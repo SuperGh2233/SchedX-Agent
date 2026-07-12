@@ -1,0 +1,20 @@
+{
+  "status": "ok",
+  "command": [
+    "sysbench",
+    "cpu",
+    "--time=30",
+    "run"
+  ],
+  "returncode": 0,
+  "metrics": {
+    "elapsed_seconds": 30.0002,
+    "events": 157329.0,
+    "events_per_second": 5244.17
+  },
+  "stdout": "sysbench 1.0.20 (using system LuaJIT 2.1.ROLLING)\n\nRunning the test with following options:\nNumber of threads: 1\nInitializing random number generator from current time\n\n\nPrime numbers limit: 10000\n\nInitializing worker threads...\n\nThreads started!\n\nCPU speed:\n    events per second:  5244.17\n\nGeneral statistics:\n    total time:                          30.0002s\n    total number of events:              157329\n\nLatency (ms):\n         min:                                    0.17\n         avg:                                    0.19\n         max:                                    3.23\n         95th percentile:                        0.23\n         sum:                                29975.58\n\nThreads fairness:\n    events (avg/stddev):           157329.0000/0.00\n    execution time (avg/stddev):   29.9756/0.00\n\n",
+  "stderr": "",
+  "benchmark": "batch-cpu",
+  "variant": "schedx",
+  "timestamp": 1779203954
+}

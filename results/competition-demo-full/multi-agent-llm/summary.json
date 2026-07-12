@@ -1,0 +1,580 @@
+{
+  "agents": 6,
+  "duration_seconds": 8,
+  "daemon_before": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "reaped_metrics": 0,
+    "fairness": {
+      "mode": "runtime_share_low",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0,
+      "background_runtime_share": 0.16184706517644828
+    },
+    "control_telemetry": {
+      "sample_runtime_ns": 21994860581,
+      "background_runtime_ns": 3559803634,
+      "background_share": 0.16184706517644828,
+      "previous_background_interval": 1024,
+      "selected_background_interval": 512,
+      "reason": "runtime_share_low",
+      "target_low": 0.12,
+      "target_high": 0.25
+    },
+    "target_background_share": {
+      "low": 0.12,
+      "high": 0.25
+    }
+  },
+  "daemon_after": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "reaped_metrics": 0,
+    "fairness": {
+      "mode": "uncontended",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0,
+      "background_runtime_share": 0.0
+    },
+    "control_telemetry": {
+      "sample_runtime_ns": 0,
+      "background_runtime_ns": 0,
+      "background_share": 0.0,
+      "previous_background_interval": 1024,
+      "selected_background_interval": 512,
+      "reason": "uncontended",
+      "target_low": 0.12,
+      "target_high": 0.25
+    },
+    "target_background_share": {
+      "low": 0.12,
+      "high": 0.25
+    }
+  },
+  "active_policy_count": 6,
+  "remaining_policy_count": 0,
+  "metrics_during": {
+    "ok": true,
+    "cgroup_metrics": {
+      "6828": {
+        "enqueues": 58,
+        "runs": 58,
+        "runtime_ns": 1118520656,
+        "wait_ns": 285838646
+      },
+      "6960": {
+        "enqueues": 0,
+        "runs": 0,
+        "runtime_ns": 0,
+        "wait_ns": 0
+      },
+      "6696": {
+        "enqueues": 52,
+        "runs": 51,
+        "runtime_ns": 1032047664,
+        "wait_ns": 388276904
+      },
+      "7048": {
+        "enqueues": 53,
+        "runs": 52,
+        "runtime_ns": 1030153541,
+        "wait_ns": 366223264
+      },
+      "6872": {
+        "enqueues": 63,
+        "runs": 63,
+        "runtime_ns": 1222680536,
+        "wait_ns": 186974184
+      },
+      "7136": {
+        "enqueues": 62,
+        "runs": 62,
+        "runtime_ns": 1197158536,
+        "wait_ns": 188272333
+      }
+    }
+  },
+  "cleanup": {
+    "ok": true,
+    "removed": 0,
+    "reaped_metrics": 0
+  },
+  "llm_plan": {
+    "returncode": 0,
+    "stdout": "{\n  \"decision\": {\n    \"mode\": \"latency_first\",\n    \"target\": \"redis-server\",\n    \"parameters\": {\n      \"cpu_weight\": 8000,\n      \"cpu_max_bg\": \"25000 100000\",\n      \"nice_target\": -5,\n      \"nice_bg\": 10,\n      \"isolate_target\": \"stress-ng-cpu\",\n      \"cpu_weight_bg\": 25\n    },\n    \"reason\": \"DeepSeek V4 proposal: Protect redis-server from background stress-ng processes by giving it high scheduling weight and priority, while capping background CPU at 25%.\",\n    \"confidence\": 0.85,\n    \"source\": \"deepseek-v4\"\n  },\n  \"llm_error\": \"\"\n}\n",
+    "stderr": "",
+    "json": {
+      "decision": {
+        "mode": "latency_first",
+        "target": "redis-server",
+        "parameters": {
+          "cpu_weight": 8000,
+          "cpu_max_bg": "25000 100000",
+          "nice_target": -5,
+          "nice_bg": 10,
+          "isolate_target": "stress-ng-cpu",
+          "cpu_weight_bg": 25
+        },
+        "reason": "DeepSeek V4 proposal: Protect redis-server from background stress-ng processes by giving it high scheduling weight and priority, while capping background CPU at 25%.",
+        "confidence": 0.85,
+        "source": "deepseek-v4"
+      },
+      "llm_error": ""
+    }
+  },
+  "successful_tools": 6,
+  "native_scx_tools": 6,
+  "daemon_mode_tools": 6,
+  "records": [
+    {
+      "run_id": "tool-1783820478200-5650",
+      "agent_id": "llm-agent-3",
+      "intent": "background",
+      "resource_hint": "",
+      "command": [
+        "stress-ng",
+        "--cpu",
+        "1",
+        "--timeout",
+        "8s"
+      ],
+      "profile": {
+        "intent": "background",
+        "scx_class": 3,
+        "scx_weight": 100,
+        "cpu_weight": 50,
+        "cpu_max": "100000 100000",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "512"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-3/tool-1783820478200-5650",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 6696,
+      "scx_error": "",
+      "pid": 5653,
+      "returncode": 0,
+      "duration_seconds": 8.095590327000082,
+      "metrics": {
+        "memory_current_bytes": 544768,
+        "memory_peak_bytes": 106266624,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 5839814,
+          "user_usec": 5790089,
+          "system_usec": 49724,
+          "nice_usec": 0,
+          "nr_periods": 2,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 2
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 279,
+        "runs": 283,
+        "runtime_ns": 5834226716,
+        "wait_ns": 2226631502
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "stress-ng: info:  [5653] setting to a 8 secs run per stressor\nstress-ng: info:  [5653] dispatching hogs: 1 cpu\nstress-ng: info:  [5653] skipped: 0\nstress-ng: info:  [5653] passed: 1: cpu (1)\nstress-ng: info:  [5653] failed: 0\nstress-ng: info:  [5653] metrics untrustworthy: 0\nstress-ng: info:  [5653] successful run completed in 8.02 secs\n",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1783820478202-5649",
+      "agent_id": "llm-agent-2",
+      "intent": "compile",
+      "resource_hint": "",
+      "command": [
+        "stress-ng",
+        "--cpu",
+        "1",
+        "--timeout",
+        "8s"
+      ],
+      "profile": {
+        "intent": "compile",
+        "scx_class": 2,
+        "scx_weight": 1500,
+        "cpu_weight": 300,
+        "cpu_max": "max",
+        "memory_high": "3G",
+        "memory_max": "4G",
+        "pids_max": "2048"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-2/tool-1783820478202-5649",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 6828,
+      "scx_error": "",
+      "pid": 5655,
+      "returncode": 0,
+      "duration_seconds": 8.060054432000015,
+      "metrics": {
+        "memory_current_bytes": 589824,
+        "memory_peak_bytes": 104566784,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 6353916,
+          "user_usec": 6305110,
+          "system_usec": 48805,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 2
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 307,
+        "runs": 311,
+        "runtime_ns": 6349656529,
+        "wait_ns": 1686864285
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "stress-ng: info:  [5655] setting to a 8 secs run per stressor\nstress-ng: info:  [5655] dispatching hogs: 1 cpu\nstress-ng: info:  [5655] skipped: 0\nstress-ng: info:  [5655] passed: 1: cpu (1)\nstress-ng: info:  [5655] failed: 0\nstress-ng: info:  [5655] metrics untrustworthy: 0\nstress-ng: info:  [5655] successful run completed in 8.01 secs\n",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1783820478204-5648",
+      "agent_id": "llm-agent-1",
+      "intent": "test",
+      "resource_hint": "",
+      "command": [
+        "stress-ng",
+        "--cpu",
+        "1",
+        "--timeout",
+        "8s"
+      ],
+      "profile": {
+        "intent": "test",
+        "scx_class": 1,
+        "scx_weight": 5000,
+        "cpu_weight": 500,
+        "cpu_max": "max",
+        "memory_high": "2G",
+        "memory_max": "3G",
+        "pids_max": "1024"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-1/tool-1783820478204-5648",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 6872,
+      "scx_error": "",
+      "pid": 5656,
+      "returncode": 0,
+      "duration_seconds": 8.056366551000337,
+      "metrics": {
+        "memory_current_bytes": 598016,
+        "memory_peak_bytes": 106147840,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 6992720,
+          "user_usec": 6942940,
+          "system_usec": 49780,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 2
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 335,
+        "runs": 339,
+        "runtime_ns": 6993572531,
+        "wait_ns": 1039525390
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "stress-ng: info:  [5656] setting to a 8 secs run per stressor\nstress-ng: info:  [5656] dispatching hogs: 1 cpu\nstress-ng: info:  [5656] skipped: 0\nstress-ng: info:  [5656] passed: 1: cpu (1)\nstress-ng: info:  [5656] failed: 0\nstress-ng: info:  [5656] metrics untrustworthy: 0\nstress-ng: info:  [5656] successful run completed in 8.01 secs\n",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1783820478205-5647",
+      "agent_id": "llm-agent-0",
+      "intent": "interactive",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "8"
+      ],
+      "profile": {
+        "intent": "interactive",
+        "scx_class": 1,
+        "scx_weight": 10000,
+        "cpu_weight": 1000,
+        "cpu_max": "max",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "256"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-0/tool-1783820478205-5647",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 6960,
+      "scx_error": "",
+      "pid": 5658,
+      "returncode": 0,
+      "duration_seconds": 8.019557733000056,
+      "metrics": {
+        "memory_current_bytes": 53248,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 1134,
+          "user_usec": 0,
+          "system_usec": 1134,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 1,
+        "runs": 2,
+        "runtime_ns": 133289,
+        "wait_ns": 7528819
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1783820478212-5652",
+      "agent_id": "llm-agent-5",
+      "intent": "background",
+      "resource_hint": "",
+      "command": [
+        "stress-ng",
+        "--cpu",
+        "1",
+        "--timeout",
+        "8s"
+      ],
+      "profile": {
+        "intent": "background",
+        "scx_class": 3,
+        "scx_weight": 100,
+        "cpu_weight": 50,
+        "cpu_max": "100000 100000",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "512"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-5/tool-1783820478212-5652",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 7048,
+      "scx_error": "",
+      "pid": 5665,
+      "returncode": 0,
+      "duration_seconds": 8.08727879800017,
+      "metrics": {
+        "memory_current_bytes": 602112,
+        "memory_peak_bytes": 104701952,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 5858419,
+          "user_usec": 5809686,
+          "system_usec": 48732,
+          "nice_usec": 0,
+          "nr_periods": 2,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 2
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 280,
+        "runs": 283,
+        "runtime_ns": 5853914454,
+        "wait_ns": 2208731123
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "stress-ng: info:  [5665] setting to a 8 secs run per stressor\nstress-ng: info:  [5665] dispatching hogs: 1 cpu\nstress-ng: info:  [5665] skipped: 0\nstress-ng: info:  [5665] passed: 1: cpu (1)\nstress-ng: info:  [5665] failed: 0\nstress-ng: info:  [5665] metrics untrustworthy: 0\nstress-ng: info:  [5665] successful run completed in 8.03 secs\n",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1783820478215-5651",
+      "agent_id": "llm-agent-4",
+      "intent": "test",
+      "resource_hint": "",
+      "command": [
+        "stress-ng",
+        "--cpu",
+        "1",
+        "--timeout",
+        "8s"
+      ],
+      "profile": {
+        "intent": "test",
+        "scx_class": 1,
+        "scx_weight": 5000,
+        "cpu_weight": 500,
+        "cpu_max": "max",
+        "memory_high": "2G",
+        "memory_max": "3G",
+        "pids_max": "1024"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/llm-agent-4/tool-1783820478215-5651",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 7136,
+      "scx_error": "",
+      "pid": 5666,
+      "returncode": 0,
+      "duration_seconds": 8.062661864999882,
+      "metrics": {
+        "memory_current_bytes": 602112,
+        "memory_peak_bytes": 104259584,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 6999966,
+          "user_usec": 6952185,
+          "system_usec": 47780,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 2
+      },
+      "scx_cgroup_metrics": {
+        "enqueues": 337,
+        "runs": 340,
+        "runtime_ns": 6999569700,
+        "wait_ns": 1030176554
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "stress-ng: info:  [5666] setting to a 8 secs run per stressor\nstress-ng: info:  [5666] dispatching hogs: 1 cpu\nstress-ng: info:  [5666] skipped: 0\nstress-ng: info:  [5666] passed: 1: cpu (1)\nstress-ng: info:  [5666] failed: 0\nstress-ng: info:  [5666] metrics untrustworthy: 0\nstress-ng: info:  [5666] successful run completed in 8.00 secs\n",
+      "stderr": ""
+    }
+  ],
+  "outputs": [
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"interactive\", \"duration_seconds\": 8.0196, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [5656] setting to a 8 secs run per stressor\nstress-ng: info:  [5656] dispatching hogs: 1 cpu\nstress-ng: info:  [5656] skipped: 0\nstress-ng: info:  [5656] passed: 1: cpu (1)\nstress-ng: info:  [5656] failed: 0\nstress-ng: info:  [5656] metrics untrustworthy: 0\nstress-ng: info:  [5656] successful run completed in 8.01 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"test\", \"duration_seconds\": 8.0564, \"memory_peak_bytes\": 106147840, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [5655] setting to a 8 secs run per stressor\nstress-ng: info:  [5655] dispatching hogs: 1 cpu\nstress-ng: info:  [5655] skipped: 0\nstress-ng: info:  [5655] passed: 1: cpu (1)\nstress-ng: info:  [5655] failed: 0\nstress-ng: info:  [5655] metrics untrustworthy: 0\nstress-ng: info:  [5655] successful run completed in 8.01 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"compile\", \"duration_seconds\": 8.0601, \"memory_peak_bytes\": 104566784, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [5653] setting to a 8 secs run per stressor\nstress-ng: info:  [5653] dispatching hogs: 1 cpu\nstress-ng: info:  [5653] skipped: 0\nstress-ng: info:  [5653] passed: 1: cpu (1)\nstress-ng: info:  [5653] failed: 0\nstress-ng: info:  [5653] metrics untrustworthy: 0\nstress-ng: info:  [5653] successful run completed in 8.02 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"background\", \"duration_seconds\": 8.0956, \"memory_peak_bytes\": 106266624, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [5666] setting to a 8 secs run per stressor\nstress-ng: info:  [5666] dispatching hogs: 1 cpu\nstress-ng: info:  [5666] skipped: 0\nstress-ng: info:  [5666] passed: 1: cpu (1)\nstress-ng: info:  [5666] failed: 0\nstress-ng: info:  [5666] metrics untrustworthy: 0\nstress-ng: info:  [5666] successful run completed in 8.00 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"test\", \"duration_seconds\": 8.0627, \"memory_peak_bytes\": 104259584, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [5665] setting to a 8 secs run per stressor\nstress-ng: info:  [5665] dispatching hogs: 1 cpu\nstress-ng: info:  [5665] skipped: 0\nstress-ng: info:  [5665] passed: 1: cpu (1)\nstress-ng: info:  [5665] failed: 0\nstress-ng: info:  [5665] metrics untrustworthy: 0\nstress-ng: info:  [5665] successful run completed in 8.03 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"background\", \"duration_seconds\": 8.0873, \"memory_peak_bytes\": 104701952, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    }
+  ],
+  "passed": true
+}

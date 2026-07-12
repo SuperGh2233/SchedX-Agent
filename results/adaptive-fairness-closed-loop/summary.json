@@ -1,0 +1,49 @@
+{
+  "fairness_during": {
+    "mode": "runtime_share_target",
+    "background_interval": 1024,
+    "default_interval": 0,
+    "cpu_pressure_avg10": 0.0,
+    "background_runtime_share": 0.17851779042179358
+  },
+  "active_cgroup_policies": 2,
+  "cgroup_metrics": {
+    "12333": {
+      "enqueues": 422,
+      "runs": 421,
+      "runtime_ns": 8275777754,
+      "wait_ns": 39024058306
+    },
+    "12377": {
+      "enqueues": 1978,
+      "runs": 1982,
+      "runtime_ns": 39828535354,
+      "wait_ns": 8305844443
+    }
+  },
+  "control_telemetry": {
+    "sample_runtime_ns": 20577456271,
+    "background_runtime_ns": 3673442026,
+    "background_share": 0.17851779042179358,
+    "previous_background_interval": 1024,
+    "selected_background_interval": 1024,
+    "reason": "runtime_share_target"
+  },
+  "latency_dispatch_delta": 1966,
+  "background_dispatch_delta": 422,
+  "successful_workloads": 2,
+  "daemon_running_after": true,
+  "passed": true,
+  "outputs": [
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [20513] setting to a 20 secs run per stressor\nstress-ng: info:  [20513] dispatching hogs: 4 cpu\nstress-ng: info:  [20513] skipped: 0\nstress-ng: info:  [20513] passed: 4: cpu (4)\nstress-ng: info:  [20513] failed: 0\nstress-ng: info:  [20513] metrics untrustworthy: 0\nstress-ng: info:  [20513] successful run completed in 20.01 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"interactive\", \"duration_seconds\": 20.0889, \"memory_peak_bytes\": 115580928, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "stress-ng: info:  [20512] setting to a 20 secs run per stressor\nstress-ng: info:  [20512] dispatching hogs: 4 cpu\nstress-ng: info:  [20512] skipped: 0\nstress-ng: info:  [20512] passed: 4: cpu (4)\nstress-ng: info:  [20512] failed: 0\nstress-ng: info:  [20512] metrics untrustworthy: 0\nstress-ng: info:  [20512] successful run completed in 20.18 secs\n",
+      "stderr": "[schedx-metrics] {\"intent\": \"background\", \"duration_seconds\": 20.2674, \"memory_peak_bytes\": 112259072, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    }
+  ]
+}

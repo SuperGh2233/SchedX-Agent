@@ -1,0 +1,23 @@
+{
+  "status": "ok",
+  "command": [
+    "redis-benchmark",
+    "-q",
+    "-n",
+    "100000",
+    "-c",
+    "64",
+    "-t",
+    "get,set"
+  ],
+  "returncode": 0,
+  "metrics": {
+    "p50_latency_ms": 0.311,
+    "qps": 98556.83
+  },
+  "stdout": " \nSET: rps=0.0 (overall: -nan) avg_msec=-nan (overall: -nan)\n                                                           \nSET: rps=104744.0 (overall: 104744.0) avg_msec=0.326 (overall: 0.326)\n                                                                      \nSET: rps=93402.4 (overall: 99061.9) avg_msec=0.403 (overall: 0.362)\n                                                                    \nSET: rps=85844.0 (overall: 94661.8) avg_msec=0.444 (overall: 0.387)\n                                                                    \nSET: rps=98426.3 (overall: 95604.8) avg_msec=0.379 (overall: 0.385)\n                                                                    \nSET: 95693.78 requests per second, p50=0.311 msec\n \nGET: rps=82740.0 (overall: 101397.1) avg_msec=0.333 (overall: 0.333)\n                                                                     \nGET: rps=93796.0 (overall: 97211.5) avg_msec=0.393 (overall: 0.365)\n                                                                    \nGET: rps=104784.9 (overall: 99907.8) avg_msec=0.325 (overall: 0.350)\n                                                                     \nGET: rps=105304.0 (overall: 101320.4) avg_msec=0.319 (overall: 0.342)\n                                                                      \nGET: 101419.88 requests per second, p50=0.311 msec\n\n",
+  "stderr": "",
+  "benchmark": "redis-latency",
+  "variant": "schedx",
+  "timestamp": 1779203915
+}

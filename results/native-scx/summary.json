@@ -1,0 +1,143 @@
+{
+  "kernel": "6.15.11-schedx",
+  "duration_seconds": 10,
+  "repeats": 3,
+  "default": {
+    "rows": [
+      {
+        "latency_avg_ms": 11.06,
+        "latency_stdev_ms": 42.36,
+        "latency_max_ms": 508.74,
+        "req_per_sec_avg": 15120.0,
+        "req_per_sec_stdev": 7080.0,
+        "requests_per_sec": 60124.74,
+        "qps": 60124.74,
+        "transfer_sec": "214.97MB",
+        "p50_ms": 0.651,
+        "p50_latency_ms": 0.651,
+        "p75_ms": 2.51,
+        "p75_latency_ms": 2.51,
+        "p90_ms": 15.73,
+        "p90_latency_ms": 15.73,
+        "p99_ms": 250.61,
+        "p99_latency_ms": 250.61,
+        "avg_latency_ms": 11.06
+      },
+      {
+        "latency_avg_ms": 16.13,
+        "latency_stdev_ms": 80.27,
+        "latency_max_ms": 918.23,
+        "req_per_sec_avg": 14330.0,
+        "req_per_sec_stdev": 5640.0,
+        "requests_per_sec": 56942.18,
+        "qps": 56942.18,
+        "transfer_sec": "203.59MB",
+        "p50_ms": 0.738,
+        "p50_latency_ms": 0.738,
+        "p75_ms": 2.43,
+        "p75_latency_ms": 2.43,
+        "p90_ms": 5.88,
+        "p90_latency_ms": 5.88,
+        "p99_ms": 455.1,
+        "p99_latency_ms": 455.1,
+        "avg_latency_ms": 16.13
+      },
+      {
+        "latency_avg_ms": 12.12,
+        "latency_stdev_ms": 52.2,
+        "latency_max_ms": 572.36,
+        "req_per_sec_avg": 13530.0,
+        "req_per_sec_stdev": 5320.0,
+        "requests_per_sec": 53778.39,
+        "qps": 53778.39,
+        "transfer_sec": "192.27MB",
+        "p50_ms": 0.831,
+        "p50_latency_ms": 0.831,
+        "p75_ms": 2.69,
+        "p75_latency_ms": 2.69,
+        "p90_ms": 7.49,
+        "p90_latency_ms": 7.49,
+        "p99_ms": 310.54,
+        "p99_latency_ms": 310.54,
+        "avg_latency_ms": 12.12
+      }
+    ],
+    "dispatch_stats": {}
+  },
+  "native_sched_ext": {
+    "rows": [
+      {
+        "latency_avg_ms": 0.4261,
+        "latency_stdev_ms": 0.3789,
+        "latency_max_ms": 7.95,
+        "req_per_sec_avg": 37970.0,
+        "req_per_sec_stdev": 723.62,
+        "requests_per_sec": 151038.59,
+        "qps": 151038.59,
+        "transfer_sec": "540.01MB",
+        "p50_ms": 0.332,
+        "p50_latency_ms": 0.332,
+        "p75_ms": 0.557,
+        "p75_latency_ms": 0.557,
+        "p90_ms": 0.837,
+        "p90_latency_ms": 0.837,
+        "p99_ms": 1.83,
+        "p99_latency_ms": 1.83,
+        "avg_latency_ms": 0.4261
+      },
+      {
+        "latency_avg_ms": 0.4349,
+        "latency_stdev_ms": 0.3709,
+        "latency_max_ms": 7.21,
+        "req_per_sec_avg": 36800.0,
+        "req_per_sec_stdev": 3380.0,
+        "requests_per_sec": 146377.21,
+        "qps": 146377.21,
+        "transfer_sec": "523.35MB",
+        "p50_ms": 0.352,
+        "p50_latency_ms": 0.352,
+        "p75_ms": 0.571,
+        "p75_latency_ms": 0.571,
+        "p90_ms": 0.837,
+        "p90_latency_ms": 0.837,
+        "p99_ms": 1.79,
+        "p99_latency_ms": 1.79,
+        "avg_latency_ms": 0.4349
+      },
+      {
+        "latency_avg_ms": 0.5144,
+        "latency_stdev_ms": 0.5093,
+        "latency_max_ms": 14.5,
+        "req_per_sec_avg": 33380.0,
+        "req_per_sec_stdev": 10130.0,
+        "requests_per_sec": 132721.82,
+        "qps": 132721.82,
+        "transfer_sec": "474.52MB",
+        "p50_ms": 0.383,
+        "p50_latency_ms": 0.383,
+        "p75_ms": 0.652,
+        "p75_latency_ms": 0.652,
+        "p90_ms": 1.12,
+        "p90_latency_ms": 1.12,
+        "p99_ms": 2.12,
+        "p99_latency_ms": 2.12,
+        "avg_latency_ms": 0.5144
+      }
+    ],
+    "dispatch_stats": {
+      "latency_dispatches": 292744,
+      "batch_dispatches": 0,
+      "background_dispatches": 285,
+      "default_dispatches": 214390,
+      "total": 507419
+    }
+  },
+  "comparison": {
+    "rps_gain_percent": 151.77022418701455,
+    "p99_reduction_percent": 99.43517835178352,
+    "default_mean_rps": 56948.43666666667,
+    "native_mean_rps": 143379.20666666667,
+    "default_mean_p99_ms": 338.75,
+    "native_mean_p99_ms": 1.9133333333333333
+  }
+}

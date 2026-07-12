@@ -1,0 +1,7 @@
+{
+  "benchmark": "nginx-latency",
+  "timestamp": 1779006433,
+  "status": "plan_only",
+  "message": "Install wrk/redis-benchmark/sysbench on openEuler to collect real metrics.",
+  "metrics": {}
+}

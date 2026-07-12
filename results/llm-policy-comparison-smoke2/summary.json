@@ -1,0 +1,215 @@
+{
+  "kernel": "6.15.11-schedx",
+  "duration_seconds": 5,
+  "repeats": 1,
+  "llm_source": "deepseek-v4",
+  "rule_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 10000,
+      "cpu_weight_bg": 100,
+      "cpu_max_bg": "50000 100000"
+    },
+    "reason": "deterministic rule policy",
+    "confidence": 0.8
+  },
+  "llm_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 10000,
+      "cpu_weight_bg": 100,
+      "cpu_max_bg": "50000 100000"
+    },
+    "reason": "DeepSeek V4 proposal: rule baseline for nginx under CPU interference",
+    "confidence": 0.8
+  },
+  "default": {
+    "rows": [
+      {
+        "latency_avg_ms": 1.54,
+        "latency_stdev_ms": 1.92,
+        "latency_max_ms": 25.33,
+        "req_per_sec_avg": 16420.0,
+        "req_per_sec_stdev": 3210.0,
+        "requests_per_sec": 65217.32,
+        "qps": 65217.32,
+        "transfer_sec": "233.17MB",
+        "p50_ms": 0.711,
+        "p50_latency_ms": 0.711,
+        "p75_ms": 2.27,
+        "p75_latency_ms": 2.27,
+        "p90_ms": 4.06,
+        "p90_latency_ms": 4.06,
+        "p99_ms": 8.52,
+        "p99_latency_ms": 8.52,
+        "avg_latency_ms": 1.54
+      }
+    ],
+    "background_cpu_ticks": 789,
+    "dispatch_stats": {},
+    "policy_source": "none",
+    "decision": {},
+    "classification": {},
+    "pressure": {}
+  },
+  "rule_schedx": {
+    "rows": [
+      {
+        "latency_avg_ms": 0.5677,
+        "latency_stdev_ms": 0.97,
+        "latency_max_ms": 28.74,
+        "req_per_sec_avg": 34090.0,
+        "req_per_sec_stdev": 2140.0,
+        "requests_per_sec": 135206.23,
+        "qps": 135206.23,
+        "transfer_sec": "483.41MB",
+        "p50_ms": 0.375,
+        "p50_latency_ms": 0.375,
+        "p75_ms": 0.644,
+        "p75_latency_ms": 0.644,
+        "p90_ms": 1.08,
+        "p90_latency_ms": 1.08,
+        "p99_ms": 3.61,
+        "p99_latency_ms": 3.61,
+        "avg_latency_ms": 0.5677
+      }
+    ],
+    "background_cpu_ticks": 85,
+    "dispatch_stats": {
+      "latency_dispatches": 48491,
+      "batch_dispatches": 0,
+      "background_dispatches": 45,
+      "default_dispatches": 32244,
+      "total": 80780
+    },
+    "policy_source": "rule",
+    "decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {
+        "cpu_weight": 10000,
+        "cpu_weight_bg": 100,
+        "cpu_max_bg": "50000 100000"
+      },
+      "reason": "deterministic rule policy",
+      "confidence": 0.8
+    },
+    "classification": {},
+    "pressure": {}
+  },
+  "llm_schedx": {
+    "rows": [
+      {
+        "latency_avg_ms": 0.5509,
+        "latency_stdev_ms": 0.85,
+        "latency_max_ms": 17.26,
+        "req_per_sec_avg": 34540.0,
+        "req_per_sec_stdev": 2350.0,
+        "requests_per_sec": 136945.87,
+        "qps": 136945.87,
+        "transfer_sec": "489.63MB",
+        "p50_ms": 0.37,
+        "p50_latency_ms": 0.37,
+        "p75_ms": 0.611,
+        "p75_latency_ms": 0.611,
+        "p90_ms": 1.0,
+        "p90_latency_ms": 1.0,
+        "p99_ms": 3.98,
+        "p99_latency_ms": 3.98,
+        "avg_latency_ms": 0.5509
+      }
+    ],
+    "background_cpu_ticks": 89,
+    "dispatch_stats": {
+      "latency_dispatches": 48922,
+      "batch_dispatches": 0,
+      "background_dispatches": 47,
+      "default_dispatches": 34007,
+      "total": 82976
+    },
+    "policy_source": "deepseek-v4",
+    "decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {
+        "cpu_weight": 10000,
+        "cpu_weight_bg": 100,
+        "cpu_max_bg": "50000 100000"
+      },
+      "reason": "DeepSeek V4 proposal: rule baseline for nginx under CPU interference",
+      "confidence": 0.8
+    },
+    "classification": {
+      "overall": "mixed",
+      "groups": {
+        "latency_sensitive": [
+          {
+            "pid": 1094,
+            "comm": "nginx"
+          },
+          {
+            "pid": 1095,
+            "comm": "nginx"
+          },
+          {
+            "pid": 1096,
+            "comm": "nginx"
+          },
+          {
+            "pid": 1097,
+            "comm": "nginx"
+          },
+          {
+            "pid": 1098,
+            "comm": "nginx"
+          }
+        ],
+        "background_noise": [
+          {
+            "pid": 3009,
+            "comm": "stress-ng"
+          },
+          {
+            "pid": 3010,
+            "comm": "stress-ng"
+          },
+          {
+            "pid": 3011,
+            "comm": "stress-ng"
+          },
+          {
+            "pid": 3012,
+            "comm": "stress-ng"
+          },
+          {
+            "pid": 3013,
+            "comm": "stress-ng"
+          }
+        ]
+      }
+    },
+    "pressure": {
+      "cpu": {},
+      "memory": {},
+      "io": {}
+    }
+  },
+  "comparison": {
+    "rule": {
+      "mean_rps": 135206.23,
+      "mean_p99_ms": 3.61,
+      "rps_gain_percent": 107.3164459993143,
+      "p99_reduction_percent": 57.62910798122066,
+      "background_cpu_retention_percent": 10.773130544993663
+    },
+    "llm": {
+      "mean_rps": 136945.87,
+      "mean_p99_ms": 3.98,
+      "rps_gain_percent": 109.98389691572727,
+      "p99_reduction_percent": 53.28638497652582,
+      "background_cpu_retention_percent": 11.280101394169835
+    }
+  }
+}

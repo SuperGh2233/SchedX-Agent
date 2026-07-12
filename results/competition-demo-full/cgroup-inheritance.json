@@ -1,0 +1,7 @@
+{
+  "cgroup_policy_present": true,
+  "task_policy_count": 0,
+  "policy_scope": "cgroup",
+  "native_scx": true,
+  "passed": true
+}

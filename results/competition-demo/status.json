@@ -1,0 +1,56 @@
+{
+  "schedx": "0.3.0",
+  "platform": "Linux-6.15.11-schedx-x86_64-with-glibc2.38",
+  "cgroup_v2": true,
+  "cgroup_controllers": [
+    "cpuset",
+    "cpu",
+    "io",
+    "memory",
+    "hugetlb",
+    "pids",
+    "rdma",
+    "misc"
+  ],
+  "cgroup_cpu_stat": {
+    "usage_usec": 739257239,
+    "user_usec": 367087567,
+    "system_usec": 372169672,
+    "nice_usec": 0,
+    "nr_periods": 0,
+    "nr_throttled": 0,
+    "throttled_usec": 0,
+    "nr_bursts": 0,
+    "burst_usec": 0
+  },
+  "cpu_topology": {
+    "total_cpus": 4,
+    "online_cpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "performance_cores": [
+      0,
+      1
+    ],
+    "efficiency_cores": [
+      2,
+      3
+    ],
+    "performance_mask": "0,1",
+    "efficiency_mask": "2,3"
+  },
+  "sched_ext": {
+    "available": true,
+    "state": "enabled",
+    "current_scheduler": "schedx_agent",
+    "allowlist": "scx_agent, scx_rusty, scx_simple",
+    "process_running": false
+  },
+  "scx_daemon_available": true,
+  "mode": "sched_ext-native",
+  "llm_configured": true,
+  "llm_model": "deepseek-v4-pro"
+}

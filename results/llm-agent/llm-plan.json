@@ -1,0 +1,16 @@
+{
+  "decision": {
+    "mode": "latency_first",
+    "target": "redis-server",
+    "parameters": {
+      "cpu_weight": 8000,
+      "cpu_max_bg": "50000 100000",
+      "nice_target": -5,
+      "nice_bg": 5
+    },
+    "reason": "DeepSeek V4 proposal: Pure latency workload (redis-server and nginx) with no active batch/background tasks; boost Redis priority and limit potential background CPU usage to protect latency.",
+    "confidence": 0.9,
+    "source": "deepseek-v4"
+  },
+  "llm_error": ""
+}

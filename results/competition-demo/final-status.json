@@ -1,0 +1,34 @@
+{
+  "ok": true,
+  "scheduler_running": true,
+  "sched_ext": {
+    "available": true,
+    "state": "enabled",
+    "current_scheduler": "schedx_agent",
+    "allowlist": "scx_agent, scx_rusty, scx_simple",
+    "process_running": true
+  },
+  "reaped_policies": 0,
+  "reaped_metrics": 0,
+  "fairness": {
+    "mode": "runtime_share_low",
+    "background_interval": 512,
+    "default_interval": 0,
+    "cpu_pressure_avg10": 0.0,
+    "background_runtime_share": 0.17507516979805193
+  },
+  "control_telemetry": {
+    "sample_runtime_ns": 20188359412,
+    "background_runtime_ns": 3534480452,
+    "background_share": 0.17507516979805193,
+    "previous_background_interval": 512,
+    "selected_background_interval": 512,
+    "reason": "runtime_share_low",
+    "target_low": 0.12,
+    "target_high": 0.25
+  },
+  "target_background_share": {
+    "low": 0.12,
+    "high": 0.25
+  }
+}

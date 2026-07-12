@@ -1,0 +1,147 @@
+{
+  "agents": 6,
+  "duration_seconds": 8,
+  "daemon_before": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "reaped_metrics": 0,
+    "fairness": {
+      "mode": "runtime_share_low",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0,
+      "background_runtime_share": 0.16184706517644828
+    },
+    "control_telemetry": {
+      "sample_runtime_ns": 21994860581,
+      "background_runtime_ns": 3559803634,
+      "background_share": 0.16184706517644828,
+      "previous_background_interval": 1024,
+      "selected_background_interval": 512,
+      "reason": "runtime_share_low",
+      "target_low": 0.12,
+      "target_high": 0.25
+    },
+    "target_background_share": {
+      "low": 0.12,
+      "high": 0.25
+    }
+  },
+  "daemon_after": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "reaped_metrics": 0,
+    "fairness": {
+      "mode": "uncontended",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0,
+      "background_runtime_share": 0.0
+    },
+    "control_telemetry": {
+      "sample_runtime_ns": 0,
+      "background_runtime_ns": 0,
+      "background_share": 0.0,
+      "previous_background_interval": 1024,
+      "selected_background_interval": 512,
+      "reason": "uncontended",
+      "target_low": 0.12,
+      "target_high": 0.25
+    },
+    "target_background_share": {
+      "low": 0.12,
+      "high": 0.25
+    }
+  },
+  "active_policy_count": 6,
+  "remaining_policy_count": 0,
+  "metrics_during": {
+    "ok": true,
+    "cgroup_metrics": {
+      "6828": {
+        "enqueues": 58,
+        "runs": 58,
+        "runtime_ns": 1118520656,
+        "wait_ns": 285838646
+      },
+      "6960": {
+        "enqueues": 0,
+        "runs": 0,
+        "runtime_ns": 0,
+        "wait_ns": 0
+      },
+      "6696": {
+        "enqueues": 52,
+        "runs": 51,
+        "runtime_ns": 1032047664,
+        "wait_ns": 388276904
+      },
+      "7048": {
+        "enqueues": 53,
+        "runs": 52,
+        "runtime_ns": 1030153541,
+        "wait_ns": 366223264
+      },
+      "6872": {
+        "enqueues": 63,
+        "runs": 63,
+        "runtime_ns": 1222680536,
+        "wait_ns": 186974184
+      },
+      "7136": {
+        "enqueues": 62,
+        "runs": 62,
+        "runtime_ns": 1197158536,
+        "wait_ns": 188272333
+      }
+    }
+  },
+  "cleanup": {
+    "ok": true,
+    "removed": 0,
+    "reaped_metrics": 0
+  },
+  "llm_plan": {
+    "returncode": 0,
+    "stdout": "{\n  \"decision\": {\n    \"mode\": \"latency_first\",\n    \"target\": \"redis-server\",\n    \"parameters\": {\n      \"cpu_weight\": 8000,\n      \"cpu_max_bg\": \"25000 100000\",\n      \"nice_target\": -5,\n      \"nice_bg\": 10,\n      \"isolate_target\": \"stress-ng-cpu\",\n      \"cpu_weight_bg\": 25\n    },\n    \"reason\": \"DeepSeek V4 proposal: Protect redis-server from background stress-ng processes by giving it high scheduling weight and priority, while capping background CPU at 25%.\",\n    \"confidence\": 0.85,\n    \"source\": \"deepseek-v4\"\n  },\n  \"llm_error\": \"\"\n}\n",
+    "stderr": "",
+    "json": {
+      "decision": {
+        "mode": "latency_first",
+        "target": "redis-server",
+        "parameters": {
+          "cpu_weight": 8000,
+          "cpu_max_bg": "25000 100000",
+          "nice_target": -5,
+          "nice_bg": 10,
+          "isolate_target": "stress-ng-cpu",
+          "cpu_weight_bg": 25
+        },
+        "reason": "DeepSeek V4 proposal: Protect redis-server from background stress-ng processes by giving it high scheduling weight and priority, while capping background CPU at 25%.",
+        "confidence": 0.85,
+        "source": "deepseek-v4"
+      },
+      "llm_error": ""
+    }
+  },
+  "successful_tools": 6,
+  "native_scx_tools": 6,
+  "daemon_mode_tools": 6,
+  "passed": true
+}

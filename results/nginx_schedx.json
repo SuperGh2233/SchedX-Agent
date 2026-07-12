@@ -1,0 +1,36 @@
+{
+  "status": "ok",
+  "command": [
+    "wrk",
+    "-t2",
+    "-c64",
+    "-d10s",
+    "--latency",
+    "http://127.0.0.1/"
+  ],
+  "returncode": 0,
+  "metrics": {
+    "latency_avg_ms": 0.96,
+    "latency_stdev_ms": 1.68,
+    "latency_max_ms": 56.87,
+    "req_per_sec_avg": 38280.0,
+    "req_per_sec_stdev": 3150.0,
+    "requests_per_sec": 76098.86,
+    "qps": 76098.86,
+    "transfer_sec": "272.08MB",
+    "p50_ms": 0.7,
+    "p50_latency_ms": 0.7,
+    "p75_ms": 1.04,
+    "p75_latency_ms": 1.04,
+    "p90_ms": 1.62,
+    "p90_latency_ms": 1.62,
+    "p99_ms": 5.53,
+    "p99_latency_ms": 5.53,
+    "avg_latency_ms": 0.96
+  },
+  "stdout": "Running 10s test @ http://127.0.0.1/\n  2 threads and 64 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     0.96ms    1.68ms  56.87ms   96.08%\n    Req/Sec    38.28k     3.15k   53.94k    76.50%\n  Latency Distribution\n     50%  700.00us\n     75%    1.04ms\n     90%    1.62ms\n     99%    5.53ms\n  762093 requests in 10.01s, 2.66GB read\nRequests/sec:  76098.86\nTransfer/sec:    272.08MB\n",
+  "stderr": "",
+  "benchmark": "nginx-latency",
+  "variant": "schedx",
+  "timestamp": 1779203896
+}

@@ -1,0 +1,17 @@
+{
+  "initial_interval": 4096,
+  "sampled_intervals": [
+    4096,
+    2048,
+    1024,
+    512
+  ],
+  "sampled_reasons": [
+    "awaiting_runtime_sample",
+    "runtime_share_low",
+    "runtime_share_low",
+    "runtime_share_low"
+  ],
+  "final_background_share": 0.16638355780490288,
+  "passed": true
+}

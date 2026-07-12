@@ -1,0 +1,23 @@
+{
+  "status": "ok",
+  "command": [
+    "redis-benchmark",
+    "-q",
+    "-n",
+    "100000",
+    "-c",
+    "64",
+    "-t",
+    "get,set"
+  ],
+  "returncode": 0,
+  "metrics": {
+    "p50_latency_ms": 0.311,
+    "qps": 100657.51
+  },
+  "stdout": " \nSET: rps=0.0 (overall: 0.0) avg_msec=-nan (overall: -nan)\n                                                          \nSET: rps=105660.0 (overall: 105239.0) avg_msec=0.326 (overall: 0.326)\n                                                                      \nSET: rps=108051.8 (overall: 106645.4) avg_msec=0.315 (overall: 0.320)\n                                                                      \nSET: rps=99256.0 (overall: 104188.8) avg_msec=0.369 (overall: 0.336)\n                                                                     \nSET: 102986.61 requests per second, p50=0.303 msec\n \nGET: rps=10408.0 (overall: 89724.1) avg_msec=0.427 (overall: 0.427)\n                                                                    \nGET: rps=101812.8 (overall: 100560.7) avg_msec=0.345 (overall: 0.353)\n                                                                      \nGET: rps=87676.0 (overall: 94483.0) avg_msec=0.451 (overall: 0.396)\n                                                                    \nGET: rps=95156.0 (overall: 94698.7) avg_msec=0.394 (overall: 0.395)\n                                                                    \nGET: 98328.42 requests per second, p50=0.311 msec\n\n",
+  "stderr": "",
+  "benchmark": "redis-latency",
+  "variant": "default",
+  "timestamp": 1779203908
+}

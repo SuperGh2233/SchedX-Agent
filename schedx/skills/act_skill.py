@@ -1,0 +1,40 @@
+from __future__ import annotations
+
+from dataclasses import asdict
+
+from schedx.agent.context import AgentContext
+from schedx.agent.executor import SafeActionExecutor
+from schedx.agent.skill import SkillResult
+from schedx.controllers.cgroup_controller import CgroupController
+
+
+class ActSkill:
+    name = "act"
+    description = "Execute planned actions with rollback support."
+
+    def run(self, context: AgentContext) -> SkillResult:
+        actions = context.data.get("actions", [])
+        if not actions:
+            context.data["execution_results"] = []
+            context.data["execution_noop"] = True
+            return SkillResult(True, "no matching actions; execution completed as a safe no-op")
+
+        cgroup = CgroupController(dry_run=context.dry_run)
+        executor = SafeActionExecutor(cgroup)
+        results = executor.execute(actions, dry_run=context.dry_run)
+
+        context.data["execution_results"] = results
+
+        failed = [r for r in results if r.get("status") in ("failed_rolled_back", "unsupported")]
+        if failed:
+            return SkillResult(
+                False,
+                f"execution completed with {len(failed)} failures",
+                {"results": results, "failures": len(failed)},
+            )
+
+        return SkillResult(
+            True,
+            f"executed {len(results)} actions successfully",
+            {"results": results},
+        )

@@ -1,0 +1,131 @@
+{
+  "kernel": "6.15.11-schedx",
+  "duration_seconds": 5,
+  "repeats": 1,
+  "llm_source": "deepseek-v4",
+  "rule_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 10000,
+      "cpu_weight_bg": 100,
+      "cpu_max_bg": "50000 100000"
+    },
+    "reason": "deterministic rule policy",
+    "confidence": 0.8
+  },
+  "llm_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 10000,
+      "cpu_weight_bg": 100,
+      "cpu_max_bg": "50000 100000"
+    },
+    "reason": "DeepSeek V4 proposal: Prioritize nginx for latency-sensitive workload with no background noise detected.",
+    "confidence": 0.8
+  },
+  "default": {
+    "rows": [
+      {
+        "latency_avg_ms": 1.4,
+        "latency_stdev_ms": 1.68,
+        "latency_max_ms": 14.47,
+        "req_per_sec_avg": 17970.0,
+        "req_per_sec_stdev": 3640.0,
+        "requests_per_sec": 71297.67,
+        "qps": 71297.67,
+        "transfer_sec": "254.91MB",
+        "p50_ms": 0.588,
+        "p50_latency_ms": 0.588,
+        "p75_ms": 2.13,
+        "p75_latency_ms": 2.13,
+        "p90_ms": 3.7,
+        "p90_latency_ms": 3.7,
+        "p99_ms": 7.33,
+        "p99_latency_ms": 7.33,
+        "avg_latency_ms": 1.4
+      }
+    ],
+    "background_cpu_ticks": 742,
+    "dispatch_stats": {}
+  },
+  "rule_schedx": {
+    "rows": [
+      {
+        "latency_avg_ms": 0.5915,
+        "latency_stdev_ms": 1.58,
+        "latency_max_ms": 50.55,
+        "req_per_sec_avg": 35680.0,
+        "req_per_sec_stdev": 2250.0,
+        "requests_per_sec": 141621.24,
+        "qps": 141621.24,
+        "transfer_sec": "506.34MB",
+        "p50_ms": 0.347,
+        "p50_latency_ms": 0.347,
+        "p75_ms": 0.627,
+        "p75_latency_ms": 0.627,
+        "p90_ms": 1.07,
+        "p90_latency_ms": 1.07,
+        "p99_ms": 3.89,
+        "p99_latency_ms": 3.89,
+        "avg_latency_ms": 0.5915
+      }
+    ],
+    "background_cpu_ticks": 88,
+    "dispatch_stats": {
+      "latency_dispatches": 51430,
+      "batch_dispatches": 0,
+      "background_dispatches": 46,
+      "default_dispatches": 33066,
+      "total": 84542
+    }
+  },
+  "llm_schedx": {
+    "rows": [
+      {
+        "latency_avg_ms": 0.5548,
+        "latency_stdev_ms": 0.88,
+        "latency_max_ms": 18.94,
+        "req_per_sec_avg": 35660.0,
+        "req_per_sec_stdev": 2230.0,
+        "requests_per_sec": 141506.38,
+        "qps": 141506.38,
+        "transfer_sec": "505.93MB",
+        "p50_ms": 0.345,
+        "p50_latency_ms": 0.345,
+        "p75_ms": 0.613,
+        "p75_latency_ms": 0.613,
+        "p90_ms": 1.06,
+        "p90_latency_ms": 1.06,
+        "p99_ms": 4.14,
+        "p99_latency_ms": 4.14,
+        "avg_latency_ms": 0.5548
+      }
+    ],
+    "background_cpu_ticks": 88,
+    "dispatch_stats": {
+      "latency_dispatches": 49996,
+      "batch_dispatches": 0,
+      "background_dispatches": 47,
+      "default_dispatches": 33503,
+      "total": 83546
+    }
+  },
+  "comparison": {
+    "rule": {
+      "mean_rps": 141621.24,
+      "mean_p99_ms": 3.89,
+      "rps_gain_percent": 98.63375619427674,
+      "p99_reduction_percent": 46.93042291950887,
+      "background_cpu_retention_percent": 11.859838274932615
+    },
+    "llm": {
+      "mean_rps": 141506.38,
+      "mean_p99_ms": 4.14,
+      "rps_gain_percent": 98.47265696059915,
+      "p99_reduction_percent": 43.519781718963166,
+      "background_cpu_retention_percent": 11.859838274932615
+    }
+  }
+}

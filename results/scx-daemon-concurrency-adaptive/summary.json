@@ -1,0 +1,572 @@
+{
+  "agents": 8,
+  "daemon_before": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "fairness": {
+      "mode": "uncontended",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0
+    }
+  },
+  "active_policy_count": 8,
+  "remaining_policy_count": 0,
+  "daemon_after": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 0,
+    "fairness": {
+      "mode": "fair",
+      "background_interval": 1024,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0
+    }
+  },
+  "daemon_after_reap": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true
+    },
+    "reaped_policies": 1,
+    "fairness": {
+      "mode": "uncontended",
+      "background_interval": 512,
+      "default_interval": 0,
+      "cpu_pressure_avg10": 0.0
+    }
+  },
+  "successful_tools": 8,
+  "native_scx_tools": 8,
+  "daemon_mode_tools": 8,
+  "stale_policy_reaped": true,
+  "records": [
+    {
+      "run_id": "tool-1781426833733-19307",
+      "agent_id": "concurrent-4",
+      "intent": "interactive",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "interactive",
+        "scx_class": 1,
+        "scx_weight": 10000,
+        "cpu_weight": 1000,
+        "cpu_max": "max",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "256"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-4/tool-1781426833733-19307",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11464,
+      "scx_error": "",
+      "pid": 19323,
+      "returncode": 0,
+      "duration_seconds": 4.0027253679982095,
+      "metrics": {
+        "memory_current_bytes": 49152,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 1253,
+          "user_usec": 0,
+          "system_usec": 1253,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833739-19309",
+      "agent_id": "concurrent-6",
+      "intent": "compile",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "compile",
+        "scx_class": 2,
+        "scx_weight": 1500,
+        "cpu_weight": 300,
+        "cpu_max": "max",
+        "memory_high": "3G",
+        "memory_max": "4G",
+        "pids_max": "2048"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-6/tool-1781426833739-19309",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11596,
+      "scx_error": "",
+      "pid": 19324,
+      "returncode": 0,
+      "duration_seconds": 4.002154213998438,
+      "metrics": {
+        "memory_current_bytes": 53248,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 1200,
+          "user_usec": 0,
+          "system_usec": 1200,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833698-19305",
+      "agent_id": "concurrent-2",
+      "intent": "compile",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "compile",
+        "scx_class": 2,
+        "scx_weight": 1500,
+        "cpu_weight": 300,
+        "cpu_max": "max",
+        "memory_high": "3G",
+        "memory_max": "4G",
+        "pids_max": "2048"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-2/tool-1781426833698-19305",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11112,
+      "scx_error": "",
+      "pid": 19311,
+      "returncode": 0,
+      "duration_seconds": 4.020565536000504,
+      "metrics": {
+        "memory_current_bytes": 49152,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 837,
+          "user_usec": 837,
+          "system_usec": 0,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833711-19303",
+      "agent_id": "concurrent-0",
+      "intent": "interactive",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "interactive",
+        "scx_class": 1,
+        "scx_weight": 10000,
+        "cpu_weight": 1000,
+        "cpu_max": "max",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "256"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-0/tool-1781426833711-19303",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11288,
+      "scx_error": "",
+      "pid": 19314,
+      "returncode": 0,
+      "duration_seconds": 4.012772142999893,
+      "metrics": {
+        "memory_current_bytes": 53248,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 871,
+          "user_usec": 871,
+          "system_usec": 0,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833748-19310",
+      "agent_id": "concurrent-7",
+      "intent": "background",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "background",
+        "scx_class": 3,
+        "scx_weight": 100,
+        "cpu_weight": 50,
+        "cpu_max": "100000 100000",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "512"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-7/tool-1781426833748-19310",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11728,
+      "scx_error": "",
+      "pid": 19332,
+      "returncode": 0,
+      "duration_seconds": 4.002177633999963,
+      "metrics": {
+        "memory_current_bytes": 45056,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 1424,
+          "user_usec": 0,
+          "system_usec": 1424,
+          "nice_usec": 0,
+          "nr_periods": 2,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833702-19304",
+      "agent_id": "concurrent-1",
+      "intent": "test",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "test",
+        "scx_class": 1,
+        "scx_weight": 5000,
+        "cpu_weight": 500,
+        "cpu_max": "max",
+        "memory_high": "2G",
+        "memory_max": "3G",
+        "pids_max": "1024"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-1/tool-1781426833702-19304",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11200,
+      "scx_error": "",
+      "pid": 19313,
+      "returncode": 0,
+      "duration_seconds": 4.01356828599819,
+      "metrics": {
+        "memory_current_bytes": 49152,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 868,
+          "user_usec": 868,
+          "system_usec": 0,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833719-19306",
+      "agent_id": "concurrent-3",
+      "intent": "background",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "background",
+        "scx_class": 3,
+        "scx_weight": 100,
+        "cpu_weight": 50,
+        "cpu_max": "100000 100000",
+        "memory_high": "1G",
+        "memory_max": "2G",
+        "pids_max": "512"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-3/tool-1781426833719-19306",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11376,
+      "scx_error": "",
+      "pid": 19316,
+      "returncode": 0,
+      "duration_seconds": 4.0123937069984095,
+      "metrics": {
+        "memory_current_bytes": 53248,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 737,
+          "user_usec": 737,
+          "system_usec": 0,
+          "nice_usec": 0,
+          "nr_periods": 2,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "run_id": "tool-1781426833739-19308",
+      "agent_id": "concurrent-5",
+      "intent": "test",
+      "resource_hint": "",
+      "command": [
+        "sleep",
+        "4"
+      ],
+      "profile": {
+        "intent": "test",
+        "scx_class": 1,
+        "scx_weight": 5000,
+        "cpu_weight": 500,
+        "cpu_max": "max",
+        "memory_high": "2G",
+        "memory_max": "3G",
+        "pids_max": "1024"
+      },
+      "cgroup": "/sys/fs/cgroup/schedx-agents/concurrent-5/tool-1781426833739-19308",
+      "native_scx": true,
+      "scx_mode": "daemon",
+      "scx_policy_scope": "cgroup",
+      "cgroup_id": 11640,
+      "scx_error": "",
+      "pid": 19325,
+      "returncode": 0,
+      "duration_seconds": 4.002407126001344,
+      "metrics": {
+        "memory_current_bytes": 53248,
+        "memory_peak_bytes": 290816,
+        "memory_events": {
+          "low": 0,
+          "high": 0,
+          "max": 0,
+          "oom": 0,
+          "oom_kill": 0,
+          "oom_group_kill": 0
+        },
+        "cpu_stat": {
+          "usage_usec": 1161,
+          "user_usec": 0,
+          "system_usec": 1161,
+          "nice_usec": 0,
+          "nr_periods": 0,
+          "nr_throttled": 0,
+          "throttled_usec": 0,
+          "nr_bursts": 0,
+          "burst_usec": 0
+        },
+        "pids_peak": 1
+      },
+      "feedback": [],
+      "retry_recommended": false,
+      "next_resource_hint": "",
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "outputs": [
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"interactive\", \"duration_seconds\": 4.0128, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"test\", \"duration_seconds\": 4.0136, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"compile\", \"duration_seconds\": 4.0206, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"background\", \"duration_seconds\": 4.0124, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"interactive\", \"duration_seconds\": 4.0027, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"test\", \"duration_seconds\": 4.0024, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"compile\", \"duration_seconds\": 4.0022, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    },
+    {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "[schedx-metrics] {\"intent\": \"background\", \"duration_seconds\": 4.0022, \"memory_peak_bytes\": 290816, \"native_scx\": true, \"scx_mode\": \"daemon\"}\n"
+    }
+  ],
+  "passed": true
+}

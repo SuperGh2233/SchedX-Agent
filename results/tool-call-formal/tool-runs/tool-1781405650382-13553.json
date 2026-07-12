@@ -1,0 +1,55 @@
+{
+  "run_id": "tool-1781405650382-13553",
+  "agent_id": "benchmark-agent",
+  "intent": "test",
+  "resource_hint": "intent:test,cpu:high,memory:high",
+  "command": [
+    "python3",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "profile": {
+    "intent": "test",
+    "scx_class": 1,
+    "scx_weight": 5000,
+    "cpu_weight": 1000,
+    "cpu_max": "max",
+    "memory_high": "3G",
+    "memory_max": "4G",
+    "pids_max": "1024"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/benchmark-agent/tool-1781405650382-13553",
+  "native_scx": true,
+  "scx_error": "",
+  "pid": 13580,
+  "returncode": 0,
+  "duration_seconds": 0.24614349699959348,
+  "metrics": {
+    "memory_current_bytes": 376832,
+    "memory_peak_bytes": 25079808,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 176190,
+      "user_usec": 143456,
+      "system_usec": 32733,
+      "nice_usec": 0,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "feedback": [],
+  "stdout": "........................................................                 [100%]\n56 passed in 0.10s\n",
+  "stderr": ""
+}
