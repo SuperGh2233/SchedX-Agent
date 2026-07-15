@@ -21,6 +21,8 @@ from schedx.skills.scx_skill import ScxSkill, ScxStatsSkill
 from schedx.skills.verify_skill import VerifySkill
 from schedx.skills.llm_analyze_skill import LlmAnalyzeSkill
 from schedx.skills.llm_policy_skill import LlmPolicySkill
+from schedx.policies.repository import PolicyRepository
+from schedx.policies.router import SchedulerRouter, target_for_mode
 
 
 @dataclass
@@ -60,6 +62,10 @@ class AgentLoop:
         self.engine = DecisionEngine()
         self.round = 0
         self.round_history: list[dict] = []
+        self.policy_repository = PolicyRepository(
+            self.context.state_dir / "policy_repository.json"
+        )
+        self.policy_router = SchedulerRouter(self.policy_repository)
 
         self._skills: dict[str, Skill] = {
             "probe": ProbeSkill(),
@@ -154,22 +160,17 @@ class AgentLoop:
         if self.context.data.get("llm_policy_enabled"):
             self._execute_skill("llm_policy", round_num * 100 + 3)
             raw = self.context.data["agent_decision"]
-            agent_decision = Decision(
+            proposal = Decision(
                 raw["mode"], raw["target"], raw["parameters"], raw["reason"], raw["confidence"]
             )
+            source = str(raw.get("source", "llm_policy"))
         else:
             preferred_target = self.context.data.get("target", "")
-            agent_decision = self.engine.decide(classification, pressure, topology, preferred_target)
-            self.context.data["mode"] = agent_decision.mode
-            self.context.data["target"] = agent_decision.target
-            self.context.data["agent_decision"] = {
-                "mode": agent_decision.mode,
-                "target": agent_decision.target,
-                "parameters": agent_decision.parameters,
-                "reason": agent_decision.reason,
-                "confidence": agent_decision.confidence,
-                "source": "rule_engine",
-            }
+            proposal = self.engine.decide(
+                classification, pressure, topology, preferred_target
+            )
+            source = "rule_engine"
+        agent_decision = self._route_proposal(proposal, classification, source)
         print(f"Agent decision: mode={agent_decision.mode}, target={agent_decision.target}")
         print(f"  reason: {agent_decision.reason}")
         print(f"  confidence: {agent_decision.confidence:.0%}")
@@ -198,7 +199,11 @@ class AgentLoop:
         pressure = self.context.data.get("snapshot", {}).get("pressure", {})
         topology = self.context.data.get("topology", {})
 
-        if self.context.data.get("mode") and self.context.data.get("target"):
+        if self.context.data.get("mode"):
+            if not self.context.data.get("target"):
+                self.context.data["target"] = target_for_mode(
+                    str(self.context.data["mode"]), classification
+                )
             return LoopDecision(
                 should_continue=True,
                 next_phase="policy",
@@ -207,26 +212,32 @@ class AgentLoop:
 
         if self.context.data.get("llm_policy_enabled"):
             result = self._execute_skill("llm_policy", iteration)
+            if not result.ok:
+                return LoopDecision(False, None, result.message)
             raw = self.context.data["agent_decision"]
+            proposal = Decision(
+                raw["mode"],
+                raw["target"],
+                raw["parameters"],
+                raw["reason"],
+                raw["confidence"],
+            )
+            routed = self._route_proposal(
+                proposal,
+                classification,
+                str(raw.get("source", "llm_policy")),
+            )
             return LoopDecision(
-                should_continue=result.ok,
-                next_phase="policy" if result.ok else None,
-                reason=f"policy selected by {raw.get('source', 'unknown')}",
+                should_continue=True,
+                next_phase="policy",
+                reason=f"policy selected by {raw.get('source', 'unknown')} via {self.context.data['policy_route']['expert_id']} ({routed.confidence:.0%})",
             )
 
         preferred_target = self.context.data.get("target", "")
-        decision = self.engine.decide(classification, pressure, topology, preferred_target)
-
-        self.context.data["mode"] = decision.mode
-        self.context.data["target"] = decision.target
-        self.context.data["agent_decision"] = {
-            "mode": decision.mode,
-            "target": decision.target,
-            "parameters": decision.parameters,
-            "reason": decision.reason,
-            "confidence": decision.confidence,
-            "source": "rule_engine",
-        }
+        proposal = self.engine.decide(
+            classification, pressure, topology, preferred_target
+        )
+        decision = self._route_proposal(proposal, classification, "rule_engine")
 
         self._record_decision_log("decide", SkillResult(True, decision.reason), iteration)
 
@@ -235,6 +246,46 @@ class AgentLoop:
             next_phase="policy",
             reason=f"auto-decided: {decision.mode} for {decision.target} (confidence={decision.confidence:.0%})",
         )
+
+    def _route_proposal(
+        self,
+        proposal: Decision,
+        classification: dict[str, Any],
+        source: str,
+    ) -> Decision:
+        route = self.policy_router.route(
+            classification,
+            proposal.mode,
+            proposal.confidence,
+        )
+        expert = self.policy_repository.get(route.expert_id)
+        parameters = dict(expert.parameters)
+        if proposal.mode == route.mode:
+            parameters.update(proposal.parameters)
+        target = target_for_mode(route.mode, classification, proposal.target)
+        decision = Decision(
+            mode=route.mode,
+            target=target,
+            parameters=parameters,
+            reason=(
+                f"{proposal.reason}; router={route.expert_id} "
+                f"({route.reason})"
+            ),
+            confidence=route.confidence,
+        )
+        self.context.data["mode"] = decision.mode
+        self.context.data["target"] = decision.target
+        self.context.data["policy_route"] = route.to_dict()
+        self.context.data["agent_decision"] = {
+            "mode": decision.mode,
+            "target": decision.target,
+            "parameters": decision.parameters,
+            "reason": decision.reason,
+            "confidence": decision.confidence,
+            "source": source,
+            "expert_id": route.expert_id,
+        }
+        return decision
 
     def _execute_skill(self, phase: str, iteration: int) -> SkillResult:
         skill = self._skills.get(phase)
@@ -260,6 +311,8 @@ class AgentLoop:
 
     def _make_decision(self, phase: str, result: SkillResult, iteration: int) -> LoopDecision:
         if not result.ok:
+            if phase == "verify" and self.context.data.get("rollback_required"):
+                return LoopDecision(True, "rollback", "canary rejected; initiating rollback")
             if phase == "act":
                 return LoopDecision(True, "rollback", "execution failed; initiating rollback")
             if phase == "rollback":

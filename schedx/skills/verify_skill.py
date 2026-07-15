@@ -4,6 +4,8 @@ from schedx.agent.context import AgentContext
 from schedx.agent.skill import SkillResult
 from schedx.probes.cgroup_probe import CgroupProbe
 from schedx.probes.procfs_probe import ProcfsProbe
+from schedx.policies.repository import PolicyRepository
+from schedx.policies.verifier import CanaryVerifier
 
 
 class VerifySkill:
@@ -41,6 +43,38 @@ class VerifySkill:
             verification["recommendations"].append(
                 f"{len(skipped_actions)} actions were skipped (protected processes)"
             )
+
+        canary = context.data.get("canary")
+        if isinstance(canary, dict):
+            verdict = CanaryVerifier().evaluate(
+                str(context.data.get("mode", "balanced")),
+                canary.get("baseline", {}),
+                canary.get("candidate", {}),
+                nr_rejected=int(canary.get("nr_rejected", 0) or 0),
+                background_share=canary.get("background_share"),
+            )
+            verdict_data = verdict.to_dict()
+            context.data["canary_verdict"] = verdict_data
+            verification["canary"] = verdict_data
+            route = context.data.get("policy_route", {})
+            expert_id = route.get("expert_id") if isinstance(route, dict) else None
+            if expert_id:
+                PolicyRepository(
+                    context.state_dir / "policy_repository.json"
+                ).record_outcome(
+                    str(expert_id),
+                    accepted=verdict.accepted,
+                    metrics=verdict.deltas,
+                    reason=",".join(verdict.reasons) or verdict.status,
+                )
+            if not verdict.accepted:
+                context.data["rollback_required"] = True
+                verification["recommendations"].append(
+                    "Canary policy regressed or violated safety constraints; rollback required."
+                )
+                context.data["verification"] = verification
+                return SkillResult(False, "canary rejected; rollback required", verification)
+            context.data.pop("rollback_required", None)
 
         context.data["verification"] = verification
         return SkillResult(
