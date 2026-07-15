@@ -59,3 +59,44 @@ def test_repository_keeps_malformed_file_and_falls_back_to_builtins(tmp_path: Pa
     assert path.read_text(encoding="utf-8") == "{not-json"
     assert repository.load_error
 
+
+def test_repository_merges_outcomes_from_independent_instances(tmp_path: Path):
+    path = tmp_path / "policies.json"
+    first = PolicyRepository(path)
+    second = PolicyRepository(path)
+
+    first.record_outcome("latency_guard", accepted=True)
+    second.record_outcome("throughput_boost", accepted=False)
+
+    reloaded = PolicyRepository(path)
+    assert reloaded.outcome_for("latency_guard").accepts == 1
+    assert reloaded.outcome_for("throughput_boost").rejects == 1
+
+
+def test_repository_refuses_to_overwrite_malformed_file(tmp_path: Path):
+    path = tmp_path / "policies.json"
+    malformed = "{not-json"
+    path.write_text(malformed, encoding="utf-8")
+    repository = PolicyRepository(path)
+
+    with pytest.raises(RuntimeError, match="malformed policy repository"):
+        repository.record_outcome("latency_guard", accepted=True)
+
+    assert path.read_text(encoding="utf-8") == malformed
+
+
+def test_repository_tracks_inconclusive_outcome_separately(tmp_path: Path):
+    path = tmp_path / "policies.json"
+    repository = PolicyRepository(path)
+
+    outcome = repository.record_outcome(
+        "latency_guard",
+        accepted=None,
+        reason="missing objective metrics",
+    )
+
+    assert outcome.observations == 1
+    assert outcome.accepts == 0
+    assert outcome.rejects == 0
+    assert outcome.inconclusive == 1
+    assert outcome.last_accepted is None

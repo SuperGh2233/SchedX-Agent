@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import math
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Mapping
 
 
 @dataclass(frozen=True)
@@ -39,27 +40,48 @@ class CanaryVerifier:
     def evaluate(
         self,
         mode: str,
-        baseline: Mapping[str, float | int | None],
-        candidate: Mapping[str, float | int | None],
+        baseline: object,
+        candidate: object,
         *,
-        nr_rejected: int = 0,
-        background_share: float | None = None,
+        nr_rejected: object = 0,
+        background_share: object = None,
     ) -> CanaryVerdict:
         reasons: list[str] = []
         deltas: dict[str, float] = {}
 
-        baseline_p99 = self._metric(
+        if not isinstance(baseline, Mapping) or not isinstance(candidate, Mapping):
+            return CanaryVerdict(
+                False, "rejected", ["invalid_metric_payload"], deltas
+            )
+
+        baseline_p99, baseline_p99_invalid = self._metric(
             baseline, "p99_ms", "p99_latency_ms", "mean_p99_ms"
         )
-        candidate_p99 = self._metric(
+        candidate_p99, candidate_p99_invalid = self._metric(
             candidate, "p99_ms", "p99_latency_ms", "mean_p99_ms"
         )
-        baseline_rps = self._metric(
+        baseline_rps, baseline_rps_invalid = self._metric(
             baseline, "requests_per_sec", "rps", "mean_requests_per_sec", "qps"
         )
-        candidate_rps = self._metric(
+        candidate_rps, candidate_rps_invalid = self._metric(
             candidate, "requests_per_sec", "rps", "mean_requests_per_sec", "qps"
         )
+
+        rejected_count, rejected_invalid = self._nonnegative_number(nr_rejected)
+        share, share_invalid = self._share(background_share)
+        if any(
+            (
+                baseline_p99_invalid,
+                candidate_p99_invalid,
+                baseline_rps_invalid,
+                candidate_rps_invalid,
+                rejected_invalid,
+                share_invalid,
+            )
+        ):
+            return CanaryVerdict(
+                False, "rejected", ["invalid_metric_value"], deltas
+            )
 
         p99_delta = self._percent_change(baseline_p99, candidate_p99)
         rps_delta = self._percent_change(baseline_rps, candidate_rps)
@@ -68,12 +90,9 @@ class CanaryVerifier:
         if rps_delta is not None:
             deltas["requests_per_sec_percent"] = rps_delta
 
-        if int(nr_rejected) > 0:
+        if rejected_count is not None and rejected_count > 0:
             reasons.append("sched_ext_rejected_tasks")
-        if (
-            background_share is not None
-            and float(background_share) < self.min_background_share
-        ):
+        if share is not None and share < self.min_background_share:
             reasons.append("background_starvation")
 
         objective_available = False
@@ -106,21 +125,46 @@ class CanaryVerifier:
 
     @staticmethod
     def _metric(
-        values: Mapping[str, float | int | None], *keys: str
-    ) -> float | None:
+        values: Mapping[str, object], *keys: str
+    ) -> tuple[float | None, bool]:
         for key in keys:
-            value = values.get(key)
+            if key not in values:
+                continue
+            value = values[key]
             if value is None:
                 continue
             try:
-                return float(value)
+                parsed = float(value)
             except (TypeError, ValueError):
-                continue
-        return None
+                return None, True
+            if not math.isfinite(parsed) or parsed < 0.0:
+                return None, True
+            return parsed, False
+        return None, False
+
+    @staticmethod
+    def _nonnegative_number(value: object) -> tuple[float | None, bool]:
+        if value is None:
+            return 0.0, False
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError):
+            return None, True
+        if not math.isfinite(parsed) or parsed < 0.0:
+            return None, True
+        return parsed, False
+
+    @staticmethod
+    def _share(value: object) -> tuple[float | None, bool]:
+        if value is None:
+            return None, False
+        parsed, invalid = CanaryVerifier._nonnegative_number(value)
+        if invalid or parsed is None or parsed > 1.0:
+            return None, True
+        return parsed, False
 
     @staticmethod
     def _percent_change(before: float | None, after: float | None) -> float | None:
         if before is None or after is None or before == 0:
             return None
         return round((after - before) / before * 100.0, 6)
-

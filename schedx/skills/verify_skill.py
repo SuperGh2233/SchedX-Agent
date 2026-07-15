@@ -50,7 +50,7 @@ class VerifySkill:
                 str(context.data.get("mode", "balanced")),
                 canary.get("baseline", {}),
                 canary.get("candidate", {}),
-                nr_rejected=int(canary.get("nr_rejected", 0) or 0),
+                nr_rejected=canary.get("nr_rejected", 0),
                 background_share=canary.get("background_share"),
             )
             verdict_data = verdict.to_dict()
@@ -63,7 +63,9 @@ class VerifySkill:
                     context.state_dir / "policy_repository.json"
                 ).record_outcome(
                     str(expert_id),
-                    accepted=verdict.accepted,
+                    accepted=(
+                        verdict.accepted if verdict.status != "inconclusive" else None
+                    ),
                     metrics=verdict.deltas,
                     reason=",".join(verdict.reasons) or verdict.status,
                 )

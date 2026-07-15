@@ -77,8 +77,9 @@ flowchart LR
 
 Automatic rule and LLM proposals pass through a bounded, time-weighted router
 before execution. The router uses exponential decay, a confidence threshold,
-and a six-second switch cooldown to avoid policy thrashing. Explicit CLI modes
-always bypass automatic routing.
+and a six-second switch cooldown to avoid policy thrashing. After cooldown, a
+new expert must remain the winner for two consecutive observations before the
+router switches. Explicit CLI modes always bypass automatic routing.
 
 The built-in allowlisted experts are:
 
@@ -99,7 +100,9 @@ The router selects an internal policy mode implemented by the existing
 `scx_agent`; it never executes a repository entry as a command. When benchmark
 or deployment code supplies baseline and candidate canary metrics, verification
 rejects sched_ext task rejections, background starvation, P99 regressions, and
-throughput regressions. A rejected canary enters the existing rollback path.
+throughput regressions. A rejected canary enters the existing rollback path;
+missing objective metrics are recorded separately as inconclusive rather than
+as a successful policy outcome.
 
 ## Agent Tool-Call Resource Control
 

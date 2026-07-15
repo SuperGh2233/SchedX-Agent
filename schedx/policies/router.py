@@ -55,6 +55,7 @@ class SchedulerRouter:
         decay: float = 0.75,
         confidence_threshold: float = 0.40,
         cooldown_seconds: float = 6.0,
+        min_switch_samples: int = 2,
     ) -> None:
         if window_size < 1:
             raise ValueError("window_size must be at least 1")
@@ -64,13 +65,18 @@ class SchedulerRouter:
             raise ValueError("confidence_threshold must be in [0, 1]")
         if cooldown_seconds < 0.0:
             raise ValueError("cooldown_seconds cannot be negative")
+        if min_switch_samples < 1:
+            raise ValueError("min_switch_samples must be at least 1")
         self.repository = repository
         self.decay = decay
         self.confidence_threshold = confidence_threshold
         self.cooldown_seconds = cooldown_seconds
+        self.min_switch_samples = min_switch_samples
         self._history: deque[dict[str, float]] = deque(maxlen=window_size)
         self.current_expert: str | None = None
         self.last_switch_at: float | None = None
+        self._pending_expert: str | None = None
+        self._pending_count = 0
 
     def route(
         self,
@@ -98,12 +104,14 @@ class SchedulerRouter:
             selected = self.current_expert or "balanced"
             reason = "low_confidence_fallback"
             switched = False
+            self._reset_pending()
         elif self.current_expert is None:
             selected = candidate
             reason = "initial_selection"
             switched = selected != "balanced"
             self.current_expert = selected
             self.last_switch_at = timestamp
+            self._reset_pending()
         elif (
             candidate != self.current_expert
             and self.last_switch_at is not None
@@ -112,16 +120,29 @@ class SchedulerRouter:
             selected = self.current_expert
             reason = "cooldown_hold"
             switched = False
+            self._reset_pending()
         elif candidate != self.current_expert:
-            selected = candidate
-            reason = "higher_weighted_score"
-            switched = True
-            self.current_expert = selected
-            self.last_switch_at = timestamp
+            if self._pending_expert == candidate:
+                self._pending_count += 1
+            else:
+                self._pending_expert = candidate
+                self._pending_count = 1
+            if self._pending_count < self.min_switch_samples:
+                selected = self.current_expert
+                reason = "hysteresis_hold"
+                switched = False
+            else:
+                selected = candidate
+                reason = "higher_weighted_score"
+                switched = True
+                self.current_expert = selected
+                self.last_switch_at = timestamp
+                self._reset_pending()
         else:
             selected = candidate
             reason = "stable_selection"
             switched = False
+            self._reset_pending()
 
         if self.current_expert is None:
             self.current_expert = selected
@@ -136,6 +157,10 @@ class SchedulerRouter:
             reason=reason,
             timestamp=timestamp,
         )
+
+    def _reset_pending(self) -> None:
+        self._pending_expert = None
+        self._pending_count = 0
 
     def _scores_from_observation(
         self,
@@ -223,4 +248,3 @@ def target_for_mode(mode: str, classification: dict, fallback: str = "") -> str:
         key=lambda process: float(process.get("cpu_percent", 0.0) or 0.0),
     )
     return str(selected.get("comm", "")) or fallback
-

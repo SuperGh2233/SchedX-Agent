@@ -114,6 +114,30 @@ def test_rejected_canary_sets_rollback_and_records_outcome(tmp_path: Path):
     assert outcome.rejects == 1
 
 
+def test_inconclusive_canary_is_not_recorded_as_accept(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    context.data.update(
+        {
+            "mode": "latency_first",
+            "execution_results": [{"status": "ok"}],
+            "policy_route": {"expert_id": "latency_guard"},
+            "canary": {"baseline": {}, "candidate": {}},
+        }
+    )
+
+    result = VerifySkill().run(context)
+
+    assert result.ok
+    assert context.data["canary_verdict"]["status"] == "inconclusive"
+    assert "rollback_required" not in context.data
+    outcome = PolicyRepository(tmp_path / "policy_repository.json").outcome_for(
+        "latency_guard"
+    )
+    assert outcome.accepts == 0
+    assert outcome.rejects == 0
+    assert outcome.inconclusive == 1
+
+
 def test_agent_loop_routes_rejected_verification_to_rollback(tmp_path: Path):
     context = AgentContext(state_dir=tmp_path)
     context.data["rollback_required"] = True
@@ -125,3 +149,73 @@ def test_agent_loop_routes_rejected_verification_to_rollback(tmp_path: Path):
 
     assert decision.should_continue
     assert decision.next_phase == "rollback"
+
+
+def test_continuous_round_keeps_accepted_policy_active(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    loop = AgentLoop(context)
+    phases: list[str] = []
+
+    def execute(phase: str, iteration: int) -> SkillResult:
+        phases.append(phase)
+        if phase == "analyze":
+            context.data["classification"] = mixed_classification()
+        return SkillResult(True, f"{phase} ok")
+
+    loop._execute_skill = execute
+
+    result = loop._run_one_round(1)
+
+    assert result["status"] == "ok"
+    assert result["verify_success"] is True
+    assert "rollback" not in phases
+
+
+def test_continuous_round_rolls_back_rejected_canary(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    loop = AgentLoop(context)
+    phases: list[str] = []
+
+    def execute(phase: str, iteration: int) -> SkillResult:
+        phases.append(phase)
+        if phase == "analyze":
+            context.data["classification"] = mixed_classification()
+        if phase == "verify":
+            context.data["rollback_required"] = True
+            return SkillResult(False, "canary rejected")
+        return SkillResult(True, f"{phase} ok")
+
+    loop._execute_skill = execute
+
+    result = loop._run_one_round(1)
+
+    assert result["status"] == "failed_rolled_back"
+    assert result["verify_success"] is False
+    assert phases[-1] == "rollback"
+
+
+def test_continuous_round_clears_rollback_request_after_rollback(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    loop = AgentLoop(context)
+    phases: list[str] = []
+    active_round = 1
+
+    def execute(phase: str, iteration: int) -> SkillResult:
+        phases.append(phase)
+        if phase == "analyze":
+            context.data["classification"] = mixed_classification()
+        if phase == "verify" and active_round == 1:
+            context.data["rollback_required"] = True
+            return SkillResult(False, "canary rejected")
+        return SkillResult(True, f"{phase} ok")
+
+    loop._execute_skill = execute
+
+    first = loop._run_one_round(1)
+    active_round = 2
+    second = loop._run_one_round(2)
+
+    assert first["status"] == "failed_rolled_back"
+    assert second["status"] == "ok"
+    assert phases.count("rollback") == 1
+    assert "rollback_required" not in context.data

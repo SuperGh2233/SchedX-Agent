@@ -13,7 +13,8 @@ This phase adds:
 
 - a JSON-backed repository of allowlisted expert policy definitions and
   historical outcomes;
-- a time-weighted router with confidence threshold and switch cooldown;
+- a time-weighted router with confidence threshold, switch cooldown, and
+  consecutive-observation hysteresis;
 - four built-in experts: `latency_guard`, `throughput_boost`,
   `background_isolation`, and `balanced`;
 - AgentLoop integration for automatic rule and LLM decisions;
@@ -93,7 +94,8 @@ Selection rules:
 3. If confidence is below the threshold, retain the current expert or use
    `balanced` during initialization.
 4. If cooldown has not elapsed, retain the current expert.
-5. Otherwise switch and record the reason, confidence, scores, and timestamp.
+5. After cooldown, require the candidate to win two consecutive observations.
+6. Then switch and record the reason, confidence, scores, and timestamp.
 
 Explicit user modes are never overridden. Automatic rule and LLM proposals
 are routed. A route result includes enough metadata for CLI output and reports.
@@ -110,8 +112,9 @@ It rejects a candidate when any of the following is true:
 - a balanced policy causes a severe regression in either metric.
 
 Missing metrics produce an `inconclusive` verdict rather than fabricated
-improvements. Existing execution verification remains unchanged when no canary
-payload is present.
+improvements and are counted separately from accepts and rejects. Invalid,
+non-finite, or negative metric values are rejected. Existing execution
+verification remains unchanged when no canary payload is present.
 
 ### AgentLoop Integration
 
@@ -128,7 +131,8 @@ The context stores:
 - `canary_verdict` when canary metrics are supplied.
 
 Rejected canaries set `rollback_required`; the loop then runs the existing
-RollbackSkill.
+RollbackSkill. Accepted policies remain active in continuous mode, while a
+successful rollback clears its request before the next round.
 
 ## Safety
 
@@ -157,4 +161,3 @@ merge.
 - Sustained observations after cooldown can switch experts.
 - Canary regressions request rollback.
 - Existing optimize, cgroup, daemon, benchmark, and dry-run tests remain green.
-

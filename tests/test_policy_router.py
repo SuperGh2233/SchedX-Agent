@@ -113,6 +113,34 @@ def test_router_switches_after_cooldown_with_sustained_batch_samples(tmp_path: P
     router.route(classification("latency_sensitive"), "latency_first", 0.9, now=100.0)
     router.route(classification("batch_compute"), "throughput_first", 0.9, now=102.0)
 
+    first_post_cooldown = router.route(
+        classification("batch_compute"),
+        "throughput_first",
+        0.9,
+        now=106.0,
+    )
+    decision = router.route(
+        classification("batch_compute"),
+        "throughput_first",
+        0.9,
+        now=107.0,
+    )
+
+    assert first_post_cooldown.expert_id == "latency_guard"
+    assert first_post_cooldown.reason == "hysteresis_hold"
+    assert decision.expert_id == "throughput_boost"
+    assert decision.switched
+    assert decision.reason == "higher_weighted_score"
+
+
+def test_router_does_not_switch_on_one_contradictory_sample_after_cooldown(tmp_path: Path):
+    router = SchedulerRouter(
+        PolicyRepository(tmp_path / "policies.json"),
+        window_size=1,
+        cooldown_seconds=5.0,
+    )
+    router.route(classification("latency_sensitive"), "latency_first", 0.9, now=100.0)
+
     decision = router.route(
         classification("batch_compute"),
         "throughput_first",
@@ -120,9 +148,9 @@ def test_router_switches_after_cooldown_with_sustained_batch_samples(tmp_path: P
         now=106.0,
     )
 
-    assert decision.expert_id == "throughput_boost"
-    assert decision.switched
-    assert decision.reason == "higher_weighted_score"
+    assert decision.expert_id == "latency_guard"
+    assert decision.reason == "hysteresis_hold"
+    assert not decision.switched
 
 
 def test_target_selection_matches_routed_mode():
@@ -131,4 +159,3 @@ def test_target_selection_matches_routed_mode():
     assert target_for_mode("latency_first", observed) == "nginx"
     assert target_for_mode("throughput_first", observed) == "make"
     assert target_for_mode("isolate_background", observed) == "stress-ng"
-

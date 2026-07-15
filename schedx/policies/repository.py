@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,6 +36,7 @@ class PolicyOutcome:
     observations: int = 0
     accepts: int = 0
     rejects: int = 0
+    inconclusive: int = 0
     last_accepted: bool | None = None
     last_metrics: dict[str, float] = field(default_factory=dict)
     last_reason: str = ""
@@ -113,23 +117,34 @@ class PolicyRepository:
         self,
         expert_id: str,
         *,
-        accepted: bool,
+        accepted: bool | None,
         metrics: dict[str, float] | None = None,
         reason: str = "",
     ) -> PolicyOutcome:
         self.get(expert_id)
-        previous = self._outcomes[expert_id]
-        outcome = PolicyOutcome(
-            observations=previous.observations + 1,
-            accepts=previous.accepts + int(accepted),
-            rejects=previous.rejects + int(not accepted),
-            last_accepted=accepted,
-            last_metrics=dict(metrics or {}),
-            last_reason=reason,
-            last_updated=datetime.now(timezone.utc).isoformat(),
-        )
-        self._outcomes[expert_id] = outcome
-        self._save()
+        if accepted is not None and not isinstance(accepted, bool):
+            raise TypeError("accepted must be true, false, or None")
+        with self._exclusive_lock():
+            self._reset_outcomes()
+            self.load_error = ""
+            self._load()
+            if self.load_error:
+                raise RuntimeError(
+                    f"malformed policy repository: {self.load_error}"
+                )
+            previous = self._outcomes[expert_id]
+            outcome = PolicyOutcome(
+                observations=previous.observations + 1,
+                accepts=previous.accepts + int(accepted is True),
+                rejects=previous.rejects + int(accepted is False),
+                inconclusive=previous.inconclusive + int(accepted is None),
+                last_accepted=accepted,
+                last_metrics=dict(metrics or {}),
+                last_reason=reason,
+                last_updated=datetime.now(timezone.utc).isoformat(),
+            )
+            self._outcomes[expert_id] = outcome
+            self._save_unlocked()
         return outcome
 
     def to_dict(self) -> dict[str, Any]:
@@ -151,6 +166,8 @@ class PolicyRepository:
             return
         try:
             payload = json.loads(self.path.read_text(encoding="utf-8"))
+            if not isinstance(payload, dict):
+                raise ValueError("policy repository must be an object")
             if payload.get("version") != self.VERSION:
                 raise ValueError("unsupported policy repository version")
             outcomes = payload.get("outcomes", {})
@@ -164,6 +181,7 @@ class PolicyRepository:
                     observations=int(raw.get("observations", 0)),
                     accepts=int(raw.get("accepts", 0)),
                     rejects=int(raw.get("rejects", 0)),
+                    inconclusive=int(raw.get("inconclusive", 0)),
                     last_accepted=raw.get("last_accepted"),
                     last_metrics={
                         str(key): float(value)
@@ -175,8 +193,40 @@ class PolicyRepository:
         except (OSError, ValueError, TypeError, json.JSONDecodeError) as exc:
             self.load_error = str(exc)
 
-    def _save(self) -> None:
+    def _reset_outcomes(self) -> None:
+        self._outcomes = {
+            expert_id: PolicyOutcome() for expert_id in self._experts
+        }
+
+    @contextmanager
+    def _exclusive_lock(self):
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        lock_path = self.path.with_name(f".{self.path.name}.lock")
+        with lock_path.open("a+b") as handle:
+            if os.name == "nt":
+                import msvcrt
+
+                handle.seek(0, os.SEEK_END)
+                if handle.tell() == 0:
+                    handle.write(b"\0")
+                    handle.flush()
+                handle.seek(0)
+                msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
+                try:
+                    yield
+                finally:
+                    handle.seek(0)
+                    msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+                try:
+                    yield
+                finally:
+                    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+    def _save_unlocked(self) -> None:
         payload = {
             "version": self.VERSION,
             "experts": [asdict(expert) for expert in self.list_experts()],
@@ -185,10 +235,17 @@ class PolicyRepository:
                 for expert_id, outcome in sorted(self._outcomes.items())
             },
         }
-        temporary = self.path.with_name(f".{self.path.name}.tmp")
-        temporary.write_text(
-            json.dumps(payload, indent=2, ensure_ascii=False),
-            encoding="utf-8",
+        descriptor, temporary_name = tempfile.mkstemp(
+            dir=self.path.parent,
+            prefix=f".{self.path.name}.",
+            suffix=".tmp",
         )
-        temporary.replace(self.path)
-
+        temporary = Path(temporary_name)
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+                json.dump(payload, stream, indent=2, ensure_ascii=False)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, self.path)
+        finally:
+            temporary.unlink(missing_ok=True)

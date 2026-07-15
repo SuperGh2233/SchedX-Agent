@@ -1,3 +1,5 @@
+import math
+
 from schedx.policies.verifier import CanaryVerifier
 
 
@@ -75,3 +77,26 @@ def test_verifier_reports_inconclusive_when_objective_metric_is_missing():
     assert verdict.status == "inconclusive"
     assert verdict.reasons == ["missing_objective_metrics"]
 
+
+def test_verifier_rejects_non_mapping_metric_payload():
+    verdict = CanaryVerifier().evaluate(
+        "latency_first",
+        baseline=None,
+        candidate=None,
+    )
+
+    assert not verdict.accepted
+    assert verdict.status == "rejected"
+    assert verdict.reasons == ["invalid_metric_payload"]
+
+
+def test_verifier_rejects_non_finite_metric():
+    verdict = CanaryVerifier().evaluate(
+        "latency_first",
+        baseline={"p99_ms": 10.0},
+        candidate={"p99_ms": math.nan},
+    )
+
+    assert not verdict.accepted
+    assert verdict.status == "rejected"
+    assert verdict.reasons == ["invalid_metric_value"]

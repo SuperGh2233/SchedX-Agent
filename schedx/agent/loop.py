@@ -179,11 +179,22 @@ class AgentLoop:
         act_result = self._execute_skill("act", round_num * 100 + 4)
         verify_result = self._execute_skill("verify", round_num * 100 + 5)
 
-        rollback_result = self._execute_skill("rollback", round_num * 100 + 6)
+        rollback_required = (
+            not policy_result.ok
+            or not act_result.ok
+            or not verify_result.ok
+            or bool(self.context.data.get("rollback_required"))
+        )
+        if rollback_required:
+            rollback_result = self._execute_skill("rollback", round_num * 100 + 6)
+            if rollback_result.ok:
+                self.context.data.pop("rollback_required", None)
+
+        successful = policy_result.ok and act_result.ok and verify_result.ok
 
         return {
             "round": round_num,
-            "status": "ok" if act_result.ok else "failed",
+            "status": "ok" if successful else "failed_rolled_back",
             "decision": {
                 "mode": agent_decision.mode,
                 "target": agent_decision.target,
