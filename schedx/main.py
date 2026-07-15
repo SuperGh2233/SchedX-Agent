@@ -17,6 +17,7 @@ from schedx.controllers.cgroup_controller import CgroupController
 from schedx.controllers.scx_controller import ScxController
 from schedx.policies.classifier import WorkloadClassifier
 from schedx.policies.planner import PolicyPlanner
+from schedx.policies.repository import PolicyRepository
 from schedx.probes.cgroup_probe import CgroupProbe
 from schedx.probes.procfs_probe import ProcfsProbe
 from schedx.report.report_generator import ReportGenerator
@@ -65,6 +66,16 @@ def cmd_status(args: argparse.Namespace) -> int:
             "llm_model": llm.model if llm.is_configured() else "not configured",
         }
     )
+    return 0
+
+
+def cmd_policies(args: argparse.Namespace) -> int:
+    repository = PolicyRepository(
+        Path(args.state_dir) / "policy_repository.json"
+    )
+    payload = repository.to_dict()
+    payload["repository"] = payload.pop("path")
+    print_json(payload)
     return 0
 
 
@@ -333,6 +344,12 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
 
     sub.add_parser("status").set_defaults(func=cmd_status)
+
+    policies = sub.add_parser(
+        "policies", help="List allowlisted adaptive scheduling experts and outcomes"
+    )
+    policies.add_argument("--state-dir", default=".schedx")
+    policies.set_defaults(func=cmd_policies)
 
     probe = sub.add_parser("probe")
     probe.add_argument("--top", type=int, default=20)
