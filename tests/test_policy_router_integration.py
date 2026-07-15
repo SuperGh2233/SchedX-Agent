@@ -43,6 +43,8 @@ def test_agent_loop_routes_automatic_proposal_and_records_metadata(tmp_path: Pat
     assert context.data["agent_decision"]["source"] == "rule_engine"
     assert context.data["policy_route"]["expert_id"] == "latency_guard"
     assert context.data["mode"] == "latency_first"
+    report = loop._build_report()
+    assert report["context_data"]["policy_route"]["scores"]["latency_guard"] > 0.5
 
 
 def test_explicit_mode_and_target_bypass_router(tmp_path: Path):

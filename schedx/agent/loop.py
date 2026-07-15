@@ -389,6 +389,8 @@ class AgentLoop:
                 "mode": self.context.data.get("mode"),
                 "target": self.context.data.get("target"),
                 "agent_decision": self.context.data.get("agent_decision"),
+                "policy_route": self.context.data.get("policy_route"),
+                "canary_verdict": self.context.data.get("canary_verdict"),
                 "decision_log": self.context.data.get("decision_log", []),
             },
         }
