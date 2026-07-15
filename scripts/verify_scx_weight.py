@@ -12,6 +12,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from schedx.controllers.scx_controller import SCX_CLASS_BATCH, ScxController
 
+MIN_OBSERVED_RATIO = 5.0
+
 
 def ticks(pid: int) -> int:
     fields = open(f"/proc/{pid}/stat", encoding="utf-8").read().split()
@@ -31,19 +33,19 @@ def main() -> None:
         time.sleep(10)
         low_ticks = ticks(low.pid) - start_low
         high_ticks = ticks(high.pid) - start_high
-        print(
-            json.dumps(
-                {
-                    "low_weight": 100,
-                    "high_weight": 1000,
-                    "low_ticks": low_ticks,
-                    "high_ticks": high_ticks,
-                    "observed_ratio": high_ticks / low_ticks if low_ticks else None,
-                    "stats": ctl.get_stats().to_dict(),
-                },
-                indent=2,
-            )
-        )
+        observed_ratio = high_ticks / low_ticks if low_ticks else None
+        result = {
+            "low_weight": 100,
+            "high_weight": 1000,
+            "low_ticks": low_ticks,
+            "high_ticks": high_ticks,
+            "observed_ratio": observed_ratio,
+            "minimum_ratio": MIN_OBSERVED_RATIO,
+            "stats": ctl.get_stats().to_dict(),
+            "passed": observed_ratio is not None
+            and observed_ratio >= MIN_OBSERVED_RATIO,
+        }
+        print(json.dumps(result, indent=2))
     finally:
         ctl.stop_scheduler()
         low.terminate()
@@ -52,6 +54,8 @@ def main() -> None:
         high.wait()
     print(f"state={ctl.state()}")
     print(f"rejected={open('/sys/kernel/sched_ext/nr_rejected', encoding='utf-8').read().strip()}")
+    if not result["passed"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

@@ -38,12 +38,12 @@ A custom sched_ext scheduler for SchedX-Agent that classifies tasks by workload 
 
 ## Workload Classification
 
-| Class | ID | Priority | Time Slice | Weight | Description |
-|-------|-----|----------|------------|--------|-------------|
-| Unknown | 0 | Normal | Default | 1000 | Default behavior |
-| Latency | 1 | High | Short (50%) | 10000 | nginx, redis, envoy |
-| Batch | 2 | Normal | Long (200%) | 1000 | gcc, make, sysbench |
-| Background | 3 | Low | Very Long (400%) | 100 | stress-ng, openssl |
+| Class | ID | Priority | Default Slice | Weight | Description |
+|-------|-----|----------|---------------|--------|-------------|
+| Unknown | 0 | Normal | 100% | 1000 | Default behavior |
+| Latency | 1 | High | 50% cap | 10000 | nginx, redis, envoy |
+| Batch | 2 | Normal | 100% | 1000 | gcc, make, sysbench |
+| Background | 3 | Low | 10% | 100 | stress-ng, openssl |
 
 ## BPF Maps
 
@@ -136,9 +136,11 @@ if scx.is_available():
 
 ### Time Slices
 
-- **Latency**: 50% of default slice for faster preemption
-- **Batch**: 200% of default slice for better throughput
-- **Background**: 400% of default slice to minimize overhead
+Within a class, task slices scale with policy weight around the default weight
+of 1000. Slices are clamped to 10%-400% of `SCX_SLICE_DFL`; latency-class
+slices have an additional 50% cap to protect tail latency. Weighted slices
+complement vtime ordering on kernels where a task may already be prefetched to
+a CPU-local DSQ before the current task is re-enqueued.
 
 ### Weights
 
@@ -146,6 +148,15 @@ Weights are aligned with cgroup cpu.weight (1-10000):
 - Higher weight = more CPU time
 - Latency tasks get 10000 (maximum)
 - Background tasks get 100 (minimum)
+
+Verify same-class weight enforcement on the target kernel with:
+
+```bash
+python scripts/verify_scx_weight.py
+```
+
+The verifier compares weights 100 and 1000 on one CPU and fails unless the
+observed CPU-time ratio is at least 5:1.
 
 ## Troubleshooting
 
