@@ -13,11 +13,13 @@ class CpuTopologyProbe:
     def get_topology(self) -> dict:
         total = os.cpu_count() or 1
         online = self._online_cpus()
-        performance, efficiency = self._split_cores(online)
+        performance, efficiency, detection = self._classify_cores(online)
 
         return {
             "total_cpus": total,
             "online_cpus": online,
+            "heterogeneous": bool(efficiency),
+            "detection": detection,
             "performance_cores": performance,
             "efficiency_cores": efficiency,
             "performance_mask": self._cpus_to_mask(performance),
@@ -30,16 +32,35 @@ class CpuTopologyProbe:
             return self._parse_cpu_range(online_path.read_text(encoding="utf-8").strip())
         return list(range(os.cpu_count() or 1))
 
-    def _split_cores(self, cpus: list[int]) -> tuple[list[int], list[int]]:
-        """Split cores into performance and efficiency halves.
+    def _classify_cores(self, cpus: list[int]) -> tuple[list[int], list[int], str]:
+        """Detect heterogeneous cores from sysfs without inventing a split."""
+        for relative, source in (
+            ("topology/core_type", "core_type"),
+            ("cpu_capacity", "cpu_capacity"),
+            ("cpufreq/cpuinfo_max_freq", "max_frequency"),
+        ):
+            values = self._per_cpu_values(cpus, relative)
+            if len(values) != len(cpus) or len(set(values.values())) < 2:
+                continue
+            lowest = min(values.values())
+            highest = max(values.values())
+            if lowest <= 0 or highest / lowest < 1.10:
+                continue
+            performance = sorted(cpu for cpu, value in values.items() if value == highest)
+            efficiency = sorted(cpu for cpu, value in values.items() if value < highest)
+            if performance and efficiency:
+                return performance, efficiency, source
+        return list(cpus), [], "homogeneous_or_unknown"
 
-        On systems without heterogeneous cores (no big.LITTLE), this simply
-        splits by index: first half = performance, second half = efficiency.
-        """
-        if len(cpus) <= 1:
-            return cpus, []
-        mid = len(cpus) // 2
-        return cpus[:mid], cpus[mid:]
+    def _per_cpu_values(self, cpus: list[int], relative: str) -> dict[int, int]:
+        values: dict[int, int] = {}
+        for cpu in cpus:
+            path = self.sys_root / f"cpu{cpu}" / relative
+            try:
+                values[cpu] = int(path.read_text(encoding="utf-8").strip())
+            except (FileNotFoundError, OSError, ValueError):
+                return {}
+        return values
 
     def get_performance_mask(self) -> str:
         """Return cpuset mask for performance cores."""
@@ -71,7 +92,7 @@ class CpuTopologyProbe:
     @staticmethod
     def _cpus_to_mask(cpus: list[int]) -> str:
         if not cpus:
-            return "0"
+            return ""
         if len(cpus) == 1:
             return str(cpus[0])
         return ",".join(str(c) for c in cpus)

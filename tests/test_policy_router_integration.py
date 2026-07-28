@@ -47,7 +47,7 @@ def test_agent_loop_routes_automatic_proposal_and_records_metadata(tmp_path: Pat
     assert report["context_data"]["policy_route"]["scores"]["latency_guard"] > 0.5
 
 
-def test_explicit_mode_and_target_bypass_router(tmp_path: Path):
+def test_explicit_mode_and_target_records_route_without_changing_parameters(tmp_path: Path):
     context = AgentContext(state_dir=tmp_path)
     context.data.update(
         {
@@ -62,10 +62,20 @@ def test_explicit_mode_and_target_bypass_router(tmp_path: Path):
 
     assert result.should_continue
     assert result.next_phase == "policy"
-    assert "policy_route" not in context.data
+    assert context.data["policy_route"]["expert_id"] == "latency_guard"
+    assert context.data["policy_route"]["reason"].startswith("explicit user-selected")
+    assert context.data["agent_decision"] == {
+        "mode": "latency_first",
+        "target": "nginx",
+        "parameters": {},
+        "reason": "explicit user-selected mode and target",
+        "confidence": 1.0,
+        "source": "explicit_cli",
+        "expert_id": "latency_guard",
+    }
 
 
-def test_explicit_mode_without_target_selects_target_but_bypasses_router(tmp_path: Path):
+def test_explicit_mode_without_target_selects_target_and_records_route(tmp_path: Path):
     observed = mixed_classification()
     observed["groups"]["batch_compute"] = [
         {"pid": 30, "comm": "make", "cpu_percent": 90.0}
@@ -84,7 +94,8 @@ def test_explicit_mode_without_target_selects_target_but_bypasses_router(tmp_pat
     assert result.should_continue
     assert context.data["mode"] == "throughput_first"
     assert context.data["target"] == "make"
-    assert "policy_route" not in context.data
+    assert context.data["policy_route"]["expert_id"] == "throughput_boost"
+    assert context.data["agent_decision"]["source"] == "explicit_cli"
 
 
 def test_rejected_canary_sets_rollback_and_records_outcome(tmp_path: Path):
@@ -138,6 +149,24 @@ def test_inconclusive_canary_is_not_recorded_as_accept(tmp_path: Path):
     assert outcome.inconclusive == 1
 
 
+def test_invalid_programmatic_canary_config_requests_rollback(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    context.data.update(
+        {
+            "mode": "isolate_background",
+            "execution_results": [{"status": "ok"}],
+            "canary_min_background_retention": 2.0,
+            "canary": {"baseline": {}, "candidate": {}},
+        }
+    )
+
+    result = VerifySkill().run(context)
+
+    assert not result.ok
+    assert context.data["rollback_required"] is True
+    assert context.data["canary_verdict"]["status"] == "invalid_config"
+
+
 def test_agent_loop_routes_rejected_verification_to_rollback(tmp_path: Path):
     context = AgentContext(state_dir=tmp_path)
     context.data["rollback_required"] = True
@@ -149,6 +178,19 @@ def test_agent_loop_routes_rejected_verification_to_rollback(tmp_path: Path):
 
     assert decision.should_continue
     assert decision.next_phase == "rollback"
+
+
+def test_agent_report_exposes_rollback_evidence(tmp_path: Path):
+    context = AgentContext(state_dir=tmp_path)
+    context.data["rollback"] = {
+        "restored": 1,
+        "groups_removed": 1,
+        "scx_entries": [{"pid": 20, "status": "removed"}],
+    }
+
+    report = AgentLoop(context)._build_report()
+
+    assert report["context_data"]["rollback"] == context.data["rollback"]
 
 
 def test_continuous_round_keeps_accepted_policy_active(tmp_path: Path):

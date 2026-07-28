@@ -49,6 +49,10 @@ class AgentContext:
         return self.state_dir / "rollback.json"
 
     @property
+    def scx_rollback_file(self) -> Path:
+        return self.state_dir / "scx_rollback.json"
+
+    @property
     def session_file(self) -> Path:
         return self.state_dir / "session.json"
 

@@ -9,7 +9,13 @@ import time
 from pathlib import Path
 from typing import Any
 
-from schedx.controllers.scx_controller import ScxController
+from schedx.controllers.scx_controller import (
+    SCX_FAIRNESS_BACKGROUND_MAX,
+    SCX_FAIRNESS_BACKGROUND_MIN,
+    SCX_FAIRNESS_BACKGROUND_DEFAULT,
+    SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
+    ScxController,
+)
 
 DEFAULT_SOCKET = Path("/run/schedx/scx-daemon.sock")
 
@@ -75,7 +81,13 @@ class _ScxDaemonDispatch:
         self.reaped_policies = 0
         self.reaped_metrics = 0
         self._next_reap = time.monotonic() + 5
-        self.fairness = {"mode": "balanced", "background_interval": 2048, "default_interval": 0}
+        self.fairness = {
+            "mode": "startup",
+            "background_interval": getattr(
+                controller, "background_interval", SCX_FAIRNESS_BACKGROUND_DEFAULT
+            ),
+            "default_interval": SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
+        }
         self._last_metrics: dict[int, dict[str, int]] = {}
         self.control_telemetry: dict[str, Any] = {}
         self.target_background_share = {"low": 0.12, "high": 0.25}
@@ -211,7 +223,7 @@ class _ScxDaemonDispatch:
             self.target_background_share["low"],
             self.target_background_share["high"],
         )
-        default = 0
+        default = SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL
         if (
             background != self.fairness["background_interval"]
             or default != self.fairness["default_interval"]
@@ -313,13 +325,13 @@ def choose_background_interval(
 ) -> tuple[str, int]:
     """Adjust one step toward a 12%-25% background runtime target."""
     if not mixed:
-        return "uncontended", 512
+        return "uncontended", SCX_FAIRNESS_BACKGROUND_DEFAULT
     if not sample_runtime_ns:
         return "awaiting_runtime_sample", current
     if background_share < target_low:
-        return "runtime_share_low", max(512, current // 2)
+        return "runtime_share_low", max(SCX_FAIRNESS_BACKGROUND_MIN, current // 2)
     if background_share > target_high:
-        return "runtime_share_high", min(4096, current * 2)
+        return "runtime_share_high", min(SCX_FAIRNESS_BACKGROUND_MAX, current * 2)
     return "runtime_share_target", current
 
 

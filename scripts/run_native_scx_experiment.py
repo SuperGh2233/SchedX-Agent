@@ -14,12 +14,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from schedx.benchmark.wrk_parser import parse_wrk_output
 from schedx.controllers.scx_controller import (
+    SCX_FAIRNESS_BACKGROUND_DEFAULT,
     SCX_CLASS_BACKGROUND,
     SCX_CLASS_LATENCY,
     ScxController,
 )
 
-DEFAULT_BACKGROUND_INTERVAL = 64
+DEFAULT_BACKGROUND_INTERVAL = SCX_FAIRNESS_BACKGROUND_DEFAULT
 MIN_BACKGROUND_RETENTION_PERCENT = 25.0
 
 

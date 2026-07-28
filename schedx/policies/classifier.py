@@ -1,8 +1,36 @@
 from __future__ import annotations
 
-LATENCY_NAMES = {"nginx", "redis-server", "redis", "envoy", "haproxy", "mysql", "postgres", "mongod"}
-BATCH_NAMES = {"make", "cmake", "gcc", "g++", "cc1", "sysbench", "cargo", "rustc", "java", "javac"}
-NOISE_NAMES = {"stress-ng", "stress", "yes", "openssl", "dd", "sha256sum"}
+LATENCY_NAMES = {
+    "nginx",
+    "redis-server",
+    "redis",
+    "envoy",
+    "haproxy",
+    "mysql",
+    "postgres",
+    "mongod",
+}
+BATCH_NAMES = {
+    "make",
+    "cmake",
+    "gcc",
+    "g++",
+    "cc1",
+    "sysbench",
+    "cargo",
+    "rustc",
+    "java",
+    "javac",
+}
+NOISE_NAMES = {
+    "stress-ng",
+    "stress-ng-cpu",
+    "stress",
+    "yes",
+    "openssl",
+    "dd",
+    "sha256sum",
+}
 PYTHON_BATCH_KEYWORDS = ("benchmark", "train", "stress", "load", "compute", "matrix")
 
 
@@ -14,6 +42,7 @@ class WorkloadClassifier:
         comm = str(proc.get("comm", "")).lower()
         cmdline = str(proc.get("cmdline", "")).lower()
         text = f"{comm} {cmdline}"
+        argv0 = cmdline.split(maxsplit=1)[0].rsplit("/", 1)[-1] if cmdline else ""
         cpu = float(proc.get("cpu_percent", 0.0) or 0.0)
         rss = int(proc.get("rss_bytes", 0) or 0)
         voluntary_ctx = int(proc.get("voluntary_ctxt_switches", 0) or 0)
@@ -22,23 +51,40 @@ class WorkloadClassifier:
         wait_sum = float(sched.get("se.statistics.wait_sum", 0.0) or 0.0)
         wait_count = float(sched.get("se.statistics.wait_count", 0.0) or 0.0)
 
-        # Rule 1: Known latency-sensitive services
-        if comm in LATENCY_NAMES or "nginx" in text or "redis-server" in text or " redis " in f" {text} ":
-            return {"type": "latency_sensitive", "reason": f"comm/cmdline={text.strip()} matches latency service rule"}
-
-        # Rule 2: Known background noise
-        if comm in NOISE_NAMES or "stress-ng" in text:
-            return {"type": "background_noise", "reason": f"comm/cmdline={text.strip()} matches background noise rule"}
-
-        # Rule 3: Known batch compute
-        if comm in BATCH_NAMES or any(name in text for name in ("gcc", "cc1", "make", "cmake", "sysbench")):
-            return {"type": "batch_compute", "reason": f"comm/cmdline={text.strip()} matches batch compute rule"}
-
-        # Rule 4: Python process classification
+        # Python benchmark drivers may mention service names as arguments. Handle
+        # them before exact executable matching so the controller cannot become
+        # the protected workload by accident.
         if comm in {"python", "python3"}:
             if any(keyword in cmdline for keyword in PYTHON_BATCH_KEYWORDS):
-                return {"type": "batch_compute", "reason": f"python cmdline contains batch keyword: {cmdline}"}
-            return {"type": "unknown", "reason": "python process without benchmark/train/stress/load keyword"}
+                return {
+                    "type": "batch_compute",
+                    "reason": f"python cmdline contains batch keyword: {cmdline}",
+                }
+            return {
+                "type": "unknown",
+                "reason": "python process without benchmark/train/stress/load keyword",
+            }
+
+        # Rule 1: Known latency-sensitive service executable
+        if comm in LATENCY_NAMES or argv0 in LATENCY_NAMES:
+            return {
+                "type": "latency_sensitive",
+                "reason": f"comm/cmdline={text.strip()} matches latency service rule",
+            }
+
+        # Rule 2: Known background-noise executable
+        if comm in NOISE_NAMES or argv0 in NOISE_NAMES:
+            return {
+                "type": "background_noise",
+                "reason": f"comm/cmdline={text.strip()} matches background noise rule",
+            }
+
+        # Rule 3: Known batch-compute executable
+        if comm in BATCH_NAMES or argv0 in BATCH_NAMES:
+            return {
+                "type": "batch_compute",
+                "reason": f"comm/cmdline={text.strip()} matches batch compute rule",
+            }
 
         # Rule 5: High CPU usage -> batch compute
         if cpu >= 50.0:
@@ -91,8 +137,14 @@ class WorkloadClassifier:
         for items in groups.values():
             items.sort(key=self._sort_key, reverse=True)
 
-        active_types = [key for key, items in groups.items() if key != "unknown" and items]
-        overall = "mixed" if len(active_types) > 1 else (active_types[0] if active_types else "unknown")
+        active_types = [
+            key for key, items in groups.items() if key != "unknown" and items
+        ]
+        overall = (
+            "mixed"
+            if len(active_types) > 1
+            else (active_types[0] if active_types else "unknown")
+        )
 
         # Add system-level PSI analysis
         pressure = snapshot.get("pressure", {})
@@ -110,19 +162,25 @@ class WorkloadClassifier:
         if cpu_psi:
             avg10 = cpu_psi.get("avg10", 0.0)
             if avg10 > 20.0:
-                insights["cpu"] = f"CPU pressure high (avg10={avg10:.1f}%), system is CPU-bound"
+                insights["cpu"] = (
+                    f"CPU pressure high (avg10={avg10:.1f}%), system is CPU-bound"
+                )
             elif avg10 > 5.0:
                 insights["cpu"] = f"CPU pressure moderate (avg10={avg10:.1f}%)"
 
         if mem_psi:
             avg10 = mem_psi.get("avg10", 0.0)
             if avg10 > 10.0:
-                insights["memory"] = f"Memory pressure high (avg10={avg10:.1f}%), consider memory limits"
+                insights["memory"] = (
+                    f"Memory pressure high (avg10={avg10:.1f}%), consider memory limits"
+                )
 
         if io_psi:
             avg10 = io_psi.get("avg10", 0.0)
             if avg10 > 20.0:
-                insights["io"] = f"I/O pressure high (avg10={avg10:.1f}%), system is I/O-bound"
+                insights["io"] = (
+                    f"I/O pressure high (avg10={avg10:.1f}%), system is I/O-bound"
+                )
 
         return insights
 

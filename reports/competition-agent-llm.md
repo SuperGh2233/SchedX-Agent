@@ -6,7 +6,7 @@ SchedX-Agent is an adaptive Linux resource-control Agent for mixed workloads.
 It combines workload sensing, allowlisted expert routing, native sched_ext,
 cgroup v2 enforcement, real SLO canaries, and automatic rollback.
 
-- Demo artifact: `results/competition-demo/2026-07-16_07-38-05`
+- Demo artifact: `results/competition-agent-llm/2026-07-17_07-50-10`
 - Demo status: `ok`
 - Agent version: `0.4.0`
 - Kernel: `Linux-6.6.0-159.4.3.154.oe2403sp4.schedx1-x86_64-with-glibc2.38`
@@ -31,18 +31,18 @@ flowchart LR
 
 | Phase | Mean RPS | Mean P99 (ms) | RPS gain | P99 reduction | Background retention | Valid |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| default | 47169.78 | 6.40 | 0.00% | 0.00% | 100.00% | True |
-| cgroup_only | 83402.73 | 4.04 | 76.81% | 36.79% | 44.11% | True |
-| scx_only | 89390.59 | 1.78 | 89.51% | 72.17% | 44.70% | True |
-| agent_combined | 88045.48 | 1.77 | 86.66% | 72.33% | 43.92% | True |
+| default | 56446.79 | 6.60 | 0.00% | 0.00% | 100.00% | True |
+| cgroup_only | 94335.71 | 4.25 | 67.12% | 35.62% | 47.32% | True |
+| scx_only | 99401.92 | 2.39 | 76.10% | 63.72% | 46.04% | True |
+| agent_combined | 97397.92 | 2.24 | 72.55% | 66.04% | 47.03% | True |
 
 ### RPS
 
 ```mermaid
 xychart-beta
   x-axis ["default", "cgroup", "scx", "agent"]
-  y-axis "Requests/sec" 0 --> 98329.65
-  bar [47169.78, 83402.73, 89390.59, 88045.48]
+  y-axis "Requests/sec" 0 --> 109342.11
+  bar [56446.79, 94335.71, 99401.92, 97397.92]
 ```
 
 ### P99 Latency
@@ -50,8 +50,8 @@ xychart-beta
 ```mermaid
 xychart-beta
   x-axis ["default", "cgroup", "scx", "agent"]
-  y-axis "P99 ms" 0 --> 7.04
-  bar [6.40, 4.04, 1.78, 1.77]
+  y-axis "P99 ms" 0 --> 7.26
+  bar [6.60, 4.25, 2.39, 2.24]
 ```
 
 The ablation isolates default Linux scheduling, cgroup-only control,
@@ -62,17 +62,17 @@ Only rows meeting the background-progress floor are valid performance claims.
 
 | Phase | Mean events/s | P95 latency (ms) | Gain vs interference |
 | --- | ---: | ---: | ---: |
-| baseline | 17260.77 | 0.36 | 90.36% |
-| interference | 9067.42 | 2.97 | 0.00% |
-| schedx | 15460.69 | 0.36 | 70.51% |
+| baseline | 16158.01 | 0.36 | 81.44% |
+| interference | 8905.41 | 2.93 | 0.00% |
+| schedx | 14802.46 | 0.36 | 66.22% |
 
 ### Batch Throughput
 
 ```mermaid
 xychart-beta
   x-axis ["baseline", "interference", "schedx"]
-  y-axis "Events/sec" 0 --> 18986.84
-  bar [17260.77, 9067.42, 15460.69]
+  y-axis "Events/sec" 0 --> 17773.81
+  bar [16158.01, 8905.41, 14802.46]
 ```
 
 The SchedX phase identifies a live sysbench workload and applies the
@@ -84,18 +84,18 @@ throughput expert while CPU interference remains active.
 
 - Final status: `success`
 - Verdict: `accepted`
-- RPS change: 19.18%
-- P99 delta (negative is better): -94.52%
-- Background retention: 73.00%
+- RPS change: 14.34%
+- P99 delta (negative is better): -92.68%
+- Background retention: 75.25%
 - Rollback evidence present: `False`
 
 ### Strict rollback gate
 
 - Final status: `rolled_back`
 - Verdict: `rejected`
-- RPS change: 6.65%
-- P99 delta (negative is better): -93.36%
-- Background retention: 73.25%
+- RPS change: 11.17%
+- P99 delta (negative is better): -92.25%
+- Background retention: 73.64%
 - Rollback evidence present: `True`
 
 

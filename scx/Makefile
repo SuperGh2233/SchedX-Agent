@@ -2,7 +2,7 @@
 # running experiment kernel. This keeps scx compatibility headers aligned with
 # the kernel ABI being tested.
 
-KERNEL_SCX_DIR ?= /usr/src/schedx-kernel/linux-6.15.11/tools/sched_ext
+KERNEL_SCX_DIR ?= /root/kernel-build/kernel/tools/sched_ext
 OUTPUT_DIR := output
 KERNEL_BIN := $(KERNEL_SCX_DIR)/build/bin/scx_agent
 

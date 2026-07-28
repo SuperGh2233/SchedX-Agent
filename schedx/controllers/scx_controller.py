@@ -32,6 +32,14 @@ SCX_WEIGHT_DEFAULTS = {
     SCX_CLASS_BACKGROUND: 100,
 }
 
+# A service interval of 64 preserved at least 25% of baseline background
+# progress in the formal SP4 benchmark. Keep runtime and benchmark defaults in
+# one place so normal Agent execution is tested with the same safety setting.
+SCX_FAIRNESS_BACKGROUND_DEFAULT = 64
+SCX_FAIRNESS_BACKGROUND_MIN = 32
+SCX_FAIRNESS_BACKGROUND_MAX = 4096
+SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL = 0
+
 
 @dataclass
 class ScxStats:
@@ -70,10 +78,24 @@ class ScxController:
         sys_root: Path = Path("/sys/kernel/sched_ext"),
         dry_run: bool = True,
         scheduler_binary: str = "scx_agent",
+        background_interval: int | None = None,
     ) -> None:
         self.sys_root = sys_root
         self.dry_run = dry_run
         self.scheduler_binary = scheduler_binary
+        if background_interval is None:
+            background_interval = int(
+                os.environ.get(
+                    "SCHEDX_SCX_BACKGROUND_INTERVAL",
+                    str(SCX_FAIRNESS_BACKGROUND_DEFAULT),
+                )
+            )
+        if not SCX_FAIRNESS_BACKGROUND_MIN <= background_interval <= SCX_FAIRNESS_BACKGROUND_MAX:
+            raise ValueError(
+                "background_interval must be between "
+                f"{SCX_FAIRNESS_BACKGROUND_MIN} and {SCX_FAIRNESS_BACKGROUND_MAX}"
+            )
+        self.background_interval = background_interval
         self._process: subprocess.Popen | None = None
         self._pipe_path: Path | None = None
 
@@ -104,6 +126,7 @@ class ScxController:
             "current_scheduler": self.current_scheduler(),
             "allowlist": ", ".join(sorted(self.ALLOWLIST)),
             "process_running": self._process is not None and self._process.poll() is None,
+            "background_interval": self.background_interval,
         }
 
     def start_scheduler(
@@ -157,7 +180,10 @@ class ScxController:
         # its own response rather than returning immediately.
         self._read_until_prompt()
         # Avoid strict class-priority starvation even outside daemon mode.
-        self.set_fairness(background_interval=2048, default_interval=0)
+        self.set_fairness(
+            background_interval=self.background_interval,
+            default_interval=SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
+        )
         return True
 
     def stop_scheduler(self) -> bool:

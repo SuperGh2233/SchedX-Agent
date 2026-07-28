@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "schedx-agent"
-version = "0.1.0"
-description = "SchedX-Agent MVP for adaptive Linux workload resource control."
+version = "0.4.0"
+description = "Adaptive Linux resource-control Agent with cgroup v2 and sched_ext."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "SchedX Lab" }]
