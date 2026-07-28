@@ -114,9 +114,9 @@ python3 scripts/run_competition_demo.py \
 画面应显示：
 
 ```text
-后台干扰仍在运行 : false
-资源控制仍有残留 : false
-自定义调度状态   : disabled
+后台干扰仍在运行 : 否
+资源控制仍有残留 : 否
+自定义调度状态   : 已关闭
 CLEAN: 演示环境已恢复
 ```
 

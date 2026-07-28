@@ -26,9 +26,10 @@ python3 -m schedx status | python3 -c '
 import json, sys
 d = json.load(sys.stdin)
 s = d["sched_ext"]
+state_name = {"disabled": "已关闭", "enabled": "运行中"}.get(s["state"], s["state"])
 print("操作系统与内核 :", d["platform"])
 print("资源控制功能   :", "可用" if d["cgroup_v2"] else "不可用")
-print("自定义调度功能 :", "可用，当前状态={}".format(s["state"]) if s["available"] else "不可用")
+print("自定义调度功能 :", "可用，当前状态={}".format(state_name) if s["available"] else "不可用")
 print("Agent 运行方式 :", "真实自定义调度" if d["mode"] == "sched_ext-native" else d["mode"])
 print("大模型         :", "{}，{}".format("已配置" if d["llm_configured"] else "未配置", d["llm_model"]))
 if not d["cgroup_v2"] or not s["available"] or not d["llm_configured"]:

@@ -35,10 +35,11 @@ cgroup=false
 [[ -d /sys/fs/cgroup/schedx ]] && cgroup=true
 state="$(python3 -m schedx status | python3 -c 'import json,sys; print(json.load(sys.stdin)["sched_ext"]["state"])')"
 state_text="$state"
-[[ $state == disabled ]] && state_text="已关闭（disabled）"
+[[ $state == disabled ]] && state_text="已关闭"
+[[ $state == enabled ]] && state_text="运行中"
 
-echo "后台干扰仍在运行 : $stress"
-echo "资源控制仍有残留 : $cgroup"
+echo "后台干扰仍在运行 : $([[ $stress == true ]] && echo 是 || echo 否)"
+echo "资源控制仍有残留 : $([[ $cgroup == true ]] && echo 是 || echo 否)"
 echo "自定义调度状态   : $state_text"
 if [[ $stress == false && $cgroup == false && $state == disabled ]]; then
     echo "CLEAN: 演示环境已恢复"

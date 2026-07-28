@@ -183,7 +183,7 @@ print(
     f"后台干扰已停止={'是' if not cleanup['stress_ng_running'] else '否'}，"
     f"资源控制已清理={'是' if not cleanup['cgroup_base_exists'] else '否'}，"
     "自定义调度={}".format(
-        "已关闭（disabled）"
+        "已关闭"
         if cleanup["sched_ext_state"] == "disabled"
         else cleanup["sched_ext_state"]
     )

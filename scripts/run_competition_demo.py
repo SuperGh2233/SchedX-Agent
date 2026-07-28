@@ -297,9 +297,17 @@ def format_console_summary(summary: dict[str, Any]) -> str:
     lines.extend(
         [
             "\n[环境恢复]",
-            f"后台干扰已停止 : {not cleanup.get('stress_ng_running', True)}",
-            f"资源控制已清理 : {not cleanup.get('cgroup_base_exists', True)}",
-            f"调度器状态     : {cleanup.get('sched_ext_state')}",
+            "后台干扰已停止 : {}".format(
+                "是" if not cleanup.get("stress_ng_running", True) else "否"
+            ),
+            "资源控制已清理 : {}".format(
+                "是" if not cleanup.get("cgroup_base_exists", True) else "否"
+            ),
+            "自定义调度状态 : {}".format(
+                "已关闭"
+                if cleanup.get("sched_ext_state") == "disabled"
+                else cleanup.get("sched_ext_state")
+            ),
             f"报告文件       : {summary.get('report', {}).get('path')}",
         ]
     )
