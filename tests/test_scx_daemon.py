@@ -130,6 +130,18 @@ def test_runtime_share_and_closed_loop_adjustment():
         "runtime_share_low",
         2048,
     )
+    assert choose_background_interval(64, 0.05, 1000, 0, True) == (
+        "runtime_share_low",
+        32,
+    )
+    assert choose_background_interval(64, 0.30, 1000, 0, True) == (
+        "runtime_share_high",
+        128,
+    )
+    assert choose_background_interval(512, 0, 0, 0, False) == (
+        "uncontended",
+        64,
+    )
 
 
 def test_daemon_cleanup_orphan_zero_metrics(tmp_path: Path):

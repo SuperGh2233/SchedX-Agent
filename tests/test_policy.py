@@ -29,33 +29,82 @@ def test_classifier_reports_cpu_reason():
 
 
 def test_classifier_detects_nginx_latency():
-    proc = {"pid": 10, "comm": "nginx", "cmdline": "nginx: worker process", "cpu_percent": 1.0}
+    proc = {
+        "pid": 10,
+        "comm": "nginx",
+        "cmdline": "nginx: worker process",
+        "cpu_percent": 1.0,
+    }
     result = WorkloadClassifier().classify_process_with_reason(proc)
     assert result["type"] == "latency_sensitive"
 
 
 def test_classifier_detects_redis_latency():
-    proc = {"pid": 11, "comm": "redis-server", "cmdline": "redis-server 127.0.0.1:6379", "cpu_percent": 1.0}
+    proc = {
+        "pid": 11,
+        "comm": "redis-server",
+        "cmdline": "redis-server 127.0.0.1:6379",
+        "cpu_percent": 1.0,
+    }
     result = WorkloadClassifier().classify_process_with_reason(proc)
     assert result["type"] == "latency_sensitive"
 
 
 def test_classifier_detects_stress_background():
-    proc = {"pid": 12, "comm": "stress-ng", "cmdline": "stress-ng --cpu 4", "cpu_percent": 90.0}
+    proc = {
+        "pid": 12,
+        "comm": "stress-ng",
+        "cmdline": "stress-ng --cpu 4",
+        "cpu_percent": 90.0,
+    }
     result = WorkloadClassifier().classify_process_with_reason(proc)
     assert result["type"] == "background_noise"
 
 
 def test_classifier_keeps_plain_python_unknown():
-    proc = {"pid": 13, "comm": "python3", "cmdline": "python3 app.py", "cpu_percent": 2.0}
+    proc = {
+        "pid": 13,
+        "comm": "python3",
+        "cmdline": "python3 app.py",
+        "cpu_percent": 2.0,
+    }
     result = WorkloadClassifier().classify_process_with_reason(proc)
     assert result["type"] == "unknown"
 
 
 def test_classifier_detects_python_benchmark_batch():
-    proc = {"pid": 14, "comm": "python3", "cmdline": "python3 train_benchmark.py", "cpu_percent": 2.0}
+    proc = {
+        "pid": 14,
+        "comm": "python3",
+        "cmdline": "python3 train_benchmark.py",
+        "cpu_percent": 2.0,
+    }
     result = WorkloadClassifier().classify_process_with_reason(proc)
     assert result["type"] == "batch_compute"
+
+
+def test_python_nginx_benchmark_driver_is_not_latency_service():
+    result = WorkloadClassifier().classify_process_with_reason(
+        {
+            "comm": "python3",
+            "cmdline": "python3 -m schedx.main benchmark nginx-ablation",
+            "cpu_percent": 1.0,
+        }
+    )
+
+    assert result["type"] == "batch_compute"
+
+
+def test_shell_argument_containing_nginx_is_not_latency_service():
+    result = WorkloadClassifier().classify_process_with_reason(
+        {
+            "comm": "bash",
+            "cmdline": "bash scripts/run_nginx_experiment.sh",
+            "cpu_percent": 1.0,
+        }
+    )
+
+    assert result["type"] == "unknown"
 
 
 def test_isolate_background_allows_stress_ng_cpu():
@@ -77,7 +126,11 @@ def test_isolate_background_allows_stress_ng_parent():
     classification = {
         "groups": {
             "background_noise": [
-                {"pid": 21, "comm": "stress-ng", "cmdline": "stress-ng --cpu 4 --timeout 300s"}
+                {
+                    "pid": 21,
+                    "comm": "stress-ng",
+                    "cmdline": "stress-ng --cpu 4 --timeout 300s",
+                }
             ]
         }
     }
@@ -92,7 +145,12 @@ def test_isolate_background_skips_schedx_control_process():
     classification = {
         "groups": {
             "background_noise": [
-                {"pid": 22, "comm": "schedx", "cmdline": "python -m schedx.main classify", "cpu_percent": 99.0}
+                {
+                    "pid": 22,
+                    "comm": "schedx",
+                    "cmdline": "python -m schedx.main classify",
+                    "cpu_percent": 99.0,
+                }
             ]
         }
     }
@@ -135,17 +193,40 @@ def test_latency_policy_adds_hard_cpu_isolation_on_four_cpus():
 
     actions = PolicyPlanner().plan("latency_first", "nginx", classification, topology)
 
-    assert not any(a.action == "set_cpuset_cpus" and a.target == "nginx" for a in actions)
-    assert any(a.action == "set_cpuset_cpus" and a.target == "2" and a.value == "2,3" for a in actions)
+    assert not any(
+        a.action == "set_cpuset_cpus" and a.target == "nginx" for a in actions
+    )
+    assert any(
+        a.action == "set_cpuset_cpus" and a.target == "2" and a.value == "2,3"
+        for a in actions
+    )
 
 
 def test_isolation_policy_skips_cpuset_on_small_system():
     classification = {"groups": {"background_noise": [{"pid": 2, "comm": "stress-ng"}]}}
     topology = {"total_cpus": 2, "performance_mask": "0", "efficiency_mask": "1"}
 
-    actions = PolicyPlanner().plan("isolate_background", "stress-ng", classification, topology)
+    actions = PolicyPlanner().plan(
+        "isolate_background", "stress-ng", classification, topology
+    )
 
     assert not any(a.action == "set_cpuset_cpus" for a in actions)
+
+
+def test_isolation_policy_skips_cpuset_on_homogeneous_system():
+    classification = {"groups": {"background_noise": [{"pid": 2, "comm": "stress-ng"}]}}
+    topology = {
+        "total_cpus": 4,
+        "heterogeneous": False,
+        "performance_mask": "0,1,2,3",
+        "efficiency_mask": "",
+    }
+
+    actions = PolicyPlanner().plan(
+        "isolate_background", "stress-ng", classification, topology
+    )
+
+    assert not any(action.action == "set_cpuset_cpus" for action in actions)
 
 
 def test_policy_uses_agent_selected_background_quota():
@@ -155,9 +236,24 @@ def test_policy_uses_agent_selected_background_quota():
         "latency_first",
         "nginx",
         classification,
-        parameters={"cpu_weight": 8000, "cpu_weight_bg": 25, "cpu_max_bg": "15000 100000"},
+        parameters={
+            "cpu_weight": 8000,
+            "cpu_weight_bg": 25,
+            "cpu_max_bg": "15000 100000",
+        },
     )
 
-    assert any(a.action == "set_cgroup_cpu_weight" and a.target == "nginx" and a.value == 8000 for a in actions)
-    assert any(a.action == "set_cgroup_cpu_weight" and a.target == "2" and a.value == 25 for a in actions)
-    assert any(a.action == "set_cgroup_cpu_max" and a.target == "2" and a.value == "15000 100000" for a in actions)
+    assert any(
+        a.action == "set_cgroup_cpu_weight" and a.target == "nginx" and a.value == 8000
+        for a in actions
+    )
+    assert any(
+        a.action == "set_cgroup_cpu_weight" and a.target == "2" and a.value == 25
+        for a in actions
+    )
+    assert any(
+        a.action == "set_cgroup_cpu_max"
+        and a.target == "2"
+        and a.value == "15000 100000"
+        for a in actions
+    )

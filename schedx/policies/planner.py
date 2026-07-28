@@ -111,6 +111,8 @@ class PolicyPlanner:
 def _isolation_masks(topology: dict | None) -> tuple[str, str]:
     if not topology or int(topology.get("total_cpus", 0) or 0) < 4:
         return "", ""
+    if topology.get("heterogeneous") is False:
+        return "", ""
     performance = str(topology.get("performance_mask", ""))
     efficiency = str(topology.get("efficiency_mask", ""))
     if not performance or not efficiency or performance == efficiency:

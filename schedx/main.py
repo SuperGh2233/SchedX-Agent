@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from schedx.agent.context import AgentContext
+from schedx import __version__
 from schedx.agent.loop import AgentLoop
 from schedx.agent.executor import SafeActionExecutor
 from schedx.benchmark.runner import BenchmarkRunner
@@ -33,6 +34,20 @@ from schedx.tool_runner import PROFILES, ToolCallRunner, emit_tool_result
 from schedx.scx_daemon import DEFAULT_SOCKET, ScxDaemonClient, serve_scx_daemon
 
 
+def unit_interval(value: str) -> float:
+    parsed = float(value)
+    if not 0.0 <= parsed <= 1.0:
+        raise argparse.ArgumentTypeError("value must be in [0, 1]")
+    return parsed
+
+
+def nonnegative_float(value: str) -> float:
+    parsed = float(value)
+    if parsed < 0.0:
+        raise argparse.ArgumentTypeError("value cannot be negative")
+    return parsed
+
+
 def print_json(data: Any) -> None:
     print(json.dumps(data, indent=2, ensure_ascii=False))
 
@@ -45,23 +60,49 @@ def build_context(args: argparse.Namespace) -> AgentContext:
     return AgentContext(dry_run=dry_run_from_args(args))
 
 
+def configure_canary(context: AgentContext, args: argparse.Namespace) -> None:
+    url = str(getattr(args, "canary_url", "") or "")
+    if not url:
+        return
+    context.data["canary_config"] = {
+        "url": url,
+        "duration": int(args.canary_duration),
+        "connections": int(args.canary_connections),
+        "threads": int(args.canary_threads),
+    }
+    context.data["canary_min_background_retention"] = float(
+        args.canary_min_background_retention
+    )
+    min_p99_improvement = getattr(args, "canary_min_p99_improvement", None)
+    if min_p99_improvement is not None:
+        context.data["canary_min_p99_improvement"] = float(min_p99_improvement)
+
+
 def cmd_status(args: argparse.Namespace) -> int:
     cgroup = CgroupProbe()
     from schedx.probes.cpu_topology_probe import CpuTopologyProbe
     from schedx.llm.client import LLMClient
     topo = CpuTopologyProbe().get_topology()
     llm = LLMClient()
+    scx = ScxController()
+    scx_status = scx.status()
+    if scx.is_available():
+        mode = "sched_ext-native"
+    elif cgroup.is_v2():
+        mode = "cgroup-only fallback"
+    else:
+        mode = "observe-only"
     print_json(
         {
-            "schedx": "0.3.0",
+            "schedx": __version__,
             "platform": platform.platform(),
             "cgroup_v2": cgroup.is_v2(),
             "cgroup_controllers": cgroup.controllers(),
             "cgroup_cpu_stat": cgroup.cpu_stat(),
             "cpu_topology": topo,
-            "sched_ext": ScxController().status(),
+            "sched_ext": scx_status,
             "scx_daemon_available": ScxDaemonClient().is_available(),
-            "mode": "sched_ext-emulated (cpuset+affinity+nice)" if not ScxController().is_available() else "sched_ext-native",
+            "mode": mode,
             "llm_configured": llm.is_configured(),
             "llm_model": llm.model if llm.is_configured() else "not configured",
         }
@@ -144,8 +185,9 @@ def cmd_optimize(args: argparse.Namespace) -> int:
     if args.target:
         context.data["target"] = args.target
     context.data["llm_policy_enabled"] = args.llm_policy
+    configure_canary(context, args)
 
-    loop = AgentLoop(context, max_iterations=10)
+    loop = AgentLoop(context, max_iterations=16)
     report = loop.run(initial_phase="probe")
 
     print_json({
@@ -162,6 +204,7 @@ def cmd_optimize(args: argparse.Namespace) -> int:
 def cmd_run(args: argparse.Namespace) -> int:
     context = AgentContext(dry_run=False)
     context.data["llm_policy_enabled"] = args.llm_policy
+    configure_canary(context, args)
     loop = AgentLoop(context, max_iterations=50)
     print(f"SchedX Agent starting continuous mode (interval={args.interval}s, max_rounds={args.max_rounds})")
     print("Press Ctrl+C to stop.")
@@ -266,6 +309,8 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
             threads=args.threads,
             repeats=args.repeats,
             stress_cpu=args.stress_cpu,
+            warmup=args.warmup,
+            minimum_background_retention_percent=args.min_background_retention,
         )
     )
     return 0
@@ -373,12 +418,14 @@ def build_parser() -> argparse.ArgumentParser:
     optimize.add_argument("--interval", type=float, default=0.2)
     optimize.add_argument("--dry-run", action="store_true", default=False)
     optimize.add_argument("--llm-policy", action="store_true", default=False)
+    _add_canary_arguments(optimize)
     optimize.set_defaults(func=cmd_optimize)
 
     run_cmd = sub.add_parser("run")
     run_cmd.add_argument("--interval", type=float, default=30, help="Seconds between rounds")
     run_cmd.add_argument("--max-rounds", type=int, default=0, help="Max rounds (0=unlimited)")
     run_cmd.add_argument("--llm-policy", action="store_true", default=False)
+    _add_canary_arguments(run_cmd)
     run_cmd.set_defaults(func=cmd_run)
 
     llm_analyze = sub.add_parser("llm-analyze")
@@ -416,6 +463,13 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--threads", type=int, default=4)
     benchmark.add_argument("--repeats", type=int, default=3)
     benchmark.add_argument("--stress-cpu", type=int, default=4)
+    benchmark.add_argument("--warmup", type=int, default=2)
+    benchmark.add_argument(
+        "--min-background-retention",
+        type=float,
+        default=25.0,
+        help="Minimum background CPU progress percentage for ablation claims",
+    )
     benchmark.set_defaults(func=cmd_benchmark)
 
     report = sub.add_parser("report")
@@ -449,6 +503,29 @@ def build_parser() -> argparse.ArgumentParser:
     scx_daemon.add_argument("--socket", default=str(DEFAULT_SOCKET))
     scx_daemon.set_defaults(func=cmd_scx_daemon)
     return parser
+
+
+def _add_canary_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--canary-url",
+        default="",
+        help="Enable a real wrk before/after SLO canary for this URL",
+    )
+    parser.add_argument("--canary-duration", type=int, default=5)
+    parser.add_argument("--canary-connections", type=int, default=32)
+    parser.add_argument("--canary-threads", type=int, default=2)
+    parser.add_argument(
+        "--canary-min-background-retention",
+        type=unit_interval,
+        default=0.25,
+        help="Minimum candidate/background CPU progress relative to baseline",
+    )
+    parser.add_argument(
+        "--canary-min-p99-improvement",
+        type=nonnegative_float,
+        default=None,
+        help="Required P99 latency improvement percentage for latency policies",
+    )
 
 
 def main() -> int:

@@ -12,6 +12,7 @@ from schedx.agent.decision import DecisionEngine, Decision
 from schedx.agent.skill import Skill, SkillResult
 from schedx.skills.act_skill import ActSkill
 from schedx.skills.analyze_skill import AnalyzeSkill
+from schedx.skills.canary_skill import CanaryBaselineSkill, CanaryCandidateSkill
 from schedx.skills.ebpf_skill import EbpfLoadSkill, EbpfAttachSkill, EbpfPolicySkill, EbpfStatsSkill
 from schedx.skills.policy_skill import PolicySkill
 from schedx.skills.probe_skill import ProbeSkill
@@ -22,7 +23,7 @@ from schedx.skills.verify_skill import VerifySkill
 from schedx.skills.llm_analyze_skill import LlmAnalyzeSkill
 from schedx.skills.llm_policy_skill import LlmPolicySkill
 from schedx.policies.repository import PolicyRepository
-from schedx.policies.router import SchedulerRouter, target_for_mode
+from schedx.policies.router import MODE_TO_EXPERT, SchedulerRouter, target_for_mode
 
 
 @dataclass
@@ -51,7 +52,20 @@ class AgentLoop:
       probe → analyze → [auto-decide mode+params] → policy → act → verify → [retry or done]
     """
 
-    PHASES = ["probe", "analyze", "decide", "policy", "ebpf_load", "ebpf_attach", "ebpf_policy", "scx", "act", "verify"]
+    PHASES = [
+        "probe",
+        "analyze",
+        "decide",
+        "policy",
+        "canary_baseline",
+        "ebpf_load",
+        "ebpf_attach",
+        "ebpf_policy",
+        "scx",
+        "act",
+        "canary_candidate",
+        "verify",
+    ]
     MAX_ITERATIONS = 20
 
     def __init__(self, context: AgentContext, max_iterations: int = MAX_ITERATIONS) -> None:
@@ -71,12 +85,14 @@ class AgentLoop:
             "probe": ProbeSkill(),
             "analyze": AnalyzeSkill(),
             "policy": PolicySkill(),
+            "canary_baseline": CanaryBaselineSkill(),
             "ebpf_load": EbpfLoadSkill(),
             "ebpf_attach": EbpfAttachSkill(),
             "ebpf_policy": EbpfPolicySkill(),
             "ebpf_stats": EbpfStatsSkill(),
             "scx": ScxSkill(),
             "act": ActSkill(),
+            "canary_candidate": CanaryCandidateSkill(),
             "verify": VerifySkill(),
             "report": ReportSkill(),
             "rollback": RollbackSkill(),
@@ -176,21 +192,37 @@ class AgentLoop:
         print(f"  confidence: {agent_decision.confidence:.0%}")
 
         policy_result = self._execute_skill("policy", round_num * 100 + 3)
-        act_result = self._execute_skill("act", round_num * 100 + 4)
-        verify_result = self._execute_skill("verify", round_num * 100 + 5)
+        baseline_result = self._execute_skill("canary_baseline", round_num * 100 + 4)
+        if not baseline_result.ok:
+            return {"round": round_num, "status": "canary_baseline_failed"}
+        scx_result = self._execute_skill("scx", round_num * 100 + 5)
+        act_result = self._execute_skill("act", round_num * 100 + 6)
+        candidate_result = self._execute_skill("canary_candidate", round_num * 100 + 7)
+        verify_result = (
+            self._execute_skill("verify", round_num * 100 + 8)
+            if candidate_result.ok
+            else SkillResult(False, candidate_result.message)
+        )
 
         rollback_required = (
             not policy_result.ok
             or not act_result.ok
+            or not candidate_result.ok
             or not verify_result.ok
             or bool(self.context.data.get("rollback_required"))
         )
         if rollback_required:
-            rollback_result = self._execute_skill("rollback", round_num * 100 + 6)
+            rollback_result = self._execute_skill("rollback", round_num * 100 + 9)
             if rollback_result.ok:
                 self.context.data.pop("rollback_required", None)
 
-        successful = policy_result.ok and act_result.ok and verify_result.ok
+        successful = (
+            policy_result.ok
+            and baseline_result.ok
+            and act_result.ok
+            and candidate_result.ok
+            and verify_result.ok
+        )
 
         return {
             "round": round_num,
@@ -202,6 +234,8 @@ class AgentLoop:
                 "confidence": agent_decision.confidence,
             },
             "act_success": act_result.ok,
+            "scx_success": scx_result.ok,
+            "canary_success": candidate_result.ok,
             "verify_success": verify_result.ok,
         }
 
@@ -215,10 +249,32 @@ class AgentLoop:
                 self.context.data["target"] = target_for_mode(
                     str(self.context.data["mode"]), classification
                 )
+            mode = str(self.context.data["mode"])
+            target = str(self.context.data["target"])
+            expert_id = MODE_TO_EXPERT.get(mode)
+            if expert_id:
+                self.context.data["policy_route"] = {
+                    "expert_id": expert_id,
+                    "mode": mode,
+                    "confidence": 1.0,
+                    "scores": {expert_id: 1.0},
+                    "switched": False,
+                    "reason": "explicit user-selected mode; router bypassed",
+                    "timestamp": time.time(),
+                }
+                self.context.data["agent_decision"] = {
+                    "mode": mode,
+                    "target": target,
+                    "parameters": {},
+                    "reason": "explicit user-selected mode and target",
+                    "confidence": 1.0,
+                    "source": "explicit_cli",
+                    "expert_id": expert_id,
+                }
             return LoopDecision(
                 should_continue=True,
                 next_phase="policy",
-                reason=f"user-specified mode={self.context.data['mode']}, target={self.context.data['target']}",
+                reason=f"user-specified mode={mode}, target={target}",
             )
 
         if self.context.data.get("llm_policy_enabled"):
@@ -326,6 +382,8 @@ class AgentLoop:
                 return LoopDecision(True, "rollback", "canary rejected; initiating rollback")
             if phase == "act":
                 return LoopDecision(True, "rollback", "execution failed; initiating rollback")
+            if phase == "canary_candidate":
+                return LoopDecision(True, "rollback", "candidate measurement failed; initiating rollback")
             if phase == "rollback":
                 return LoopDecision(False, None, "rollback completed after failure")
             if phase == "scx":
@@ -372,10 +430,16 @@ class AgentLoop:
         })
 
     def _build_report(self) -> dict[str, Any]:
+        if self.iterations and self.iterations[-1].phase == "rollback":
+            final_status = "rolled_back"
+        elif self.iterations and self.iterations[-1].result.ok:
+            final_status = "success"
+        else:
+            final_status = "failed"
         return {
             "total_iterations": len(self.iterations),
             "phases_completed": [it.phase for it in self.iterations],
-            "final_status": "success" if self.iterations and self.iterations[-1].result.ok else "failed",
+            "final_status": final_status,
             "agent_decisions": self.context.data.get("agent_decision"),
             "iterations": [
                 {
@@ -402,6 +466,8 @@ class AgentLoop:
                 "agent_decision": self.context.data.get("agent_decision"),
                 "policy_route": self.context.data.get("policy_route"),
                 "canary_verdict": self.context.data.get("canary_verdict"),
+                "canary": self.context.data.get("canary"),
+                "rollback": self.context.data.get("rollback"),
                 "decision_log": self.context.data.get("decision_log", []),
             },
         }

@@ -1,184 +1,113 @@
-# scx_agent - SchedX Agent BPF Scheduler
+# SchedX Native sched_ext Scheduler
 
-A custom sched_ext scheduler for SchedX-Agent that classifies tasks by workload type and dispatches them with different priorities.
+`scx_agent` is the native kernel scheduling backend for SchedX-Agent. It is a
+real `sched_ext_ops` BPF scheduler and is not an emulation layer.
 
-## Architecture
+## Design
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SchedX-Agent (Python)                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │  Probe   │→│ Classify │→│  Policy  │→│   Act    │    │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                 scx_agent_user (User-space)                  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  BPF Map Management │ Policy Updates │ Statistics    │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                scx_agent.bpf.o (Kernel BPF)                  │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │  select  │→│ enqueue  │→│ dispatch │→│ consume  │    │
-│  │   cpu    │  │          │  │          │  │          │    │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-│                                                             │
-│  DSQs:                                                      │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │ Latency  │  │  Global  │  │  Batch   │  │  Bgnd    │    │
-│  │ (high)   │  │ (normal) │  │ (normal) │  │  (low)   │    │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-└─────────────────────────────────────────────────────────────┘
-```
+The scheduler exposes three policy classes:
 
-## Workload Classification
+| Class | ID | Default weight | Purpose |
+| --- | ---: | ---: | --- |
+| unknown | 0 | 1000 | Unclassified tasks |
+| latency | 1 | 10000 | nginx, Redis and online services |
+| batch | 2 | 1000 | compilers and throughput jobs |
+| background | 3 | 100 | stress and best-effort work |
 
-| Class | ID | Priority | Time Slice | Weight | Description |
-|-------|-----|----------|------------|--------|-------------|
-| Unknown | 0 | Normal | Default | 1000 | Default behavior |
-| Latency | 1 | High | Short (50%) | 10000 | nginx, redis, envoy |
-| Batch | 2 | Normal | Long (200%) | 1000 | gcc, make, sysbench |
-| Background | 3 | Low | Very Long (400%) | 100 | stress-ng, openssl |
+Userspace updates two BPF maps:
 
-## BPF Maps
+- `task_policy_map`: PID to class and weight.
+- `cgroup_policy_map`: cgroup ID to class and weight, inherited by descendants.
 
-### task_policy_map (Hash)
-- **Key**: PID (__u32)
-- **Value**: struct schedx_policy { class_id, weight }
-- **Purpose**: Per-task scheduling policy
+Each class has its own DSQ. Tasks within a class use weighted virtual time and
+weight-scaled slices. Cross-class fairness is controlled by a background
+service interval. The validated initial interval is `64`; the daemon can tune
+it from observed background runtime share.
 
-### cgroup_policy_map (Hash)
-- **Key**: cgroup_id (__u64)
-- **Value**: struct schedx_policy { class_id, weight }
-- **Purpose**: Per-cgroup scheduling policy
+The scheduler also exports:
 
-### stats_map (Per-CPU Array)
-- **Key**: 0 (single entry)
-- **Value**: struct schedx_stats { latency/batch/bg/default dispatches }
-- **Purpose**: Dispatch statistics
+- per-class dispatch counters;
+- per-cgroup enqueue, run, runtime and wait metrics;
+- dynamic task/cgroup policy removal;
+- fairness updates without reloading struct_ops.
 
-## Building
+## Kernel Requirement
 
-### Prerequisites
+The stock openEuler 24.03 LTS SP4 binary kernel does not enable
+`CONFIG_SCHED_CLASS_EXT`. The source RPM does contain sched_ext, so use the
+config-only rebuild documented at:
 
-```bash
-# openEuler 24.03-LTS-SP3
-sudo dnf install -y gcc clang llvm llvm-tools make cmake git
-sudo dnf install -y kernel-devel kernel-headers
-sudo dnf install -y libbpf-devel libbpf elfutils-libelf-devel zlib-devel
-sudo dnf install -y kernel-tools  # for bpftool
+```text
+kernel/openEuler-24.03-LTS-SP4/README.md
 ```
 
-### Build
+The validated kernel is
+`6.6.0-159.4.3.154.oe2403sp4.schedx1`.
+
+## Build
+
+`KERNEL_SCX_DIR` must point to the `tools/sched_ext` directory from the exact
+kernel source used for the running experiment. The default matches the
+validated VM build tree and can be overridden:
 
 ```bash
 cd scx
-make          # Build both BPF and user-space
-make bpf      # Build only BPF program
-make user     # Build only user-space loader
+KERNEL_SCX_DIR=/root/kernel-build/kernel/tools/sched_ext ./build.sh --check
+KERNEL_SCX_DIR=/root/kernel-build/kernel/tools/sched_ext ./build.sh
+sudo install -m 0755 output/scx_agent /usr/local/bin/scx_agent
 ```
 
-### Install
+The build copies `scx_agent.bpf.c`, `scx_agent_user.c` and the shared header
+into the kernel sched_ext toolchain so libbpf compatibility headers and the
+generated skeleton match the tested kernel ABI.
+
+## Interactive Protocol
+
+```text
+set task <pid> <class_id> <weight>
+set cgroup <cgroup_id> <class_id> <weight>
+remove task <pid>
+remove cgroup <cgroup_id>
+set fairness <background_interval> <default_interval>
+stats
+metrics
+dump
+quit
+```
+
+Example:
 
 ```bash
-sudo make install  # Install to /usr/local/bin/scx_agent
+sudo scx_agent
+schedx> set task 1234 1 10000
+schedx> set task 5678 3 100
+schedx> set fairness 64 0
+schedx> stats
+schedx> quit
 ```
 
-## Usage
-
-### Interactive Mode
+For normal operation, use the persistent daemon instead of driving the
+interactive protocol directly:
 
 ```bash
-sudo ./output/scx_agent
-schedx> set task 1234 1 10000    # Set pid 1234 as latency-sensitive
-schedx> set cgroup 42 3 100      # Set cgroup 42 as background
-schedx> stats                    # Show dispatch statistics
-schedx> dump                     # Dump all policies
-schedx> quit                     # Exit
+sudo systemctl enable --now schedx-scx-daemon
+schedx scx-daemon status
 ```
 
-### From SchedX-Agent
-
-The Python `ScxController` manages the scheduler automatically:
-
-```python
-from schedx.controllers.scx_controller import ScxController
-
-scx = ScxController()
-if scx.is_available():
-    scx.start_scheduler("scx_agent")
-    scx.set_task_policy(pid=1234, class_id=1, weight=10000)
-    scx.set_cgroup_policy(cgroup_id=42, class_id=3, weight=100)
-    stats = scx.get_stats()
-    scx.stop_scheduler()
-```
-
-### Dry-Run Mode
+## Verification
 
 ```bash
-./output/scx_agent --dry-run  # Test without loading BPF
+sudo python3 scripts/verify_scx_weight.py
+sudo python3 scripts/verify_scx_cgroup_inheritance.py
+sudo python3 scripts/verify_adaptive_fairness.py
 ```
 
-## Integration with SchedX-Agent
-
-1. **Probe**: SchedX-Agent collects process information from /proc
-2. **Classify**: Workloads are classified into latency/batch/background
-3. **Policy**: PolicyPlanner generates actions based on classification
-4. **Act**: ScxController loads scx_agent and updates BPF maps
-5. **Verify**: Monitor dispatch statistics and adjust policies
-
-## Performance Tuning
-
-### Time Slices
-
-- **Latency**: 50% of default slice for faster preemption
-- **Batch**: 200% of default slice for better throughput
-- **Background**: 400% of default slice to minimize overhead
-
-### Weights
-
-Weights are aligned with cgroup cpu.weight (1-10000):
-- Higher weight = more CPU time
-- Latency tasks get 10000 (maximum)
-- Background tasks get 100 (minimum)
-
-## Troubleshooting
-
-### sched_ext not available
+The formal comparison additionally rejects a performance claim when
+background CPU retention is below 25%:
 
 ```bash
-# Check kernel support
-grep CONFIG_SCHED_CLASS_EXT /boot/config-$(uname -r)
-
-# Check if loaded
-ls -la /sys/kernel/sched_ext/
+sudo python3 scripts/run_native_scx_experiment.py
 ```
 
-### Permission denied
-
-```bash
-# Must run as root
-sudo ./output/scx_agent
-```
-
-### Build fails
-
-```bash
-# Check dependencies
-./build.sh --check
-
-# Install missing deps
-sudo ./build.sh --deps
-```
-
-## References
-
-- [sched_ext documentation](https://docs.kernel.org/scheduler/sched-ext.html)
-- [libbpf documentation](https://libbpf.readthedocs.io/)
-- [scx examples](https://github.com/sched-ext/scx)
-
+On systems without sched_ext, SchedX skips this backend and continues in
+cgroup-only fallback mode.

@@ -19,6 +19,9 @@ char _license[] SEC("license") = "GPL";
 #define WEIGHT_BASE    1000
 #define WEIGHT_MIN     1
 #define WEIGHT_MAX     10000
+#define SLICE_MIN      (SCX_SLICE_DFL / 10)
+#define SLICE_MAX      (SCX_SLICE_DFL * 4)
+#define LATENCY_SLICE_MAX (SCX_SLICE_DFL / 2)
 
 UEI_DEFINE(uei);
 static u64 dsq_vtime_now[DSQ_COUNT];
@@ -136,6 +139,19 @@ static u32 task_weight(struct task_struct *p)
 	return policy->weight;
 }
 
+static u64 task_slice(struct task_struct *p, u32 class_id)
+{
+	u64 slice = SCX_SLICE_DFL * task_weight(p) / WEIGHT_BASE;
+
+	if (slice < SLICE_MIN)
+		slice = SLICE_MIN;
+	if (slice > SLICE_MAX)
+		slice = SLICE_MAX;
+	if (class_id == SCX_CLASS_LATENCY && slice > LATENCY_SLICE_MAX)
+		slice = LATENCY_SLICE_MAX;
+	return slice;
+}
+
 static u64 class_dsq(u32 class_id)
 {
 	switch (class_id) {
@@ -164,6 +180,7 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 {
 	u32 class_id = task_class(p);
 	u64 dsq_id = class_dsq(class_id);
+	u64 slice = task_slice(p, class_id);
 	u64 vtime = p->scx.dsq_vtime;
 	u64 cgroup_id;
 	struct schedx_cgroup_metrics *metrics;
@@ -182,7 +199,7 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 	}
 	if (time_before(vtime, dsq_vtime_now[dsq_id] - SCX_SLICE_DFL))
 		vtime = dsq_vtime_now[dsq_id] - SCX_SLICE_DFL;
-	scx_bpf_dsq_insert_vtime(p, dsq_id, SCX_SLICE_DFL, vtime,
+	scx_bpf_dsq_insert_vtime(p, dsq_id, slice, vtime,
 				 enq_flags);
 }
 
@@ -259,23 +276,27 @@ void BPF_STRUCT_OPS(schedx_running, struct task_struct *p)
 void BPF_STRUCT_OPS(schedx_stopping, struct task_struct *p, bool runnable)
 {
 	struct schedx_task_ctx *taskc;
-	u64 used;
+	u32 class_id = task_class(p);
+	u64 runtime_used;
+	u64 assigned_slice = task_slice(p, class_id);
+	u64 slice_used = assigned_slice > p->scx.slice ?
+		assigned_slice - p->scx.slice : 0;
 	u32 weight = task_weight(p);
 
 	taskc = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
-	if (!taskc || !taskc->started_at)
-		return;
-	used = bpf_ktime_get_ns() - taskc->started_at;
-	taskc->started_at = 0;
-	{
+	if (taskc && taskc->started_at) {
 		struct schedx_cgroup_metrics *metrics;
 
+		runtime_used = bpf_ktime_get_ns() - taskc->started_at;
+		taskc->started_at = 0;
 		metrics = bpf_map_lookup_elem(&cgroup_metrics_map,
-					      &taskc->cgroup_id);
+						      &taskc->cgroup_id);
 		if (metrics)
-			__sync_fetch_and_add(&metrics->runtime_ns, used);
+			__sync_fetch_and_add(&metrics->runtime_ns, runtime_used);
 	}
-	p->scx.dsq_vtime += used * WEIGHT_BASE / weight;
+
+	/* Vtime accounting must not depend on optional task-storage telemetry. */
+	p->scx.dsq_vtime += slice_used * WEIGHT_BASE / weight;
 }
 
 void BPF_STRUCT_OPS(schedx_enable, struct task_struct *p)

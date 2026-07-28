@@ -1,7 +1,7 @@
 #!/bin/bash
 # build.sh - Build script for scx_agent BPF scheduler
 #
-# This script handles dependency installation and building for openEuler 24.03-LTS-SP3.
+# This script handles dependency installation and building for openEuler 24.03 LTS SP4.
 #
 # Usage:
 #   ./build.sh              # Build everything
@@ -41,9 +41,6 @@ check_root() {
 # Install dependencies for openEuler
 install_deps_openeuler() {
     log_info "Installing dependencies for openEuler..."
-
-    # Update package list
-    dnf update -y
 
     # Install build tools
     dnf install -y \

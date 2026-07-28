@@ -46,12 +46,39 @@ class VerifySkill:
 
         canary = context.data.get("canary")
         if isinstance(canary, dict):
-            verdict = CanaryVerifier().evaluate(
+            try:
+                verifier = CanaryVerifier(
+                    min_background_retention=float(
+                        context.data.get("canary_min_background_retention", 0.25)
+                    ),
+                    min_p99_improvement_percent=context.data.get(
+                        "canary_min_p99_improvement"
+                    ),
+                )
+            except (TypeError, ValueError) as exc:
+                verdict_data = {
+                    "accepted": False,
+                    "status": "invalid_config",
+                    "reasons": [str(exc)],
+                    "deltas": {},
+                }
+                context.data["canary_verdict"] = verdict_data
+                context.data["rollback_required"] = True
+                verification["canary"] = verdict_data
+                verification["recommendations"].append(
+                    "Canary configuration is invalid; rollback required."
+                )
+                context.data["verification"] = verification
+                return SkillResult(False, "invalid canary configuration; rollback required", verification)
+
+            verdict = verifier.evaluate(
                 str(context.data.get("mode", "balanced")),
                 canary.get("baseline", {}),
                 canary.get("candidate", {}),
                 nr_rejected=canary.get("nr_rejected", 0),
                 background_share=canary.get("background_share"),
+                background_retention=canary.get("background_retention"),
+                background_expected=bool(canary.get("background_expected")),
             )
             verdict_data = verdict.to_dict()
             context.data["canary_verdict"] = verdict_data

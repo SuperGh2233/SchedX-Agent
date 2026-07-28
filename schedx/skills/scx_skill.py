@@ -6,6 +6,8 @@ when sched_ext is available on the system.
 
 from __future__ import annotations
 
+import json
+
 from schedx.agent.context import AgentContext
 from schedx.agent.skill import SkillResult
 from schedx.controllers.scx_controller import ScxController
@@ -69,6 +71,7 @@ class ScxSkill:
 
         daemon = ScxDaemonClient()
         if daemon.is_available():
+            self._record_rollback(context, "persistent_scx_daemon", actions)
             results = []
             for action in actions:
                 try:
@@ -108,6 +111,8 @@ class ScxSkill:
 
         # Apply policies
         try:
+            self._record_rollback(context, "standalone_scx", actions)
+            context.data["_scx_controller"] = self.controller
             results = self.mapper.apply_policies(classification, mode)
             context.data["scx_results"] = results
             context.data["scx_status"] = "active"
@@ -125,6 +130,18 @@ class ScxSkill:
                 f"failed to apply scx policies: {e}",
                 {"error": str(e)},
             )
+
+    @staticmethod
+    def _record_rollback(
+        context: AgentContext, source: str, actions: list[dict]
+    ) -> None:
+        pids = sorted({int(action["pid"]) for action in actions if "pid" in action})
+        payload = {"source": source, "pids": pids}
+        context.data["scx_rollback"] = payload
+        context.scx_rollback_file.parent.mkdir(parents=True, exist_ok=True)
+        temporary = context.scx_rollback_file.with_suffix(".tmp")
+        temporary.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        temporary.replace(context.scx_rollback_file)
 
 
 class ScxStatsSkill:

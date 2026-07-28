@@ -2,10 +2,10 @@
 
 SchedX-Agent is a Linux adaptive resource-control Agent for mixed workloads. It probes `/proc`, classifies user-space workloads, detects sched_ext/scx availability, and applies safe cgroup v2 CPU controls with rollback and reproducible benchmark reporting.
 
-Current verified platform: openEuler 24.03-LTS-SP3 with cgroup v2 and the
-project-built Linux `6.15.11-schedx` kernel. Native sched_ext is available on
-that kernel; the original openEuler 6.6 kernel remains supported through the
-**cgroup-only fallback** mode.
+Current verified platform: openEuler 24.03 LTS SP4 with cgroup v2 and the
+config-rebuilt kernel `6.6.0-159.4.3.154.oe2403sp4.schedx1`. The stock SP4
+kernel remains installed and is supported through the **cgroup-only fallback**
+mode because its binary config does not enable `CONFIG_SCHED_CLASS_EXT`.
 
 ## Current Status
 
@@ -18,6 +18,16 @@ Verified on openEuler:
 - `schedx optimize --target stress-ng --mode isolate_background` moves stress-ng PIDs into `/sys/fs/cgroup/schedx/pid-<pid>/` and sets `cpu.weight=50`.
 - `schedx rollback` restores previous CPU weights and removes empty `pid-*` cgroups. The base `/sys/fs/cgroup/schedx` cgroup is removed when no workload remains.
 - `schedx benchmark nginx` runs a three-phase nginx + stress-ng experiment and generates `summary.csv`, `summary.json`, raw wrk output, cgroup snapshots, and `report.md`.
+- The SP4 VM passes `125` tests and the fairness-gated native sched_ext run
+  reports `62.18%` higher RPS, `33.74%` lower P99, `32.22%` background CPU
+  retention and `nr_rejected=0`.
+- A real wrk canary accepted a policy with `13.32%` higher RPS, `92.82%` lower
+  P99 and `81.86%` background progress retention. A stricter valid gate also
+  exercised automatic rollback and left no cgroup or scx task-policy residue.
+- The formal four-way ablation reports `86.66%` higher RPS and `72.33%` lower
+  P99 for the combined Agent while retaining `43.92%` of background progress.
+- In the formal sysbench scenario, CPU interference reduces throughput by
+  `47.47%`; SchedX recovers `70.51%` versus the interference phase.
 
 ## Quick Start
 
@@ -49,9 +59,12 @@ flowchart LR
   PR[Expert Policy Repository] <--> RT
   RT --> PL[Policy Planner]
   PL --> EX[Safe Action Executor]
+  PL --> CB[Baseline SLO Canary]
+  CB --> EX
   EX --> CG[cgroup v2 Controller]
   EX --> SCX[scx Controller Detection]
-  EX --> V[Canary Verifier]
+  EX --> CC[Candidate SLO Canary]
+  CC --> V[Canary Verifier]
   V -->|accepted outcome| PR
   V -->|regression| RB
   CG --> RB[Rollback Store]
@@ -98,11 +111,27 @@ schedx policies
 
 The router selects an internal policy mode implemented by the existing
 `scx_agent`; it never executes a repository entry as a command. When benchmark
-or deployment code supplies baseline and candidate canary metrics, verification
+or the CLI enables a real wrk baseline/candidate canary, verification
 rejects sched_ext task rejections, background starvation, P99 regressions, and
 throughput regressions. A rejected canary enters the existing rollback path;
 missing objective metrics are recorded separately as inconclusive rather than
 as a successful policy outcome.
+
+Enable the real service-SLO closed loop explicitly:
+
+```bash
+sudo schedx optimize \
+  --target stress-ng \
+  --mode isolate_background \
+  --canary-url http://127.0.0.1/ \
+  --canary-duration 5 \
+  --canary-min-background-retention 0.25
+```
+
+SchedX runs wrk before and after the candidate policy, measures RPS and P99,
+tracks classified background-process CPU progress, checks `nr_rejected`, and
+rolls back both cgroup and persistent scx task policies when a safety gate
+fails. Canary execution is skipped during `--dry-run`.
 
 ## Agent Tool-Call Resource Control
 
@@ -180,8 +209,9 @@ sudo python3 scripts/verify_adaptive_fairness.py
 ```
 
 The adaptive scheduler preserves a configurable background service floor while
-keeping latency work preferred. A formal 5-repeat openEuler comparison produced
-`87.89%` higher RPS, `17.58%` lower P99, and `18.74%` background CPU retention.
+keeping latency work preferred. Runtime and formal benchmarks now share the
+same initial background service interval of `64`; the daemon adjusts it from
+observed runtime share instead of starting from the old unvalidated `2048`.
 
 Each managed cgroup exposes scheduler-level `enqueues`, `runs`, `runtime_ns`,
 and `wait_ns`. The daemon uses runtime-share deltas for closed-loop tuning, and
@@ -192,9 +222,9 @@ sudo schedx scx-daemon metrics
 sudo python3 scripts/verify_closed_loop_convergence.py
 ```
 
-After enabling cgroup metrics and closed-loop control, the formal 5-repeat
-comparison produced `88.29%` higher RPS, `28.16%` lower P99, and `17.29%`
-background CPU retention.
+The latest fairness-gated SP4 comparison uses 10-second samples and 3 repeats.
+It reports `62.18%` higher mean RPS, `33.74%` lower mean P99 and `32.22%`
+background CPU retention against a required minimum of `25%`.
 
 ## DeepSeek V4 Policy Agent
 
@@ -230,28 +260,48 @@ sudo python3 scripts/run_llm_policy_experiment.py \
 
 ## Competition Demo And Final Report
 
-The latest competition path is captured by a one-click demo. It verifies native
-`sched_ext`, the persistent daemon, cgroup policy inheritance, closed-loop
-fairness, DeepSeek policy planning, and concurrent Agent tool calls.
+The one-click demo runs environment preflight, four-way nginx ablation, batch
+throughput, accepted and rejected SLO canaries, cleanup verification, and report
+generation. The default remains an offline-compatible rule-policy path:
 
 ```bash
-sudo bash scripts/run_competition_demo.sh results/competition-demo
+sudo bash scripts/run_competition_demo.sh
 ```
 
-For a faster smoke run that skips the multi-Agent section:
+For the judge-facing Agent-first demonstration, load the protected LLM
+configuration and enable the compact decision trace:
 
 ```bash
-sudo SCHEDX_DEMO_SKIP_MULTI_AGENT=1 \
-  bash scripts/run_competition_demo.sh results/competition-demo-smoke
+set -a
+source /etc/schedx/llm.env
+set +a
+sudo --preserve-env=SCHEDX_LLM_API_KEY,SCHEDX_LLM_MODEL,SCHEDX_LLM_BASE_URL \
+  bash scripts/run_competition_demo.sh --llm-policy --compact
 ```
 
-Run only the multi-Agent LLM experiment:
+This path records the LLM proposal, learned expert route, Skill phases, Canary
+verdict, and rollback summary in `agent-trace.json`. The first Canary exercises
+an accepted policy. The second applies the policy and then requires a 99.9% P99
+latency improvement, intentionally demonstrating a post-action SLO rejection and
+automatic rollback without fabricating benchmark results.
+
+The default is a short presentation run. Use the formal profile for repeated
+20-second measurements:
 
 ```bash
-sudo python3 scripts/run_multi_agent_llm_experiment.py \
-  --agents 6 \
-  --duration 8 \
-  --output results/multi-agent-llm
+sudo bash scripts/run_competition_demo.sh --formal
+```
+
+Run either experiment independently:
+
+```bash
+sudo schedx benchmark nginx-ablation \
+  --duration 20 --repeats 3 --connections 64 --threads 4 \
+  --stress-cpu 4 --output results/nginx-ablation
+
+sudo schedx benchmark batch-throughput \
+  --duration 20 --repeats 3 --threads 4 \
+  --stress-cpu 4 --output results/batch-throughput
 ```
 
 Generate the judge-facing summary report:
@@ -264,10 +314,22 @@ python3 scripts/generate_competition_report.py \
 
 Current verified highlights:
 
-- native sched_ext formal result: `88.29%` RPS gain and `28.16%` P99 reduction;
+- native sched_ext fairness-gated result: `62.18%` RPS gain, `33.74%` P99
+  reduction and `32.22%` background CPU retention;
 - DeepSeek-guided policy result: `84.96%` RPS gain and `55.16%` P99 reduction;
 - multi-Agent LLM experiment: `6/6` tools used native sched_ext through daemon mode;
 - final daemon state after validation: `sched_ext=enabled`, scheduler `schedx_agent`, `nr_rejected=0`.
+
+The ablation compares `default`, `cgroup_only`, `scx_only`, and
+`agent_combined`. It records background CPU retention and marks a row invalid
+for performance claims when the configured fairness floor is not met.
+
+Latest formal artifacts:
+
+```text
+results/competition-demo/2026-07-16_07-38-05/
+reports/competition-final.md
+```
 
 ## Nginx Mixed Workload Benchmark
 
@@ -339,12 +401,21 @@ The run showed 62.56% RPS drop under interference, 2.36% RPS recovery with Sched
 
 SchedX-Agent executes structured actions only. It does not execute model-generated shell commands. The isolate policy protects control-plane processes such as `schedx`, `python -m schedx`, `bash`, `sshd`, `systemd`, `NetworkManager`, `firewalld`, and `tuned`.
 
-cgroup writes are recorded in `.schedx/rollback.json` before mutation. `schedx rollback` restores recorded values and removes empty `/sys/fs/cgroup/schedx/pid-*` groups. If a process is still alive, cleanup is skipped with a reason such as `process_still_alive`.
+cgroup writes are recorded in `.schedx/rollback.json` before mutation, and
+persistent scx task policies are recorded in `.schedx/scx_rollback.json`.
+`schedx rollback` removes both policy types, restores recorded values and
+removes empty `/sys/fs/cgroup/schedx/pid-*` groups. If a process is still alive,
+cleanup is skipped with a reason such as `process_still_alive`.
 
 ## sched_ext/scx
 
 SchedX-Agent detects `/sys/kernel/sched_ext` and reports whether sched_ext is
 available. `scx/scx_agent.bpf.c` is a native `sched_ext_ops` scheduler with
 class-specific dispatch queues for latency, default/batch, and background
-tasks. The original openEuler 6.6 kernel automatically uses the cgroup-only
+tasks. The stock openEuler SP4 kernel automatically uses the cgroup-only
 fallback.
+
+The SP4 source RPM already contains sched_ext source code. The reproducible
+config-only kernel rebuild, source checksum, installation dry-run and stock
+kernel rollback procedure are under
+`kernel/openEuler-24.03-LTS-SP4/README.md`.

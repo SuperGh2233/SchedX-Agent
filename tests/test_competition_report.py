@@ -4,7 +4,11 @@ from pathlib import Path
 
 
 def load_report_module():
-    path = Path(__file__).resolve().parents[1] / "scripts" / "generate_competition_report.py"
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "scripts"
+        / "generate_competition_report.py"
+    )
     spec = importlib.util.spec_from_file_location("generate_competition_report", path)
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -46,8 +50,12 @@ def test_competition_report_summarizes_current_artifacts(tmp_path: Path):
             "sched_ext": {"state": "enabled", "current_scheduler": "schedx_agent"},
         },
     )
-    write_json(results / "competition-demo" / "cgroup-inheritance.json", {"passed": True})
-    write_json(results / "competition-demo" / "closed-loop-convergence.json", {"passed": True})
+    write_json(
+        results / "competition-demo" / "cgroup-inheritance.json", {"passed": True}
+    )
+    write_json(
+        results / "competition-demo" / "closed-loop-convergence.json", {"passed": True}
+    )
     write_json(
         results / "multi-agent-llm" / "summary.json",
         {"passed": True, "successful_tools": 6, "agents": 6},
@@ -57,7 +65,95 @@ def test_competition_report_summarizes_current_artifacts(tmp_path: Path):
     module.generate(results, output)
 
     text = output.read_text(encoding="utf-8")
-    assert "SchedX-Agent Competition Summary" in text
+    assert "SchedX-Agent Competition Report" in text
     assert "84.96%" in text
-    assert "DeepSeek" in text
-    assert "high" in text
+    assert "deepseek-v4" in text
+    assert "Four-Way Nginx Ablation" in text
+
+
+def test_competition_report_reads_timestamped_demo_manifest(tmp_path: Path):
+    module = load_report_module()
+    results = tmp_path / "results"
+    run_dir = results / "competition-demo" / "2026-07-18_12-00-00"
+    write_json(
+        run_dir / "manifest.json",
+        {
+            "status": "ok",
+            "nginx_ablation": {
+                "summary": {
+                    "phases": {
+                        "default": {
+                            "mean_requests_per_sec": 100.0,
+                            "mean_p99_ms": 10.0,
+                        },
+                        "cgroup_only": {"rps_gain_vs_default_percent": 10.0},
+                        "scx_only": {"rps_gain_vs_default_percent": 20.0},
+                        "agent_combined": {
+                            "rps_gain_vs_default_percent": 30.0,
+                            "valid_for_claims": True,
+                        },
+                    }
+                }
+            },
+            "batch_throughput": {
+                "summary": {
+                    "phases": {
+                        "baseline": {"mean_events_per_second": 1000.0},
+                        "interference": {"mean_events_per_second": 600.0},
+                        "schedx": {"throughput_gain_vs_interference_percent": 50.0},
+                    }
+                }
+            },
+            "accepted_canary": {
+                "data": {
+                    "agent_loop": {
+                        "final_status": "success",
+                        "context_data": {
+                            "canary_verdict": {
+                                "status": "accepted",
+                                "deltas": {"requests_per_sec_percent": 12.0},
+                            }
+                        },
+                    }
+                }
+            },
+        },
+    )
+
+    output = tmp_path / "competition.md"
+    module.generate(results, output, run_dir)
+    text = output.read_text(encoding="utf-8")
+
+    assert "30.00%" in text
+    assert "50.00%" in text
+    assert "`accepted`" in text
+    assert "xychart-beta" in text
+
+
+def test_native_report_prefers_fairness_valid_summary(tmp_path: Path):
+    module = load_report_module()
+    results = tmp_path / "results"
+    write_json(
+        results / "native-scx-old" / "summary.json",
+        {
+            "comparison": {
+                "rps_gain_percent": 90.0,
+                "background_cpu_retention_percent": 17.0,
+                "valid_for_performance_claims": False,
+            }
+        },
+    )
+    write_json(
+        results / "native-scx" / "fairness-valid" / "summary.json",
+        {
+            "comparison": {
+                "rps_gain_percent": 62.18,
+                "background_cpu_retention_percent": 32.22,
+                "valid_for_performance_claims": True,
+            }
+        },
+    )
+
+    selected = module.latest_native_summary(results)
+
+    assert selected["comparison"]["rps_gain_percent"] == 62.18
