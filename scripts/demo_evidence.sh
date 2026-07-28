@@ -26,21 +26,44 @@ def change(before, after, lower_is_better=False):
         return "N/A"
     delta = (after - before) / before * 100.0
     if abs(delta) < 0.005:
-        return "0.00% (unchanged)"
+        return "0.00%（基本不变）"
     improved = delta < 0 if lower_is_better else delta > 0
     arrow = "↓" if delta < 0 else "↑"
-    result = "improved" if improved else "regressed"
-    return f"{arrow}{abs(delta):.2f}% ({result})"
+    result = "改善" if improved else "回退"
+    return f"{arrow}{abs(delta):.2f}%（{result}）"
 
 def measured_change(value, lower_is_better=False):
     if value is None:
         return "N/A"
     if abs(value) < 0.005:
-        return "0.00% (unchanged)"
+        return "0.00%（基本不变）"
     improved = value < 0 if lower_is_better else value > 0
     arrow = "↓" if value < 0 else "↑"
-    result = "improved" if improved else "regressed"
-    return f"{arrow}{abs(value):.2f}% ({result})"
+    result = "改善" if improved else "回退"
+    return f"{arrow}{abs(value):.2f}%（{result}）"
+
+def source_name(value):
+    return {
+        "deepseek-v4": "DeepSeek 大模型",
+        "explicit_cli": "固定安全规则",
+        "rule_fallback": "本地规则",
+    }.get(value, value or "未知")
+
+def mode_name(value):
+    return {
+        "latency_first": "优先保护响应速度",
+        "throughput_first": "优先提升处理能力",
+        "balanced": "均衡分配资源",
+        "isolate_background": "隔离后台干扰",
+    }.get(value, value or "未知")
+
+def expert_name(value):
+    return {
+        "latency_guard": "响应速度保护方案",
+        "background_isolation": "后台隔离方案",
+        "balanced": "均衡方案",
+        "throughput_boost": "处理能力提升方案",
+    }.get(value, value or "等待选择")
 
 print("\n=== SchedX-Agent 演示结果 ===")
 print(f"运行目录 : {run_dir}")
@@ -112,13 +135,16 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
     deltas = verdict.get("deltas", {})
     print(f"\n[{label}]")
     print(
-        f"方案：来源={decision.get('source')}，选择={decision.get('expert_id')}，"
-        f"方向={decision.get('mode')}，保护对象={decision.get('target')}"
+        f"方案：来源={source_name(decision.get('source'))}，"
+        f"选择={expert_name(decision.get('expert_id'))}，"
+        f"方向={mode_name(decision.get('mode'))}，保护对象={decision.get('target')}"
     )
     print(
         "结果：{}".format(
-            "ROLLED_BACK"
+            "已自动恢复（ROLLED_BACK）"
             if item.get("final_status") == "rolled_back"
+            else "已接受（ACCEPTED）"
+            if verdict.get("status") == "accepted"
             else str(verdict.get("status", item.get("final_status", ""))).upper()
         )
     )
@@ -134,6 +160,8 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
             "insufficient_p99_improvement": "未达到严格的延迟改善目标",
             "throughput_regression": "每秒请求数下降超过安全范围",
             "background_progress_regression": "后台任务进度下降超过安全范围",
+            "background_starvation": "后台任务获得的处理器时间过少",
+            "missing_background_progress": "没有采集到后台任务进度",
         }
         print(
             "原因："
@@ -154,7 +182,11 @@ print("\n[环境恢复]")
 print(
     f"后台干扰已停止={not cleanup['stress_ng_running']}，"
     f"资源控制已清理={not cleanup['cgroup_base_exists']}，"
-    f"调度器状态={cleanup['sched_ext_state']}"
+    "自定义调度={}".format(
+        "已关闭（disabled）"
+        if cleanup["sched_ext_state"] == "disabled"
+        else cleanup["sched_ext_state"]
+    )
 )
 print(f"报告文件 : {data.get('report', {}).get('path', '')}")
 PY

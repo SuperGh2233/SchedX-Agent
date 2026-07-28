@@ -18,10 +18,12 @@ pgrep -f 'stress-ng|stress-ng-cpu' >/dev/null && stress=true
 cgroup=false
 [[ -d /sys/fs/cgroup/schedx ]] && cgroup=true
 state="$(python3 -m schedx status | python3 -c 'import json,sys; print(json.load(sys.stdin)["sched_ext"]["state"])')"
+state_text="$state"
+[[ $state == disabled ]] && state_text="已关闭（disabled）"
 
 echo "后台干扰仍在运行 : $stress"
 echo "资源控制仍有残留 : $cgroup"
-echo "自定义调度状态   : $state"
+echo "自定义调度状态   : $state_text"
 if [[ $stress == false && $cgroup == false && $state == disabled ]]; then
     echo "CLEAN: 演示环境已恢复"
 else
