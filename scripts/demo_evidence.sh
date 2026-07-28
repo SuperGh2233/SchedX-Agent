@@ -25,6 +25,8 @@ def change(before, after, lower_is_better=False):
     if before in (None, 0) or after is None:
         return "N/A"
     delta = (after - before) / before * 100.0
+    if abs(delta) < 0.005:
+        return "0.00% (unchanged)"
     improved = delta < 0 if lower_is_better else delta > 0
     arrow = "↓" if delta < 0 else "↑"
     result = "improved" if improved else "regressed"
@@ -33,6 +35,8 @@ def change(before, after, lower_is_better=False):
 def measured_change(value, lower_is_better=False):
     if value is None:
         return "N/A"
+    if abs(value) < 0.005:
+        return "0.00% (unchanged)"
     improved = value < 0 if lower_is_better else value > 0
     arrow = "↓" if value < 0 else "↑"
     result = "improved" if improved else "regressed"
@@ -112,8 +116,11 @@ for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严
         f"mode={decision.get('mode')}, target={decision.get('target')}"
     )
     print(
-        f"Verdict : {str(item.get('final_status', '')).upper()} "
-        f"({str(verdict.get('status', '')).upper()})"
+        "Verdict : {}".format(
+            "ROLLED_BACK"
+            if item.get("final_status") == "rolled_back"
+            else str(verdict.get("status", item.get("final_status", ""))).upper()
+        )
     )
     print(
         "Metrics : P99 {}, RPS {}, background retained {}".format(
