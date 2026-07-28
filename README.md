@@ -45,10 +45,15 @@ sudo schedx rollback
 flowchart LR
   P[Probe Skills] --> A[Analyze Skills]
   A --> C[Workload Classifier]
-  C --> PL[Policy Planner]
+  C --> RT[Time-weighted Policy Router]
+  PR[Expert Policy Repository] <--> RT
+  RT --> PL[Policy Planner]
   PL --> EX[Safe Action Executor]
   EX --> CG[cgroup v2 Controller]
   EX --> SCX[scx Controller Detection]
+  EX --> V[Canary Verifier]
+  V -->|accepted outcome| PR
+  V -->|regression| RB
   CG --> RB[Rollback Store]
   EX --> B[Benchmark Runner]
   B --> R[Report Generator]
@@ -57,6 +62,7 @@ flowchart LR
 ## Commands
 
 - `schedx status`: print platform, cgroup v2, and sched_ext status.
+- `schedx policies`: list the allowlisted expert policy catalog and canary outcomes.
 - `schedx probe`: collect process, pressure, sched, and cgroup signals.
 - `schedx classify`: classify workloads and include rule reasons.
 - `schedx optimize`: apply structured cgroup actions or show them with `--dry-run`.
@@ -66,6 +72,37 @@ flowchart LR
 - `schedx report`: generate a Markdown report from result JSON files.
 - `schedx tool-run`: execute one AI Agent tool call with an ephemeral cgroup,
   native sched_ext policy, resource-intent profile, metrics, and feedback.
+
+## Adaptive Mixture Of Policies
+
+Automatic rule and LLM proposals pass through a bounded, time-weighted router
+before execution. The router uses exponential decay, a confidence threshold,
+and a six-second switch cooldown to avoid policy thrashing. After cooldown, a
+new expert must remain the winner for two consecutive observations before the
+router switches. Explicit CLI modes always bypass automatic routing.
+
+The built-in allowlisted experts are:
+
+| Expert | SchedX mode | Purpose |
+| --- | --- | --- |
+| `latency_guard` | `latency_first` | Protect nginx, Redis, and other latency-sensitive services. |
+| `throughput_boost` | `throughput_first` | Favor sustained batch compute throughput. |
+| `background_isolation` | `isolate_background` | Constrain explicitly matched interference processes. |
+| `balanced` | `balanced` | Conservative fallback for uncertain observations. |
+
+Inspect the catalog and historical canary outcomes without root privileges:
+
+```bash
+schedx policies
+```
+
+The router selects an internal policy mode implemented by the existing
+`scx_agent`; it never executes a repository entry as a command. When benchmark
+or deployment code supplies baseline and candidate canary metrics, verification
+rejects sched_ext task rejections, background starvation, P99 regressions, and
+throughput regressions. A rejected canary enters the existing rollback path;
+missing objective metrics are recorded separately as inconclusive rather than
+as a successful policy outcome.
 
 ## Agent Tool-Call Resource Control
 
