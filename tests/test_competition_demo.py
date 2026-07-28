@@ -50,7 +50,7 @@ def test_llm_canary_uses_autonomous_policy_without_explicit_target(
     assert "--target" not in optimize
 
 
-def test_rejection_canary_uses_post_action_p99_gate(tmp_path: Path, monkeypatch):
+def test_rejection_canary_uses_deterministic_latency_gate(tmp_path: Path, monkeypatch):
     module = load_demo_module()
     calls = []
 
@@ -72,13 +72,16 @@ def test_rejection_canary_uses_post_action_p99_gate(tmp_path: Path, monkeypatch)
         3,
         2,
         0.25,
-        use_llm=True,
-        min_p99_improvement=99.9,
+        use_llm=False,
+        min_p99_improvement=101.0,
     )
 
     optimize = next(args for args in calls if args[0] == "optimize")
+    assert "--llm-policy" not in optimize
+    assert optimize[optimize.index("--mode") + 1] == "latency_first"
+    assert optimize[optimize.index("--target") + 1] == "nginx"
     gate = optimize.index("--canary-min-p99-improvement")
-    assert optimize[gate + 1] == "99.9"
+    assert optimize[gate + 1] == "101.0"
 
 
 def test_agent_trace_surfaces_decision_route_verdict_and_rollback():
@@ -135,3 +138,56 @@ def test_agent_trace_summarizes_rollback_without_verbose_entries():
         "skipped": 0,
         "scx_entries_removed": 1,
     }
+
+
+def test_compact_summary_keeps_video_signal_without_verbose_trace():
+    module = load_demo_module()
+    manifest = {
+        "status": "ok",
+        "run_dir": "results/demo/run",
+        "llm_policy": True,
+        "agent_trace": {
+            "accepted": {
+                "decision": {
+                    "source": "deepseek-v4",
+                    "expert_id": "latency_guard",
+                    "mode": "latency_first",
+                    "target": "nginx",
+                },
+                "phases_completed": ["probe", "analyze", "verify"],
+                "final_status": "success",
+                "canary_verdict": {
+                    "status": "accepted",
+                    "reasons": [],
+                    "deltas": {
+                        "p99_percent": -80.0,
+                        "requests_per_sec_percent": 2.0,
+                    },
+                },
+                "rollback": None,
+            },
+            "rejected": {
+                "decision": {
+                    "source": "rule",
+                    "expert_id": "latency_guard",
+                    "mode": "latency_first",
+                    "target": "nginx",
+                },
+                "final_status": "rolled_back",
+                "canary_verdict": {
+                    "status": "rejected",
+                    "reasons": ["insufficient_p99_improvement"],
+                    "deltas": {"p99_percent": -70.0},
+                },
+                "rollback": {"restored": 4},
+            },
+        },
+        "cleanup": {"sched_ext_state": "disabled"},
+        "report": {"returncode": 0, "path": "reports/demo.md"},
+    }
+
+    summary = module.build_console_summary(manifest)
+
+    assert summary["accepted_policy"]["verdict"] == "accepted"
+    assert summary["strict_safety_gate"]["final_status"] == "rolled_back"
+    assert "phases_completed" not in str(summary)

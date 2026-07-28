@@ -29,6 +29,10 @@ from schedx.scx_daemon import ScxDaemonClient
 from schedx.skills.rollback_skill import RollbackSkill
 
 
+def progress(step: str) -> None:
+    print(f"\n{step}", file=sys.stderr, flush=True)
+
+
 def preflight(require_llm: bool = False) -> dict[str, Any]:
     required = {tool: shutil.which(tool) for tool in ("wrk", "stress-ng", "sysbench")}
     nginx = subprocess.run(
@@ -180,13 +184,39 @@ def extract_agent_trace(result: dict[str, Any]) -> dict[str, Any]:
 
 
 def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
+    def summarize_trace(trace: dict[str, Any]) -> dict[str, Any]:
+        decision = trace.get("decision", {})
+        verdict = trace.get("canary_verdict", {})
+        deltas = verdict.get("deltas", {})
+        return {
+            "source": decision.get("source"),
+            "expert": decision.get("expert_id"),
+            "mode": decision.get("mode"),
+            "target": decision.get("target"),
+            "final_status": trace.get("final_status"),
+            "verdict": verdict.get("status"),
+            "reasons": verdict.get("reasons", []),
+            "p99_change_percent": deltas.get("p99_percent"),
+            "rps_change_percent": deltas.get("requests_per_sec_percent"),
+            "background_retention_percent": deltas.get(
+                "background_retention_percent"
+            ),
+            "rollback": trace.get("rollback"),
+        }
+
+    trace = manifest.get("agent_trace", {})
+    report = manifest.get("report", {})
     return {
         "status": manifest.get("status"),
         "run_dir": manifest.get("run_dir"),
         "llm_policy": manifest.get("llm_policy", False),
-        "agent_trace": manifest.get("agent_trace", {}),
+        "accepted_policy": summarize_trace(trace.get("accepted", {})),
+        "strict_safety_gate": summarize_trace(trace.get("rejected", {})),
         "cleanup": manifest.get("cleanup", {}),
-        "report": manifest.get("report", {}),
+        "report": {
+            "status": "ok" if report.get("returncode") == 0 else "failed",
+            "path": report.get("path"),
+        },
     }
 
 
@@ -248,6 +278,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "llm_policy": args.llm_policy,
     }
     try:
+        progress("[1/4] Nginx 四组消融：default / cgroup / scx / Agent")
         ablation = BenchmarkRunner().run(
             "nginx-ablation",
             run_dir / "nginx-ablation",
@@ -261,6 +292,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         manifest["nginx_ablation"] = ablation
         write_json(run_dir / "nginx-ablation-result.json", ablation)
 
+        progress("[2/4] 第二 workload：sysbench batch throughput")
         batch = BenchmarkRunner().run(
             "batch-throughput",
             run_dir / "batch-throughput",
@@ -277,6 +309,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         write_json(
             run_dir / "daemon-active.json", run_schedx_json(["scx-daemon", "status"])
         )
+        progress("[3/4] DeepSeek 策略：常规 Canary 接受门槛")
         manifest["accepted_canary"] = run_canary(
             run_dir,
             "canary-accepted",
@@ -285,14 +318,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             0.25,
             use_llm=args.llm_policy,
         )
+        progress("[4/4] 安全验证：确定性严格门槛与原子回滚")
         manifest["rollback_canary"] = run_canary(
             run_dir,
             "canary-rollback",
             max(3, min(duration, 5)),
             args.stress_cpu,
             0.25,
-            use_llm=args.llm_policy,
-            min_p99_improvement=99.9,
+            use_llm=False,
+            min_p99_improvement=101.0,
         )
         manifest["agent_trace"] = {
             "accepted": extract_agent_trace(manifest["accepted_canary"]),
@@ -307,6 +341,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     except Exception as exc:
         manifest.update({"status": "failed", "error": str(exc)})
     finally:
+        progress("[清理] 恢复 cgroup、scx 与干扰负载")
         cleanup_stress()
         manifest["final_rollback"] = run_schedx_json(["rollback"])
         stop_daemon(daemon_process, daemon_log)

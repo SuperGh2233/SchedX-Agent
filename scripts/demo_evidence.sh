@@ -21,6 +21,23 @@ def metric(value, digits=2):
 def percentage(value):
     return "N/A" if value is None else f"{value:.2f}%"
 
+def change(before, after, lower_is_better=False):
+    if before in (None, 0) or after is None:
+        return "N/A"
+    delta = (after - before) / before * 100.0
+    improved = delta < 0 if lower_is_better else delta > 0
+    arrow = "↓" if delta < 0 else "↑"
+    result = "improved" if improved else "regressed"
+    return f"{arrow}{abs(delta):.2f}% ({result})"
+
+def measured_change(value, lower_is_better=False):
+    if value is None:
+        return "N/A"
+    improved = value < 0 if lower_is_better else value > 0
+    arrow = "↓" if value < 0 else "↑"
+    result = "improved" if improved else "regressed"
+    return f"{arrow}{abs(value):.2f}% ({result})"
+
 print("\n=== SchedX-Agent 完整证据链 ===")
 print(f"运行目录 : {run_dir}")
 print(f"运行状态 : {data.get('status')}")
@@ -29,10 +46,10 @@ print(f"实验参数 : duration={data.get('duration')}s, repeats={data.get('repe
 nginx = data["nginx_ablation"]["summary"]["phases"]
 print("\n[四组消融]                 RPS        P99(ms)   后台保留率")
 for key, label in (
-    ("default", "默认调度"),
+    ("default", "Default"),
     ("cgroup_only", "cgroup-only"),
     ("scx_only", "scx-only"),
-    ("agent_combined", "Agent 联合"),
+    ("agent_combined", "Agent-combined"),
 ):
     row = nginx[key]
     print(
@@ -40,6 +57,23 @@ for key, label in (
         f" {metric(row.get('mean_p99_ms'), 3):>12}"
         f" {percentage(row.get('background_retention_percent')):>11}"
     )
+
+default = nginx["default"]
+agent = nginx["agent_combined"]
+print(
+    "Agent result       : RPS {}, P99 {}, background retained {}".format(
+        change(
+            default.get("mean_requests_per_sec"),
+            agent.get("mean_requests_per_sec"),
+        ),
+        change(
+            default.get("mean_p99_ms"),
+            agent.get("mean_p99_ms"),
+            lower_is_better=True,
+        ),
+        percentage(agent.get("background_retention_percent")),
+    )
+)
 
 batch = data["batch_throughput"]["summary"]["phases"]
 print("\n[第二 workload：sysbench]")
@@ -50,20 +84,55 @@ for key, label in (("baseline", "baseline"), ("interference", "interference"), (
         f"P95={metric(row.get('mean_latency_p95_ms'), 3)} ms"
     )
 
+interference = batch["interference"]
+schedx = batch["schedx"]
+print(
+    "SchedX vs interference: throughput {}, P95 {}".format(
+        change(
+            interference.get("mean_events_per_second"),
+            schedx.get("mean_events_per_second"),
+        ),
+        change(
+            interference.get("mean_latency_p95_ms"),
+            schedx.get("mean_latency_p95_ms"),
+            lower_is_better=True,
+        ),
+    )
+)
+
 trace = data["agent_trace"]
-for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严格门槛")):
+for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严格安全门槛")):
     item = trace[key]
     decision = item.get("decision", {})
     verdict = item.get("canary_verdict", {})
+    deltas = verdict.get("deltas", {})
     print(f"\n[{label}]")
     print(
-        f"DeepSeek source={decision.get('source')}, expert={decision.get('expert_id')}, "
+        f"Policy  : source={decision.get('source')}, expert={decision.get('expert_id')}, "
         f"mode={decision.get('mode')}, target={decision.get('target')}"
     )
-    print(f"final_status={item.get('final_status')}, reasons={verdict.get('reasons', [])}")
-    print(f"deltas={verdict.get('deltas', {})}")
+    print(
+        f"Verdict : {str(item.get('final_status', '')).upper()} "
+        f"({str(verdict.get('status', '')).upper()})"
+    )
+    print(
+        "Metrics : P99 {}, RPS {}, background retained {}".format(
+            measured_change(deltas.get("p99_percent"), lower_is_better=True),
+            measured_change(deltas.get("requests_per_sec_percent")),
+            percentage(deltas.get("background_retention_percent")),
+        )
+    )
+    if verdict.get("reasons"):
+        print(f"Reasons : {', '.join(verdict['reasons'])}")
     if item.get("rollback"):
-        print(f"rollback={item['rollback']}")
+        rollback = item["rollback"]
+        print(
+            "Rollback: restored={}, groups_removed={}, scx_entries_removed={}".format(
+                rollback.get("restored", 0),
+                rollback.get("groups_removed", 0),
+                rollback.get("scx_entries_removed", 0),
+            )
+        )
 
 cleanup = data["cleanup"]
 print("\n[最终清理]")

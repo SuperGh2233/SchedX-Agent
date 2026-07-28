@@ -32,6 +32,7 @@ pause_scene() {
 }
 
 banner() {
+    [[ -t 1 ]] && clear
     printf '\n\033[1;36m============================================================\033[0m\n'
     printf '\033[1;36m%s\033[0m\n' "$1"
     printf '\033[1;36m============================================================\033[0m\n'
@@ -52,13 +53,18 @@ stress-ng --cpu 2 --timeout 45s --metrics-brief >.schedx/demo-stress.log 2>&1 &
 stress_pid=$!
 sleep 2
 python3 -m schedx classify --top 50 | python3 -c '
+from collections import Counter
 import json, sys
 c = json.load(sys.stdin)["classification"]
-print("overall =", c["overall"])
-for key in ("latency_sensitive", "batch_compute", "background_noise"):
+
+def summary(key):
     rows = c["groups"].get(key, [])
-    names = ", ".join("{}(pid={})".format(x["comm"], x["pid"]) for x in rows[:6]) or "-"
-    print("{:<20}: {}".format(key, names))
+    counts = Counter(x["comm"] for x in rows)
+    return ", ".join("{} x{}".format(name, count) for name, count in counts.items()) or "-"
+
+print("Overall workload : {}".format(c["overall"].upper()))
+print("Online services  : {}".format(summary("latency_sensitive")))
+print("CPU interference : {}".format(summary("background_noise")))
 '
 pause_scene
 
@@ -70,7 +76,7 @@ d = x["decision"]
 print("source     =", d.get("source"))
 print("mode       =", d.get("mode"))
 print("target     =", d.get("target"))
-print("expert     =", d.get("expert_id", "将在完整闭环内路由"))
+print("expert     =", d.get("expert_id", "pending safety routing"))
 print("confidence =", d.get("confidence"))
 print("parameters =", d.get("parameters"))
 print("reason     =", d.get("reason"))
@@ -80,7 +86,7 @@ wait "$stress_pid" 2>/dev/null || true
 bash scripts/demo_cleanup.sh >/dev/null
 pause_scene
 
-banner "第 4 幕：真实闭环——消融、第二 workload、Canary 常规与严格门槛"
+banner "第 4 幕：真实闭环——消融、第二 workload、Canary 接受与回滚"
 output="results/video-recording"
 report="reports/video-recording.md"
 args=(
@@ -102,21 +108,7 @@ else
     )
 fi
 
-log="$(mktemp)"
-bash scripts/run_competition_demo.sh "${args[@]}" >"$log" 2>&1 &
-demo_pid=$!
-started=$SECONDS
-while kill -0 "$demo_pid" 2>/dev/null; do
-    printf '\rAgent 正在执行 probe → policy → scx/cgroup → verify → rollback，已运行 %3d 秒' "$((SECONDS - started))"
-    sleep 2
-done
-printf '\n'
-set +e
-wait "$demo_pid"
-rc=$?
-set -e
-cat "$log"
-[[ $rc -eq 0 ]] || exit "$rc"
+python3 scripts/run_competition_demo.py "${args[@]}"
 pause_scene
 
 banner "第 5 幕：证据回放——性能收益、Agent trace 与原子回滚"
