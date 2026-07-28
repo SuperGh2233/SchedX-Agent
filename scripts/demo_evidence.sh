@@ -15,6 +15,12 @@ latest = Path(sys.argv[1])
 run_dir = Path(json.loads(latest.read_text(encoding="utf-8"))["run_dir"])
 data = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
 
+def metric(value, digits=2):
+    return "N/A" if value is None else f"{value:.{digits}f}"
+
+def percentage(value):
+    return "N/A" if value is None else f"{value:.2f}%"
+
 print("\n=== SchedX-Agent 完整证据链 ===")
 print(f"运行目录 : {run_dir}")
 print(f"运行状态 : {data.get('status')}")
@@ -30,16 +36,19 @@ for key, label in (
 ):
     row = nginx[key]
     print(
-        f"{label:<16} {row['mean_requests_per_sec']:>10.2f}"
-        f" {row['mean_p99_ms']:>12.3f}"
-        f" {row['background_retention_percent']:>11.2f}%"
+        f"{label:<16} {metric(row.get('mean_requests_per_sec')):>10}"
+        f" {metric(row.get('mean_p99_ms'), 3):>12}"
+        f" {percentage(row.get('background_retention_percent')):>11}"
     )
 
 batch = data["batch_throughput"]["summary"]["phases"]
 print("\n[第二 workload：sysbench]")
 for key, label in (("baseline", "baseline"), ("interference", "interference"), ("schedx", "SchedX")):
     row = batch[key]
-    print(f"{label:<14} events/s={row['mean_events_per_second']:.2f}, P95={row['mean_latency_p95_ms']:.3f} ms")
+    print(
+        f"{label:<14} events/s={metric(row.get('mean_events_per_second'))}, "
+        f"P95={metric(row.get('mean_latency_p95_ms'), 3)} ms"
+    )
 
 trace = data["agent_trace"]
 for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严格门槛")):
