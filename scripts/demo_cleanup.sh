@@ -19,9 +19,9 @@ cgroup=false
 [[ -d /sys/fs/cgroup/schedx ]] && cgroup=true
 state="$(python3 -m schedx status | python3 -c 'import json,sys; print(json.load(sys.stdin)["sched_ext"]["state"])')"
 
-echo "stress-ng running : $stress"
-echo "cgroup remains    : $cgroup"
-echo "sched_ext state   : $state"
+echo "后台干扰仍在运行 : $stress"
+echo "资源控制仍有残留 : $cgroup"
+echo "自定义调度状态   : $state"
 if [[ $stress == false && $cgroup == false && $state == disabled ]]; then
     echo "CLEAN: 演示环境已恢复"
 else

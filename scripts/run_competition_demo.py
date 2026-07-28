@@ -220,6 +220,92 @@ def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def format_console_summary(summary: dict[str, Any]) -> str:
+    def percent(value: object, *, lower_is_better: bool = False) -> str:
+        if value is None:
+            return "无有效数据"
+        number = float(value)
+        if abs(number) < 0.005:
+            return "基本不变"
+        improved = number < 0 if lower_is_better else number > 0
+        arrow = "下降" if number < 0 else "上升"
+        result = "改善" if improved else "回退"
+        return f"{arrow} {abs(number):.2f}%（{result}）"
+
+    def policy_name(value: object) -> str:
+        return {
+            "latency_first": "优先保护响应速度",
+            "throughput_first": "优先提升处理能力",
+            "balanced": "均衡模式",
+            "isolate_background": "隔离后台干扰",
+        }.get(str(value), str(value or "未知"))
+
+    def source_name(value: object) -> str:
+        return {
+            "deepseek-v4": "DeepSeek 大模型",
+            "explicit_cli": "固定安全规则",
+            "rule_fallback": "本地规则",
+        }.get(str(value), str(value or "未知"))
+
+    def verdict_block(title: str, item: dict[str, Any]) -> list[str]:
+        verdict = str(item.get("verdict", "")).upper()
+        final = str(item.get("final_status", ""))
+        result = "ROLLED_BACK" if final == "rolled_back" else verdict
+        lines = [
+            f"\n[{title}]",
+            f"方案来源       : {source_name(item.get('source'))}",
+            f"优化方向       : {policy_name(item.get('mode'))}",
+            f"保护对象       : {item.get('target') or '未知'}",
+            f"执行结果       : {result}",
+            f"最慢 1% 请求延迟: {percent(item.get('p99_change_percent'), lower_is_better=True)}",
+            f"每秒请求数     : {percent(item.get('rps_change_percent'))}",
+            "后台任务进度   : {}".format(
+                "无有效数据"
+                if item.get("background_retention_percent") is None
+                else f"{float(item['background_retention_percent']):.2f}%"
+            ),
+        ]
+        if item.get("reasons"):
+            reason_names = {
+                "insufficient_p99_improvement": "未达到严格的延迟改善目标",
+                "throughput_regression": "每秒请求数下降超过安全范围",
+                "background_progress_regression": "后台任务进度下降超过安全范围",
+            }
+            lines.append(
+                "拒绝原因       : "
+                + "，".join(reason_names.get(reason, reason) for reason in item["reasons"])
+            )
+        rollback = item.get("rollback")
+        if rollback:
+            lines.append(
+                "回滚结果       : 恢复 {} 项，删除 {} 个资源组和 {} 个调度策略".format(
+                    rollback.get("restored", 0),
+                    rollback.get("groups_removed", 0),
+                    rollback.get("scx_entries_removed", 0),
+                )
+            )
+        return lines
+
+    cleanup = summary.get("cleanup", {})
+    lines = [
+        "\n=== SchedX-Agent 运行摘要 ===",
+        f"总体状态       : {str(summary.get('status', '')).upper()}",
+        f"结果目录       : {summary.get('run_dir')}",
+    ]
+    lines.extend(verdict_block("常规小范围试运行", summary["accepted_policy"]))
+    lines.extend(verdict_block("严格安全检查", summary["strict_safety_gate"]))
+    lines.extend(
+        [
+            "\n[环境恢复]",
+            f"后台干扰已停止 : {not cleanup.get('stress_ng_running', True)}",
+            f"资源控制已清理 : {not cleanup.get('cgroup_base_exists', True)}",
+            f"调度器状态     : {cleanup.get('sched_ext_state')}",
+            f"报告文件       : {summary.get('report', {}).get('path')}",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def generate_report(results: Path, run_dir: Path, output: Path) -> dict[str, Any]:
     completed = subprocess.run(
         [
@@ -278,7 +364,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "llm_policy": args.llm_policy,
     }
     try:
-        progress("[1/4] Nginx 四组消融：default / cgroup / scx / Agent")
+        progress("[1/4] 对比四种资源管控方案")
         ablation = BenchmarkRunner().run(
             "nginx-ablation",
             run_dir / "nginx-ablation",
@@ -292,7 +378,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         manifest["nginx_ablation"] = ablation
         write_json(run_dir / "nginx-ablation-result.json", ablation)
 
-        progress("[2/4] 第二 workload：sysbench batch throughput")
+        progress("[2/4] 验证第二类任务：批处理计算")
         batch = BenchmarkRunner().run(
             "batch-throughput",
             run_dir / "batch-throughput",
@@ -309,7 +395,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         write_json(
             run_dir / "daemon-active.json", run_schedx_json(["scx-daemon", "status"])
         )
-        progress("[3/4] DeepSeek 策略：常规 Canary 接受门槛")
+        progress("[3/4] DeepSeek 方案：常规小范围试运行")
         manifest["accepted_canary"] = run_canary(
             run_dir,
             "canary-accepted",
@@ -318,7 +404,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             0.25,
             use_llm=args.llm_policy,
         )
-        progress("[4/4] 安全验证：确定性严格门槛与原子回滚")
+        progress("[4/4] 严格安全检查：不达标就自动恢复")
         manifest["rollback_canary"] = run_canary(
             run_dir,
             "canary-rollback",
@@ -341,7 +427,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     except Exception as exc:
         manifest.update({"status": "failed", "error": str(exc)})
     finally:
-        progress("[清理] 恢复 cgroup、scx 与干扰负载")
+        progress("[清理] 停止后台干扰并恢复默认状态")
         cleanup_stress()
         manifest["final_rollback"] = run_schedx_json(["rollback"])
         stop_daemon(daemon_process, daemon_log)
@@ -395,8 +481,10 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
     result = run(args)
-    output = build_console_summary(result) if args.compact else result
-    print(json.dumps(output, indent=2, ensure_ascii=False))
+    if args.compact:
+        print(format_console_summary(build_console_summary(result)))
+    else:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result.get("status") == "ok" else 1
 
 

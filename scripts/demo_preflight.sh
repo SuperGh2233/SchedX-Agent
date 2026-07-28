@@ -26,11 +26,11 @@ python3 -m schedx status | python3 -c '
 import json, sys
 d = json.load(sys.stdin)
 s = d["sched_ext"]
-print("OS/内核       :", d["platform"])
-print("cgroup v2     :", d["cgroup_v2"])
-print("sched_ext     : available={}, state={}".format(s["available"], s["state"]))
-print("Agent mode    :", d["mode"])
-print("LLM           : configured={}, model={}".format(d["llm_configured"], d["llm_model"]))
+print("操作系统与内核 :", d["platform"])
+print("资源控制功能   :", "可用" if d["cgroup_v2"] else "不可用")
+print("自定义调度功能 :", "可用，当前状态={}".format(s["state"]) if s["available"] else "不可用")
+print("Agent 运行方式 :", "真实自定义调度" if d["mode"] == "sched_ext-native" else d["mode"])
+print("大模型         :", "{}，{}".format("已配置" if d["llm_configured"] else "未配置", d["llm_model"]))
 if not d["cgroup_v2"] or not s["available"] or not d["llm_configured"]:
     raise SystemExit(1)
 if s["state"] != "disabled":
@@ -47,4 +47,4 @@ if [[ -d /sys/fs/cgroup/schedx ]]; then
     exit 1
 fi
 
-echo "READY: 环境、服务、LLM、cgroup v2 与 native sched_ext 均已就绪"
+echo "READY: 操作系统、在线服务、大模型和资源调度功能均已就绪"

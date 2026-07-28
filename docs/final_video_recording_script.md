@@ -30,42 +30,42 @@ bash scripts/demo_recording_story.sh
 
 ## 第 1 幕：项目定位与真实环境（约 45 秒）
 
-画面会展示 openEuler、补丁内核、cgroup v2、native sched_ext 和 LLM 状态。
+画面会展示 openEuler、比赛内核、资源控制功能、自定义调度功能和大模型状态。
 
 旁白：
 
-> 本项目名为 SchedX-Agent，面向 Linux 混合负载场景构建自适应资源管控闭环。当前演示运行在 openEuler 24.03 LTS SP4 上，内核已经启用 sched_ext。系统同时支持 cgroup v2 安全回退，并配置了 DeepSeek 策略模型。下面所有分类、调度、验证和回滚都在真实虚拟机中执行。
+> 本项目名为 SchedX-Agent，主要解决在线服务受到后台任务干扰的问题。当前演示运行在比赛要求的 openEuler 24.03 LTS SP4 上。系统已经启用可扩展调度功能，也可以通过资源控制组限制后台任务，并由 DeepSeek 大模型协助选择优化方案。下面看到的识别、调整、效果检查和自动恢复，都在这台真实虚拟机中执行。
 
 看到 `READY` 后按 Enter。
 
-## 第 2 幕：Workload 感知与分类（约 50 秒）
+## 第 2 幕：识别在线服务与后台干扰（约 50 秒）
 
 脚本会启动 nginx 与 stress-ng 混合负载，并输出分类结果。
 
 旁白：
 
-> Agent 首先从 procfs、PSI、cgroup 和调度指标中感知工作负载。这里 nginx 被识别为延迟敏感型服务，stress-ng 及其 CPU worker 被识别为后台干扰负载，因此 overall 判定为 mixed。分类器采用受控规则，不会把 schedx、sshd、systemd 等控制进程误隔离。
+> Agent 首先读取系统中的进程信息、处理器压力和资源使用情况。现在它识别出 nginx 是需要快速响应的在线服务，stress-ng 是持续占用处理器的后台干扰任务，因此判断当前属于混合负载场景。所有控制动作还会经过安全名单检查，SchedX 自身以及远程登录、系统管理等关键进程都不会被误操作。
 
-看到 `latency_sensitive`、`background_noise` 和 `overall = mixed` 后按 Enter。
+看到“场景判断：混合负载”“在线服务：nginx”和“后台干扰：stress-ng”后按 Enter。
 
-## 第 3 幕：LLM 提案与受约束决策（约 60 秒）
+## 第 3 幕：大模型提出方案，安全规则负责把关（约 60 秒）
 
 脚本会调用 `llm-plan`，显示策略来源、模式、目标、置信度和结构化参数。
 
 旁白：
 
-> DeepSeek 不直接生成任意 Shell 命令，而是提出结构化策略。策略必须经过参数范围、目标白名单和风险约束校验，再由专家策略路由器选择 latency guard、background isolation、balanced 或 throughput boost。即使模型不可用，系统也会自动回退到规则策略。
+> DeepSeek 不会直接执行系统命令，它只负责提出一个格式固定的优化方案。系统会检查调整对象是否安全、参数是否在允许范围内，再从“保护响应速度、隔离后台干扰、均衡分配资源、提升处理能力”四类方案中选择最合适的一种。即使大模型暂时不可用，Agent 也会自动使用本地规则继续运行。
 
 重点指出：
 
-- `source = deepseek-v4`
-- `mode = latency_first`
-- `target = nginx`
-- `parameters` 为结构化参数
+- 方案来源是 DeepSeek 大模型
+- 优化方向是优先保护响应速度
+- 保护对象是 nginx
+- 在线服务和后台任务使用不同优先级
 
 讲解完后按 Enter。
 
-## 第 4 幕：Agent 闭环执行（约 2～3 分钟）
+## 第 4 幕：自动执行并检查效果（约 2～3 分钟）
 
 脚本调用当前主程序：
 
@@ -85,29 +85,27 @@ python3 scripts/run_competition_demo.py \
 
 等待期间旁白：
 
-> Agent 正在执行完整闭环：Probe 感知系统状态，Analyze 识别 workload，LLM Policy 生成受约束提案，Policy Router 选择专家策略，随后通过 native sched_ext 与 cgroup v2 执行动作。Canary 阶段会比较执行前后的吞吐、P99 延迟和后台任务保留率，只有满足 SLO 才接受策略，否则自动回滚。
+> Agent 现在开始完整执行。它先读取系统状态，判断在线服务和后台干扰，再让大模型提出方案，由安全规则完成检查，然后调整处理器资源。调整完成后，系统会先进行一次小范围试运行，比较优化前后的每秒请求数、最慢百分之一请求的延迟，以及后台任务是否还能正常推进。只有达到预设性能目标，方案才会被保留，否则系统会自动恢复原来的设置。
 
 > 本次录制使用短时参数验证流程完整性，正式性能结论来自多轮重复实验，短时结果不用于宣称稳定性能提升。
 
 脚本完成后按 Enter。
 
-## 第 5 幕：证据链与回滚（约 90 秒）
+## 第 5 幕：实验结果与自动恢复（约 90 秒）
 
-画面会显示四组消融、sysbench 第二 workload、Canary 接受与拒绝结果。
+画面会显示四种方案对比、第二类批处理任务，以及小范围试运行的接受和恢复结果。
 
 旁白：
 
-> 这里展示 Agent 的证据链。四组消融分别是默认调度、cgroup-only、scx-only 和 Agent 联合策略；第二个 workload 使用 sysbench 验证批处理场景。常规 Canary 满足门槛后接受策略，严格 Canary 检测到吞吐回退后拒绝策略，并恢复 CPU 权重、删除 cgroup 和 scx 策略项。
+> 这里展示完整的实验结果。第一部分对比默认调度、只限制后台资源、只使用自定义调度，以及 Agent 联合优化四种方案。第二部分使用批处理计算任务验证系统不只适用于 nginx。常规小范围试运行达到目标后保留方案；严格安全检查故意设置了更高门槛，方案不达标时，Agent 会恢复原来的资源设置，并清除刚才创建的资源组和调度策略。
 
 重点指出：
 
-- `source=deepseek-v4`
-- `expert=latency_guard`
-- `final_status=success`
-- 严格门槛下 `final_status=rolled_back`
-- `rollback` 中恢复项和删除项数量
+- 常规试运行显示 `ACCEPTED`，表示方案通过
+- 严格安全检查显示 `ROLLED_BACK`，表示系统已经自动恢复
+- 重点指出恢复的设置数量、删除的资源组数量和调度策略数量
 
-如果某个短时采样指标显示 `N/A`，说明该指标在短时窗口内不足以形成有效比较，不代表伪造或补填数据。
+如果某个短时采样指标显示“无有效数据”，说明短时间内采集的数据还不足以进行比较，不代表伪造或补填数据。
 
 讲解完后按 Enter。
 
@@ -116,15 +114,34 @@ python3 scripts/run_competition_demo.py \
 画面应显示：
 
 ```text
-stress-ng running : false
-cgroup remains    : false
-sched_ext state   : disabled
+后台干扰仍在运行 : false
+资源控制仍有残留 : false
+自定义调度状态   : disabled
 CLEAN: 演示环境已恢复
 ```
 
 旁白：
 
-> 演示结束后，Agent 停止干扰负载、回滚资源配置、清除 cgroup，并将 sched_ext 恢复为 disabled。由此形成感知、决策、执行、验证、接受或回滚、报告和清理的完整闭环。SchedX-Agent 的核心价值不是单次调参，而是面向 SLO 的安全自适应调度。
+> 演示结束后，Agent 已经停止后台干扰任务，恢复原来的资源设置，删除临时资源组，并关闭本次自定义调度。整个过程形成了“发现问题、选择方案、执行优化、检查效果、接受或恢复、生成报告”的完整闭环。SchedX-Agent 的价值不只是调整一次参数，而是持续根据实际效果安全地选择资源管控方案。
+
+## 常见术语的中文讲法
+
+录制时优先说右侧中文，不需要反复念英文缩写：
+
+| 技术名词 | 演讲时的中文说法 |
+|---|---|
+| procfs | 进程信息 |
+| PSI | 系统压力 |
+| cgroup | 资源控制组 |
+| sched_ext | 可扩展调度功能 |
+| scx | 自定义调度器 |
+| LLM | 大语言模型 |
+| workload | 工作负载或运行任务 |
+| Canary | 小范围试运行 |
+| SLO | 预设性能目标 |
+| RPS | 每秒请求数 |
+| P99 | 最慢百分之一请求的延迟 |
+| rollback | 自动恢复原来的设置 |
 
 ## 录制结束后的检查
 

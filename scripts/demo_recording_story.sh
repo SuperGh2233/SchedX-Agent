@@ -43,12 +43,12 @@ cleanup() {
 }
 trap cleanup EXIT
 
-banner "第 1 幕：环境预检——证明执行面是真实的"
+banner "第 1 幕：检查真实运行环境"
 bash scripts/demo_cleanup.sh >/dev/null
 bash scripts/demo_preflight.sh
 pause_scene
 
-banner "第 2 幕：制造混合负载——nginx 在线服务 + stress-ng 干扰"
+banner "第 2 幕：识别在线服务和后台干扰"
 stress-ng --cpu 2 --timeout 45s --metrics-brief >.schedx/demo-stress.log 2>&1 &
 stress_pid=$!
 sleep 2
@@ -62,31 +62,40 @@ def summary(key):
     counts = Counter(x["comm"] for x in rows)
     return ", ".join("{} x{}".format(name, count) for name, count in counts.items()) or "-"
 
-print("Overall workload : {}".format(c["overall"].upper()))
-print("Online services  : {}".format(summary("latency_sensitive")))
-print("CPU interference : {}".format(summary("background_noise")))
+print("场景判断 : {}".format("混合负载" if c["overall"] == "mixed" else c["overall"]))
+print("在线服务 : {}".format(summary("latency_sensitive")))
+print("后台干扰 : {}".format(summary("background_noise")))
 '
 pause_scene
 
-banner "第 3 幕：DeepSeek 提案——受约束策略进入专家路由"
+banner "第 3 幕：DeepSeek 提出方案，安全规则负责把关"
 python3 -m schedx llm-plan --top 50 | python3 -c '
 import json, sys
 x = json.load(sys.stdin)
 d = x["decision"]
-print("source     =", d.get("source"))
-print("mode       =", d.get("mode"))
-print("target     =", d.get("target"))
-print("expert     =", d.get("expert_id", "pending safety routing"))
-print("confidence =", d.get("confidence"))
-print("parameters =", d.get("parameters"))
-print("reason     =", d.get("reason"))
+p = d.get("parameters", {})
+mode_names = {
+    "latency_first": "优先保护响应速度",
+    "throughput_first": "优先提升处理能力",
+    "balanced": "均衡分配资源",
+    "isolate_background": "隔离后台干扰",
+}
+source = "DeepSeek 大模型" if d.get("source") == "deepseek-v4" else d.get("source")
+print("方案来源       :", source)
+print("优化方向       :", mode_names.get(d.get("mode"), d.get("mode")))
+print("保护对象       :", d.get("target"))
+print("安全检查       :", d.get("expert_id", "等待系统选择合适方案"))
+print("方案可信度     : {:.0%}".format(d.get("confidence", 0)))
+print("在线服务优先级 :", p.get("cpu_weight"))
+print("后台任务优先级 :", p.get("cpu_weight_bg"))
+print("选择原因       : 检测到在线服务和后台干扰同时存在")
 '
 kill "$stress_pid" 2>/dev/null || true
 wait "$stress_pid" 2>/dev/null || true
 bash scripts/demo_cleanup.sh >/dev/null
 pause_scene
 
-banner "第 4 幕：真实闭环——消融、第二 workload、Canary 接受与回滚"
+banner "第 4 幕：自动执行、对比效果并检查安全性"
 output="results/video-recording"
 report="reports/video-recording.md"
 args=(
@@ -111,12 +120,12 @@ fi
 python3 scripts/run_competition_demo.py "${args[@]}"
 pause_scene
 
-banner "第 5 幕：证据回放——性能收益、Agent trace 与原子回滚"
+banner "第 5 幕：查看性能结果和自动恢复证据"
 bash scripts/demo_evidence.sh "$output"
 pause_scene
 
-banner "第 6 幕：最终清理——恢复默认调度状态且无资源残留"
+banner "第 6 幕：清理现场并恢复系统默认状态"
 bash scripts/demo_cleanup.sh
 trap - EXIT
 echo
-echo "演示闭环完成：感知 → 决策 → 执行 → 验证 → 接受或回滚 → 报告与清理"
+echo "演示完成：发现问题 → 选择方案 → 执行优化 → 检查效果 → 接受或恢复 → 生成报告"

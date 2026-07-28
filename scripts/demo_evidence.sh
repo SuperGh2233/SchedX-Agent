@@ -42,30 +42,30 @@ def measured_change(value, lower_is_better=False):
     result = "improved" if improved else "regressed"
     return f"{arrow}{abs(value):.2f}% ({result})"
 
-print("\n=== SchedX-Agent 完整证据链 ===")
+print("\n=== SchedX-Agent 演示结果 ===")
 print(f"运行目录 : {run_dir}")
 print(f"运行状态 : {data.get('status')}")
-print(f"实验参数 : duration={data.get('duration')}s, repeats={data.get('repeats')}")
+print(f"测试设置 : 每组 {data.get('duration')} 秒，重复 {data.get('repeats')} 次")
 
 nginx = data["nginx_ablation"]["summary"]["phases"]
-print("\n[四组消融]                 RPS        P99(ms)   后台保留率")
+print("\n[四种方案对比]")
 for key, label in (
-    ("default", "Default"),
-    ("cgroup_only", "cgroup-only"),
-    ("scx_only", "scx-only"),
-    ("agent_combined", "Agent-combined"),
+    ("default", "默认调度"),
+    ("cgroup_only", "仅限制后台资源"),
+    ("scx_only", "仅使用自定义调度"),
+    ("agent_combined", "Agent 联合优化"),
 ):
     row = nginx[key]
     print(
-        f"{label:<16} {metric(row.get('mean_requests_per_sec')):>10}"
-        f" {metric(row.get('mean_p99_ms'), 3):>12}"
-        f" {percentage(row.get('background_retention_percent')):>11}"
+        f"{label}: 每秒请求 {metric(row.get('mean_requests_per_sec'))}，"
+        f"最慢 1% 延迟 {metric(row.get('mean_p99_ms'), 3)} 毫秒，"
+        f"后台任务进度 {percentage(row.get('background_retention_percent'))}"
     )
 
 default = nginx["default"]
 agent = nginx["agent_combined"]
 print(
-    "Agent result       : RPS {}, P99 {}, background retained {}".format(
+    "Agent 综合效果：每秒请求数 {}，最慢 1% 延迟 {}，后台任务进度 {}".format(
         change(
             default.get("mean_requests_per_sec"),
             agent.get("mean_requests_per_sec"),
@@ -80,18 +80,18 @@ print(
 )
 
 batch = data["batch_throughput"]["summary"]["phases"]
-print("\n[第二 workload：sysbench]")
-for key, label in (("baseline", "baseline"), ("interference", "interference"), ("schedx", "SchedX")):
+print("\n[第二类任务：批处理计算]")
+for key, label in (("baseline", "无干扰基准"), ("interference", "加入后台干扰"), ("schedx", "Agent 优化后")):
     row = batch[key]
     print(
-        f"{label:<14} events/s={metric(row.get('mean_events_per_second'))}, "
-        f"P95={metric(row.get('mean_latency_p95_ms'), 3)} ms"
+        f"{label}: 每秒完成 {metric(row.get('mean_events_per_second'))} 次，"
+        f"较慢请求延迟 {metric(row.get('mean_latency_p95_ms'), 3)} 毫秒"
     )
 
 interference = batch["interference"]
 schedx = batch["schedx"]
 print(
-    "SchedX vs interference: throughput {}, P95 {}".format(
+    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}".format(
         change(
             interference.get("mean_events_per_second"),
             schedx.get("mean_events_per_second"),
@@ -105,36 +105,44 @@ print(
 )
 
 trace = data["agent_trace"]
-for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严格安全门槛")):
+for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严格安全检查")):
     item = trace[key]
     decision = item.get("decision", {})
     verdict = item.get("canary_verdict", {})
     deltas = verdict.get("deltas", {})
     print(f"\n[{label}]")
     print(
-        f"Policy  : source={decision.get('source')}, expert={decision.get('expert_id')}, "
-        f"mode={decision.get('mode')}, target={decision.get('target')}"
+        f"方案：来源={decision.get('source')}，选择={decision.get('expert_id')}，"
+        f"方向={decision.get('mode')}，保护对象={decision.get('target')}"
     )
     print(
-        "Verdict : {}".format(
+        "结果：{}".format(
             "ROLLED_BACK"
             if item.get("final_status") == "rolled_back"
             else str(verdict.get("status", item.get("final_status", ""))).upper()
         )
     )
     print(
-        "Metrics : P99 {}, RPS {}, background retained {}".format(
+        "变化：最慢 1% 延迟 {}，每秒请求数 {}，后台任务进度 {}".format(
             measured_change(deltas.get("p99_percent"), lower_is_better=True),
             measured_change(deltas.get("requests_per_sec_percent")),
             percentage(deltas.get("background_retention_percent")),
         )
     )
     if verdict.get("reasons"):
-        print(f"Reasons : {', '.join(verdict['reasons'])}")
+        reason_names = {
+            "insufficient_p99_improvement": "未达到严格的延迟改善目标",
+            "throughput_regression": "每秒请求数下降超过安全范围",
+            "background_progress_regression": "后台任务进度下降超过安全范围",
+        }
+        print(
+            "原因："
+            + "，".join(reason_names.get(reason, reason) for reason in verdict["reasons"])
+        )
     if item.get("rollback"):
         rollback = item["rollback"]
         print(
-            "Rollback: restored={}, groups_removed={}, scx_entries_removed={}".format(
+            "自动恢复：恢复 {} 项设置，删除 {} 个资源组和 {} 个调度策略".format(
                 rollback.get("restored", 0),
                 rollback.get("groups_removed", 0),
                 rollback.get("scx_entries_removed", 0),
@@ -142,11 +150,11 @@ for key, label in (("accepted", "Canary 常规门槛"), ("rejected", "Canary 严
         )
 
 cleanup = data["cleanup"]
-print("\n[最终清理]")
+print("\n[环境恢复]")
 print(
-    f"stress_ng_running={cleanup['stress_ng_running']}, "
-    f"cgroup_base_exists={cleanup['cgroup_base_exists']}, "
-    f"sched_ext_state={cleanup['sched_ext_state']}"
+    f"后台干扰已停止={not cleanup['stress_ng_running']}，"
+    f"资源控制已清理={not cleanup['cgroup_base_exists']}，"
+    f"调度器状态={cleanup['sched_ext_state']}"
 )
 print(f"报告文件 : {data.get('report', {}).get('path', '')}")
 PY

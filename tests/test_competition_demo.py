@@ -187,7 +187,12 @@ def test_compact_summary_keeps_video_signal_without_verbose_trace():
     }
 
     summary = module.build_console_summary(manifest)
+    rendered = module.format_console_summary(summary)
 
     assert summary["accepted_policy"]["verdict"] == "accepted"
     assert summary["strict_safety_gate"]["final_status"] == "rolled_back"
     assert "phases_completed" not in str(summary)
+    assert "常规小范围试运行" in rendered
+    assert "严格安全检查" in rendered
+    assert "ROLLED_BACK" in rendered
+    assert not rendered.lstrip().startswith("{")
