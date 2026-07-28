@@ -9,7 +9,23 @@ fi
 
 printf '\n=== SchedX-Agent 演示清理 ===\n'
 pkill -f '[s]tress-ng' 2>/dev/null || true
-python3 -m schedx rollback || true
+rollback_output="$(python3 -m schedx rollback 2>/dev/null || true)"
+if [[ -n $rollback_output ]]; then
+    printf '%s' "$rollback_output" | python3 -c '
+import json
+import sys
+
+try:
+    data = json.load(sys.stdin)
+except json.JSONDecodeError:
+    print("资源设置恢复完成")
+else:
+    restored = data.get("restored", len(data.get("rolled_back", [])))
+    removed = data.get("groups_removed", 0)
+    print(f"恢复设置数量     : {restored}")
+    print(f"删除资源组数量   : {removed}")
+'
+fi
 python3 -m schedx scx-daemon stop >/dev/null 2>&1 || true
 sleep 1
 

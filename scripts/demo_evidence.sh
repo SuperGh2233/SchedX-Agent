@@ -16,14 +16,14 @@ run_dir = Path(json.loads(latest.read_text(encoding="utf-8"))["run_dir"])
 data = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
 
 def metric(value, digits=2):
-    return "N/A" if value is None else f"{value:.{digits}f}"
+    return "无有效数据" if value is None else f"{value:.{digits}f}"
 
 def percentage(value):
-    return "N/A" if value is None else f"{value:.2f}%"
+    return "无有效数据" if value is None else f"{value:.2f}%"
 
 def change(before, after, lower_is_better=False):
     if before in (None, 0) or after is None:
-        return "N/A"
+        return "无有效数据"
     delta = (after - before) / before * 100.0
     if abs(delta) < 0.005:
         return "0.00%（基本不变）"
@@ -34,7 +34,7 @@ def change(before, after, lower_is_better=False):
 
 def measured_change(value, lower_is_better=False):
     if value is None:
-        return "N/A"
+        return "无有效数据"
     if abs(value) < 0.005:
         return "0.00%（基本不变）"
     improved = value < 0 if lower_is_better else value > 0
@@ -180,8 +180,8 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
 cleanup = data["cleanup"]
 print("\n[环境恢复]")
 print(
-    f"后台干扰已停止={not cleanup['stress_ng_running']}，"
-    f"资源控制已清理={not cleanup['cgroup_base_exists']}，"
+    f"后台干扰已停止={'是' if not cleanup['stress_ng_running'] else '否'}，"
+    f"资源控制已清理={'是' if not cleanup['cgroup_base_exists'] else '否'}，"
     "自定义调度={}".format(
         "已关闭（disabled）"
         if cleanup["sched_ext_state"] == "disabled"
