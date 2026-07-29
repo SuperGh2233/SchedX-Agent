@@ -39,9 +39,24 @@ def test_ablation_summary_isolates_each_execution_plane(tmp_path: Path):
 def test_batch_summary_reports_interference_and_schedx_recovery(tmp_path: Path):
     config = BatchThroughputConfig(output=tmp_path)
     rows = [
-        {"phase": "baseline", "events_per_second": 1000.0, "latency_p95_ms": 2.0},
-        {"phase": "interference", "events_per_second": 600.0, "latency_p95_ms": 5.0},
-        {"phase": "schedx", "events_per_second": 900.0, "latency_p95_ms": 3.0},
+        {
+            "phase": "baseline",
+            "events_per_second": 1000.0,
+            "latency_p95_ms": 2.0,
+            "background_cpu_ticks": 0,
+        },
+        {
+            "phase": "interference",
+            "events_per_second": 600.0,
+            "latency_p95_ms": 5.0,
+            "background_cpu_ticks": 100,
+        },
+        {
+            "phase": "schedx",
+            "events_per_second": 900.0,
+            "latency_p95_ms": 3.0,
+            "background_cpu_ticks": 50,
+        },
     ]
 
     summary = build_batch_summary(
@@ -57,6 +72,38 @@ def test_batch_summary_reports_interference_and_schedx_recovery(tmp_path: Path):
     assert (
         summary["phases"]["schedx"]["throughput_gain_vs_interference_percent"] == 50.0
     )
+    assert summary["phases"]["schedx"]["background_retention_percent"] == 50.0
+    assert summary["phases"]["schedx"]["valid_for_claims"]
+    assert summary["interference_detected"]
+
+
+def test_batch_summary_marks_short_run_without_real_interference(tmp_path: Path):
+    rows = [
+        {
+            "phase": "baseline",
+            "events_per_second": 1000.0,
+            "background_cpu_ticks": 0,
+        },
+        {
+            "phase": "interference",
+            "events_per_second": 1010.0,
+            "background_cpu_ticks": 100,
+        },
+        {
+            "phase": "schedx",
+            "events_per_second": 1005.0,
+            "background_cpu_ticks": 90,
+        },
+    ]
+
+    summary = build_batch_summary(
+        BatchThroughputConfig(output=tmp_path),
+        {},
+        rows,
+        {phase: [] for phase in ("baseline", "interference", "schedx")},
+    )
+
+    assert not summary["interference_detected"]
 
 
 def test_cli_exposes_competition_benchmark_commands():

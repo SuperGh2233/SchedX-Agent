@@ -1,0 +1,3879 @@
+{
+  "status": "ok",
+  "benchmark": "batch-throughput",
+  "config": {
+    "duration": 20,
+    "threads": 4,
+    "repeats": 5,
+    "stress_cpu": 4,
+    "warmup": 3,
+    "minimum_background_retention_percent": 25.0,
+    "output": "results/batch-formal-final"
+  },
+  "interference_detected": true,
+  "interference_drop_percent": 46.7053,
+  "environment": {
+    "kernel": "Linux openeuler-sp4-stock 6.6.0-159.4.3.154.oe2403sp4.schedx1 #1 SMP Wed Jul 15 23:56:40 CST 2026 x86_64 x86_64 x86_64 GNU/Linux",
+    "cpu_count": 4,
+    "cgroup_v2": true,
+    "sched_ext_available": true
+  },
+  "phases": {
+    "baseline": {
+      "mean_events_per_second": 16575.144,
+      "mean_elapsed_seconds": 20.0002,
+      "mean_latency_p95_ms": 0.37,
+      "mean_background_cpu_ticks": 0.0,
+      "background_retention_percent": 0.0,
+      "throughput_gain_vs_interference_percent": 87.6359,
+      "throughput_drop_vs_baseline_percent": 0.0
+    },
+    "interference": {
+      "mean_events_per_second": 8833.672,
+      "mean_elapsed_seconds": 20.0007,
+      "mean_latency_p95_ms": 2.97,
+      "mean_background_cpu_ticks": 3600.8,
+      "background_retention_percent": 100.0,
+      "throughput_gain_vs_interference_percent": 0.0,
+      "throughput_drop_vs_baseline_percent": 46.7053
+    },
+    "schedx": {
+      "mean_events_per_second": 14535.262,
+      "mean_elapsed_seconds": 20.0002,
+      "mean_latency_p95_ms": 0.37,
+      "mean_background_cpu_ticks": 979.2,
+      "background_retention_percent": 27.194000000000003,
+      "throughput_gain_vs_interference_percent": 64.5438,
+      "throughput_drop_vs_baseline_percent": 12.3069,
+      "valid_for_claims": true
+    }
+  },
+  "action_evidence": {
+    "baseline": [
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      }
+    ],
+    "interference": [
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      }
+    ],
+    "schedx": [
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "throughput_first",
+          "target": "sysbench",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "throughput_boost"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 1029,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5968,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 687838,
+                "nonvoluntary_ctxt_switches": 3358,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 69406.882279,
+                  "nr_switches": 691196.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1030,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 995,
+                "stime": 5886,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 692599,
+                "nonvoluntary_ctxt_switches": 3253,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68817.863001,
+                  "nr_switches": 695852.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1032,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5901,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 685528,
+                "nonvoluntary_ctxt_switches": 3166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68734.523562,
+                  "nr_switches": 688694.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1033,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 966,
+                "stime": 5827,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 698526,
+                "nonvoluntary_ctxt_switches": 3268,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 67940.361149,
+                  "nr_switches": 701794.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1028,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "nginx: master process /usr/sbin/nginx",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 4214784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.300655,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 955365,
+                "comm": "sysbench",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "sysbench cpu --threads=4 --time=20 run",
+                "utime": 81,
+                "stime": 0,
+                "rss_bytes": 8577024,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 159.18,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2.380491,
+                  "nr_switches": 3.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule"
+              },
+              {
+                "pid": 950183,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 1,
+                "cmdline": ".venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final",
+                "utime": 7,
+                "stime": 3,
+                "rss_bytes": 33079296,
+                "voluntary_ctxt_switches": 68,
+                "nonvoluntary_ctxt_switches": 19,
+                "cpu_percent": 8.16,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 108.003852,
+                  "nr_switches": 87.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: .venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 955110,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 955107,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 298,
+                "stime": 0,
+                "rss_bytes": 6279168,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 409,
+                "cpu_percent": 69.39,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2993.396221,
+                  "nr_switches": 411.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 955111,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 955107,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 288,
+                "stime": 0,
+                "rss_bytes": 6279168,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 344,
+                "cpu_percent": 40.82,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2890.829719,
+                  "nr_switches": 346.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 955109,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 955107,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 289,
+                "stime": 0,
+                "rss_bytes": 6279168,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 310,
+                "cpu_percent": 32.65,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2902.746163,
+                  "nr_switches": 312.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 955108,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 955107,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 287,
+                "stime": 0,
+                "rss_bytes": 6230016,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 364,
+                "cpu_percent": 28.57,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2886.902256,
+                  "nr_switches": 366.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 955107,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106729472,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 34.074662,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 928,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 23,
+                "rss_bytes": 42233856,
+                "voluntary_ctxt_switches": 831,
+                "nonvoluntary_ctxt_switches": 12,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 292.935493,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 673,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 98,
+                "stime": 268,
+                "rss_bytes": 31293440,
+                "voluntary_ctxt_switches": 41849,
+                "nonvoluntary_ctxt_switches": 166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3647.801646,
+                  "nr_switches": 42015.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 982,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 21,
+                "stime": 207,
+                "rss_bytes": 28835840,
+                "voluntary_ctxt_switches": 30467,
+                "nonvoluntary_ctxt_switches": 15,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1179.379766,
+                  "nr_switches": 30482.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 946,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 13,
+                "stime": 40,
+                "rss_bytes": 21573632,
+                "voluntary_ctxt_switches": 3648,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 301.523973,
+                  "nr_switches": 3680.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 20,
+                "stime": 112,
+                "rss_bytes": 15978496,
+                "voluntary_ctxt_switches": 3305,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1331.542402,
+                  "nr_switches": 3341.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1342,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 15,
+                "stime": 269,
+                "rss_bytes": 14856192,
+                "voluntary_ctxt_switches": 64,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 12.710137,
+                  "nr_switches": 66.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 708,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 5,
+                "stime": 19,
+                "rss_bytes": 13299712,
+                "voluntary_ctxt_switches": 1506,
+                "nonvoluntary_ctxt_switches": 28,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 241.401526,
+                  "nr_switches": 1534.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 613621,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 613555,
+                "cmdline": "-bash",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12357632,
+                "voluntary_ctxt_switches": 50,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 6.767419,
+                  "nr_switches": 52.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "throughput_first",
+          "total_actions": 11,
+          "successful": 11,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 1029,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1030,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1032,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1033,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1028,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955365,
+              "class_id": 2,
+              "weight": 2000,
+              "workload_type": "batch_compute",
+              "comm": "sysbench",
+              "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955110,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955111,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955109,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955108,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 955107,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": 9000,
+              "reason": "favor batch throughput",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 955365,
+            "group": "pid-955365"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": "max 100000",
+              "reason": "full CPU quota for batch",
+              "risk_level": "low",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 955365,
+            "group": "pid-955365"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "955110",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955110,
+            "group": "pid-955110"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "955110",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955110,
+            "group": "pid-955110"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "955111",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955111,
+            "group": "pid-955111"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "955111",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955111,
+            "group": "pid-955111"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "955109",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955109,
+            "group": "pid-955109"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "955109",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955109,
+            "group": "pid-955109"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "955108",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955108,
+            "group": "pid-955108"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "955108",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955108,
+            "group": "pid-955108"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "955107",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955107,
+            "group": "pid-955107"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "955107",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 955107,
+            "group": "pid-955107"
+          }
+        ],
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "throughput_first",
+          "target": "sysbench",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "throughput_boost"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 1029,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5968,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 687838,
+                "nonvoluntary_ctxt_switches": 3358,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 69406.882279,
+                  "nr_switches": 691196.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1030,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 995,
+                "stime": 5886,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 692599,
+                "nonvoluntary_ctxt_switches": 3253,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68817.863001,
+                  "nr_switches": 695852.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1032,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5901,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 685528,
+                "nonvoluntary_ctxt_switches": 3166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68734.523562,
+                  "nr_switches": 688694.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1033,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 966,
+                "stime": 5827,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 698526,
+                "nonvoluntary_ctxt_switches": 3268,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 67940.361149,
+                  "nr_switches": 701794.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1028,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "nginx: master process /usr/sbin/nginx",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 4214784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.300655,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 960664,
+                "comm": "sysbench",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "sysbench cpu --threads=4 --time=20 run",
+                "utime": 89,
+                "stime": 0,
+                "rss_bytes": 8585216,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 182.52,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2.498127,
+                  "nr_switches": 4.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule"
+              },
+              {
+                "pid": 950183,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 1,
+                "cmdline": ".venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final",
+                "utime": 13,
+                "stime": 7,
+                "rss_bytes": 33439744,
+                "voluntary_ctxt_switches": 167,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 7.77,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 214.270882,
+                  "nr_switches": 203.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: .venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 960293,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 960292,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 292,
+                "stime": 1,
+                "rss_bytes": 5984256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 423,
+                "cpu_percent": 46.6,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2944.801038,
+                  "nr_switches": 425.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 960294,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 960292,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 292,
+                "stime": 0,
+                "rss_bytes": 5984256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 435,
+                "cpu_percent": 46.6,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2932.057582,
+                  "nr_switches": 437.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 960295,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 960292,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 290,
+                "stime": 0,
+                "rss_bytes": 5967872,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 451,
+                "cpu_percent": 46.6,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2913.221064,
+                  "nr_switches": 453.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 960296,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 960292,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 293,
+                "stime": 1,
+                "rss_bytes": 5984256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 450,
+                "cpu_percent": 42.72,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2943.926127,
+                  "nr_switches": 452.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 960292,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106676224,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 34.261886,
+                  "nr_switches": 1.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 928,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 23,
+                "rss_bytes": 42233856,
+                "voluntary_ctxt_switches": 831,
+                "nonvoluntary_ctxt_switches": 12,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 292.935493,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 673,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 98,
+                "stime": 270,
+                "rss_bytes": 31555584,
+                "voluntary_ctxt_switches": 42077,
+                "nonvoluntary_ctxt_switches": 168,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3668.390378,
+                  "nr_switches": 42245.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 982,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 21,
+                "stime": 207,
+                "rss_bytes": 28835840,
+                "voluntary_ctxt_switches": 30514,
+                "nonvoluntary_ctxt_switches": 15,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1182.198321,
+                  "nr_switches": 30529.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 946,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 13,
+                "stime": 40,
+                "rss_bytes": 21573632,
+                "voluntary_ctxt_switches": 3649,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 301.582973,
+                  "nr_switches": 3681.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 20,
+                "stime": 112,
+                "rss_bytes": 15978496,
+                "voluntary_ctxt_switches": 3309,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1332.310033,
+                  "nr_switches": 3345.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1342,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 15,
+                "stime": 270,
+                "rss_bytes": 14856192,
+                "voluntary_ctxt_switches": 64,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 12.710137,
+                  "nr_switches": 66.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 708,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 5,
+                "stime": 19,
+                "rss_bytes": 13299712,
+                "voluntary_ctxt_switches": 1516,
+                "nonvoluntary_ctxt_switches": 29,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 246.274818,
+                  "nr_switches": 1545.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 613621,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 613555,
+                "cmdline": "-bash",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12357632,
+                "voluntary_ctxt_switches": 50,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 6.767419,
+                  "nr_switches": 52.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "throughput_first",
+          "total_actions": 11,
+          "successful": 11,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 1029,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1030,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1032,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1033,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1028,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960664,
+              "class_id": 2,
+              "weight": 2000,
+              "workload_type": "batch_compute",
+              "comm": "sysbench",
+              "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960293,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960294,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960295,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960296,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 960292,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": 9000,
+              "reason": "favor batch throughput",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 960664,
+            "group": "pid-960664"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": "max 100000",
+              "reason": "full CPU quota for batch",
+              "risk_level": "low",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 960664,
+            "group": "pid-960664"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "960293",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960293,
+            "group": "pid-960293"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "960293",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960293,
+            "group": "pid-960293"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "960294",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960294,
+            "group": "pid-960294"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "960294",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960294,
+            "group": "pid-960294"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "960295",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960295,
+            "group": "pid-960295"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "960295",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960295,
+            "group": "pid-960295"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "960296",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960296,
+            "group": "pid-960296"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "960296",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960296,
+            "group": "pid-960296"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "960292",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960292,
+            "group": "pid-960292"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "960292",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 960292,
+            "group": "pid-960292"
+          }
+        ],
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "throughput_first",
+          "target": "sysbench",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "throughput_boost"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 1029,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5968,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 687838,
+                "nonvoluntary_ctxt_switches": 3358,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 69406.882279,
+                  "nr_switches": 691196.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1030,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 995,
+                "stime": 5886,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 692599,
+                "nonvoluntary_ctxt_switches": 3253,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68817.863001,
+                  "nr_switches": 695852.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1032,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5901,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 685528,
+                "nonvoluntary_ctxt_switches": 3166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68734.523562,
+                  "nr_switches": 688694.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1033,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 966,
+                "stime": 5827,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 698526,
+                "nonvoluntary_ctxt_switches": 3268,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 67940.361149,
+                  "nr_switches": 701794.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1028,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "nginx: master process /usr/sbin/nginx",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 4214784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.300655,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 965609,
+                "comm": "sysbench",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "sysbench cpu --threads=4 --time=20 run",
+                "utime": 94,
+                "stime": 0,
+                "rss_bytes": 8568832,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 194.17,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2.618992,
+                  "nr_switches": 3.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule"
+              },
+              {
+                "pid": 950183,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 1,
+                "cmdline": ".venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final",
+                "utime": 19,
+                "stime": 12,
+                "rss_bytes": 33533952,
+                "voluntary_ctxt_switches": 260,
+                "nonvoluntary_ctxt_switches": 49,
+                "cpu_percent": 7.77,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 313.037283,
+                  "nr_switches": 309.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: .venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 965239,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 965237,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 290,
+                "stime": 1,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 451,
+                "cpu_percent": 46.6,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2916.069903,
+                  "nr_switches": 453.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 965240,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 965237,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 296,
+                "stime": 1,
+                "rss_bytes": 8318976,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 384,
+                "cpu_percent": 42.72,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2982.131466,
+                  "nr_switches": 386.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 965238,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 965237,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 290,
+                "stime": 0,
+                "rss_bytes": 8310784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 472,
+                "cpu_percent": 38.83,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2912.79271,
+                  "nr_switches": 474.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 965241,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 965237,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 283,
+                "stime": 0,
+                "rss_bytes": 8286208,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 394,
+                "cpu_percent": 31.07,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2846.11421,
+                  "nr_switches": 396.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 965237,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106676224,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 5,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 34.865371,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 614000,
+                "comm": "top",
+                "state": "S",
+                "ppid": 613621,
+                "cmdline": "top",
+                "utime": 62,
+                "stime": 256,
+                "rss_bytes": 10866688,
+                "voluntary_ctxt_switches": 1625,
+                "nonvoluntary_ctxt_switches": 920,
+                "cpu_percent": 3.88,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3188.119445,
+                  "nr_switches": 2545.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 928,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 23,
+                "rss_bytes": 42233856,
+                "voluntary_ctxt_switches": 831,
+                "nonvoluntary_ctxt_switches": 12,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 292.935493,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 673,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 99,
+                "stime": 271,
+                "rss_bytes": 31686656,
+                "voluntary_ctxt_switches": 42289,
+                "nonvoluntary_ctxt_switches": 172,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3687.878393,
+                  "nr_switches": 42461.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 982,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 21,
+                "stime": 208,
+                "rss_bytes": 28835840,
+                "voluntary_ctxt_switches": 30557,
+                "nonvoluntary_ctxt_switches": 15,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1184.782521,
+                  "nr_switches": 30572.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 946,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 13,
+                "stime": 40,
+                "rss_bytes": 21573632,
+                "voluntary_ctxt_switches": 3659,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 302.123893,
+                  "nr_switches": 3691.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 20,
+                "stime": 112,
+                "rss_bytes": 15978496,
+                "voluntary_ctxt_switches": 3311,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1332.545143,
+                  "nr_switches": 3347.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1342,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 15,
+                "stime": 271,
+                "rss_bytes": 14856192,
+                "voluntary_ctxt_switches": 64,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 12.710137,
+                  "nr_switches": 66.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 708,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 5,
+                "stime": 19,
+                "rss_bytes": 13299712,
+                "voluntary_ctxt_switches": 1526,
+                "nonvoluntary_ctxt_switches": 29,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 249.64945,
+                  "nr_switches": 1555.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "throughput_first",
+          "total_actions": 11,
+          "successful": 11,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 1029,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1030,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1032,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1033,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1028,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965609,
+              "class_id": 2,
+              "weight": 2000,
+              "workload_type": "batch_compute",
+              "comm": "sysbench",
+              "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965239,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965240,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965238,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965241,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 965237,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": 9000,
+              "reason": "favor batch throughput",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 965609,
+            "group": "pid-965609"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": "max 100000",
+              "reason": "full CPU quota for batch",
+              "risk_level": "low",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 965609,
+            "group": "pid-965609"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "965239",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965239,
+            "group": "pid-965239"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "965239",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965239,
+            "group": "pid-965239"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "965240",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965240,
+            "group": "pid-965240"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "965240",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965240,
+            "group": "pid-965240"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "965238",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965238,
+            "group": "pid-965238"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "965238",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965238,
+            "group": "pid-965238"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "965241",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965241,
+            "group": "pid-965241"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "965241",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965241,
+            "group": "pid-965241"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "965237",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965237,
+            "group": "pid-965237"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "965237",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 965237,
+            "group": "pid-965237"
+          }
+        ],
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "throughput_first",
+          "target": "sysbench",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "throughput_boost"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 1029,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5968,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 687838,
+                "nonvoluntary_ctxt_switches": 3358,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 69406.882279,
+                  "nr_switches": 691196.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1030,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 995,
+                "stime": 5886,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 692599,
+                "nonvoluntary_ctxt_switches": 3253,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68817.863001,
+                  "nr_switches": 695852.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1032,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5901,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 685528,
+                "nonvoluntary_ctxt_switches": 3166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68734.523562,
+                  "nr_switches": 688694.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1033,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 966,
+                "stime": 5827,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 698526,
+                "nonvoluntary_ctxt_switches": 3268,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 67940.361149,
+                  "nr_switches": 701794.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1028,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "nginx: master process /usr/sbin/nginx",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 4214784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.300655,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 977692,
+                "comm": "sysbench",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "sysbench cpu --threads=4 --time=20 run",
+                "utime": 86,
+                "stime": 0,
+                "rss_bytes": 8433664,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 180.77,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2.318401,
+                  "nr_switches": 3.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule"
+              },
+              {
+                "pid": 950183,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 1,
+                "cmdline": ".venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final",
+                "utime": 24,
+                "stime": 17,
+                "rss_bytes": 33599488,
+                "voluntary_ctxt_switches": 419,
+                "nonvoluntary_ctxt_switches": 64,
+                "cpu_percent": 7.69,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 424.380082,
+                  "nr_switches": 483.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: .venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 977368,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 977367,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 298,
+                "stime": 0,
+                "rss_bytes": 7913472,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 382,
+                "cpu_percent": 46.15,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2984.595588,
+                  "nr_switches": 384.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 977370,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 977367,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 288,
+                "stime": 0,
+                "rss_bytes": 7913472,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 397,
+                "cpu_percent": 46.15,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2888.712096,
+                  "nr_switches": 399.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 977369,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 977367,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 292,
+                "stime": 0,
+                "rss_bytes": 7897088,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 401,
+                "cpu_percent": 46.15,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2929.731124,
+                  "nr_switches": 403.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 977371,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 977367,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 290,
+                "stime": 0,
+                "rss_bytes": 7913472,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 381,
+                "cpu_percent": 42.31,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2915.197146,
+                  "nr_switches": 383.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 977367,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106749952,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 5,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 34.525031,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 928,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 23,
+                "rss_bytes": 42233856,
+                "voluntary_ctxt_switches": 831,
+                "nonvoluntary_ctxt_switches": 12,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 292.935493,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 673,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 102,
+                "stime": 273,
+                "rss_bytes": 31817728,
+                "voluntary_ctxt_switches": 42801,
+                "nonvoluntary_ctxt_switches": 177,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3735.189115,
+                  "nr_switches": 42978.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 982,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 21,
+                "stime": 209,
+                "rss_bytes": 28835840,
+                "voluntary_ctxt_switches": 30666,
+                "nonvoluntary_ctxt_switches": 15,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1191.239492,
+                  "nr_switches": 30681.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 946,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 13,
+                "stime": 41,
+                "rss_bytes": 21573632,
+                "voluntary_ctxt_switches": 3670,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 302.683374,
+                  "nr_switches": 3702.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 20,
+                "stime": 112,
+                "rss_bytes": 15978496,
+                "voluntary_ctxt_switches": 3317,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1333.164338,
+                  "nr_switches": 3353.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1342,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 15,
+                "stime": 274,
+                "rss_bytes": 14987264,
+                "voluntary_ctxt_switches": 64,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 12.710137,
+                  "nr_switches": 66.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 708,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 5,
+                "stime": 19,
+                "rss_bytes": 13299712,
+                "voluntary_ctxt_switches": 1537,
+                "nonvoluntary_ctxt_switches": 30,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 253.557913,
+                  "nr_switches": 1567.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 613621,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 613555,
+                "cmdline": "-bash",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12357632,
+                "voluntary_ctxt_switches": 50,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 6.767419,
+                  "nr_switches": 52.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "throughput_first",
+          "total_actions": 11,
+          "successful": 11,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 1029,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1030,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1032,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1033,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1028,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977692,
+              "class_id": 2,
+              "weight": 2000,
+              "workload_type": "batch_compute",
+              "comm": "sysbench",
+              "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977368,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977370,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977369,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977371,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 977367,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": 9000,
+              "reason": "favor batch throughput",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 977692,
+            "group": "pid-977692"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": "max 100000",
+              "reason": "full CPU quota for batch",
+              "risk_level": "low",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 977692,
+            "group": "pid-977692"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "977368",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977368,
+            "group": "pid-977368"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "977368",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977368,
+            "group": "pid-977368"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "977370",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977370,
+            "group": "pid-977370"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "977370",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977370,
+            "group": "pid-977370"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "977369",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977369,
+            "group": "pid-977369"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "977369",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977369,
+            "group": "pid-977369"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "977371",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977371,
+            "group": "pid-977371"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "977371",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977371,
+            "group": "pid-977371"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "977367",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977367,
+            "group": "pid-977367"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "977367",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 977367,
+            "group": "pid-977367"
+          }
+        ],
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "throughput_first",
+          "target": "sysbench",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "throughput_boost"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 1029,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5968,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 687838,
+                "nonvoluntary_ctxt_switches": 3358,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 69406.882279,
+                  "nr_switches": 691196.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1030,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 995,
+                "stime": 5886,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 692599,
+                "nonvoluntary_ctxt_switches": 3253,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68817.863001,
+                  "nr_switches": 695852.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1032,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 972,
+                "stime": 5901,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 685528,
+                "nonvoluntary_ctxt_switches": 3166,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 68734.523562,
+                  "nr_switches": 688694.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1033,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1028,
+                "cmdline": "nginx: worker process",
+                "utime": 966,
+                "stime": 5827,
+                "rss_bytes": 8265728,
+                "voluntary_ctxt_switches": 698526,
+                "nonvoluntary_ctxt_switches": 3268,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 67940.361149,
+                  "nr_switches": 701794.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+              },
+              {
+                "pid": 1028,
+                "comm": "nginx",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "nginx: master process /usr/sbin/nginx",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 4214784,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/nginx.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.300655,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 982923,
+                "comm": "sysbench",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "sysbench cpu --threads=4 --time=20 run",
+                "utime": 87,
+                "stime": 0,
+                "rss_bytes": 8568832,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 180.77,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2.885971,
+                  "nr_switches": 3.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule"
+              },
+              {
+                "pid": 950183,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 1,
+                "cmdline": ".venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final",
+                "utime": 30,
+                "stime": 22,
+                "rss_bytes": 33685504,
+                "voluntary_ctxt_switches": 518,
+                "nonvoluntary_ctxt_switches": 81,
+                "cpu_percent": 7.69,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 531.995458,
+                  "nr_switches": 599.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: .venv/bin/python3 -m schedx benchmark batch-throughput --duration 20 --threads 4 --repeats 5 --stress-cpu 4 --warmup 3 --output results/batch-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 982554,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 982553,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 293,
+                "stime": 0,
+                "rss_bytes": 6877184,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 428,
+                "cpu_percent": 42.31,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2941.206877,
+                  "nr_switches": 430.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 982555,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 982553,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 291,
+                "stime": 0,
+                "rss_bytes": 6877184,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 453,
+                "cpu_percent": 42.31,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2921.777494,
+                  "nr_switches": 455.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 982556,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 982553,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 290,
+                "stime": 0,
+                "rss_bytes": 6877184,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 446,
+                "cpu_percent": 42.31,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2909.188303,
+                  "nr_switches": 448.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 982557,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 982553,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 289,
+                "stime": 0,
+                "rss_bytes": 6877184,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 417,
+                "cpu_percent": 42.31,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2906.155013,
+                  "nr_switches": 419.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 982553,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 950183,
+                "cmdline": "stress-ng --cpu 4 --timeout 43s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106561536,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 37.122844,
+                  "nr_switches": 1.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 928,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 23,
+                "rss_bytes": 42233856,
+                "voluntary_ctxt_switches": 831,
+                "nonvoluntary_ctxt_switches": 12,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 292.935493,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 673,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 102,
+                "stime": 274,
+                "rss_bytes": 31817728,
+                "voluntary_ctxt_switches": 43033,
+                "nonvoluntary_ctxt_switches": 179,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 3755.105656,
+                  "nr_switches": 43212.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 982,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 21,
+                "stime": 209,
+                "rss_bytes": 28835840,
+                "voluntary_ctxt_switches": 30712,
+                "nonvoluntary_ctxt_switches": 15,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1193.925413,
+                  "nr_switches": 30727.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 946,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 13,
+                "stime": 41,
+                "rss_bytes": 21573632,
+                "voluntary_ctxt_switches": 3688,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 303.665214,
+                  "nr_switches": 3720.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 20,
+                "stime": 112,
+                "rss_bytes": 15978496,
+                "voluntary_ctxt_switches": 3319,
+                "nonvoluntary_ctxt_switches": 36,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1333.390174,
+                  "nr_switches": 3355.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1342,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 15,
+                "stime": 275,
+                "rss_bytes": 15118336,
+                "voluntary_ctxt_switches": 65,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 12.730807,
+                  "nr_switches": 67.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 708,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 5,
+                "stime": 20,
+                "rss_bytes": 13299712,
+                "voluntary_ctxt_switches": 1547,
+                "nonvoluntary_ctxt_switches": 30,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 256.951889,
+                  "nr_switches": 1577.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 613621,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 613555,
+                "cmdline": "-bash",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12357632,
+                "voluntary_ctxt_switches": 50,
+                "nonvoluntary_ctxt_switches": 2,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 6.767419,
+                  "nr_switches": 52.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "throughput_first",
+          "total_actions": 11,
+          "successful": 11,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 1029,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1030,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1032,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1033,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 1028,
+              "class_id": 1,
+              "weight": 5000,
+              "workload_type": "latency_sensitive",
+              "comm": "nginx",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982923,
+              "class_id": 2,
+              "weight": 2000,
+              "workload_type": "batch_compute",
+              "comm": "sysbench",
+              "reason": "comm/cmdline=sysbench sysbench cpu --threads=4 --time=20 run matches batch compute rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982554,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982555,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982556,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982557,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 982553,
+              "class_id": 3,
+              "weight": 300,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 43s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": 9000,
+              "reason": "favor batch throughput",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 982923,
+            "group": "pid-982923"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "sysbench",
+              "target_type": "process_name",
+              "value": "max 100000",
+              "reason": "full CPU quota for batch",
+              "risk_level": "low",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 982923,
+            "group": "pid-982923"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "982554",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982554,
+            "group": "pid-982554"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "982554",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982554,
+            "group": "pid-982554"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "982555",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982555,
+            "group": "pid-982555"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "982555",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982555,
+            "group": "pid-982555"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "982556",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982556,
+            "group": "pid-982556"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "982556",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982556,
+            "group": "pid-982556"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "982557",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982557,
+            "group": "pid-982557"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "982557",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982557,
+            "group": "pid-982557"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "982553",
+              "target_type": "pid",
+              "value": 300,
+              "reason": "preserve CPU capacity for batch workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982553,
+            "group": "pid-982553"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "982553",
+              "target_type": "pid",
+              "value": "80000 100000",
+              "reason": "limit explicit stress interference",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng",
+                "matched_by": "comm_exact"
+              }
+            },
+            "status": "ok",
+            "pid": 982553,
+            "group": "pid-982553"
+          }
+        ],
+        "log": ""
+      }
+    ]
+  },
+  "cleanup": {
+    "stress_processes": [],
+    "cgroup_base_exists": false,
+    "sched_ext_state": "disabled"
+  }
+}

@@ -63,7 +63,12 @@ def builtin_experts() -> tuple[ExpertPolicy, ...]:
             mode="throughput_first",
             description="Favor sustained batch-compute throughput.",
             workload_types=("batch_compute",),
-            parameters={"cpu_weight": 9000, "cpu_max": "max 100000"},
+            parameters={
+                "cpu_weight": 9000,
+                "cpu_max": "max 100000",
+                "cpu_weight_bg": 300,
+                "cpu_max_bg": "80000 100000",
+            },
         ),
         ExpertPolicy(
             expert_id="background_isolation",

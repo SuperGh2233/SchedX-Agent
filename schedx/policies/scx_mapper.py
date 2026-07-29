@@ -17,6 +17,7 @@ from schedx.controllers.scx_controller import (
     SCX_WEIGHT_DEFAULTS,
     ScxController,
 )
+from schedx.controllers.process_controller import is_protected_control_process
 
 
 @dataclass
@@ -118,6 +119,11 @@ class ScxPolicyMapper:
                 pid = proc.get("pid")
                 if pid is None:
                     continue
+                if is_protected_control_process(
+                    str(proc.get("comm", "")),
+                    str(proc.get("cmdline", "")),
+                ):
+                    continue
 
                 actions.append({
                     "type": "set_task_policy",
@@ -204,6 +210,8 @@ class ScxPolicyMapper:
                 return min(10000, base_weight * 2)
             elif workload_type == "latency_sensitive":
                 return max(1, base_weight // 2)
+            elif workload_type == "background_noise":
+                return max(300, base_weight)
 
         elif mode == "balanced":
             # Use default weights

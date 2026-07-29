@@ -162,8 +162,18 @@ class DecisionEngine:
 
     def _throughput_params(self, cpu_pressure: str) -> dict[str, Any]:
         if cpu_pressure == "high":
-            return {"cpu_weight": 9500, "cpu_max": "max 100000"}
-        return {"cpu_weight": 9000, "cpu_max": "max 100000"}
+            return {
+                "cpu_weight": 9500,
+                "cpu_max": "max 100000",
+                "cpu_weight_bg": 100,
+                "cpu_max_bg": "50000 100000",
+            }
+        return {
+            "cpu_weight": 9000,
+            "cpu_max": "max 100000",
+            "cpu_weight_bg": 300,
+            "cpu_max_bg": "80000 100000",
+        }
 
     def _isolate_params(self, cpu_pressure: str) -> dict[str, Any]:
         if cpu_pressure == "high":

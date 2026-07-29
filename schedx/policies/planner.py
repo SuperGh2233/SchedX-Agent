@@ -73,6 +73,27 @@ class PolicyPlanner:
             Action("set_cgroup_cpu_max", target, "process_name", str(parameters.get("cpu_max", "max 100000")),
                    "full CPU quota for batch", "low"),
         ]
+        background_weight = int(parameters.get("cpu_weight_bg", 300))
+        background_max = str(parameters.get("cpu_max_bg", "80000 100000"))
+        for proc in classification.get("groups", {}).get("background_noise", []):
+            match = match_isolation_target(proc, "stress-ng")
+            if not match["matched"]:
+                continue
+            pid = str(proc["pid"])
+            metadata = {
+                "comm": proc.get("comm", ""),
+                "matched_by": match["matched_by"],
+            }
+            actions.append(Action(
+                "set_cgroup_cpu_weight", pid, "pid", background_weight,
+                "preserve CPU capacity for batch workload", "medium",
+                metadata=metadata,
+            ))
+            actions.append(Action(
+                "set_cgroup_cpu_max", pid, "pid", background_max,
+                "limit explicit stress interference", "medium",
+                metadata=metadata,
+            ))
         return actions
 
     def _isolate_background(

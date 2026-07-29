@@ -387,13 +387,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         write_json(run_dir / "nginx-ablation-result.json", ablation)
 
         progress("[2/4] 验证第二类任务：批处理计算")
+        cpu_count = os.cpu_count() or 1
+        batch_workers = max(args.batch_threads, min(cpu_count, 4))
+        stress_workers = max(args.stress_cpu, min(cpu_count, 8))
         batch = BenchmarkRunner().run(
             "batch-throughput",
             run_dir / "batch-throughput",
-            duration=duration,
-            threads=args.batch_threads,
-            repeats=repeats,
-            stress_cpu=args.stress_cpu,
+            duration=max(duration, 10),
+            threads=batch_workers,
+            repeats=max(repeats, 2),
+            stress_cpu=stress_workers,
             warmup=2,
         )
         manifest["batch_throughput"] = batch

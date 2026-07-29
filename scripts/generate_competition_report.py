@@ -64,8 +64,11 @@ def extract(results: Path, demo_run: Path | None = None) -> dict[str, Any]:
     batch = _nested_summary(manifest.get("batch_throughput"))
     if not ablation:
         ablation = latest_summary(results / "nginx-ablation")
-    if not batch:
-        batch = latest_summary(results / "batch-throughput")
+    formal_batch = latest_summary(results / "batch-throughput")
+    if formal_batch.get("phases", {}).get("schedx", {}).get("valid_for_claims"):
+        batch = formal_batch
+    elif not batch:
+        batch = formal_batch
 
     native = latest_native_summary(results)
     llm = read_json(results / "llm-policy-comparison" / "summary.json")
@@ -215,8 +218,8 @@ def _ablation_table(summary: dict[str, Any]) -> list[str]:
 
 def _batch_table(summary: dict[str, Any]) -> list[str]:
     lines = [
-        "| Phase | Mean events/s | P95 latency (ms) | Gain vs interference |",
-        "| --- | ---: | ---: | ---: |",
+        "| Phase | Mean events/s | P95 latency (ms) | Gain vs interference | Background progress | Valid |",
+        "| --- | ---: | ---: | ---: | ---: | --- |",
     ]
     phases = summary.get("phases", {})
     for name in ("baseline", "interference", "schedx"):
@@ -224,7 +227,9 @@ def _batch_table(summary: dict[str, Any]) -> list[str]:
         lines.append(
             f"| {name} | {num(item.get('mean_events_per_second'))} | "
             f"{num(item.get('mean_latency_p95_ms'))} | "
-            f"{pct(item.get('throughput_gain_vs_interference_percent'))} |"
+            f"{pct(item.get('throughput_gain_vs_interference_percent'))} | "
+            f"{pct(item.get('background_retention_percent'))} | "
+            f"{item.get('valid_for_claims', 'n/a')} |"
         )
     return lines
 

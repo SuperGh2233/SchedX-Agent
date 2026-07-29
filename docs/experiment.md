@@ -53,14 +53,17 @@ the configured floor.
 
 ```bash
 sudo schedx benchmark batch-throughput \
-  --duration 20 --threads 4 --repeats 3 \
+  --duration 20 --threads 4 --repeats 5 \
   --stress-cpu 4 --output results/batch-throughput
 ```
 
 The benchmark compares sysbench alone, sysbench under CPU interference, and a
 SchedX phase. In the SchedX phase, sysbench is already running when the Agent
 classifies it and applies the `throughput_first` expert, so the result validates
-the live workload pipeline rather than an offline command plan.
+the live workload pipeline rather than an offline command plan. The phase order
+rotates between repeats to reduce time-order bias. A result is valid for claims
+only when interference causes a measurable throughput drop, SchedX restores
+throughput, and background progress remains above the configured fairness floor.
 
 ## Final Report
 

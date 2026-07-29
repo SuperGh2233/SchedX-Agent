@@ -81,6 +81,7 @@ class BenchmarkRunner:
                     repeats=repeats,
                     stress_cpu=stress_cpu,
                     warmup=warmup,
+                    minimum_background_retention_percent=minimum_background_retention_percent,
                     output=output,
                 )
             )

@@ -68,7 +68,7 @@ def expert_name(value):
 print("\n=== SchedX-Agent 演示结果 ===")
 print(f"运行目录 : {run_dir}")
 print(f"运行状态 : {data.get('status')}")
-print(f"测试设置 : 每组 {data.get('duration')} 秒，重复 {data.get('repeats')} 次")
+print(f"在线服务测试 : 每组 {data.get('duration')} 秒，重复 {data.get('repeats')} 次")
 
 nginx = data["nginx_ablation"]["summary"]["phases"]
 print("\n[四种方案对比]")
@@ -102,8 +102,18 @@ print(
     )
 )
 
-batch = data["batch_throughput"]["summary"]["phases"]
+batch_summary = data["batch_throughput"]["summary"]
+batch = batch_summary["phases"]
+batch_config = batch_summary["config"]
 print("\n[第二类任务：批处理计算]")
+print(
+    "测试设置: 每组 {} 秒，重复 {} 次，计算线程 {}，干扰线程 {}".format(
+        batch_config["duration"],
+        batch_config["repeats"],
+        batch_config["threads"],
+        batch_config["stress_cpu"],
+    )
+)
 for key, label in (("baseline", "无干扰基准"), ("interference", "加入后台干扰"), ("schedx", "Agent 优化后")):
     row = batch[key]
     print(
@@ -114,7 +124,21 @@ for key, label in (("baseline", "无干扰基准"), ("interference", "加入后�
 interference = batch["interference"]
 schedx = batch["schedx"]
 print(
-    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}".format(
+    "干扰有效性: {}".format(
+        "已观察到明确性能下降"
+        if batch_summary.get("interference_detected")
+        else "本轮未形成稳定性能下降，仅作为流程验证"
+    )
+)
+print(
+    "结果可信性: {}".format(
+        "满足吞吐提升和后台进度要求"
+        if schedx.get("valid_for_claims")
+        else "未同时满足吞吐提升和后台进度要求"
+    )
+)
+print(
+    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}，后台任务进度 {}".format(
         change(
             interference.get("mean_events_per_second"),
             schedx.get("mean_events_per_second"),
@@ -124,6 +148,7 @@ print(
             schedx.get("mean_latency_p95_ms"),
             lower_is_better=True,
         ),
+        percentage(schedx.get("background_retention_percent")),
     )
 )
 

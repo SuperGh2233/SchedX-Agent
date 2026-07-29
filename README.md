@@ -18,7 +18,7 @@ Verified on openEuler:
 - `schedx optimize --target stress-ng --mode isolate_background` moves stress-ng PIDs into `/sys/fs/cgroup/schedx/pid-<pid>/` and sets `cpu.weight=50`.
 - `schedx rollback` restores previous CPU weights and removes empty `pid-*` cgroups. The base `/sys/fs/cgroup/schedx` cgroup is removed when no workload remains.
 - `schedx benchmark nginx` runs a three-phase nginx + stress-ng experiment and generates `summary.csv`, `summary.json`, raw wrk output, cgroup snapshots, and `report.md`.
-- The SP4 VM passes `125` tests and the fairness-gated native sched_ext run
+- The SP4 VM passes `137` tests and the fairness-gated native sched_ext run
   reports `62.18%` higher RPS, `33.74%` lower P99, `32.22%` background CPU
   retention and `nr_rejected=0`.
 - A real wrk canary accepted a policy with `13.32%` higher RPS, `92.82%` lower
@@ -27,7 +27,9 @@ Verified on openEuler:
 - The formal four-way ablation reports `86.66%` higher RPS and `72.33%` lower
   P99 for the combined Agent while retaining `43.92%` of background progress.
 - In the formal sysbench scenario, CPU interference reduces throughput by
-  `47.47%`; SchedX recovers `70.51%` versus the interference phase.
+  `46.71%`; SchedX recovers `64.54%` versus the interference phase, reduces
+  P95 latency from `2.97 ms` to `0.37 ms`, and retains `27.19%` of background
+  progress. The result passes the configured `25%` fairness floor.
 
 ## Quick Start
 

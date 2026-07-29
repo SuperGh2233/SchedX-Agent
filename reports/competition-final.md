@@ -60,19 +60,19 @@ Only rows meeting the background-progress floor are valid performance claims.
 
 ## 4. Batch Throughput Scenario
 
-| Phase | Mean events/s | P95 latency (ms) | Gain vs interference |
-| --- | ---: | ---: | ---: |
-| baseline | 17260.77 | 0.36 | 90.36% |
-| interference | 9067.42 | 2.97 | 0.00% |
-| schedx | 15460.69 | 0.36 | 70.51% |
+| Phase | Mean events/s | P95 latency (ms) | Gain vs interference | Background progress | Valid |
+| --- | ---: | ---: | ---: | ---: | --- |
+| baseline | 16575.14 | 0.37 | 87.64% | 0.00% | n/a |
+| interference | 8833.67 | 2.97 | 0.00% | 100.00% | n/a |
+| schedx | 14535.26 | 0.37 | 64.54% | 27.19% | True |
 
 ### Batch Throughput
 
 ```mermaid
 xychart-beta
   x-axis ["baseline", "interference", "schedx"]
-  y-axis "Events/sec" 0 --> 18986.84
-  bar [17260.77, 9067.42, 15460.69]
+  y-axis "Events/sec" 0 --> 18232.66
+  bar [16575.14, 8833.67, 14535.26]
 ```
 
 The SchedX phase identifies a live sysbench workload and applies the

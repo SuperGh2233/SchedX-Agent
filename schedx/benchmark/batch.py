@@ -36,6 +36,7 @@ class BatchThroughputConfig:
     repeats: int = 3
     stress_cpu: int = 4
     warmup: int = 2
+    minimum_background_retention_percent: float = 25.0
     output: Path = Path("results/batch-throughput")
 
 
@@ -69,8 +70,10 @@ class BatchThroughputBenchmark:
         rows: list[dict[str, Any]] = []
         evidence: dict[str, list[dict[str, Any]]] = {phase: [] for phase in self.phases}
         try:
-            for phase in self.phases:
-                for repeat in range(1, config.repeats + 1):
+            for repeat in range(1, config.repeats + 1):
+                offset = (repeat - 1) % len(self.phases)
+                phase_order = self.phases[offset:] + self.phases[:offset]
+                for phase in phase_order:
                     row, action = self._run_repeat(phase, repeat, config, run_dir)
                     rows.append(row)
                     evidence[phase].append(action)
@@ -118,7 +121,7 @@ class BatchThroughputBenchmark:
                 start_new_session=True,
             )
             if phase == "schedx":
-                time.sleep(min(1.0, max(config.duration / 5.0, 0.2)))
+                time.sleep(0.2)
                 context, action = self._apply_agent()
             stdout, stderr = batch.communicate(timeout=config.duration + 30)
             ticks_after = cpu_ticks(stress_pids)
@@ -185,6 +188,10 @@ class BatchThroughputBenchmark:
             raise ValueError(
                 "duration, threads, repeats, and stress_cpu must be positive"
             )
+        if not 0.0 <= config.minimum_background_retention_percent <= 100.0:
+            raise ValueError(
+                "minimum_background_retention_percent must be between 0 and 100"
+            )
 
     @staticmethod
     def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -209,21 +216,25 @@ class BatchThroughputBenchmark:
         lines = [
             "# SchedX-Agent Batch Throughput Report",
             "",
-            "| Phase | Events/s | P95 latency (ms) | Change vs interference |",
-            "| --- | ---: | ---: | ---: |",
+            "| Phase | Events/s | P95 latency (ms) | Change vs interference | Background progress |",
+            "| --- | ---: | ---: | ---: | ---: |",
         ]
         for phase in BatchThroughputBenchmark.phases:
             item = summary["phases"][phase]
             lines.append(
                 f"| {phase} | {_fmt(item.get('mean_events_per_second'))} | "
                 f"{_fmt(item.get('mean_latency_p95_ms'))} | "
-                f"{_pct(item.get('throughput_gain_vs_interference_percent'))} |"
+                f"{_pct(item.get('throughput_gain_vs_interference_percent'))} | "
+                f"{_pct(item.get('background_retention_percent'))} |"
             )
         lines.extend(
             [
                 "",
                 "The SchedX phase launches sysbench first, identifies the live batch workload,",
                 "and applies the throughput expert while CPU interference is active.",
+                "",
+                f"- Interference detected: {summary.get('interference_detected')}",
+                f"- Result valid for claims: {summary['phases']['schedx'].get('valid_for_claims')}",
             ]
         )
         path.write_text("\n".join(lines), encoding="utf-8")
@@ -238,24 +249,45 @@ def build_batch_summary(
     phases: dict[str, dict[str, Any]] = {}
     interference_rows = [row for row in rows if row["phase"] == "interference"]
     interference_eps = mean(interference_rows, "events_per_second")
+    interference_ticks = mean(interference_rows, "background_cpu_ticks")
     baseline_rows = [row for row in rows if row["phase"] == "baseline"]
     baseline_eps = mean(baseline_rows, "events_per_second")
+    interference_drop = percent_drop(baseline_eps, interference_eps)
     for phase in BatchThroughputBenchmark.phases:
         phase_rows = [row for row in rows if row["phase"] == phase]
         eps = mean(phase_rows, "events_per_second")
+        background_ticks = mean(phase_rows, "background_cpu_ticks")
         phases[phase] = {
             "mean_events_per_second": eps,
             "mean_elapsed_seconds": mean(phase_rows, "elapsed_seconds"),
             "mean_latency_p95_ms": mean(phase_rows, "latency_p95_ms"),
+            "mean_background_cpu_ticks": background_ticks,
+            "background_retention_percent": (
+                percent_gain(interference_ticks, background_ticks) + 100.0
+                if interference_ticks not in (None, 0) and background_ticks is not None
+                else None
+            ),
             "throughput_gain_vs_interference_percent": percent_gain(
                 interference_eps, eps
             ),
             "throughput_drop_vs_baseline_percent": percent_drop(baseline_eps, eps),
         }
+    schedx = phases["schedx"]
+    schedx["valid_for_claims"] = bool(
+        interference_drop is not None
+        and interference_drop >= 2.0
+        and (schedx.get("throughput_gain_vs_interference_percent") or 0.0) > 0.0
+        and (schedx.get("background_retention_percent") or 0.0)
+        >= config.minimum_background_retention_percent
+    )
     return {
         "status": "ok",
         "benchmark": "batch-throughput",
         "config": {**asdict(config), "output": str(config.output)},
+        "interference_detected": bool(
+            interference_drop is not None and interference_drop >= 2.0
+        ),
+        "interference_drop_percent": interference_drop,
         "environment": {
             "kernel": environment.get("uname", environment.get("kernel")),
             "cpu_count": environment.get("cpu_count"),

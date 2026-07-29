@@ -157,3 +157,40 @@ def test_native_report_prefers_fairness_valid_summary(tmp_path: Path):
     selected = module.latest_native_summary(results)
 
     assert selected["comparison"]["rps_gain_percent"] == 62.18
+
+
+def test_competition_report_prefers_fair_batch_summary(tmp_path: Path):
+    module = load_report_module()
+    results = tmp_path / "results"
+    run_dir = results / "competition-demo" / "2026-07-18_12-00-00"
+    write_json(
+        run_dir / "manifest.json",
+        {
+            "batch_throughput": {
+                "summary": {
+                    "phases": {
+                        "schedx": {
+                            "throughput_gain_vs_interference_percent": -1.0,
+                            "valid_for_claims": False,
+                        }
+                    }
+                }
+            }
+        },
+    )
+    write_json(
+        results / "batch-throughput" / "formal" / "summary.json",
+        {
+            "phases": {
+                "schedx": {
+                    "throughput_gain_vs_interference_percent": 64.54,
+                    "background_retention_percent": 27.19,
+                    "valid_for_claims": True,
+                }
+            }
+        },
+    )
+
+    data = module.extract(results, run_dir)
+
+    assert data["batch"]["phases"]["schedx"]["valid_for_claims"]

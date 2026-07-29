@@ -1,5 +1,6 @@
 from schedx.policies.classifier import WorkloadClassifier
 from schedx.policies.planner import PolicyPlanner, match_isolation_target
+from schedx.policies.scx_mapper import ScxPolicyMapper
 
 
 def test_classifier_detects_mixed_workload():
@@ -19,6 +20,52 @@ def test_latency_policy_protects_target():
     actions = PolicyPlanner().plan("latency_first", "nginx", classification)
     assert actions[0].target == "nginx"
     assert any(action.target == "2" for action in actions)
+
+
+def test_throughput_policy_boosts_batch_and_limits_only_stress_ng():
+    classification = {
+        "groups": {
+            "background_noise": [
+                {"pid": 2, "comm": "stress-ng-cpu", "cmdline": "stress-ng --cpu 4"},
+                {"pid": 3, "comm": "sshd", "cmdline": "sshd: root@pts/0"},
+            ]
+        }
+    }
+
+    actions = PolicyPlanner().plan(
+        "throughput_first", "sysbench", classification
+    )
+
+    assert [action.target for action in actions[:2]] == ["sysbench", "sysbench"]
+    assert [action.target for action in actions[2:]] == ["2", "2"]
+    assert actions[2].value == 300
+    assert actions[3].value == "80000 100000"
+    assert all(action.target != "3" for action in actions)
+
+
+def test_scx_throughput_policy_skips_controller_and_preserves_background():
+    classification = {
+        "groups": {
+            "batch_compute": [
+                {"pid": 10, "comm": "sysbench", "cmdline": "sysbench cpu run"},
+                {
+                    "pid": 11,
+                    "comm": "python3",
+                    "cmdline": "python3 -m schedx benchmark batch-throughput",
+                },
+            ],
+            "background_noise": [
+                {"pid": 20, "comm": "stress-ng-cpu", "cmdline": "stress-ng --cpu 4"}
+            ],
+        }
+    }
+
+    actions = ScxPolicyMapper().map_classification(
+        classification, "throughput_first"
+    )
+
+    assert {action["pid"] for action in actions} == {10, 20}
+    assert next(action for action in actions if action["pid"] == 20)["weight"] == 300
 
 
 def test_classifier_reports_cpu_reason():

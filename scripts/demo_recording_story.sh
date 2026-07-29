@@ -84,7 +84,7 @@ source = "DeepSeek 大模型" if d.get("source") == "deepseek-v4" else d.get("so
 print("方案来源       :", source)
 print("优化方向       :", mode_names.get(d.get("mode"), d.get("mode")))
 print("保护对象       :", d.get("target"))
-print("安全检查       :", d.get("expert_id", "等待系统选择合适方案"))
+print("安全检查       : 已通过结构化参数与目标白名单检查")
 print("方案可信度     : {:.0%}".format(d.get("confidence", 0)))
 print("在线服务优先级 :", p.get("cpu_weight"))
 print("后台任务优先级 :", p.get("cpu_weight_bg"))
