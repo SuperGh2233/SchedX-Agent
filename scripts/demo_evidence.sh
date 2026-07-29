@@ -165,6 +165,34 @@ print(
 )
 
 trace = data["agent_trace"]
+completed_phases = trace.get("accepted", {}).get("phases_completed", [])
+phase_names = {
+    "probe": "ProbeSkill（系统感知）",
+    "analyze": "AnalyzeSkill（负载分类）",
+    "llm_policy": "LlmPolicySkill（大模型建议）",
+    "policy": "PolicySkill（策略生成）",
+    "canary_baseline": "CanaryBaselineSkill（执行前测量）",
+    "ebpf_load": "EbpfLoadSkill（扩展检查）",
+    "ebpf_attach": "EbpfAttachSkill（挂载检查）",
+    "ebpf_policy": "EbpfPolicySkill（扩展策略检查）",
+    "scx": "ScxSkill（自定义调度）",
+    "act": "ActSkill（资源执行）",
+    "canary_candidate": "CanaryCandidateSkill（执行后测量）",
+    "verify": "VerifySkill（效果验证）",
+    "rollback": "RollbackSkill（自动恢复）",
+}
+visible_phases = [
+    phase_names[phase] for phase in completed_phases if phase in phase_names
+]
+print("\n[标准化 Skills 执行链]")
+for start in range(0, len(visible_phases), 4):
+    print(" → ".join(visible_phases[start : start + 4]))
+print(
+    "ReportSkill（报告生成）: {}".format(
+        "已完成" if data.get("report", {}).get("returncode") == 0 else "未完成"
+    )
+)
+
 reason_names = {
     "insufficient_p99_improvement": "未达到严格的延迟改善目标",
     "throughput_regression": "每秒请求数下降超过安全范围",
