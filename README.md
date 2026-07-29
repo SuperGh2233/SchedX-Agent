@@ -16,6 +16,8 @@ The `master` branch root contains the official preliminary-round deliverables:
 - `SchedX-Agent_项目介绍.pptx`
 - `操作系统开源创新大赛 作品原创承诺书.docx`
 - `项目展示.mp4`
+- `THIRD_PARTY_NOTICES.md`
+- `code_origin_stats.md`
 
 Canonical source code lives in `schedx/`, `scx/`, `ebpf/`, and `scripts/`.
 Reproducibility material lives in `kernel/`, `tests/`, `results/`, `reports/`,
