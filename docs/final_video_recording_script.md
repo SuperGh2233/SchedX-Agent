@@ -162,10 +162,10 @@ python3 -m schedx status
 项目展示.mp4
 ```
 
-替换仓库根目录和 `初赛作品提交材料/` 中的旧视频，再提交：
+将最终视频保存到仓库根目录并提交：
 
 ```bash
-git add 项目展示.mp4 初赛作品提交材料/项目展示.mp4
+git add 项目展示.mp4
 git commit -m "Update final demonstration video"
 git push origin master
 ```

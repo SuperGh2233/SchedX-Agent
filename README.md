@@ -7,6 +7,21 @@ config-rebuilt kernel `6.6.0-159.4.3.154.oe2403sp4.schedx1`. The stock SP4
 kernel remains installed and is supported through the **cgroup-only fallback**
 mode because its binary config does not enable `CONFIG_SCHED_CLASS_EXT`.
 
+## Competition Submission
+
+The `master` branch root contains the official preliminary-round deliverables:
+
+- `README.md`
+- `SchedX-Agent_项目说明书.docx`
+- `SchedX-Agent_项目介绍.pptx`
+- `操作系统开源创新大赛 作品原创承诺书.docx`
+- `项目展示.mp4`
+
+Canonical source code lives in `schedx/`, `scx/`, `ebpf/`, and `scripts/`.
+Reproducibility material lives in `kernel/`, `tests/`, `results/`, `reports/`,
+and `docs/`. Root-level source copies, editing prompts, template copies, and
+submission ZIP archives are intentionally excluded to avoid stale duplicates.
+
 ## Current Status
 
 Verified on openEuler:

@@ -19,3 +19,8 @@ scx/build/
 scx/output/
 ebpf/build/
 docs/*.pdf
+*.bundle
+~$*
+/初赛作品提交材料/
+/初赛作品提交模板/
+/初赛作品提交材料.zip
