@@ -276,7 +276,7 @@ def format_console_summary(summary: dict[str, Any]) -> str:
             f"执行结果       : {result}",
             f"最慢 1% 请求延迟: {percent(item.get('p99_change_percent'), lower_is_better=True)}",
             f"每秒请求数     : {percent(item.get('rps_change_percent'))}",
-            "后台任务进度   : {}".format(
+            "后台运行量(基准=100%): {}".format(
                 "无有效数据"
                 if item.get("background_retention_percent") is None
                 else f"{float(item['background_retention_percent']):.2f}%"
@@ -286,7 +286,7 @@ def format_console_summary(summary: dict[str, Any]) -> str:
             reason_names = {
                 "insufficient_p99_improvement": "未达到严格的延迟改善目标",
                 "throughput_regression": "每秒请求数下降超过安全范围",
-                "background_progress_regression": "后台任务进度下降超过安全范围",
+                "background_progress_regression": "后台运行量下降超过安全范围",
                 "execution_failed_before_verification": "执行阶段未完成，未进入效果验证",
             }
             lines.append(

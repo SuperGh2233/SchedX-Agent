@@ -42,6 +42,18 @@ def measured_change(value, lower_is_better=False):
     result = "改善" if improved else "回退"
     return f"{arrow}{abs(value):.2f}%（{result}）"
 
+def delta_percent(before, after):
+    if before in (None, 0) or after is None:
+        return None
+    return (after - before) / before * 100.0
+
+def spoken_change(value):
+    if value is None:
+        return "没有有效数据"
+    if abs(value) < 0.005:
+        return "基本不变"
+    return f"{'提高' if value > 0 else '下降'}百分之{abs(value):.2f}"
+
 def source_name(value):
     return {
         "deepseek-v4": "DeepSeek 大模型",
@@ -82,13 +94,13 @@ for key, label in (
     print(
         f"{label}: 每秒请求 {metric(row.get('mean_requests_per_sec'))}，"
         f"最慢 1% 延迟 {metric(row.get('mean_p99_ms'), 3)} 毫秒，"
-        f"后台任务进度 {percentage(row.get('background_retention_percent'))}"
+        f"后台运行量（基准=100%）{percentage(row.get('background_retention_percent'))}"
     )
 
 default = nginx["default"]
 agent = nginx["agent_combined"]
 print(
-    "Agent 综合效果：每秒请求数 {}，最慢 1% 延迟 {}，后台任务进度 {}".format(
+    "Agent 综合效果：每秒请求数 {}，最慢 1% 延迟 {}，后台运行量（基准=100%）{}".format(
         change(
             default.get("mean_requests_per_sec"),
             agent.get("mean_requests_per_sec"),
@@ -132,13 +144,13 @@ print(
 )
 print(
     "结果可信性: {}".format(
-        "满足吞吐提升和后台进度要求"
+        "满足吞吐提升和后台运行量要求"
         if schedx.get("valid_for_claims")
-        else "未同时满足吞吐提升和后台进度要求"
+        else "未同时满足吞吐提升和后台运行量要求"
     )
 )
 print(
-    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}，后台任务进度 {}".format(
+    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}，后台运行量（基准=100%）{}".format(
         change(
             interference.get("mean_events_per_second"),
             schedx.get("mean_events_per_second"),
@@ -153,6 +165,14 @@ print(
 )
 
 trace = data["agent_trace"]
+reason_names = {
+    "insufficient_p99_improvement": "未达到严格的延迟改善目标",
+    "throughput_regression": "每秒请求数下降超过安全范围",
+    "background_progress_regression": "后台运行量下降超过安全范围",
+    "background_starvation": "后台任务获得的处理器时间过少",
+    "missing_background_progress": "没有采集到后台运行量",
+    "execution_failed_before_verification": "执行阶段未完成，未进入效果验证",
+}
 for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严格安全检查")):
     item = trace[key]
     decision = item.get("decision")
@@ -179,7 +199,7 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
         )
     )
     print(
-        "变化：最慢 1% 延迟 {}，每秒请求数 {}，后台任务进度 {}".format(
+        "变化：最慢 1% 延迟 {}，每秒请求数 {}，后台运行量（基准=100%）{}".format(
             measured_change(deltas.get("p99_percent"), lower_is_better=True),
             measured_change(deltas.get("requests_per_sec_percent")),
             percentage(deltas.get("background_retention_percent")),
@@ -189,14 +209,6 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
     if not verdict and item.get("final_status") == "rolled_back":
         reasons = ["execution_failed_before_verification"]
     if reasons:
-        reason_names = {
-            "insufficient_p99_improvement": "未达到严格的延迟改善目标",
-            "throughput_regression": "每秒请求数下降超过安全范围",
-            "background_progress_regression": "后台任务进度下降超过安全范围",
-            "background_starvation": "后台任务获得的处理器时间过少",
-            "missing_background_progress": "没有采集到后台任务进度",
-            "execution_failed_before_verification": "执行阶段未完成，未进入效果验证",
-        }
         print(
             "原因："
             + "，".join(reason_names.get(reason, reason) for reason in reasons)
@@ -210,6 +222,63 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
                 rollback.get("scx_entries_removed", 0),
             )
         )
+
+online_rps_delta = delta_percent(
+    default.get("mean_requests_per_sec"),
+    agent.get("mean_requests_per_sec"),
+)
+online_p99_delta = delta_percent(
+    default.get("mean_p99_ms"),
+    agent.get("mean_p99_ms"),
+)
+batch_throughput_delta = delta_percent(
+    interference.get("mean_events_per_second"),
+    schedx.get("mean_events_per_second"),
+)
+batch_latency_delta = delta_percent(
+    interference.get("mean_latency_p95_ms"),
+    schedx.get("mean_latency_p95_ms"),
+)
+candidate = trace["accepted"]
+candidate_verdict = candidate.get("canary_verdict")
+candidate_verdict = candidate_verdict if isinstance(candidate_verdict, dict) else {}
+candidate_deltas = candidate_verdict.get("deltas")
+candidate_deltas = candidate_deltas if isinstance(candidate_deltas, dict) else {}
+candidate_reasons = candidate_verdict.get("reasons", [])
+candidate_reason = "，".join(
+    reason_names.get(reason, reason) for reason in candidate_reasons
+) or "安全检查结果"
+candidate_result = (
+    f"因{candidate_reason}，系统自动恢复"
+    if candidate.get("final_status") == "rolled_back"
+    else "通过安全检查，可以接受"
+)
+
+print("\n[第五幕讲解提示（直接照读）]")
+print(
+    "第一，在线服务场景中，Agent 联合优化使每秒请求数{}，"
+    "最慢百分之一请求延迟{}，后台运行量保持在基准的{}。".format(
+        spoken_change(online_rps_delta),
+        spoken_change(online_p99_delta),
+        percentage(agent.get("background_retention_percent")),
+    )
+)
+print(
+    "第二，批处理场景中，Agent 相比干扰状态使处理能力{}，"
+    "较慢请求延迟{}，后台运行量保持在基准的{}。".format(
+        spoken_change(batch_throughput_delta),
+        spoken_change(batch_latency_delta),
+        percentage(schedx.get("background_retention_percent")),
+    )
+)
+print(
+    "第三，DeepSeek 候选方案使最慢百分之一请求延迟{}，每秒请求数{}；{}。"
+    "这说明大模型负责提出方案，真实数据和安全规则负责最终决定。".format(
+        spoken_change(candidate_deltas.get("p99_percent")),
+        spoken_change(candidate_deltas.get("requests_per_sec_percent")),
+        candidate_result,
+    )
+)
 
 cleanup = data["cleanup"]
 print("\n[环境恢复]")
