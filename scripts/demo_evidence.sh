@@ -52,7 +52,7 @@ def spoken_change(value):
         return "没有有效数据"
     if abs(value) < 0.005:
         return "基本不变"
-    return f"{'提高' if value > 0 else '下降'}百分之{abs(value):.2f}"
+    return f"{'提高' if value > 0 else '下降'} {abs(value):.2f}%"
 
 def source_name(value):
     return {
@@ -94,13 +94,13 @@ for key, label in (
     print(
         f"{label}: 每秒请求 {metric(row.get('mean_requests_per_sec'))}，"
         f"最慢 1% 延迟 {metric(row.get('mean_p99_ms'), 3)} 毫秒，"
-        f"后台运行量（基准=100%）{percentage(row.get('background_retention_percent'))}"
+        f"后台运行量（基准=100%）：{percentage(row.get('background_retention_percent'))}"
     )
 
 default = nginx["default"]
 agent = nginx["agent_combined"]
 print(
-    "Agent 综合效果：每秒请求数 {}，最慢 1% 延迟 {}，后台运行量（基准=100%）{}".format(
+    "Agent 综合效果：每秒请求数 {}，最慢 1% 延迟 {}，后台运行量（基准=100%）：{}".format(
         change(
             default.get("mean_requests_per_sec"),
             agent.get("mean_requests_per_sec"),
@@ -150,7 +150,7 @@ print(
     )
 )
 print(
-    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}，后台运行量（基准=100%）{}".format(
+    "Agent 相比干扰场景：处理能力 {}，较慢请求延迟 {}，后台运行量（基准=100%）：{}".format(
         change(
             interference.get("mean_events_per_second"),
             schedx.get("mean_events_per_second"),
@@ -227,7 +227,7 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
         )
     )
     print(
-        "变化：最慢 1% 延迟 {}，每秒请求数 {}，后台运行量（基准=100%）{}".format(
+        "变化：最慢 1% 延迟 {}，每秒请求数 {}，后台运行量（基准=100%）：{}".format(
             measured_change(deltas.get("p99_percent"), lower_is_better=True),
             measured_change(deltas.get("requests_per_sec_percent")),
             percentage(deltas.get("background_retention_percent")),
@@ -282,26 +282,26 @@ candidate_result = (
     else "通过安全检查，可以接受"
 )
 
-print("\n[第五幕讲解提示（直接照读）]")
+print("\n[本轮核心结论]")
 print(
-    "第一，在线服务场景中，Agent 联合优化使每秒请求数{}，"
-    "最慢百分之一请求延迟{}，后台运行量保持在基准的{}。".format(
+    "在线服务：Agent 联合优化使每秒请求数{}，"
+    "最慢百分之一请求延迟{}，后台运行量保持在基准的 {}。".format(
         spoken_change(online_rps_delta),
         spoken_change(online_p99_delta),
         percentage(agent.get("background_retention_percent")),
     )
 )
 print(
-    "第二，批处理场景中，Agent 相比干扰状态使处理能力{}，"
-    "较慢请求延迟{}，后台运行量保持在基准的{}。".format(
+    "批处理任务：Agent 相比干扰状态使处理能力{}，"
+    "较慢请求延迟{}，后台运行量保持在基准的 {}。".format(
         spoken_change(batch_throughput_delta),
         spoken_change(batch_latency_delta),
         percentage(schedx.get("background_retention_percent")),
     )
 )
 print(
-    "第三，DeepSeek 候选方案使最慢百分之一请求延迟{}，每秒请求数{}；{}。"
-    "这说明大模型负责提出方案，真实数据和安全规则负责最终决定。".format(
+    "策略安全：DeepSeek 候选方案使最慢百分之一请求延迟{}，"
+    "每秒请求数{}；{}。大模型负责提出方案，真实数据和安全规则负责最终决定。".format(
         spoken_change(candidate_deltas.get("p99_percent")),
         spoken_change(candidate_deltas.get("requests_per_sec_percent")),
         candidate_result,
