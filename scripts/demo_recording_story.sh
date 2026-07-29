@@ -49,7 +49,7 @@ bash scripts/demo_preflight.sh
 pause_scene
 
 banner "第 2 幕：识别在线服务和后台干扰"
-stress-ng --cpu 2 --timeout 45s --metrics-brief >.schedx/demo-stress.log 2>&1 &
+stress-ng --cpu 2 --timeout 300s --metrics-brief >.schedx/demo-stress.log 2>&1 &
 stress_pid=$!
 sleep 2
 python3 -m schedx classify --top 50 | python3 -c '
@@ -69,6 +69,11 @@ print("后台干扰 : {}".format(summary("background_noise")))
 pause_scene
 
 banner "第 3 幕：DeepSeek 提出方案，安全规则负责把关"
+if ! kill -0 "$stress_pid" 2>/dev/null; then
+    stress-ng --cpu 2 --timeout 300s --metrics-brief >.schedx/demo-stress.log 2>&1 &
+    stress_pid=$!
+    sleep 2
+fi
 python3 -m schedx llm-plan --top 50 | python3 -c '
 import json, sys
 x = json.load(sys.stdin)
@@ -87,8 +92,17 @@ print("保护对象       :", d.get("target"))
 print("安全检查       : 已通过结构化参数与目标白名单检查")
 print("方案可信度     : {:.0%}".format(d.get("confidence", 0)))
 print("在线服务优先级 :", p.get("cpu_weight"))
-print("后台任务优先级 :", p.get("cpu_weight_bg"))
-print("选择原因       : 检测到在线服务和后台干扰同时存在")
+background_weight = p.get("cpu_weight_bg")
+print(
+    "后台任务优先级 :",
+    background_weight if background_weight is not None else "未设置（当前没有后台干扰）",
+)
+print(
+    "选择原因       :",
+    "检测到在线服务和后台干扰同时存在"
+    if background_weight is not None
+    else "当前只检测到在线服务",
+)
 '
 kill "$stress_pid" 2>/dev/null || true
 wait "$stress_pid" 2>/dev/null || true

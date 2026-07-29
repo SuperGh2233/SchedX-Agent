@@ -24,6 +24,7 @@ PARAMETER_LIMITS: dict[str, tuple[int, int] | set[str]] = {
         "15000 100000",
         "25000 100000",
         "50000 100000",
+        "80000 100000",
         "max",
     },
 }

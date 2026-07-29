@@ -50,3 +50,25 @@ def test_llm_policy_validator_replaces_unknown_target():
         fallback(),
     )
     assert result.target == "nginx"
+
+
+def test_llm_policy_validator_keeps_required_safe_defaults():
+    safe = Decision(
+        "latency_first",
+        "nginx",
+        {"cpu_weight": 8000, "cpu_weight_bg": 10},
+        "mixed workload baseline",
+        0.85,
+    )
+
+    result = LLMPolicyPlanner().validate(
+        {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {"cpu_weight": 9000},
+        },
+        classification(),
+        safe,
+    )
+
+    assert result.parameters["cpu_weight_bg"] == 10
