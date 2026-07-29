@@ -18,7 +18,7 @@ Verified on openEuler:
 - `schedx optimize --target stress-ng --mode isolate_background` moves stress-ng PIDs into `/sys/fs/cgroup/schedx/pid-<pid>/` and sets `cpu.weight=50`.
 - `schedx rollback` restores previous CPU weights and removes empty `pid-*` cgroups. The base `/sys/fs/cgroup/schedx` cgroup is removed when no workload remains.
 - `schedx benchmark nginx` runs a three-phase nginx + stress-ng experiment and generates `summary.csv`, `summary.json`, raw wrk output, cgroup snapshots, and `report.md`.
-- The SP4 VM passes `137` tests and the fairness-gated native sched_ext run
+- The SP4 VM passes `141` tests and the fairness-gated native sched_ext run
   reports `62.18%` higher RPS, `33.74%` lower P99, `32.22%` background CPU
   retention and `nr_rejected=0`.
 - A real wrk canary accepted a policy with `13.32%` higher RPS, `92.82%` lower
@@ -50,6 +50,14 @@ schedx optimize --target stress-ng --mode isolate_background --dry-run
 sudo schedx optimize --target stress-ng --mode isolate_background
 sudo schedx rollback
 ```
+
+## Documentation
+
+- [System design](docs/design.md)
+- [Reproducible experiments](docs/experiment.md)
+- [openEuler 24.03 LTS SP4 setup](docs/openEuler_setup.md)
+- [Five-minute demonstration script](docs/final_video_recording_script.md)
+- [Reproducible sched_ext kernel build](kernel/openEuler-24.03-LTS-SP4/README.md)
 
 ## Architecture
 
