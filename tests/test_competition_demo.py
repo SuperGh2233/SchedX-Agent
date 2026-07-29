@@ -194,5 +194,54 @@ def test_compact_summary_keeps_video_signal_without_verbose_trace():
     assert "phases_completed" not in str(summary)
     assert "常规小范围试运行" in rendered
     assert "严格安全检查" in rendered
-    assert "ROLLED_BACK" in rendered
+    assert "已自动恢复" in rendered
     assert not rendered.lstrip().startswith("{")
+
+
+def test_compact_summary_handles_missing_canary_verdict():
+    module = load_demo_module()
+    manifest = {
+        "status": "failed",
+        "run_dir": "results/demo/run",
+        "agent_trace": {
+            "accepted": {
+                "decision": {"source": "deepseek-v4", "mode": "latency_first"},
+                "final_status": "rolled_back",
+                "canary_verdict": None,
+            },
+            "rejected": {
+                "decision": {"source": "explicit_cli", "mode": "latency_first"},
+                "final_status": "rolled_back",
+                "canary_verdict": None,
+            },
+        },
+        "cleanup": {"sched_ext_state": "disabled"},
+        "report": {"returncode": 0, "path": "reports/demo.md"},
+    }
+
+    summary = module.build_console_summary(manifest)
+    rendered = module.format_console_summary(summary)
+
+    assert summary["accepted_policy"]["verdict"] is None
+    assert "执行未完成，已自动恢复" in rendered
+    assert "执行阶段未完成，未进入效果验证" in rendered
+
+
+def test_extract_agent_trace_preserves_execution_failures():
+    module = load_demo_module()
+    trace = module.extract_agent_trace(
+        {
+            "data": {
+                "agent_loop": {
+                    "context_data": {
+                        "canary_verdict": None,
+                        "execution_results": [
+                            {"status": "failed_rolled_back", "error": "test failure"}
+                        ],
+                    }
+                }
+            }
+        }
+    )
+
+    assert trace["execution_results"][0]["status"] == "failed_rolled_back"

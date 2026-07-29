@@ -155,9 +155,12 @@ print(
 trace = data["agent_trace"]
 for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严格安全检查")):
     item = trace[key]
-    decision = item.get("decision", {})
-    verdict = item.get("canary_verdict", {})
-    deltas = verdict.get("deltas", {})
+    decision = item.get("decision")
+    decision = decision if isinstance(decision, dict) else {}
+    verdict = item.get("canary_verdict")
+    verdict = verdict if isinstance(verdict, dict) else {}
+    deltas = verdict.get("deltas")
+    deltas = deltas if isinstance(deltas, dict) else {}
     print(f"\n[{label}]")
     print(
         f"方案：来源={source_name(decision.get('source'))}，"
@@ -166,11 +169,13 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
     )
     print(
         "结果：{}".format(
-            "已自动恢复（ROLLED_BACK）"
+            "执行未完成，已自动恢复"
+            if item.get("final_status") == "rolled_back" and not verdict
+            else "已自动恢复"
             if item.get("final_status") == "rolled_back"
             else "已接受（ACCEPTED）"
             if verdict.get("status") == "accepted"
-            else str(verdict.get("status", item.get("final_status", ""))).upper()
+            else str(verdict.get("status") or item.get("final_status") or "数据不足")
         )
     )
     print(
@@ -180,17 +185,21 @@ for key, label in (("accepted", "常规小范围试运行"), ("rejected", "严�
             percentage(deltas.get("background_retention_percent")),
         )
     )
-    if verdict.get("reasons"):
+    reasons = verdict.get("reasons", [])
+    if not verdict and item.get("final_status") == "rolled_back":
+        reasons = ["execution_failed_before_verification"]
+    if reasons:
         reason_names = {
             "insufficient_p99_improvement": "未达到严格的延迟改善目标",
             "throughput_regression": "每秒请求数下降超过安全范围",
             "background_progress_regression": "后台任务进度下降超过安全范围",
             "background_starvation": "后台任务获得的处理器时间过少",
             "missing_background_progress": "没有采集到后台任务进度",
+            "execution_failed_before_verification": "执行阶段未完成，未进入效果验证",
         }
         print(
             "原因："
-            + "，".join(reason_names.get(reason, reason) for reason in verdict["reasons"])
+            + "，".join(reason_names.get(reason, reason) for reason in reasons)
         )
     if item.get("rollback"):
         rollback = item["rollback"]

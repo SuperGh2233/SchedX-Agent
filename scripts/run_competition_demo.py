@@ -179,15 +179,23 @@ def extract_agent_trace(result: dict[str, Any]) -> dict[str, Any]:
         "phases_completed": loop.get("phases_completed", []),
         "final_status": loop.get("final_status", ""),
         "canary_verdict": context.get("canary_verdict", {}),
+        "execution_results": context.get("execution_results", []),
         "rollback": rollback,
     }
 
 
 def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
-    def summarize_trace(trace: dict[str, Any]) -> dict[str, Any]:
-        decision = trace.get("decision", {})
-        verdict = trace.get("canary_verdict", {})
-        deltas = verdict.get("deltas", {})
+    def summarize_trace(trace: object) -> dict[str, Any]:
+        trace = trace if isinstance(trace, dict) else {}
+        decision = trace.get("decision")
+        decision = decision if isinstance(decision, dict) else {}
+        verdict = trace.get("canary_verdict")
+        verdict = verdict if isinstance(verdict, dict) else {}
+        deltas = verdict.get("deltas")
+        deltas = deltas if isinstance(deltas, dict) else {}
+        reasons = verdict.get("reasons", [])
+        if not verdict and trace.get("final_status") == "rolled_back":
+            reasons = ["execution_failed_before_verification"]
         return {
             "source": decision.get("source"),
             "expert": decision.get("expert_id"),
@@ -195,7 +203,7 @@ def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "target": decision.get("target"),
             "final_status": trace.get("final_status"),
             "verdict": verdict.get("status"),
-            "reasons": verdict.get("reasons", []),
+            "reasons": reasons,
             "p99_change_percent": deltas.get("p99_percent"),
             "rps_change_percent": deltas.get("requests_per_sec_percent"),
             "background_retention_percent": deltas.get(
@@ -204,7 +212,8 @@ def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
             "rollback": trace.get("rollback"),
         }
 
-    trace = manifest.get("agent_trace", {})
+    trace = manifest.get("agent_trace")
+    trace = trace if isinstance(trace, dict) else {}
     report = manifest.get("report", {})
     return {
         "status": manifest.get("status"),
@@ -248,9 +257,17 @@ def format_console_summary(summary: dict[str, Any]) -> str:
         }.get(str(value), str(value or "未知"))
 
     def verdict_block(title: str, item: dict[str, Any]) -> list[str]:
-        verdict = str(item.get("verdict", "")).upper()
+        raw_verdict = item.get("verdict")
+        verdict = str(raw_verdict).upper() if raw_verdict else ""
         final = str(item.get("final_status", ""))
-        result = "ROLLED_BACK" if final == "rolled_back" else verdict
+        if final == "rolled_back" and not verdict:
+            result = "执行未完成，已自动恢复"
+        elif final == "rolled_back":
+            result = "已自动恢复"
+        elif verdict == "ACCEPTED":
+            result = "已接受"
+        else:
+            result = verdict or "数据不足"
         lines = [
             f"\n[{title}]",
             f"方案来源       : {source_name(item.get('source'))}",
@@ -270,6 +287,7 @@ def format_console_summary(summary: dict[str, Any]) -> str:
                 "insufficient_p99_improvement": "未达到严格的延迟改善目标",
                 "throughput_regression": "每秒请求数下降超过安全范围",
                 "background_progress_regression": "后台任务进度下降超过安全范围",
+                "execution_failed_before_verification": "执行阶段未完成，未进入效果验证",
             }
             lines.append(
                 "拒绝原因       : "
@@ -415,6 +433,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             0.25,
             use_llm=args.llm_policy,
         )
+        accepted_trace = extract_agent_trace(manifest["accepted_canary"])
+        if not isinstance(accepted_trace.get("canary_verdict"), dict):
+            manifest["accepted_canary_first_attempt"] = manifest["accepted_canary"]
+            progress("[3/4] 首次试运行未完成，清理后自动重试一次")
+            manifest["accepted_canary"] = run_canary(
+                run_dir,
+                "canary-accepted-retry",
+                max(3, min(duration, 5)),
+                args.stress_cpu,
+                0.25,
+                use_llm=args.llm_policy,
+            )
         progress("[4/4] 严格安全检查：不达标就自动恢复")
         manifest["rollback_canary"] = run_canary(
             run_dir,
@@ -430,11 +460,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rejected": extract_agent_trace(manifest["rollback_canary"]),
         }
         write_json(run_dir / "agent-trace.json", manifest["agent_trace"])
-        manifest["status"] = (
-            "ok"
-            if ablation.get("status") == "ok" and batch.get("status") == "ok"
-            else "failed"
+        canaries_completed = all(
+            isinstance(item.get("canary_verdict"), dict)
+            for item in manifest["agent_trace"].values()
         )
+        manifest["status"] = "ok" if (
+            ablation.get("status") == "ok"
+            and batch.get("status") == "ok"
+            and canaries_completed
+        ) else "failed"
     except Exception as exc:
         manifest.update({"status": "failed", "error": str(exc)})
     finally:
