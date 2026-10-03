@@ -57,7 +57,7 @@ def dry_run_from_args(args: argparse.Namespace) -> bool:
 
 
 def build_context(args: argparse.Namespace) -> AgentContext:
-    return AgentContext(dry_run=dry_run_from_args(args))
+    return AgentContext(dry_run=dry_run_from_args(args), state_dir=Path(getattr(args, "state_dir", ".schedx")))
 
 
 def configure_canary(context: AgentContext, args: argparse.Namespace) -> None:
@@ -86,7 +86,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     llm = LLMClient()
     scx = ScxController()
     scx_status = scx.status()
-    if scx.is_available():
+    if scx_status["state"] == "enabled":
         mode = "sched_ext-native"
     elif cgroup.is_v2():
         mode = "cgroup-only fallback"
@@ -198,18 +198,19 @@ def cmd_optimize(args: argparse.Namespace) -> int:
     })
 
     context.save_session()
-    return 0
+    status = report["final_status"]
+    return 0 if status in {"success", "degraded"} else (3 if status == "rollback_failed" else 1)
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    context = AgentContext(dry_run=False)
+    context = build_context(args)
     context.data["llm_policy_enabled"] = args.llm_policy
     configure_canary(context, args)
     loop = AgentLoop(context, max_iterations=50)
     print(f"SchedX Agent starting continuous mode (interval={args.interval}s, max_rounds={args.max_rounds})")
     print("Press Ctrl+C to stop.")
-    loop.run_continuous(interval=args.interval, max_rounds=args.max_rounds)
-    return 0
+    reason = loop.run_continuous(interval=args.interval, max_rounds=args.max_rounds)
+    return 3 if reason == "rollback_failed" else (1 if reason == "consecutive_failures" else 0)
 
 
 def cmd_llm_analyze(args: argparse.Namespace) -> int:
@@ -279,7 +280,7 @@ def cmd_llm_report(args: argparse.Namespace) -> int:
 def cmd_control(args: argparse.Namespace) -> int:
     context = build_context(args)
     from schedx.controllers.cgroup_controller import CgroupController
-    cgroup = CgroupController(dry_run=context.dry_run)
+    cgroup = CgroupController(dry_run=context.dry_run, rollback_file=context.rollback_file)
     group = args.group or f"manual-{args.pid}"
     cgroup.add_pid(group, args.pid)
     if args.cpu_weight is not None:
@@ -348,12 +349,14 @@ def cmd_tool_run(args: argparse.Namespace) -> int:
         }.items()
         if value is not None
     }
-    result = ToolCallRunner(native_scx=not args.no_scx).run(
+    result = ToolCallRunner(native_scx=not args.no_scx, state_dir=Path(args.state_dir) / "tool-runs").run(
         command,
         agent_id=args.agent_id,
         intent=args.intent,
         profile_overrides=overrides,
         resource_hint=args.resource_hint or os.environ.get("AGENT_RESOURCE_HINT", ""),
+        timeout=args.timeout,
+        output_limit=args.output_limit,
     )
     emit_tool_result(result)
     return int(result["returncode"])
@@ -502,6 +505,8 @@ def build_parser() -> argparse.ArgumentParser:
     tool_run.add_argument("--pids-max")
     tool_run.add_argument("--no-scx", action="store_true", default=False)
     tool_run.add_argument("--resource-hint", default="")
+    tool_run.add_argument("--timeout", type=float, default=300.0)
+    tool_run.add_argument("--output-limit", type=int, default=1048576)
     tool_run.add_argument("tool_command", nargs=argparse.REMAINDER)
     tool_run.set_defaults(func=cmd_tool_run)
 
@@ -512,6 +517,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     scx_daemon.add_argument("--socket", default=str(DEFAULT_SOCKET))
     scx_daemon.set_defaults(func=cmd_scx_daemon)
+    for command_parser in (optimize, run_cmd, control, rollback, tool_run):
+        command_parser.add_argument("--state-dir", default=".schedx")
     return parser
 
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import math
 from typing import Any
 
 
@@ -97,16 +98,17 @@ class DecisionEngine:
         }
 
     def should_stop(self, history: list[dict]) -> bool:
-        """Decide if further optimization rounds should stop."""
-        if len(history) >= 3:
-            return True
-        if len(history) >= 2:
-            last_two = history[-2:]
-            if all(h.get("improvement", 0) < 0 for h in last_two):
-                return True
-            if all(h.get("improvement", 0) > 5 for h in last_two):
-                return True
-        return False
+        """Recognize three measured, stable rounds of the same objective."""
+        if len(history) < 3:
+            return False
+        window = history[-3:]
+        if any(row.get("status") != "ok" or row.get("objective_status") != "accepted" for row in window):
+            return False
+        decisions = {(row.get("decision", {}).get("mode"), row.get("decision", {}).get("target")) for row in window}
+        if len(decisions) != 1:
+            return False
+        values = [row.get("improvement") for row in window]
+        return all(isinstance(value, (int, float)) and math.isfinite(value) and abs(value) <= 1.0 for value in values)
 
     def adjust_parameters(self, base_params: dict, adjustment: dict) -> dict:
         params = dict(base_params)

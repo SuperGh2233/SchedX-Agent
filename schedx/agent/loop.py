@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import json
 import time
+import uuid
+import math
+import copy
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -18,7 +21,7 @@ from schedx.skills.policy_skill import PolicySkill
 from schedx.skills.probe_skill import ProbeSkill
 from schedx.skills.report_skill import ReportSkill
 from schedx.skills.rollback_skill import RollbackSkill
-from schedx.skills.scx_skill import ScxSkill, ScxStatsSkill
+from schedx.skills.scx_skill import ScxSkill, ScxStatsSkill, ScxCgroupSkill
 from schedx.skills.verify_skill import VerifySkill
 from schedx.skills.llm_analyze_skill import LlmAnalyzeSkill
 from schedx.skills.llm_policy_skill import LlmPolicySkill
@@ -62,6 +65,7 @@ class AgentLoop:
         "ebpf_attach",
         "scx",
         "act",
+        "scx_cgroups",
         "ebpf_policy",
         "canary_candidate",
         "ebpf_stats",
@@ -93,6 +97,7 @@ class AgentLoop:
             "ebpf_stats": EbpfStatsSkill(),
             "scx": ScxSkill(),
             "act": ActSkill(),
+            "scx_cgroups": ScxCgroupSkill(),
             "canary_candidate": CanaryCandidateSkill(),
             "verify": VerifySkill(),
             "report": ReportSkill(),
@@ -103,6 +108,7 @@ class AgentLoop:
         }
 
     def run(self, initial_phase: str = "probe") -> dict[str, Any]:
+        self.context.data["transaction_owner"] = self.context.session.session_id
         phase = initial_phase
         iteration = 0
 
@@ -117,6 +123,8 @@ class AgentLoop:
                 phase = decision.next_phase or "policy"
                 continue
 
+            if phase in {"ebpf_load", "scx", "act"}:
+                self.context.data["mutation_started"] = True
             result = self._execute_skill(phase, iteration)
             loop_decision = self._make_decision(phase, result, iteration)
             self.decisions.append(loop_decision)
@@ -130,36 +138,48 @@ class AgentLoop:
 
         return self._build_report()
 
-    def run_continuous(self, interval: float = 30.0, max_rounds: int = 0) -> None:
-        """Continuous agent loop: sense → decide → act → verify → repeat."""
-        round_num = 0
-        while True:
-            round_num += 1
-            if max_rounds > 0 and round_num > max_rounds:
-                break
-
-            print(f"\n{'='*50}")
-            print(f"  Agent Round {round_num}")
-            print(f"{'='*50}")
-
-            self.context.data["round"] = round_num
-            self.context.dry_run = False
-
-            result = self._run_one_round(round_num)
-            self.round_history.append(result)
-
-            if self.engine.should_stop(self.round_history):
-                print("Agent: optimization converged, stopping.")
-                break
-
-            print(f"Agent: sleeping {interval}s before next round...")
-            try:
-                time.sleep(interval)
-            except KeyboardInterrupt:
-                print("\nAgent: interrupted by user.")
-                break
+    def run_continuous(self, interval: float = 30.0, max_rounds: int = 0) -> str:
+        """Monitor indefinitely; stable objectives suppress churn, not monitoring."""
+        if not math.isfinite(interval) or interval < 0 or max_rounds < 0:
+            raise ValueError("interval and max_rounds must be non-negative")
+        round_num, failures = 0, 0
+        failure_limit = int(self.context.data.get("max_consecutive_failures", 3))
+        try:
+            while max_rounds == 0 or round_num < max_rounds:
+                round_num += 1
+                self.context.data["round"] = round_num
+                result = self._run_one_round(round_num)
+                self.round_history.append(result)
+                self.round_history[:] = self.round_history[-128:]
+                failures = 0 if result["status"] == "ok" else failures + 1
+                if result["status"] == "rollback_failed":
+                    self.context.data["stop_reason"] = "rollback_failed"
+                    return "rollback_failed"
+                if failures >= failure_limit:
+                    self.context.data["stop_reason"] = "consecutive_failures"
+                    return "consecutive_failures"
+                self.context.data["converged"] = self.engine.should_stop(self.round_history)
+                if self.context.data["converged"]:
+                    print("Agent: measured objectives stable; continuing observation.")
+                self.context.save_session()
+                if max_rounds and round_num >= max_rounds:
+                    break
+                time.sleep(min(interval * (2 ** max(0, failures - 1)), max(interval, 300.0)))
+        except KeyboardInterrupt:
+            if self.context.data.get("mutation_started"):
+                result = self._execute_skill("rollback", round_num * 100 + 99)
+                if not result.ok:
+                    self.context.data["stop_reason"] = "rollback_failed"
+                    return "rollback_failed"
+            self.context.data["stop_reason"] = "interrupted"
+            return "interrupted"
+        self.context.data["stop_reason"] = "max_rounds"
+        return "max_rounds"
 
     def _run_one_round(self, round_num: int) -> dict[str, Any]:
+        if self.context.data.get("rollback_required"):
+            return {"round": round_num, "status": "rollback_failed", "reason": "recovery required before new actions"}
+        self._reset_round()
         probe_result = self._execute_skill("probe", round_num * 100 + 1)
         if not probe_result.ok:
             return {"round": round_num, "status": "probe_failed"}
@@ -170,12 +190,15 @@ class AgentLoop:
 
         classification = self.context.data.get("classification", {})
 
-        self._execute_skill("llm_analyze", round_num * 100 + 2)
+        if self.context.data.get("llm_policy_enabled"):
+            self._execute_skill("llm_analyze", round_num * 100 + 2)
         pressure = self.context.data.get("snapshot", {}).get("pressure", {})
         topology = self.context.data.get("topology", {})
 
         if self.context.data.get("llm_policy_enabled"):
-            self._execute_skill("llm_policy", round_num * 100 + 3)
+            llm_result = self._execute_skill("llm_policy", round_num * 100 + 3)
+            if not llm_result.ok:
+                return {"round": round_num, "status": "llm_policy_failed"}
             raw = self.context.data["agent_decision"]
             proposal = Decision(
                 raw["mode"], raw["target"], raw["parameters"], raw["reason"], raw["confidence"]
@@ -192,61 +215,64 @@ class AgentLoop:
         print(f"  reason: {agent_decision.reason}")
         print(f"  confidence: {agent_decision.confidence:.0%}")
 
-        policy_result = self._execute_skill("policy", round_num * 100 + 3)
-        baseline_result = self._execute_skill("canary_baseline", round_num * 100 + 4)
-        if not baseline_result.ok:
-            return {"round": round_num, "status": "canary_baseline_failed"}
-        ebpf_load_result = self._execute_skill("ebpf_load", round_num * 100 + 5)
-        ebpf_attach_result = self._execute_skill("ebpf_attach", round_num * 100 + 6)
-        scx_result = self._execute_skill("scx", round_num * 100 + 7)
-        act_result = self._execute_skill("act", round_num * 100 + 8)
-        ebpf_policy_result = self._execute_skill("ebpf_policy", round_num * 100 + 9)
-        candidate_result = self._execute_skill("canary_candidate", round_num * 100 + 10)
-        ebpf_stats_result = self._execute_skill("ebpf_stats", round_num * 100 + 11)
-        verify_result = (
-            self._execute_skill("verify", round_num * 100 + 12)
-            if candidate_result.ok
-            else SkillResult(False, candidate_result.message)
-        )
-
-        rollback_required = (
-            not policy_result.ok
-            or not act_result.ok
-            or not candidate_result.ok
-            or not verify_result.ok
-            or bool(self.context.data.get("rollback_required"))
-        )
-        if rollback_required:
-            rollback_result = self._execute_skill("rollback", round_num * 100 + 13)
-            if rollback_result.ok:
-                self.context.data.pop("rollback_required", None)
-
-        successful = (
-            policy_result.ok
-            and baseline_result.ok
-            and act_result.ok
-            and candidate_result.ok
-            and verify_result.ok
-        )
-
+        results: dict[str, SkillResult] = {}
+        for offset, phase in enumerate(("policy", "canary_baseline", "ebpf_load", "ebpf_attach", "scx", "act", "scx_cgroups", "ebpf_policy", "canary_candidate", "ebpf_stats", "verify"), 3):
+            if phase in {"ebpf_load", "scx", "act"}:
+                self.context.data["mutation_started"] = True
+            result = self._execute_skill(phase, round_num * 100 + offset)
+            results[phase] = result
+            if phase == "policy" and result.ok and "actions" in self.context.data and not self.context.data["actions"]:
+                self.context.data["execution_results"] = []
+                self.context.data["execution_noop"] = True
+                return {"round": round_num, "status": "ok", "noop": True, "objective_status": "unmeasured", "improvement": None}
+            if not result.ok:
+                if phase in {"ebpf_load", "ebpf_attach", "ebpf_stats"}:
+                    self.context.data.setdefault("degraded_phases", []).append(phase)
+                    continue
+                if self.context.data.get("mutation_started"):
+                    self.context.data["rollback_required"] = True
+                    rollback = self._execute_skill("rollback", round_num * 100 + 20)
+                    if rollback.ok:
+                        self.context.data.pop("rollback_required", None)
+                        self.context.data.pop("mutation_started", None)
+                    return {"round": round_num, "status": "failed_rolled_back" if rollback.ok else "rollback_failed",
+                            "failed_phase": phase, "verify_success": results.get("verify", SkillResult(False, "not run")).ok,
+                            "rollback_success": rollback.ok}
+                return {"round": round_num, "status": f"{phase}_failed", "failed_phase": phase}
+        verdict = self.context.data.get("canary_verdict", {})
+        self.context.data.pop("mutation_started", None)
+        self.context.data["accepted_classification"] = copy.deepcopy(classification)
+        self.context.data["accepted_cgroup_ids"] = [row.get("cgroup_id") for row in self.context.data.get("ebpf_policy_results", []) if row.get("cgroup_id")]
         return {
-            "round": round_num,
-            "status": "ok" if successful else "failed_rolled_back",
-            "decision": {
-                "mode": agent_decision.mode,
-                "target": agent_decision.target,
-                "reason": agent_decision.reason,
-                "confidence": agent_decision.confidence,
+            "round": round_num, "status": "ok", "decision": {
+                "mode": agent_decision.mode, "target": agent_decision.target,
+                "reason": agent_decision.reason, "confidence": agent_decision.confidence,
             },
-            "act_success": act_result.ok,
-            "scx_success": scx_result.ok,
-            "ebpf_load_success": ebpf_load_result.ok,
-            "ebpf_attach_success": ebpf_attach_result.ok,
-            "ebpf_policy_success": ebpf_policy_result.ok,
-            "ebpf_stats_success": ebpf_stats_result.ok,
-            "canary_success": candidate_result.ok,
-            "verify_success": verify_result.ok,
+            **{phase + "_success": result.ok for phase, result in results.items()},
+            "canary_success": results["canary_candidate"].ok,
+            "degraded_phases": self.context.data.get("degraded_phases", []),
+            "objective_status": verdict.get("status", "unmeasured"),
+            "metrics": self.context.data.get("canary", {}).get("candidate", {}),
+            "improvement": self._objective_improvement(),
         }
+
+    def _reset_round(self) -> None:
+        self.context.data["transaction_id"] = uuid.uuid4().hex
+        self.context.data["transaction_owner"] = self.context.session.session_id
+        self.context.data.pop("mutation_started", None)
+        for key in ("actions", "execution_results", "execution_noop", "canary", "canary_verdict", "verification", "degraded_phases"):
+            self.context.data.pop(key, None)
+
+    def _objective_improvement(self) -> float | None:
+        verdict = self.context.data.get("canary_verdict", {})
+        if verdict.get("status") != "accepted":
+            return None
+        deltas = verdict.get("deltas", {})
+        if self.context.data.get("mode") in {"latency_first", "isolate_background"}:
+            value = deltas.get("p99_percent")
+            return -float(value) if value is not None else None
+        value = deltas.get("requests_per_sec_percent")
+        return float(value) if value is not None else None
 
     def _auto_decide(self, iteration: int) -> LoopDecision:
         classification = self.context.data.get("classification", {})
@@ -369,7 +395,10 @@ class AgentLoop:
             return SkillResult(False, f"unknown phase: {phase}")
 
         start_time = time.time()
-        result = skill.run(self.context)
+        try:
+            result = skill.run(self.context)
+        except Exception as exc:
+            result = SkillResult(False, f"{phase} failed: {exc}", {"error": str(exc)})
         duration_ms = (time.time() - start_time) * 1000
 
         iteration_record = LoopIteration(
@@ -382,25 +411,31 @@ class AgentLoop:
             context_snapshot=self._snapshot_context(),
         )
         self.iterations.append(iteration_record)
+        self.iterations[:] = self.iterations[-1000:]
         self._record_decision_log(phase, result, iteration)
         return result
 
     def _make_decision(self, phase: str, result: SkillResult, iteration: int) -> LoopDecision:
+        if phase == "rollback":
+            if result.ok:
+                self.context.data.pop("rollback_required", None)
+                self.context.data.pop("mutation_started", None)
+            else:
+                self.context.data["rollback_required"] = True
+            return LoopDecision(False, None, "rollback completed" if result.ok else "rollback failed; recovery required")
         if not result.ok:
-            if phase == "verify" and self.context.data.get("rollback_required"):
-                return LoopDecision(True, "rollback", "canary rejected; initiating rollback")
-            if phase == "act":
-                return LoopDecision(True, "rollback", "execution failed; initiating rollback")
-            if phase == "canary_candidate":
-                return LoopDecision(True, "rollback", "candidate measurement failed; initiating rollback")
-            if phase == "rollback":
-                return LoopDecision(False, None, "rollback completed after failure")
-            if phase == "scx":
-                return LoopDecision(True, "act", "scx failed; falling back to cgroup-only")
-            if phase.startswith("ebpf_"):
+            if phase in {"ebpf_load", "ebpf_attach", "ebpf_stats"}:
+                self.context.data.setdefault("degraded_phases", []).append(phase)
                 return LoopDecision(True, self._next_phase(phase), f"{phase} failed; degraded mode")
+            if self.context.data.get("mutation_started") or self.context.data.get("rollback_required"):
+                self.context.data["rollback_required"] = True
+                return LoopDecision(True, "rollback", f"{phase} failed; initiating rollback")
             return LoopDecision(False, None, f"{phase} failed: {result.message}")
 
+        if phase == "policy" and "actions" in self.context.data and not self.context.data["actions"]:
+            self.context.data["execution_results"] = []
+            self.context.data["execution_noop"] = True
+            return LoopDecision(True, "verify", "no matching actions; verifying safe no-op")
         if phase == "verify":
             return LoopDecision(False, None, "optimization round completed")
 
@@ -440,9 +475,9 @@ class AgentLoop:
 
     def _build_report(self) -> dict[str, Any]:
         if self.iterations and self.iterations[-1].phase == "rollback":
-            final_status = "rolled_back"
-        elif self.iterations and self.iterations[-1].result.ok:
-            final_status = "success"
+            final_status = "rolled_back" if self.iterations[-1].result.ok else "rollback_failed"
+        elif self.iterations and self.iterations[-1].phase == "verify" and self.iterations[-1].result.ok:
+            final_status = "degraded" if self.context.data.get("degraded_phases") else "success"
         else:
             final_status = "failed"
         return {

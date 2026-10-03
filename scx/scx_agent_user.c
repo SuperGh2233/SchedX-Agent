@@ -183,6 +183,27 @@ static void process_command(struct scx_agent *skel, char *line)
 		dump_cgroup_metrics(skel);
 		return;
 	}
+	if (!strcmp(line, "class_metrics")) {
+		int cpus = libbpf_num_possible_cpus();
+		struct schedx_class_metrics values[cpus];
+		for (__u32 id = 0; id < SCX_CLASS_COUNT; id++) {
+			struct schedx_class_metrics total = {};
+			memset(values, 0, sizeof(values));
+			if (bpf_map_lookup_elem(bpf_map__fd(skel->maps.class_metrics_map), &id, values))
+				continue;
+			for (int cpu = 0; cpu < cpus; cpu++) {
+				total.enqueues += values[cpu].enqueues;
+				total.runs += values[cpu].runs;
+				total.runtime_ns += values[cpu].runtime_ns;
+				total.wait_ns += values[cpu].wait_ns;
+				if (values[cpu].max_wait_ns > total.max_wait_ns)
+					total.max_wait_ns = values[cpu].max_wait_ns;
+			}
+			printf("class_id=%u enqueues=%llu runs=%llu runtime_ns=%llu wait_ns=%llu max_wait_ns=%llu\n",
+			       id, total.enqueues, total.runs, total.runtime_ns, total.wait_ns, total.max_wait_ns);
+		}
+		return;
+	}
 	if (sscanf(line, "set %15s %u %u %u", scope, &pid, &class_id,
 		   &weight) == 4 && !strcmp(scope, "task")) {
 		if (set_task_policy(skel, pid, class_id, weight))
@@ -274,6 +295,12 @@ int main(int argc, char **argv)
 	SCX_OPS_LOAD(skel, schedx_ops, scx_agent, uei);
 	link = SCX_OPS_ATTACH(skel, schedx_ops, scx_agent);
 
+	if (set_fairness(skel, 64, 32)) {
+		fprintf(stderr, "failed to initialize service guarantees\n");
+		bpf_link__destroy(link);
+		scx_agent__destroy(skel);
+		return 1;
+	}
 	printf("SchedX native sched_ext scheduler attached.\n");
 	if (once) {
 		sleep(2);

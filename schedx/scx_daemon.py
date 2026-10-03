@@ -8,6 +8,7 @@ import threading
 import time
 from pathlib import Path
 from typing import Any
+from schedx.state import process_start_time
 
 from schedx.controllers.scx_controller import (
     SCX_FAIRNESS_BACKGROUND_MAX,
@@ -50,18 +51,18 @@ class ScxDaemonClient:
         except (OSError, RuntimeError, json.JSONDecodeError, AttributeError):
             return False
 
-    def set_task_policy(self, pid: int, class_id: int, weight: int) -> bool:
+    def set_task_policy(self, pid: int, class_id: int, weight: int, pid_start: str | None = None) -> bool:
         return bool(
-            self.request("set_task", pid=pid, class_id=class_id, weight=weight).get("updated")
+            self.request("set_task", pid=pid, class_id=class_id, weight=weight, pid_start=pid_start or process_start_time(pid)).get("updated")
         )
 
     def remove_task_policy(self, pid: int) -> bool:
         return bool(self.request("remove_task", pid=pid).get("removed"))
 
-    def set_cgroup_policy(self, cgroup_id: int, class_id: int, weight: int) -> bool:
+    def set_cgroup_policy(self, cgroup_id: int, class_id: int, weight: int, cgroup_path: str | None = None) -> bool:
         return bool(
             self.request(
-                "set_cgroup", cgroup_id=cgroup_id, class_id=class_id, weight=weight
+                "set_cgroup", cgroup_id=cgroup_id, class_id=class_id, weight=weight, cgroup_path=cgroup_path
             ).get("updated")
         )
 
@@ -89,8 +90,10 @@ class _ScxDaemonDispatch:
             "default_interval": SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
         }
         self._last_metrics: dict[int, dict[str, int]] = {}
+        self.cgroup_paths: dict[int, Path] = {}
+        self.task_starts: dict[int, str] = {}
         self.control_telemetry: dict[str, Any] = {}
-        self.target_background_share = {"low": 0.12, "high": 0.25}
+        self.target_background_share = {"low": 0.15, "high": 0.25}
         super().__init__(str(socket_path), _ScxRequestHandler)
 
     def dispatch(self, request: dict[str, Any]) -> dict[str, Any]:
@@ -100,7 +103,8 @@ class _ScxDaemonDispatch:
                 return {
                     "ok": True,
                     "scheduler_running": self.controller._process is not None
-                    and self.controller._process.poll() is None,
+                    and self.controller._process.poll() is None
+                    and self.controller.status().get("state") == "enabled",
                     "sched_ext": self.controller.status(),
                     "reaped_policies": self.reaped_policies,
                     "reaped_metrics": self.reaped_metrics,
@@ -109,22 +113,39 @@ class _ScxDaemonDispatch:
                     "target_background_share": self.target_background_share,
                 }
             if action == "set_task":
+                pid = int(request["pid"])
+                start = request.get("pid_start")
+                if start and process_start_time(pid) != start:
+                    raise ProcessLookupError("task identity changed before policy registration")
                 updated = self.controller.set_task_policy(
                     int(request["pid"]), int(request["class_id"]), int(request["weight"])
                 )
+                if updated and start:
+                    self.task_starts[pid] = start
                 return {"ok": True, "updated": updated}
             if action == "remove_task":
                 removed = self.controller.remove_task_policy(int(request["pid"]))
+                if removed:
+                    self.task_starts.pop(int(request["pid"]), None)
                 return {"ok": True, "removed": removed}
             if action == "set_cgroup":
+                cgroup_path = request.get("cgroup_path")
+                if cgroup_path:
+                    path = Path(cgroup_path).resolve(strict=True)
+                    if Path("/sys/fs/cgroup/schedx-agents") not in path.parents or path.stat().st_ino != int(request["cgroup_id"]):
+                        raise ValueError("tool cgroup identity does not match the managed subtree")
                 updated = self.controller.set_cgroup_policy(
                     int(request["cgroup_id"]),
                     int(request["class_id"]),
                     int(request["weight"]),
                 )
+                if updated and cgroup_path:
+                    self.cgroup_paths[int(request["cgroup_id"])] = path
                 return {"ok": True, "updated": updated}
             if action == "remove_cgroup":
                 removed = self.controller.remove_cgroup_policy(int(request["cgroup_id"]))
+                if removed:
+                    self.cgroup_paths.pop(int(request["cgroup_id"]), None)
                 return {"ok": True, "removed": removed}
             if action == "set_fairness":
                 background = int(request["background_interval"])
@@ -151,6 +172,8 @@ class _ScxDaemonDispatch:
                 return {"ok": True, "target_background_share": self.target_background_share}
             if action == "stats":
                 return {"ok": True, "stats": self.controller.get_stats().to_dict()}
+            if action == "class_metrics":
+                return {"ok": True, "class_metrics": self.controller.get_class_metrics()}
             if action == "cgroup_metrics":
                 return {"ok": True, "cgroup_metrics": self.controller.get_cgroup_metrics()}
             if action == "cleanup_metrics":
@@ -175,8 +198,19 @@ class _ScxDaemonDispatch:
             policies = all_policies.get("task_policies", {})
             for raw_pid in list(policies):
                 pid = int(raw_pid)
-                if not _pid_exists(pid) and self.controller.remove_task_policy(pid):
+                stale = pid in self.task_starts and process_start_time(pid) != self.task_starts[pid]
+                if (not _pid_exists(pid) or stale) and self.controller.remove_task_policy(pid):
+                    self.task_starts.pop(pid, None)
                     self.reaped_policies += 1
+            for cgroup_id, path in list(self.cgroup_paths.items()):
+                try:
+                    removed_or_reused = path.stat().st_ino != cgroup_id
+                except FileNotFoundError:
+                    removed_or_reused = True
+                if removed_or_reused:
+                    if self.controller.remove_cgroup_policy(cgroup_id):
+                        self.cgroup_paths.pop(cgroup_id, None)
+                        self.reaped_policies += 1
             self._cleanup_orphan_metrics(
                 all_policies.get("cgroup_policies", {}), metrics
             )
@@ -219,7 +253,7 @@ class _ScxDaemonDispatch:
             shares["background_share"],
             int(shares["sample_runtime_ns"]),
             cpu_pressure,
-            1 in classes and 3 in classes,
+            bool(classes & {1, 2}) and 3 in classes,
             self.target_background_share["low"],
             self.target_background_share["high"],
         )
@@ -261,7 +295,11 @@ else:
 class _ScxRequestHandler(socketserver.StreamRequestHandler):
     def handle(self) -> None:
         try:
-            request = json.loads(self.rfile.readline().decode())
+            self.request.settimeout(6.0)
+            raw = self.rfile.readline(65537)
+            if len(raw) > 65536 or not raw.endswith(b"\n"):
+                raise ValueError("daemon request must be one bounded JSON line")
+            request = json.loads(raw.decode())
             response = self.server.dispatch(request)  # type: ignore[attr-defined]
         except Exception as exc:
             response = {"ok": False, "error": str(exc)}
@@ -349,11 +387,13 @@ def serve_scx_daemon(
     started = ctl.start_scheduler()
     if not started:
         raise RuntimeError("sched_ext is unavailable")
-    server = _ScxDaemonServer(socket_path, ctl)
-    os.chmod(socket_path, 0o660)
+    server = None
     try:
+        server = _ScxDaemonServer(socket_path, ctl)
+        os.chmod(socket_path, 0o660)
         server.serve_forever()
     finally:
-        server.server_close()
+        if server is not None:
+            server.server_close()
         ctl.stop_scheduler()
         socket_path.unlink(missing_ok=True)

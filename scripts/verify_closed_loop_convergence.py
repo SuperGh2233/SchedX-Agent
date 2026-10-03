@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+
 import json
 import subprocess
 import sys
@@ -10,6 +11,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from schedx.controllers.scx_controller import SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL
 
 from schedx.scx_daemon import ScxDaemonClient
 
@@ -20,7 +22,7 @@ def main() -> None:
     client = ScxDaemonClient()
     initial_interval = 4096
     client.request("set_target", low=0.30, high=0.40)
-    client.request("set_fairness", background_interval=initial_interval, default_interval=0)
+    client.request("set_fairness", background_interval=initial_interval, default_interval=SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL)
     intents = ("interactive", "background")
     workers = [
         subprocess.Popen(

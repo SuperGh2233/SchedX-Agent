@@ -297,11 +297,13 @@ class EbpfController:
         rate_limit: int | None = None,
         burst_size: int | None = None,
     ) -> bool:
-        """Update the real ``net_policy_map`` entry for one cgroup."""
+        """Update network limits in bytes per second (legacy ``rate_limit`` name)."""
         if self.dry_run:
             return True
         rate = rate_limit if rate_limit is not None else self.RATE_LIMITS.get(class_id, 500_000_000)
         burst = burst_size if burst_size is not None else max(64 * 1024, rate // 10)
+        if not 1 <= rate <= 0xffffffff or not 1 <= burst <= 0xffffffff:
+            raise ValueError("network rate and burst must be positive uint32 values")
         priority = {self.CLASS_LATENCY: 7, self.CLASS_BATCH: 4}.get(class_id, 1)
         key = struct.pack("<Q", cgroup_id)
         value = struct.pack("<IIII", class_id, rate, burst, priority)
@@ -328,6 +330,43 @@ class EbpfController:
         key = struct.pack("<Q", cgroup_id)
         value = struct.pack("<IIQII", class_id, 0, memory, cpu, io)
         return self._update_map(EbpfProgType.RESOURCE_CTRL, "res_policy_map", key, value)
+
+    def remove_cgroup_policies(self, cgroup_id: int) -> bool:
+        if self.dry_run:
+            return True
+        success = True
+        for prog_type, names in ((EbpfProgType.NET_POLICY, ("net_policy_map", "net_bucket_map", "net_stats_map")),
+                                 (EbpfProgType.RESOURCE_CTRL, ("res_policy_map",)),
+                                 (EbpfProgType.SECURITY_POLICY, ("sec_exec_map",))):
+            if not self.is_program_loaded(prog_type):
+                continue
+            for name in names:
+                path = self._map_path(prog_type, name)
+                if path is None:
+                    continue
+                result = self._run(["bpftool", "map", "delete", "pinned", str(path), "key", "hex", *self._hex(struct.pack("<Q", cgroup_id))])
+                if result.returncode and "No such file" not in result.stderr:
+                    success = False
+        if self.is_program_loaded(EbpfProgType.SECURITY_POLICY):
+            path = self._map_path(EbpfProgType.SECURITY_POLICY, "sec_policy_map")
+            if path is not None:
+                result = self._run(["bpftool", "-j", "map", "dump", "pinned", str(path)])
+                if result.returncode:
+                    return False
+                for item in json.loads(result.stdout):
+                    key = item.get("key")
+                    if isinstance(key, list):
+                        raw = bytes(int(value, 16) if isinstance(value, str) else value for value in key)
+                        identity = struct.unpack("<QQQ", raw)
+                    else:
+                        key = key if isinstance(key, dict) else item.get("formatted", {}).get("key", {})
+                        identity = tuple(int(key[name]) for name in ("cgroup_id", "device", "inode"))
+                        raw = struct.pack("<QQQ", *identity)
+                    if identity[0] == cgroup_id:
+                        deleted = self._run(["bpftool", "map", "delete", "pinned", str(path), "key", "hex", *self._hex(raw)])
+                        if deleted.returncode and "No such file" not in deleted.stderr:
+                            success = False
+        return success
 
     def update_security_policy(
         self,
@@ -463,8 +502,8 @@ class EbpfController:
         return dict(zip(("total_wakeups", "total_switches", "total_latency_ns", "active_tasks"), values))
 
     def _get_net_policy_stats(self) -> dict[str, int]:
-        values = self._lookup_percpu(EbpfProgType.NET_POLICY, "net_global_map", "<QQQQ")
-        return dict(zip(("total_packets", "total_bytes", "dropped_packets", "dropped_bytes"), values))
+        values = self._lookup_percpu(EbpfProgType.NET_POLICY, "net_global_map", "<QQQQQ")
+        return dict(zip(("total_packets", "total_bytes", "dropped_packets", "dropped_bytes", "overlimit_allowed_packets"), values))
 
     def _get_resource_ctrl_stats(self) -> dict[str, int]:
         values = self._lookup_percpu(EbpfProgType.RESOURCE_CTRL, "res_global_map", "<QQQ")

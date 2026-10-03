@@ -5,10 +5,21 @@ These skills manage eBPF program lifecycle and policy application.
 
 from __future__ import annotations
 
+import hashlib
+import json
+from pathlib import Path
+from schedx.state import atomic_json, state_lock
+
 from schedx.agent.context import AgentContext
 from schedx.agent.skill import SkillResult
 from schedx.controllers.ebpf_controller import EbpfController, EbpfProgType
 from schedx.probes.ebpf_probe import EbpfProbe
+
+
+def _scoped_probe(context: AgentContext) -> EbpfProbe:
+    namespace = hashlib.sha256(str(context.state_dir.resolve()).encode()).hexdigest()[:12]
+    controller = EbpfController(dry_run=context.dry_run, pin_root=Path("/sys/fs/bpf") / ("schedx-" + namespace))
+    return EbpfProbe(dry_run=context.dry_run, controller=controller)
 
 
 class EbpfLoadSkill:
@@ -33,7 +44,7 @@ class EbpfLoadSkill:
         if isinstance(existing, EbpfProbe) and context.data.get("ebpf_status") == "attached":
             return SkillResult(True, "reusing active eBPF programs", {"status": "reused"})
 
-        probe = EbpfProbe(dry_run=context.dry_run)
+        probe = _scoped_probe(context)
         context.data["_ebpf_probe"] = probe
         if not probe.is_available():
             context.data["ebpf_status"] = "unavailable"
@@ -45,10 +56,18 @@ class EbpfLoadSkill:
 
         try:
             if not context.dry_run and probe.controller.has_pinned_programs():
+                state_file = context.state_dir / "ebpf_state.json"
+                saved = json.loads(state_file.read_text()) if state_file.exists() else {}
+                if saved.get("owner") != context.session.session_id:
+                    return SkillResult(False, "eBPF hooks belong to an existing operation; explicit rollback required")
                 cleanup = probe.cleanup_pinned()
                 context.data["ebpf_stale_cleanup"] = cleanup
                 if not all(cleanup.values()):
                     return SkillResult(False, "failed to clean stale eBPF programs", cleanup)
+            if not context.dry_run:
+                state_file = context.state_dir / "ebpf_state.json"
+                with state_lock(state_file):
+                    atomic_json(state_file, {"owner": context.session.session_id, "pin_root": str(probe.controller.pin_root)})
             results = probe.load_all()
             context.data["ebpf_load_results"] = results
 
@@ -173,7 +192,7 @@ class EbpfPolicySkill:
             failed = sum(1 for r in results if not r.get("success"))
 
             return SkillResult(
-                True,
+                failed == 0,
                 f"applied {successful} eBPF policies ({failed} failed)",
                 {"results": results, "successful": successful, "failed": failed},
             )
@@ -316,16 +335,27 @@ class EbpfCleanupSkill:
     def run(self, context: AgentContext) -> SkillResult:
         probe = context.data.get("_ebpf_probe")
         try:
+            state_file = context.state_dir / "ebpf_state.json"
+            saved = json.loads(state_file.read_text()) if state_file.exists() else {}
+            owner = context.data.get("transaction_owner")
+            if owner and saved.get("owner") and saved["owner"] != owner:
+                return SkillResult(True, "no eBPF hooks owned by this operation", {"results": {}})
             if isinstance(probe, EbpfProbe):
                 results = probe.unload_all()
             else:
-                probe = EbpfProbe(dry_run=context.dry_run)
+                probe = _scoped_probe(context)
                 results = probe.cleanup_pinned()
+                if not owner and not saved and not probe.controller.has_pinned_programs():
+                    legacy = EbpfProbe(dry_run=context.dry_run)
+                    if legacy.controller.has_pinned_programs():
+                        results.update({"legacy_" + key: value for key, value in legacy.cleanup_pinned().items()})
             ok = all(results.values())
             context.data["ebpf_cleanup"] = results
             if ok:
                 context.data["ebpf_status"] = "unloaded"
                 context.data.pop("_ebpf_probe", None)
+                if not context.dry_run:
+                    state_file.unlink(missing_ok=True)
             return SkillResult(
                 ok,
                 f"eBPF cleanup completed: {sum(results.values())}/{len(results)} removed",

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from schedx.controllers.scx_controller import SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL
+
 import csv
 import io
 import json
@@ -192,7 +194,7 @@ class NginxAblationBenchmark:
             )
         controller.set_fairness(
             background_interval=SCX_FAIRNESS_BACKGROUND_DEFAULT,
-            default_interval=0,
+            default_interval=SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
         )
         return controller, {"status": "ok", "policies": applied}
 

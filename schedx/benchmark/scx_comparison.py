@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from schedx.controllers.scx_controller import SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL
+
 import csv
 import json
 import os
@@ -301,7 +303,7 @@ def _apply_agent_policy(controller: ScxController, log_entries: list[dict[str, A
         actions.append({"pid": pid, "class": "latency", "weight": 10000, "success": controller.set_task_policy(pid, SCX_CLASS_LATENCY, 10000)})
     for pid in process_ids("stress-ng", "stress-ng-cpu"):
         actions.append({"pid": pid, "class": "background", "weight": 100, "success": controller.set_task_policy(pid, SCX_CLASS_BACKGROUND, 100)})
-    fairness = controller.set_fairness(SCX_FAIRNESS_BACKGROUND_DEFAULT, 0)
+    fairness = controller.set_fairness(SCX_FAIRNESS_BACKGROUND_DEFAULT, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL)
     policy = {"actions": actions, "fairness": fairness}
     log_entries.append({"event": "policy", "policy": policy})
     return policy

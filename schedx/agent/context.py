@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import json
 import time
+import uuid
+
+from schedx.state import atomic_json
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -40,7 +43,7 @@ class AgentContext:
     def __post_init__(self) -> None:
         if self.session is None:
             self.session = SessionState(
-                session_id=f"session-{int(time.time())}",
+                session_id=f"session-{uuid.uuid4().hex}",
                 start_time=datetime.now().isoformat(),
             )
 
@@ -101,10 +104,7 @@ class AgentContext:
             ],
             "metrics": self.session.metrics,
         }
-        self.session_file.write_text(
-            json.dumps(session_data, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
+        atomic_json(self.session_file, session_data)
 
     def load_session(self) -> bool:
         """Load session state from disk."""

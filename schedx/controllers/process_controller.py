@@ -37,6 +37,8 @@ class ProcessController:
 
     def find_by_name(self, name: str) -> list[int]:
         pids: list[int] = []
+        if not name.strip():
+            return pids
         if not self.proc_root.exists():
             return pids
         for entry in self.proc_root.iterdir():
@@ -55,6 +57,8 @@ class ProcessController:
                 )
             except (FileNotFoundError, PermissionError, ProcessLookupError):
                 cmd_value = ""
+            if not cmd_value:
+                continue
             if is_protected_control_process(value.lower(), cmd_value.lower()):
                 continue
             if value == name or name in cmd_value:

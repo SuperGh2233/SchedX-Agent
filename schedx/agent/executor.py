@@ -4,16 +4,24 @@ import os
 import subprocess
 from dataclasses import asdict
 from dataclasses import is_dataclass
+from pathlib import Path
 
 from schedx.agent.actions import Action
 from schedx.controllers.cgroup_controller import CgroupController
 from schedx.controllers.process_controller import ProcessController, is_protected_control_process
+from schedx.controllers.process_state import ProcessState
+from schedx.state import restoration_failed
 
 
 class SafeActionExecutor:
     def __init__(self, cgroup: CgroupController, processes: ProcessController | None = None) -> None:
         self.cgroup = cgroup
         self.processes = processes or ProcessController()
+        self.process_state = ProcessState(
+            getattr(cgroup, "rollback_file", Path(".schedx/rollback.json")).with_name("process_rollback.json"),
+            getattr(cgroup, "owner", None),
+            getattr(cgroup, "transaction", None),
+        )
 
     def execute(self, actions: list[Action], dry_run: bool | None = None) -> list[dict]:
         if dry_run is None:
@@ -43,11 +51,21 @@ class SafeActionExecutor:
                     results.append({"action": asdict(action), "status": "skipped_phase1"})
                 else:
                     results.append({"action": asdict(action), "status": "unsupported"})
+                if any(r.get("status") in {"failed", "unsupported"} for r in results):
+                    raise RuntimeError("action failed; stopping transaction")
         except Exception as exc:
-            rolled_back = self.cgroup.rollback()
+            if dry_run:
+                results.append({"status": "failed", "error": str(exc), "dry_run": True})
+                return results
+            rolled_back = []
+            for restore in (self.cgroup.rollback, self.process_state.rollback):
+                try:
+                    rolled_back.extend(restore())
+                except Exception as rollback_exc:
+                    rolled_back.append({"status": "failed", "reason": f"restore_failed: {rollback_exc}"})
             results.append(
                 {
-                    "status": "failed_rolled_back",
+                    "status": "rollback_failed" if restoration_failed(rolled_back) else "failed_rolled_back",
                     "error": str(exc),
                     "rolled_back": [_serialize(entry) for entry in rolled_back],
                 }
@@ -64,6 +82,18 @@ class SafeActionExecutor:
     def _is_protected(self, action: Action, pid: int) -> bool:
         comm = str(action.metadata.get("comm", "")).lower()
         cmdline = str(action.metadata.get("cmdline", "")).lower()
+        proc_root = getattr(self.processes, "proc_root", None)
+        if proc_root is not None:
+            try:
+                actual = (proc_root / str(pid) / "comm").read_text().strip().lower()
+                raw = (proc_root / str(pid) / "cmdline").read_bytes()
+                if not raw or (comm and actual != comm):
+                    return True
+                comm, cmdline = actual, raw.replace(b"\0", b" ").decode(errors="replace").lower()
+            except OSError:
+                # Preview/fake procfs paths may be unavailable; process identity
+                # is checked again by the journal before actual task changes.
+                pass
         return is_protected_control_process(comm, cmdline)
 
     def _set_weight(self, action: Action, dry_run: bool) -> list[dict]:
@@ -144,12 +174,10 @@ class SafeActionExecutor:
                 results.append({"action": asdict(action), "status": "dry_run", "pid": pid, "nice": nice_val})
                 continue
             try:
-                os.sched_set_priority(0, pid)  # noop to check pid exists
-            except (OSError, ProcessLookupError):
-                pass
-            try:
-                subprocess.run(["renice", str(nice_val), "-p", str(pid)],
-                               check=False, capture_output=True, timeout=5)
+                if not -20 <= nice_val <= 19:
+                    raise ValueError("nice must be between -20 and 19")
+                self.process_state.record(pid, "nice", os.getpriority(os.PRIO_PROCESS, pid))
+                os.setpriority(os.PRIO_PROCESS, pid, nice_val)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "nice": nice_val})
             except Exception as exc:
                 results.append({"action": asdict(action), "status": "failed", "pid": pid, "error": str(exc)})
@@ -169,8 +197,13 @@ class SafeActionExecutor:
                 results.append({"action": asdict(action), "status": "dry_run", "pid": pid, "policy": policy})
                 continue
             try:
-                subprocess.run(["chrt", "--pid", policy.lower().replace("sched_", ""), str(pid)],
-                               check=False, capture_output=True, timeout=5)
+                flags = {"SCHED_OTHER": "--other", "SCHED_BATCH": "--batch", "SCHED_IDLE": "--idle", "SCHED_FIFO": "--fifo", "SCHED_RR": "--rr"}
+                if policy not in flags:
+                    raise ValueError(f"unsupported scheduling policy: {policy}")
+                priority = int(action.metadata.get("priority", 0))
+                self.process_state.record(pid, "sched_policy", {"policy": os.sched_getscheduler(pid), "priority": os.sched_getparam(pid).sched_priority})
+                subprocess.run(["chrt", flags[policy], "--pid", str(priority), str(pid)],
+                               check=True, capture_output=True, text=True, timeout=5)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "policy": policy})
             except Exception as exc:
                 results.append({"action": asdict(action), "status": "failed", "pid": pid, "error": str(exc)})
@@ -190,8 +223,9 @@ class SafeActionExecutor:
                 results.append({"action": asdict(action), "status": "dry_run", "pid": pid, "cpus": cpus})
                 continue
             try:
+                self.process_state.record(pid, "affinity", sorted(os.sched_getaffinity(pid)))
                 subprocess.run(["taskset", "-p", "-c", cpus, str(pid)],
-                               check=False, capture_output=True, timeout=5)
+                               check=True, capture_output=True, text=True, timeout=5)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "cpus": cpus})
             except Exception as exc:
                 results.append({"action": asdict(action), "status": "failed", "pid": pid, "error": str(exc)})

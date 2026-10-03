@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+
 import json
 import os
 import statistics
@@ -12,6 +13,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from schedx.controllers.scx_controller import SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL
 from schedx.benchmark.wrk_parser import parse_wrk_output
 from schedx.controllers.scx_controller import (
     SCX_FAIRNESS_BACKGROUND_DEFAULT,
@@ -96,7 +98,7 @@ def run_phase(
                 ctl.set_task_policy(pid, SCX_CLASS_LATENCY, 10000)
             for pid in process_ids("stress-ng") + process_ids("stress-ng-cpu"):
                 ctl.set_task_policy(pid, SCX_CLASS_BACKGROUND, 100)
-            ctl.set_fairness(background_interval=background_interval, default_interval=0)
+            ctl.set_fairness(background_interval=background_interval, default_interval=SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL)
         stress_pids = process_ids("stress-ng") + process_ids("stress-ng-cpu")
         ticks_before = cpu_ticks(stress_pids)
         rows = [run_wrk(duration) for _ in range(repeats)]

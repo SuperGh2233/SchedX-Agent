@@ -6,6 +6,11 @@ import re
 import subprocess
 import sys
 import time
+import uuid
+import signal
+import select
+import threading
+import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
@@ -104,16 +109,14 @@ class ToolCallRunner:
         self.native_scx = native_scx
 
     def run(
-        self,
-        command: Sequence[str],
-        *,
-        agent_id: str = "default",
-        intent: str = "auto",
-        profile_overrides: dict[str, str | int] | None = None,
-        resource_hint: str = "",
+        self, command: Sequence[str], *, agent_id: str = "default", intent: str = "auto",
+        profile_overrides: dict[str, str | int] | None = None, resource_hint: str = "",
+        timeout: float = 300.0, output_limit: int = 1024 * 1024,
     ) -> dict:
         if not command:
             raise ValueError("tool command is required")
+        if not math.isfinite(timeout) or timeout <= 0 or output_limit < 1:
+            raise ValueError("tool timeout and output limit must be positive")
         hinted_intent, hinted_overrides = parse_resource_hint(resource_hint)
         selected_intent = hinted_intent or (infer_intent(command) if intent == "auto" else intent)
         if selected_intent not in PROFILES:
@@ -121,105 +124,157 @@ class ToolCallRunner:
         profile = asdict(PROFILES[selected_intent])
         profile.update(hinted_overrides)
         profile.update(profile_overrides or {})
-
-        run_id = f"tool-{int(time.time() * 1000)}-{os.getpid()}"
+        run_id = f"tool-{uuid.uuid4().hex}"
         agent = self._safe_name(agent_id)
         parent = self.root / "schedx-agents" / agent
         tool = parent / run_id
-        self._prepare_group(parent, tool, profile)
-        cgroup_id = tool.stat().st_ino
-
-        scx = ScxController(dry_run=False)
-        scx_daemon = ScxDaemonClient()
-        scx_started = False
-        scx_daemon_used = False
-        scx_policy_scope = "none"
-        scx_error = ""
+        self.state_dir.mkdir(parents=True, exist_ok=True)
+        scx, daemon = ScxController(dry_run=False), ScxDaemonClient()
+        process = None
+        cgroup_id = None
         started = time.monotonic()
-        process: subprocess.Popen[str] | None = None
+        scx_started = scx_used = timed_out = False
+        scx_error = ""
+        descriptors = []
+        readers, captures = [], {}
+        result = None
         try:
+            self._prepare_group(parent, tool, profile)
+            cgroup_id = tool.stat().st_ino
+            ready_r, ready_w = os.pipe()
+            gate_r, gate_w = os.pipe()
+            descriptors.extend((ready_r, ready_w, gate_r, gate_w))
             process = subprocess.Popen(
-                list(command),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                preexec_fn=self._move_self(tool),
+                [sys.executable, str(Path(__file__).with_name("tool_child.py")), str(ready_w), str(gate_r), str(tool), *command],
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                pass_fds=(ready_w, gate_r), start_new_session=True,
             )
+            for descriptor in (ready_w, gate_r):
+                os.close(descriptor)
+                descriptors.remove(descriptor)
+            for name, stream in (("stdout", process.stdout), ("stderr", process.stderr)):
+                capture = {"path": str(self.state_dir / f"{run_id}.{name}.log"), "bytes": 0, "error": ""}
+                captures[name] = capture
+                reader = threading.Thread(target=self._capture_output, args=(stream, capture, output_limit), daemon=True)
+                reader.start()
+                readers.append(reader)
+            if not select.select([ready_r], [], [], min(timeout, 5.0))[0] or os.read(ready_r, 1) != b"R":
+                raise RuntimeError("tool failed to enter its cgroup before startup deadline")
             if self.native_scx and scx.is_available():
                 try:
-                    if scx_daemon.is_available():
-                        scx_daemon_used = scx_daemon.set_cgroup_policy(
-                            cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"])
-                        )
-                        scx_policy_scope = "cgroup"
+                    if daemon.is_available():
+                        scx_used = daemon.set_cgroup_policy(cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"]), str(tool))
                     else:
                         scx_started = scx.start_scheduler()
-                        if scx_started:
-                            scx.set_cgroup_policy(
-                                cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"])
-                            )
-                            scx_policy_scope = "cgroup"
+                        scx_used = scx_started and scx.set_cgroup_policy(cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"]))
+                    if scx_used and scx_started:
+                        scx.enable_adaptive_fairness()
+                    if not scx_used:
+                        scx_error = "scheduler did not acknowledge tool policy; using cgroup-only"
                 except Exception as exc:
-                    # cgroup controls remain valid when another native scx
-                    # scheduler already owns the struct_ops link.
                     scx_error = str(exc)
-            stdout, stderr = process.communicate()
-            elapsed = time.monotonic() - started
+                    scx.stop_scheduler()
+                    scx_started = False
+            os.write(gate_w, b"G")
+            os.close(gate_w)
+            descriptors.remove(gate_w)
+            try:
+                process.wait(timeout=max(0.01, timeout - (time.monotonic() - started)))
+            except subprocess.TimeoutExpired:
+                timed_out = True
+                self._stop_tree(process, tool)
             metrics = self._metrics(tool)
-            scx_cgroup_metrics = {}
-            if scx_daemon_used:
+            scx_metrics = {}
+            if scx_used and not scx_started:
                 try:
-                    scx_cgroup_metrics = scx_daemon.cgroup_metrics().get(str(cgroup_id), {})
-                except Exception:
+                    scx_metrics = daemon.cgroup_metrics().get(str(cgroup_id), {})
+                except (OSError, RuntimeError):
                     pass
-            feedback = self._feedback(metrics, process.returncode)
-            next_resource_hint = recommend_next_hint(selected_intent, metrics, process.returncode)
             result = {
-                "run_id": run_id,
-                "agent_id": agent,
-                "intent": selected_intent,
-                "resource_hint": resource_hint,
-                "command": list(command),
-                "profile": profile,
-                "cgroup": str(tool),
-                "native_scx": scx_started or scx_daemon_used,
-                "scx_mode": "daemon" if scx_daemon_used else ("standalone" if scx_started else "cgroup"),
-                "scx_policy_scope": scx_policy_scope,
-                "cgroup_id": cgroup_id,
-                "scx_error": scx_error,
-                "pid": process.pid,
-                "returncode": process.returncode,
-                "duration_seconds": elapsed,
-                "metrics": metrics,
-                "scx_cgroup_metrics": scx_cgroup_metrics,
-                "feedback": feedback,
-                "retry_recommended": bool(next_resource_hint),
-                "next_resource_hint": next_resource_hint,
-                "stdout": stdout,
-                "stderr": stderr,
+                "run_id": run_id, "agent_id": agent, "intent": selected_intent,
+                "resource_hint": resource_hint, "command": list(command), "profile": profile,
+                "cgroup": str(tool), "cgroup_id": cgroup_id, "pid": process.pid,
+                "native_scx": scx_used, "scx_mode": ("standalone" if scx_started else "daemon") if scx_used else "cgroup",
+                "scx_policy_scope": "cgroup" if scx_used else "none", "scx_error": scx_error,
+                "cpu_control_support": scx.cpu_control_support(),
+                "returncode": 124 if timed_out else process.returncode, "timed_out": timed_out,
+                "duration_seconds": time.monotonic() - started, "metrics": metrics, "scx_cgroup_metrics": scx_metrics,
             }
-            self._save(result)
-            return result
         finally:
-            if scx_daemon_used and process:
+            for descriptor in descriptors:
+                os.close(descriptor)
+            if process:
+                self._stop_tree(process, tool)
+            for reader in readers:
+                reader.join(timeout=5)
+            policy_cleanup = True
+            if scx_used:
                 try:
-                    scx_daemon.remove_cgroup_policy(cgroup_id)
-                except Exception:
-                    pass
-            elif scx_started:
-                try:
-                    scx.remove_cgroup_policy(cgroup_id)
-                except Exception:
-                    pass
+                    policy_cleanup = (scx if scx_started else daemon).remove_cgroup_policy(cgroup_id)
+                except (OSError, RuntimeError):
+                    policy_cleanup = False
             if scx_started:
                 scx.stop_scheduler()
-            if process and process.poll() is None:
-                process.terminate()
-                try:
-                    process.wait(timeout=3)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-            self._cleanup(tool, parent)
+            cleanup = self._cleanup(tool, parent)
+            if result is not None:
+                result["cleanup"] = {"policy_removed": policy_cleanup, **cleanup}
+                for name, capture in captures.items():
+                    path = Path(capture["path"])
+                    result[name] = path.read_bytes().decode("utf-8", errors="replace") if path.exists() else ""
+                    result[name + "_path"] = str(path)
+                    result[name + "_truncated"] = capture["bytes"] > output_limit
+                    if capture["error"]:
+                        result.setdefault("capture_errors", []).append(capture["error"])
+        if result is None:
+            raise RuntimeError("tool did not produce an execution result")
+        if not result["cleanup"]["policy_removed"] or not result["cleanup"]["cgroup_removed"]:
+            if result["returncode"] == 0:
+                result["returncode"] = 125
+        result["feedback"] = self._feedback(result["metrics"], result["returncode"])
+        if result["cpu_control_support"]["cpu_max"] == "not_enforced" and not str(profile["cpu_max"]).startswith("max"):
+            result["feedback"].append("the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota")
+        if timed_out:
+            result["feedback"].append("tool exceeded its time limit; process tree stopped")
+        result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"])
+        result["retry_recommended"] = bool(result["next_resource_hint"])
+        self._save(result)
+        return result
+
+    @staticmethod
+    def _capture_output(stream, capture: dict, limit: int) -> None:
+        try:
+            with Path(capture["path"]).open("wb") as output:
+                while chunk := stream.read(65536):
+                    remaining = max(0, limit - capture["bytes"])
+                    capture["bytes"] += len(chunk)
+                    if remaining:
+                        try:
+                            output.write(chunk[:remaining])
+                        except OSError as exc:
+                            capture["error"] = str(exc)
+        except OSError as exc:
+            capture["error"] = str(exc)
+            while chunk := stream.read(65536):
+                capture["bytes"] += len(chunk)
+        finally:
+            stream.close()
+
+    @staticmethod
+    def _stop_tree(process, tool: Path) -> None:
+        kill = tool / "cgroup.kill"
+        if kill.exists():
+            try:
+                kill.write_text("1", encoding="utf-8")
+            except OSError:
+                pass
+        procs = tool / "cgroup.procs"
+        if process.poll() is None or (procs.exists() and procs.read_text().strip()):
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        if process.poll() is None:
+            process.wait(timeout=5)
 
     def _prepare_group(self, parent: Path, tool: Path, profile: dict) -> None:
         if not (self.root / "cgroup.controllers").exists():
@@ -252,13 +307,14 @@ class ToolCallRunner:
             if controller in available:
                 try:
                     subtree.write_text(f"+{controller}", encoding="utf-8")
-                except OSError:
-                    pass
+                except OSError as exc:
+                    raise RuntimeError(f"cannot enable {controller} controller at {path}: {exc}") from exc
 
     @staticmethod
     def _write_if_exists(path: Path, value: str) -> None:
-        if path.exists():
-            path.write_text(value, encoding="utf-8")
+        if not path.exists():
+            raise RuntimeError(f"required resource control is unavailable: {path}")
+        path.write_text(value, encoding="utf-8")
 
     def _metrics(self, tool: Path) -> dict:
         return {
@@ -291,17 +347,21 @@ class ToolCallRunner:
         )
 
     @staticmethod
-    def _cleanup(tool: Path, parent: Path) -> None:
-        try:
-            tool.rmdir()
-            parent.rmdir()
-            parent.parent.rmdir()
-        except OSError:
-            pass
+    def _cleanup(tool: Path, parent: Path) -> dict:
+        errors = []
+        for path in (tool, parent, parent.parent):
+            try:
+                path.rmdir()
+            except FileNotFoundError:
+                continue
+            except OSError as exc:
+                if path == tool:
+                    errors.append(str(exc))
+        return {"cgroup_removed": not tool.exists(), "errors": errors}
 
     @staticmethod
     def _safe_name(value: str) -> str:
-        return re.sub(r"[^a-zA-Z0-9_.-]", "_", value)[:64] or "default"
+        return re.sub(r"[^a-zA-Z0-9_.-]", "_", value)[:64].strip(".") or "default"
 
     @staticmethod
     def _read_int(path: Path) -> int | None:
@@ -341,6 +401,7 @@ def emit_tool_result(result: dict) -> None:
                 "memory_peak_bytes": result["metrics"]["memory_peak_bytes"],
                 "native_scx": result["native_scx"],
                 "scx_mode": result["scx_mode"],
+                "cpu_control_support": result["cpu_control_support"],
             }
         )
         + "\n"

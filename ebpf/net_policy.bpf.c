@@ -14,7 +14,7 @@
 
 struct net_policy {
     __u32 class_id;
-    __u32 rate_limit_bps;
+    __u32 rate_limit_bps; /* Historical name; units are bytes per second. */
     __u32 burst_size;
     __u32 priority;
 };
@@ -24,6 +24,7 @@ struct schedx_token_bucket {
     __u32 reserved;
     __u64 tokens;
     __u64 last_refill;
+    __u64 refill_remainder;
     __u32 rate_bps;
     __u32 burst_size;
 };
@@ -40,6 +41,7 @@ struct global_net_stats {
     __u64 total_bytes;
     __u64 dropped_packets;
     __u64 dropped_bytes;
+    __u64 overlimit_allowed_packets;
 };
 
 struct {
@@ -129,10 +131,28 @@ int net_policy_egress(struct __sk_buff *skb)
 
     bool allowed = false;
     bpf_spin_lock(&bucket->lock);
+    /* Existing cgroups must immediately observe policy changes. */
+    if (bucket->rate_bps != policy->rate_limit_bps ||
+        bucket->burst_size != policy->burst_size) {
+        bucket->rate_bps = policy->rate_limit_bps;
+        bucket->burst_size = policy->burst_size;
+        bucket->refill_remainder = 0;
+        if (bucket->tokens > bucket->burst_size)
+            bucket->tokens = bucket->burst_size;
+    }
     __u64 elapsed = now - bucket->last_refill;
-    __u64 refill = elapsed >= 1000000000ULL
-                     ? bucket->burst_size
-                     : elapsed * bucket->rate_bps / 1000000000ULL;
+    __u64 refill = 0;
+    if (bucket->rate_bps) {
+        __u64 fill_ns = ((__u64)bucket->burst_size * 1000000000ULL + bucket->rate_bps - 1) / bucket->rate_bps;
+        if (elapsed >= fill_ns) {
+            refill = bucket->burst_size;
+            bucket->refill_remainder = 0;
+        } else {
+            __u64 scaled = elapsed * bucket->rate_bps + bucket->refill_remainder;
+            refill = scaled / 1000000000ULL;
+            bucket->refill_remainder = scaled % 1000000000ULL;
+        }
+    }
     __u64 tokens = bucket->tokens + refill;
     if (tokens > bucket->burst_size)
         tokens = bucket->burst_size;
@@ -150,11 +170,16 @@ int net_policy_egress(struct __sk_buff *skb)
         account_packet(cgroup_id, skb->len, false);
         return 1;
     }
-    account_packet(cgroup_id, skb->len, true);
-
     /* Latency-sensitive workloads are measured but never dropped. */
-    if (policy->class_id == NET_CLASS_LATENCY)
+    if (policy->class_id == NET_CLASS_LATENCY) {
+        __u32 zero = 0;
+        struct global_net_stats *global = bpf_map_lookup_elem(&net_global_map, &zero);
+        if (global)
+            global->overlimit_allowed_packets++;
+        account_packet(cgroup_id, skb->len, false);
         return 1;
+    }
+    account_packet(cgroup_id, skb->len, true);
     return 0;
 }
 

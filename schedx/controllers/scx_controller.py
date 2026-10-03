@@ -6,9 +6,21 @@ import shutil
 import signal
 import subprocess
 import time
+import queue
+import threading
+from collections import deque
+from functools import wraps
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+def _serialized(method):
+    @wraps(method)
+    def invoke(self, *args, **kwargs):
+        with self._command_lock:
+            return method(self, *args, **kwargs)
+    return invoke
+
 
 # Workload classification constants - must match BPF code
 SCX_CLASS_UNKNOWN = 0
@@ -36,9 +48,10 @@ SCX_WEIGHT_DEFAULTS = {
 # progress in the formal SP4 benchmark. Keep runtime and benchmark defaults in
 # one place so normal Agent execution is tested with the same safety setting.
 SCX_FAIRNESS_BACKGROUND_DEFAULT = 64
-SCX_FAIRNESS_BACKGROUND_MIN = 32
+SCX_FAIRNESS_BACKGROUND_MIN = 1
 SCX_FAIRNESS_BACKGROUND_MAX = 4096
-SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL = 0
+SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL = 32
+SCX_FAIRNESS_THROUGHPUT_BACKGROUND = 40
 
 
 @dataclass
@@ -54,13 +67,14 @@ class ScxStats:
         return (self.latency_dispatches + self.batch_dispatches +
                 self.background_dispatches + self.default_dispatches)
 
-    def to_dict(self) -> dict[str, int]:
+    def to_dict(self) -> dict[str, int | str]:
         return {
             "latency_dispatches": self.latency_dispatches,
             "batch_dispatches": self.batch_dispatches,
             "background_dispatches": self.background_dispatches,
             "default_dispatches": self.default_dispatches,
             "total": self.total,
+            "counter_source": "enqueue",
         }
 
 
@@ -79,6 +93,7 @@ class ScxController:
         dry_run: bool = True,
         scheduler_binary: str = "scx_agent",
         background_interval: int | None = None,
+        command_timeout: float = 5.0,
     ) -> None:
         self.sys_root = sys_root
         self.dry_run = dry_run
@@ -98,6 +113,13 @@ class ScxController:
         self.background_interval = background_interval
         self._process: subprocess.Popen | None = None
         self._pipe_path: Path | None = None
+        self.command_timeout = command_timeout
+        self._command_lock = threading.RLock()
+        self._stdout_lines = queue.Queue()
+        self._stderr_tail = deque(maxlen=100)
+        self._adaptive_stop = threading.Event()
+        self._adaptive_thread = None
+        self._adaptive_report = {}
 
     def is_available(self) -> bool:
         """Check if sched_ext is available on this system."""
@@ -118,7 +140,7 @@ class ScxController:
                 return path.read_text(encoding="utf-8", errors="replace").strip()
         return "none" if self.is_available() else "unavailable"
 
-    def status(self) -> dict[str, str | bool]:
+    def status(self) -> dict[str, Any]:
         """Get comprehensive scheduler status."""
         return {
             "available": self.is_available(),
@@ -127,8 +149,19 @@ class ScxController:
             "allowlist": ", ".join(sorted(self.ALLOWLIST)),
             "process_running": self._process is not None and self._process.poll() is None,
             "background_interval": self.background_interval,
+            "cpu_control_support": self.cpu_control_support(),
         }
 
+    def cpu_control_support(self) -> dict[str, str]:
+        if self.state() != "enabled":
+            available = Path("/sys/fs/cgroup/cgroup.controllers").exists()
+            return {"cpu_weight": "cgroup_v2" if available else "unavailable", "cpu_max": "cgroup_v2" if available else "unavailable"}
+        if self.current_scheduler() == "schedx_agent":
+            quota = "not_enforced" if os.uname().release == "6.6.0-159.4.3.154.oe2403sp4.schedx1" else "kernel_dependent"
+            return {"cpu_weight": "schedx_policy_map", "cpu_max": quota}
+        return {"cpu_weight": "scheduler_dependent", "cpu_max": "scheduler_dependent"}
+
+    @_serialized
     def start_scheduler(
         self,
         scheduler_name: str = "scx_agent",
@@ -168,30 +201,39 @@ class ScxController:
             bufsize=1,
         )
 
+        self._stdout_lines = queue.Queue()
+        self._stderr_tail.clear()
+        threading.Thread(target=self._pump_output, args=(self._process.stdout, self._stdout_lines), daemon=True).start()
+        threading.Thread(target=self._pump_output, args=(self._process.stderr, None), daemon=True).start()
+
         # Wait a moment for initialization
         time.sleep(0.1)
 
         # Check if process started successfully
         if self._process.poll() is not None:
-            stderr = self._process.stderr.read() if self._process.stderr else ""
+            stderr = "".join(self._stderr_tail)
             raise RuntimeError(f"Failed to start {scheduler_name}: {stderr}")
 
         # Consume the initial line-delimited prompt so the next command reads
         # its own response rather than returning immediately.
         self._read_until_prompt()
         # Avoid strict class-priority starvation even outside daemon mode.
-        self.set_fairness(
+        if not self.set_fairness(
             background_interval=self.background_interval,
             default_interval=SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
-        )
+        ):
+            self.stop_scheduler()
+            raise RuntimeError("scheduler did not acknowledge service guarantees")
         return True
 
+    @_serialized
     def stop_scheduler(self) -> bool:
         """Stop the BPF scheduler.
 
         Returns:
             True if scheduler stopped successfully
         """
+        self._adaptive_stop.set()
         if not self._process:
             return True
 
@@ -222,6 +264,7 @@ class ScxController:
         self._process = None
         return True
 
+    @_serialized
     def set_task_policy(
         self,
         pid: int,
@@ -258,6 +301,7 @@ class ScxController:
             return False
         return "policy updated" in self._read_until_prompt()
 
+    @_serialized
     def set_cgroup_policy(
         self,
         cgroup_id: int,
@@ -294,6 +338,7 @@ class ScxController:
             return False
         return "policy updated" in self._read_until_prompt()
 
+    @_serialized
     def remove_task_policy(self, pid: int) -> bool:
         """Remove scheduling policy for a specific task.
 
@@ -314,6 +359,7 @@ class ScxController:
             return False
         return "policy removed" in self._read_until_prompt()
 
+    @_serialized
     def remove_cgroup_policy(self, cgroup_id: int) -> bool:
         """Remove scheduling policy for a cgroup.
 
@@ -334,6 +380,7 @@ class ScxController:
             return False
         return "policy removed" in self._read_until_prompt()
 
+    @_serialized
     def remove_cgroup_metrics(self, cgroup_id: int) -> bool:
         """Remove scheduler metrics for a cgroup without requiring a policy."""
         if self.dry_run:
@@ -347,20 +394,55 @@ class ScxController:
             return False
         return "metrics removed" in self._read_until_prompt()
 
+    @_serialized
     def set_fairness(self, background_interval: int, default_interval: int) -> bool:
-        """Set cross-class service intervals; zero disables a service floor."""
+        """Set service intervals while retaining a floor for ordinary tasks."""
         if not 0 <= background_interval <= 100000:
             raise ValueError("background_interval must be between 0 and 100000")
-        if not 0 <= default_interval <= 100000:
-            raise ValueError("default_interval must be between 0 and 100000")
+        if not 1 <= default_interval <= 100000:
+            raise ValueError("default_interval must be between 1 and 100000")
         if self.dry_run:
             return True
         if not self._process or self._process.poll() is not None:
             raise RuntimeError("Scheduler is not running")
         if not self._send_command(f"set fairness {background_interval} {default_interval}"):
             return False
-        return "fairness updated" in self._read_until_prompt()
+        success = "fairness updated" in self._read_until_prompt()
+        if success:
+            self.background_interval = background_interval
+        return success
 
+    def enable_adaptive_fairness(self) -> None:
+        if self.dry_run or (self._adaptive_thread and self._adaptive_thread.is_alive() and not self._adaptive_stop.is_set()):
+            return
+        self._adaptive_stop = threading.Event()
+        self._adaptive_thread = threading.Thread(target=self._adapt_runtime, args=(self._adaptive_stop,), daemon=True)
+        self._adaptive_thread.start()
+
+    def _adapt_runtime(self, stop: threading.Event) -> None:
+        from schedx.scx_daemon import choose_background_interval
+        previous = None
+        while not stop.wait(1.0):
+            try:
+                current = self.get_class_metrics()
+                if previous is not None:
+                    delta = {key: max(0, row["runtime_ns"] - previous.get(key, {}).get("runtime_ns", row["runtime_ns"])) for key, row in current.items()}
+                    foreground = delta.get(1, 0) + delta.get(2, 0)
+                    background = delta.get(3, 0)
+                    if foreground and background:
+                        share = background / (foreground + background)
+                        reason, interval = choose_background_interval(self.background_interval, share, foreground + background, 0, True, 0.15, 0.25)
+                        if stop.is_set():
+                            break
+                        if interval != self.background_interval:
+                            self.set_fairness(interval, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL)
+                        self._adaptive_report = {"reason": reason, "background_runtime_share": share, "interval": self.background_interval}
+                previous = current
+            except (OSError, RuntimeError, ValueError):
+                if not self._process or self._process.poll() is not None:
+                    break
+
+    @_serialized
     def get_stats(self) -> ScxStats:
         """Get dispatch statistics from the scheduler.
 
@@ -393,6 +475,7 @@ class ScxController:
 
         return stats
 
+    @_serialized
     def get_cgroup_metrics(self) -> dict[int, dict[str, int]]:
         """Return cumulative scheduler metrics for managed cgroups."""
         if self.dry_run or not self._process or self._process.poll() is not None:
@@ -412,6 +495,20 @@ class ScxController:
             metrics[cgroup_id] = values
         return metrics
 
+    @_serialized
+    def get_class_metrics(self) -> dict[int, dict[str, int]]:
+        if self.dry_run or not self._process or self._process.poll() is not None:
+            return {}
+        self._send_command("class_metrics")
+        metrics = {}
+        for line in self._read_until_prompt().splitlines():
+            if line.startswith("class_id="):
+                fields = dict(part.split("=", 1) for part in line.split())
+                class_id = int(fields.pop("class_id"))
+                metrics[class_id] = {key: int(value) for key, value in fields.items()}
+        return metrics
+
+    @_serialized
     def dump_policies(self) -> dict[str, Any]:
         """Dump all current policies.
 
@@ -471,18 +568,40 @@ class ScxController:
         except Exception:
             return False
 
-    def _read_until_prompt(self) -> str:
-        """Read output from scheduler until prompt appears."""
-        if not self._process or not self._process.stdout:
-            return ""
+    def _pump_output(self, stream, output_queue) -> None:
+        if stream is None:
+            return
+        try:
+            for line in stream:
+                if output_queue is not None:
+                    output_queue.put(line)
+                else:
+                    self._stderr_tail.append(line[-4096:])
+        finally:
+            if output_queue is not None:
+                output_queue.put(None)
+            stream.close()
 
+    def _read_until_prompt(self) -> str:
+        if not self._process:
+            return ""
+        deadline = time.monotonic() + self.command_timeout
         output = []
         while True:
-            line = self._process.stdout.readline()
-            if not line or "schedx>" in line:
+            remaining = deadline - time.monotonic()
+            try:
+                line = self._stdout_lines.get(timeout=max(0, remaining))
+            except queue.Empty:
+                process = self._process
+                process.kill()
+                process.wait(timeout=2)
+                self._process = None
+                raise TimeoutError("scheduler response deadline exceeded: " + "".join(self._stderr_tail)[-4096:])
+            if line is None:
+                raise RuntimeError("scheduler closed its response stream: " + "".join(self._stderr_tail)[-4096:])
+            if "schedx>" in line:
                 break
             output.append(line)
-
         return "".join(output)
 
     @staticmethod

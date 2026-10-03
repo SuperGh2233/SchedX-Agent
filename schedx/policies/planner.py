@@ -14,6 +14,8 @@ class PolicyPlanner:
         parameters: dict | None = None,
     ) -> list[Action]:
         parameters = parameters or {}
+        if not target.strip():
+            return []
         if mode == "latency_first":
             return self._latency_first(target, classification, topology, parameters)
         if mode == "throughput_first":

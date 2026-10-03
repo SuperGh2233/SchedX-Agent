@@ -25,4 +25,12 @@ struct schedx_cgroup_metrics {
 	__u64 wait_ns;
 };
 
+struct schedx_class_metrics {
+	__u64 enqueues;
+	__u64 runs;
+	__u64 runtime_ns;
+	__u64 wait_ns;
+	__u64 max_wait_ns;
+};
+
 #endif

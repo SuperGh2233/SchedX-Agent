@@ -15,7 +15,8 @@ char _license[] SEC("license") = "GPL";
 #define DSQ_LATENCY    0
 #define DSQ_DEFAULT    1
 #define DSQ_BACKGROUND 2
-#define DSQ_COUNT      3
+#define DSQ_BATCH      3
+#define DSQ_COUNT      4
 #define WEIGHT_BASE    1000
 #define WEIGHT_MIN     1
 #define WEIGHT_MAX     10000
@@ -57,6 +58,7 @@ struct {
 struct schedx_dispatch_ctx {
 	u32 since_background;
 	u32 since_default;
+	u32 since_batch;
 };
 
 struct {
@@ -73,10 +75,18 @@ struct {
 	__type(value, u64);
 } dispatch_stats SEC(".maps");
 
+struct {
+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+	__uint(max_entries, SCX_CLASS_COUNT);
+	__type(key, u32);
+	__type(value, struct schedx_class_metrics);
+} class_metrics_map SEC(".maps");
+
 struct schedx_task_ctx {
 	u64 started_at;
 	u64 queued_at;
 	u64 cgroup_id;
+	u32 class_id;
 };
 
 struct {
@@ -159,6 +169,8 @@ static u64 class_dsq(u32 class_id)
 		return DSQ_LATENCY;
 	case SCX_CLASS_BACKGROUND:
 		return DSQ_BACKGROUND;
+	case SCX_CLASS_BATCH:
+		return DSQ_BATCH;
 	default:
 		return DSQ_DEFAULT;
 	}
@@ -188,15 +200,22 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 
 	stat_inc(class_id);
 	metrics = task_metrics(p, &cgroup_id);
-	if (metrics) {
+	if (metrics)
 		__sync_fetch_and_add(&metrics->enqueues, 1);
-		taskc = bpf_task_storage_get(&task_ctx_stor, p, 0,
+	taskc = bpf_task_storage_get(&task_ctx_stor, p, 0,
 					     BPF_LOCAL_STORAGE_GET_F_CREATE);
-		if (taskc) {
-			taskc->queued_at = bpf_ktime_get_ns();
-			taskc->cgroup_id = cgroup_id;
+	if (taskc) {
+		if (taskc->class_id != class_id) {
+			vtime = dsq_vtime_now[dsq_id];
+			p->scx.dsq_vtime = vtime;
 		}
+		taskc->queued_at = bpf_ktime_get_ns();
+		taskc->cgroup_id = cgroup_id;
+		taskc->class_id = class_id;
 	}
+	struct schedx_class_metrics *classm = bpf_map_lookup_elem(&class_metrics_map, &class_id);
+	if (classm)
+		classm->enqueues++;
 	if (time_before(vtime, dsq_vtime_now[dsq_id] - SCX_SLICE_DFL))
 		vtime = dsq_vtime_now[dsq_id] - SCX_SLICE_DFL;
 	scx_bpf_dsq_insert_vtime(p, dsq_id, slice, vtime,
@@ -206,43 +225,44 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 void BPF_STRUCT_OPS(schedx_dispatch, s32 cpu, struct task_struct *prev)
 {
 	u32 zero = 0;
-	struct schedx_dispatch_ctx *dctx;
-	struct schedx_config *config;
+	struct schedx_dispatch_ctx *dctx = bpf_map_lookup_elem(&dispatch_ctx, &zero);
+	struct schedx_config *config = bpf_map_lookup_elem(&scheduler_config, &zero);
+	u64 selected;
 
-	dctx = bpf_map_lookup_elem(&dispatch_ctx, &zero);
-	config = bpf_map_lookup_elem(&scheduler_config, &zero);
-	if (dctx && config && config->background_interval &&
-	    dctx->since_background >= config->background_interval &&
-	    scx_bpf_dsq_move_to_local(DSQ_BACKGROUND)) {
-		dctx->since_background = 0;
-		dctx->since_default++;
-		return;
+	/* Give each non-latency class its own bounded service opportunity. */
+	if (dctx && config && config->default_interval &&
+	    dctx->since_batch >= config->default_interval &&
+	    scx_bpf_dsq_move_to_local(DSQ_BATCH)) {
+		selected = DSQ_BATCH;
+		goto accounted;
 	}
 	if (dctx && config && config->default_interval &&
 	    dctx->since_default >= config->default_interval &&
 	    scx_bpf_dsq_move_to_local(DSQ_DEFAULT)) {
-		dctx->since_default = 0;
-		dctx->since_background++;
-		return;
+		selected = DSQ_DEFAULT;
+		goto accounted;
+	}
+	if (dctx && config && config->background_interval &&
+	    dctx->since_background >= config->background_interval &&
+	    scx_bpf_dsq_move_to_local(DSQ_BACKGROUND)) {
+		selected = DSQ_BACKGROUND;
+		goto accounted;
 	}
 	if (scx_bpf_dsq_move_to_local(DSQ_LATENCY))
-		goto dispatched;
-	if (scx_bpf_dsq_move_to_local(DSQ_DEFAULT)) {
-		if (dctx)
-			dctx->since_default = 0;
-		goto dispatched;
-	}
-	if (scx_bpf_dsq_move_to_local(DSQ_BACKGROUND)) {
-		if (dctx)
-			dctx->since_background = 0;
+		selected = DSQ_LATENCY;
+	else if (scx_bpf_dsq_move_to_local(DSQ_DEFAULT))
+		selected = DSQ_DEFAULT;
+	else if (scx_bpf_dsq_move_to_local(DSQ_BATCH))
+		selected = DSQ_BATCH;
+	else if (scx_bpf_dsq_move_to_local(DSQ_BACKGROUND))
+		selected = DSQ_BACKGROUND;
+	else
 		return;
-	}
-	return;
-
-dispatched:
+accounted:
 	if (dctx) {
-		dctx->since_background++;
-		dctx->since_default++;
+		dctx->since_background = selected == DSQ_BACKGROUND ? 0 : dctx->since_background + 1;
+		dctx->since_default = selected == DSQ_DEFAULT ? 0 : dctx->since_default + 1;
+		dctx->since_batch = selected == DSQ_BATCH ? 0 : dctx->since_batch + 1;
 	}
 }
 
@@ -267,6 +287,14 @@ void BPF_STRUCT_OPS(schedx_running, struct task_struct *p)
 			if (taskc->queued_at && now > taskc->queued_at)
 				__sync_fetch_and_add(&metrics->wait_ns,
 						     now - taskc->queued_at);
+		}
+		struct schedx_class_metrics *classm = bpf_map_lookup_elem(&class_metrics_map, &taskc->class_id);
+		if (classm) {
+			u64 wait = taskc->queued_at && now > taskc->queued_at ? now - taskc->queued_at : 0;
+			classm->runs++;
+			classm->wait_ns += wait;
+			if (wait > classm->max_wait_ns)
+				classm->max_wait_ns = wait;
 		}
 		taskc->queued_at = 0;
 		taskc->started_at = now;
@@ -293,6 +321,9 @@ void BPF_STRUCT_OPS(schedx_stopping, struct task_struct *p, bool runnable)
 						      &taskc->cgroup_id);
 		if (metrics)
 			__sync_fetch_and_add(&metrics->runtime_ns, runtime_used);
+		struct schedx_class_metrics *classm = bpf_map_lookup_elem(&class_metrics_map, &taskc->class_id);
+		if (classm)
+			classm->runtime_ns += runtime_used;
 	}
 
 	/* Vtime accounting must not depend on optional task-storage telemetry. */
@@ -314,7 +345,10 @@ s32 BPF_STRUCT_OPS_SLEEPABLE(schedx_init)
 	ret = scx_bpf_create_dsq(DSQ_DEFAULT, -1);
 	if (ret)
 		return ret;
-	return scx_bpf_create_dsq(DSQ_BACKGROUND, -1);
+	ret = scx_bpf_create_dsq(DSQ_BACKGROUND, -1);
+	if (ret)
+		return ret;
+	return scx_bpf_create_dsq(DSQ_BATCH, -1);
 }
 
 void BPF_STRUCT_OPS(schedx_exit, struct scx_exit_info *ei)

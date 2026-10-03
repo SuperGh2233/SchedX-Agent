@@ -5,12 +5,17 @@ import os
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from schedx.state import atomic_json, process_start_time, state_lock
+
 
 @dataclass
 class RollbackEntry:
     path: str
     file: str
     previous: str | None
+    owner: str | None = None
+    pid_start: str | None = None
+    transaction: str | None = None
 
 
 class CgroupController:
@@ -20,11 +25,16 @@ class CgroupController:
         managed_prefix: str = "schedx",
         rollback_file: Path = Path(".schedx/rollback.json"),
         dry_run: bool = True,
+        owner: str | None = None,
+        transaction: str | None = None,
     ) -> None:
         self.root = root
         self.managed_prefix = managed_prefix
         self.rollback_file = rollback_file
         self.dry_run = dry_run
+        self.owner = owner
+        self.transaction = transaction
+        self._created_groups: set[Path] = set()
 
     @property
     def base_path(self) -> Path:
@@ -67,15 +77,21 @@ class CgroupController:
             self._ensure_cpu_enabled(self.root)
             self.base_path.mkdir(mode=0o755, exist_ok=True)
             self._ensure_cpu_enabled(self.base_path)
+            if not path.exists():
+                self._created_groups.add(path)
             path.mkdir(mode=0o755, exist_ok=True)
         return path
 
     def add_pid(self, group: str, pid: int) -> None:
+        if pid <= 0:
+            raise ValueError("PID must be positive; zero would move the controller itself")
         path = self.create_group(group)
         if not self.dry_run:
             current = self._current_cgroup_path(pid)
-            if current is not None and current != path and self.base_path not in current.parents:
-                self._append_rollback(RollbackEntry(str(current), "cgroup.procs", str(pid)))
+            if current == path:
+                return
+            if current is not None and current != path:
+                self._append_rollback(RollbackEntry(str(current), "cgroup.procs", str(pid), self.owner, process_start_time(pid), self.transaction))
         self._write(path / "cgroup.procs", str(pid), record=False)
 
     def set_cpu_weight(self, group: str, weight: int) -> None:
@@ -108,6 +124,8 @@ class CgroupController:
             self.base_path.mkdir(mode=0o755, exist_ok=True)
             self._ensure_cpu_enabled(self.base_path)
             self._ensure_cpuset_enabled(self.base_path)
+            if not path.exists():
+                self._created_groups.add(path)
             path.mkdir(mode=0o755, exist_ok=True)
         return path
 
@@ -130,10 +148,29 @@ class CgroupController:
         return {"raw": path.read_text(encoding="utf-8", errors="replace").strip()}
 
     def rollback(self) -> list[RollbackEntry | dict]:
+        if self.dry_run:
+            return self._load_rollback()
+        with state_lock(self.rollback_file):
+            return self._rollback_locked()
+
+    def _rollback_locked(self) -> list[RollbackEntry | dict]:
         entries = self._load_rollback()
         restored: list[RollbackEntry | dict] = []
+        pending: list[RollbackEntry] = []
+        blocked: set[tuple[str, str, str]] = set()
         for entry in reversed(entries):
+            if (self.owner is not None and entry.owner != self.owner) or (self.transaction is not None and entry.transaction != self.transaction):
+                pending.append(entry)
+                continue
+            key = (entry.path, entry.file, str(entry.previous) if entry.file == "cgroup.procs" else "")
+            if key in blocked:
+                pending.append(entry)
+                continue
             target = Path(entry.path) / entry.file
+            if entry.file == "cgroup.procs" and entry.pid_start:
+                if process_start_time(int(entry.previous or 0)) != entry.pid_start:
+                    restored.append({"path": str(target), "status": "skipped", "reason": "target_process_exited_or_reused"})
+                    continue
             if entry.previous is not None and not self.dry_run:
                 try:
                     target.write_text(entry.previous, encoding="utf-8")
@@ -147,28 +184,35 @@ class CgroupController:
                     )
                     continue
                 except OSError as exc:
+                    pending.append(entry)
+                    blocked.add(key)
                     restored.append(
                         {
                             "path": str(target),
-                            "status": "skipped",
+                            "status": "failed",
                             "reason": f"restore_failed: {exc}",
                         }
                     )
                     continue
             restored.append(entry)
         if not self.dry_run:
-            restored.extend(self.cleanup_empty_groups())
-        if not self.dry_run and self.rollback_file.exists():
-            self.rollback_file.unlink()
+            owned_paths = None
+            if self.owner is not None:
+                owned_paths = self._created_groups | {Path(entry.path) for entry in entries if entry.owner == self.owner and (self.transaction is None or entry.transaction == self.transaction) and self.base_path in Path(entry.path).parents}
+            restored.extend(self.cleanup_empty_groups(owned_paths))
+        if pending:
+            atomic_json(self.rollback_file, [asdict(entry) for entry in reversed(pending)])
+        else:
+            self.rollback_file.unlink(missing_ok=True)
         return restored
 
-    def cleanup_empty_groups(self) -> list[dict[str, str]]:
+    def cleanup_empty_groups(self, owned_paths: set[Path] | None = None) -> list[dict[str, str]]:
         results: list[dict[str, str]] = []
         base = self.base_path
         if not base.exists():
             return results
         for child in sorted(base.iterdir(), reverse=True):
-            if not child.is_dir():
+            if not child.is_dir() or (owned_paths is not None and child not in owned_paths):
                 continue
             results.append(self._try_remove_group(child))
         if base.exists():
@@ -183,8 +227,12 @@ class CgroupController:
                 try:
                     previous = path.read_text(encoding="utf-8", errors="replace").strip()
                 except OSError:
+                    if not self.dry_run:
+                        raise
                     previous = None
-            self._append_rollback(RollbackEntry(str(path.parent), path.name, previous))
+            if previous == value:
+                return
+            self._append_rollback(RollbackEntry(str(path.parent), path.name, previous, self.owner, transaction=self.transaction))
         if not self.dry_run:
             path.write_text(value, encoding="utf-8")
 
@@ -251,11 +299,18 @@ class CgroupController:
         return None
 
     def _append_rollback(self, entry: RollbackEntry) -> None:
-        entries = self._load_rollback()
-        entries.append(entry)
-        if not self.dry_run:
-            self.rollback_file.parent.mkdir(parents=True, exist_ok=True)
-            self.rollback_file.write_text(
-                json.dumps([asdict(e) for e in entries], indent=2),
-                encoding="utf-8",
-            )
+        if self.dry_run:
+            return
+        with state_lock(self.rollback_file):
+            entries = self._load_rollback()
+            for current in entries:
+                same_resource = (current.path, current.file) == (entry.path, entry.file)
+                if entry.file == "cgroup.procs":
+                    same_resource = same_resource and current.previous == entry.previous
+                if same_resource:
+                    if self.owner is not None and current.owner != self.owner:
+                        raise RuntimeError(f"resource is owned by another operation: {entry.path}/{entry.file}")
+                    if current.owner == entry.owner and current.transaction == entry.transaction and entry.file != "cgroup.procs":
+                        return
+            entries.append(entry)
+            atomic_json(self.rollback_file, [asdict(e) for e in entries])

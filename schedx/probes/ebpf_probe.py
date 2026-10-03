@@ -279,8 +279,8 @@ class EbpfProbe:
     This class provides a unified interface for all eBPF hooks.
     """
 
-    def __init__(self, dry_run: bool = True) -> None:
-        self.controller = EbpfController(dry_run=dry_run)
+    def __init__(self, dry_run: bool = True, controller: EbpfController | None = None) -> None:
+        self.controller = controller or EbpfController(dry_run=dry_run)
         self.scheduler_trace = SchedulerTraceHook(self.controller)
         self.network_policy = NetworkPolicyHook(self.controller)
         self.security_policy = SecurityPolicyHook(self.controller)

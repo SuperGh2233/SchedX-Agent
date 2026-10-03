@@ -31,13 +31,13 @@ class VerifySkill:
             "recommendations": [],
         }
 
-        failed_actions = [r for r in execution_results if r.get("status") == "failed_rolled_back"]
+        failed_actions = [r for r in execution_results if r.get("status") in {"failed", "failed_rolled_back", "rollback_failed", "unsupported"}]
         skipped_actions = [r for r in execution_results if r.get("status") == "skipped"]
 
         if failed_actions:
-            verification["recommendations"].append(
-                f"Review {len(failed_actions)} failed actions for root cause"
-            )
+            context.data["rollback_required"] = True
+            context.data["verification"] = verification
+            return SkillResult(False, "execution failed; rollback required", verification)
 
         if skipped_actions:
             verification["recommendations"].append(
@@ -116,7 +116,7 @@ class VerifySkill:
         total = len(results)
         success = sum(1 for r in results if r.get("status") == "ok")
         dry_run = sum(1 for r in results if r.get("status") == "dry_run")
-        failed = sum(1 for r in results if r.get("status") == "failed_rolled_back")
+        failed = sum(1 for r in results if r.get("status") in {"failed", "failed_rolled_back", "rollback_failed", "unsupported"})
         skipped = sum(1 for r in results if r.get("status") == "skipped")
 
         return {
