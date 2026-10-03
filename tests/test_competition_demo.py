@@ -137,6 +137,7 @@ def test_agent_trace_summarizes_rollback_without_verbose_entries():
         "groups_removed": 2,
         "skipped": 0,
         "scx_entries_removed": 1,
+        "ebpf_hooks_removed": 0,
     }
 
 

@@ -44,7 +44,7 @@ struct task_info {
 };
 
 /* Latency histogram bucket */
-struct latency_bucket {
+struct schedx_latency_bucket {
     __u64 count;
     __u64 total_ns;
 };
@@ -72,7 +72,7 @@ struct {
     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
     __uint(max_entries, MAX_LATENCY_BUCKETS);
     __type(key, __u32);
-    __type(value, struct latency_bucket);
+    __type(value, struct schedx_latency_bucket);
 } latency_histogram SEC(".maps");
 
 /* Global statistics (per-CPU) */
@@ -123,7 +123,7 @@ static __always_inline void update_histogram(__u64 latency_ns)
     else
         bucket = 8;
 
-    struct latency_bucket *entry = bpf_map_lookup_elem(&latency_histogram, &bucket);
+    struct schedx_latency_bucket *entry = bpf_map_lookup_elem(&latency_histogram, &bucket);
     if (entry) {
         entry->count++;
         entry->total_ns += latency_ns;
@@ -159,7 +159,12 @@ static __always_inline struct task_info *get_task_info(__u32 pid)
     struct task_info new_info = {
         .pid = pid,
     };
-    bpf_map_update_elem(&task_info_map, &pid, &new_info, BPF_ANY);
+    if (bpf_map_update_elem(&task_info_map, &pid, &new_info, BPF_NOEXIST) == 0) {
+        __u32 key = 0;
+        struct sched_stats *stats = bpf_map_lookup_elem(&global_stats, &key);
+        if (stats)
+            stats->active_tasks++;
+    }
     return bpf_map_lookup_elem(&task_info_map, &pid);
 }
 
@@ -196,6 +201,7 @@ SEC("tp/sched/sched_switch")
 int trace_sched_switch(struct trace_event_raw_sched_switch *ctx)
 {
     __u64 now = bpf_ktime_get_ns();
+    __u64 latency = 0;
 
     /* Get incoming task info */
     __u32 next_pid = ctx->next_pid;
@@ -205,7 +211,7 @@ int trace_sched_switch(struct trace_event_raw_sched_switch *ctx)
 
     /* Calculate scheduling latency (time from wakeup to running) */
     if (next_info->wakeup_time > 0) {
-        __u64 latency = now - next_info->wakeup_time;
+        latency = now - next_info->wakeup_time;
 
         /* Sanity check */
         if (latency < 10000000000ULL) {  /* Less than 10 seconds */
@@ -237,8 +243,7 @@ int trace_sched_switch(struct trace_event_raw_sched_switch *ctx)
             event->timestamp = now;
             event->pid = next_pid;
             event->prev_pid = prev_pid;
-            event->latency_ns = (next_info->wakeup_time > 0) ?
-                                (now - next_info->wakeup_time) : 0;
+            event->latency_ns = latency;
             event->runtime_ns = (prev_info && prev_info->switch_time > 0) ?
                                 (now - prev_info->switch_time) : 0;
             bpf_probe_read_kernel_str(event->comm, sizeof(event->comm),
@@ -288,8 +293,12 @@ int trace_sched_process_exit(struct trace_event_raw_sched_process_template *ctx)
 {
     __u32 pid = ctx->pid;
 
-    /* Don't delete immediately - let userspace read the data first */
-    /* In production, you'd want a more sophisticated cleanup mechanism */
+    if (bpf_map_delete_elem(&task_info_map, &pid) == 0) {
+        __u32 key = 0;
+        struct sched_stats *stats = bpf_map_lookup_elem(&global_stats, &key);
+        if (stats && stats->active_tasks > 0)
+            stats->active_tasks--;
+    }
 
     return 0;
 }

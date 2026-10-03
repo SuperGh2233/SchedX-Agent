@@ -71,6 +71,8 @@ def extract(results: Path, demo_run: Path | None = None) -> dict[str, Any]:
         batch = formal_batch
 
     native = latest_native_summary(results)
+    scx_comparison = latest_summary(results / "scx-compare-formal")
+    redis = latest_summary(results / "redis-formal-final")
     llm = read_json(results / "llm-policy-comparison" / "summary.json")
     return {
         "run_dir": str(run_dir) if run_dir else "",
@@ -80,6 +82,8 @@ def extract(results: Path, demo_run: Path | None = None) -> dict[str, Any]:
         "accepted_canary": _canary(manifest.get("accepted_canary")),
         "rollback_canary": _canary(manifest.get("rollback_canary")),
         "native": native,
+        "scx_comparison": scx_comparison,
+        "redis": redis,
         "llm": llm,
     }
 
@@ -163,35 +167,58 @@ def generate(
         "The SchedX phase identifies a live sysbench workload and applies the",
         "throughput expert while CPU interference remains active.",
         "",
-        "## 5. Canary And Rollback Evidence",
+        "## 5. Redis Latency Scenario",
+        "",
+        *_redis_table(data["redis"]),
+        "",
+        "The fixed-work Redis experiment rotates phase order across five repeats",
+        "and reports small-sample Student-t 95% confidence intervals.",
+        "",
+        "## 6. Canary And Rollback Evidence",
         "",
         *_canary_lines("Accepted gate", data["accepted_canary"]),
         *_canary_lines("Strict rollback gate", data["rollback_canary"]),
         "",
-        "## 6. Existing Native sched_ext Evidence",
+        "## 7. Native sched_ext Scheduler Comparison",
+        "",
+        *_scx_comparison_table(data["scx_comparison"]),
+        "",
+        "The same repeated harness compares the default scheduler with allowlisted",
+        "upstream scx examples and SchedX's task-policy scheduler. Capability labels",
+        "prevent lifecycle-only schedulers from being presented as adaptive Agents.",
+        "",
+        "## 8. Existing Native sched_ext Evidence",
         "",
         *_native_lines(data["native"]),
         "",
-        "## 7. Optional LLM Evidence",
+        "## 9. Real eBPF Evidence",
+        "",
+        "The Agent loop loads and attaches scheduler, network, resource, and security",
+        "BPF programs, updates allowlisted maps, collects counters for verification,",
+        "and removes pinned hooks through the same rollback path.",
+        "",
+        "## 10. Optional LLM Evidence",
         "",
         *_llm_lines(data["llm"]),
         "",
-        "## 8. Reproduction",
+        "## 11. Reproduction",
         "",
         "```bash",
         "sudo bash scripts/run_competition_demo.sh",
         "sudo bash scripts/run_competition_demo.sh --formal",
+        "sudo schedx benchmark scx-compare --schedulers scx_simple,scx_qmap,scx_flatcg,scx_agent --duration 20 --repeats 5",
+        "sudo schedx benchmark redis --duration 10 --repeats 5 --stress-cpu 4 --output results/redis-formal-final",
         "python3 -m pytest -q",
         "```",
         "",
         "The short demo is presentation evidence. Formal claims should use",
         "the repeated `--formal` run and retain all raw wrk/sysbench outputs.",
         "",
-        "## 9. Limitations",
+        "## 12. Limitations",
         "",
-        "- Current formal evidence focuses on CPU contention and should not be generalized to every workload.",
+        "- Formal evidence covers nginx, Redis, and sysbench under CPU contention; it should not be generalized to every workload class.",
         "- Same-host load generation can introduce client-side contention; an external load generator is preferable for final measurements.",
-        "- Network and security eBPF agents remain extension points rather than completed competition claims.",
+        "- Network and security eBPF programs currently enforce bounded map policies and audit evidence; full production firewall or mandatory-access-control semantics remain future work.",
         "- LLM policy planning is optional; safety and execution do not depend on model availability.",
     ]
     output.write_text("\n".join(lines), encoding="utf-8")
@@ -230,6 +257,59 @@ def _batch_table(summary: dict[str, Any]) -> list[str]:
             f"{pct(item.get('throughput_gain_vs_interference_percent'))} | "
             f"{pct(item.get('background_retention_percent'))} | "
             f"{item.get('valid_for_claims', 'n/a')} |"
+        )
+    return lines
+
+
+def _redis_table(summary: dict[str, Any]) -> list[str]:
+    lines = [
+        "| Phase | Mean QPS | QPS 95% CI | Mean P99 (ms) | P99 95% CI | Background retention | Valid |",
+        "| --- | ---: | --- | ---: | --- | ---: | --- |",
+    ]
+    phases = summary.get("phases", {})
+    for name in ("baseline", "interference", "schedx"):
+        item = phases.get(name, {})
+        qps = item.get("requests_per_sec", {})
+        p99 = item.get("p99_ms", {})
+        lines.append(
+            f"| {name} | {num(qps.get('mean'))} | {_ci(qps.get('ci95'))} | "
+            f"{num(p99.get('mean'))} | {_ci(p99.get('ci95'))} | "
+            f"{pct(item.get('background_retention_percent'))} | "
+            f"{item.get('valid_for_claims', 'n/a')} |"
+        )
+    lines.extend(
+        [
+            "",
+            f"- QPS recovery vs interference: {pct(summary.get('schedx_qps_gain_vs_interference_percent'))}",
+            f"- P99 reduction vs interference: {pct(summary.get('schedx_p99_reduction_vs_interference_percent'))}",
+        ]
+    )
+    return lines
+
+
+def _ci(value: Any) -> str:
+    if not isinstance(value, list) or len(value) != 2:
+        return "n/a"
+    return f"[{num(value[0])}, {num(value[1])}]"
+
+
+def _scx_comparison_table(summary: dict[str, Any]) -> list[str]:
+    lines = [
+        "| Scheduler | Capability | Mean RPS | Mean P99 (ms) | RPS gain | P99 reduction | Background retention | Valid |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
+    ]
+    for name, item in summary.get("schedulers", {}).items():
+        stats = item.get("statistics", {})
+        comparison = item.get("comparison_vs_default", {})
+        fairness = item.get("fairness", {})
+        lines.append(
+            f"| {name} | {item.get('policy_capability', 'n/a')} | "
+            f"{num(stats.get('requests_per_sec', {}).get('mean'))} | "
+            f"{num(stats.get('p99_ms', {}).get('mean'))} | "
+            f"{pct(comparison.get('rps_gain_percent'))} | "
+            f"{pct(comparison.get('p99_reduction_percent'))} | "
+            f"{pct(item.get('background_retention_percent'))} | "
+            f"{fairness.get('valid_for_claims', 'n/a')} |"
         )
     return lines
 

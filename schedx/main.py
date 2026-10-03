@@ -311,6 +311,9 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
             stress_cpu=args.stress_cpu,
             warmup=args.warmup,
             minimum_background_retention_percent=args.min_background_retention,
+            schedulers=args.schedulers,
+            redis_host=args.redis_host,
+            redis_port=args.redis_port,
         )
     )
     return 0
@@ -463,6 +466,13 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--threads", type=int, default=4)
     benchmark.add_argument("--repeats", type=int, default=3)
     benchmark.add_argument("--stress-cpu", type=int, default=4)
+    benchmark.add_argument("--redis-host", default="127.0.0.1")
+    benchmark.add_argument("--redis-port", type=int, default=6379)
+    benchmark.add_argument(
+        "--schedulers",
+        default="scx_simple,scx_agent",
+        help="Comma-separated scx schedulers for scx-compare; default is implicit",
+    )
     benchmark.add_argument("--warmup", type=int, default=2)
     benchmark.add_argument(
         "--min-background-retention",

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from schedx.agent.context import AgentContext
 from schedx.agent.skill import SkillResult
-from schedx.controllers.ebpf_controller import EbpfController
+from schedx.controllers.ebpf_controller import EbpfController, EbpfProgType
 from schedx.probes.ebpf_probe import EbpfProbe
 
 
@@ -29,6 +29,10 @@ class EbpfLoadSkill:
         Returns:
             SkillResult with load status
         """
+        existing = context.data.get("_ebpf_probe")
+        if isinstance(existing, EbpfProbe) and context.data.get("ebpf_status") == "attached":
+            return SkillResult(True, "reusing active eBPF programs", {"status": "reused"})
+
         probe = EbpfProbe(dry_run=context.dry_run)
         context.data["_ebpf_probe"] = probe
         if not probe.is_available():
@@ -40,6 +44,11 @@ class EbpfLoadSkill:
             )
 
         try:
+            if not context.dry_run and probe.controller.has_pinned_programs():
+                cleanup = probe.cleanup_pinned()
+                context.data["ebpf_stale_cleanup"] = cleanup
+                if not all(cleanup.values()):
+                    return SkillResult(False, "failed to clean stale eBPF programs", cleanup)
             results = probe.load_all()
             context.data["ebpf_load_results"] = results
 
@@ -192,20 +201,69 @@ class EbpfPolicySkill:
                 if pid is None:
                     continue
 
-                # Apply scheduling policy
-                sched_ok = controller.update_sched_policy(pid, class_id)
-
-                # Apply network policy
-                net_ok = controller.update_net_policy(pid, class_id)
-
-                results.append({
+                entry = {
                     "pid": pid,
                     "workload_type": workload_type,
                     "class_id": class_id,
-                    "sched_policy": sched_ok,
-                    "net_policy": net_ok,
-                    "success": sched_ok and net_ok,
+                    "sched_policy": "delegated_to_scx_or_cgroup",
+                }
+
+                cgroup_id = controller.cgroup_id_for_pid(pid)
+                entry["cgroup_id"] = cgroup_id
+                if cgroup_id is None:
+                    reason = controller.last_error
+                    entry.update({
+                        "net_policy": "deferred",
+                        "resource_policy": "deferred",
+                        "security_policy": "deferred",
+                        "status": "deferred",
+                        "reason": reason,
+                        "success": "shared cgroup" in reason,
+                    })
+                    results.append(entry)
+                    continue
+
+                policy_statuses = []
+                if controller.is_program_loaded(EbpfProgType.NET_POLICY):
+                    ok = controller.update_net_cgroup_policy(cgroup_id, class_id)
+                    entry["net_policy"] = "applied" if ok else "failed"
+                    policy_statuses.append(ok)
+                else:
+                    entry["net_policy"] = "skipped"
+
+                if controller.is_program_loaded(EbpfProgType.RESOURCE_CTRL):
+                    ok = controller.update_resource_policy(cgroup_id, class_id)
+                    entry["resource_policy"] = "applied" if ok else "failed"
+                    policy_statuses.append(ok)
+                else:
+                    entry["resource_policy"] = "skipped"
+
+                if controller.is_program_loaded(EbpfProgType.SECURITY_POLICY):
+                    try:
+                        executable = controller.proc_root / str(pid) / "exe"
+                        if not controller.dry_run:
+                            executable = executable.resolve(strict=True)
+                        ok = controller.update_security_policy(
+                            cgroup_id,
+                            executable,
+                            deny_exec=False,
+                            audit_only=True,
+                        )
+                    except OSError as exc:
+                        controller.last_error = f"cannot resolve executable for pid {pid}: {exc}"
+                        ok = False
+                    entry["security_policy"] = "audit" if ok else "failed"
+                    policy_statuses.append(ok)
+                else:
+                    entry["security_policy"] = "skipped"
+
+                success = all(policy_statuses)
+                entry.update({
+                    "status": "applied" if success else "failed",
+                    "reason": "" if success else controller.last_error,
+                    "success": success,
                 })
+                results.append(entry)
 
         return results
 
@@ -219,9 +277,6 @@ class EbpfStatsSkill:
     name = "ebpf_stats"
     description = "Collect statistics from eBPF programs."
 
-    def __init__(self) -> None:
-        self.probe = EbpfProbe()
-
     def run(self, context: AgentContext) -> SkillResult:
         """Execute the eBPF stats skill.
 
@@ -232,7 +287,10 @@ class EbpfStatsSkill:
             SkillResult with statistics
         """
         try:
-            snapshot = self.probe.snapshot()
+            probe = context.data.get("_ebpf_probe")
+            if not isinstance(probe, EbpfProbe):
+                return SkillResult(True, "eBPF is inactive; statistics skipped", {"status": "skipped"})
+            snapshot = probe.snapshot()
             context.data["ebpf_stats"] = snapshot
 
             return SkillResult(
@@ -247,3 +305,31 @@ class EbpfStatsSkill:
                 f"failed to collect eBPF statistics: {e}",
                 {"error": str(e)},
             )
+
+
+class EbpfCleanupSkill:
+    """Unload active hooks; used by rollback and explicit cleanup paths."""
+
+    name = "ebpf_cleanup"
+    description = "Detach eBPF links and remove pinned maps/programs."
+
+    def run(self, context: AgentContext) -> SkillResult:
+        probe = context.data.get("_ebpf_probe")
+        try:
+            if isinstance(probe, EbpfProbe):
+                results = probe.unload_all()
+            else:
+                probe = EbpfProbe(dry_run=context.dry_run)
+                results = probe.cleanup_pinned()
+            ok = all(results.values())
+            context.data["ebpf_cleanup"] = results
+            if ok:
+                context.data["ebpf_status"] = "unloaded"
+                context.data.pop("_ebpf_probe", None)
+            return SkillResult(
+                ok,
+                f"eBPF cleanup completed: {sum(results.values())}/{len(results)} removed",
+                {"results": results},
+            )
+        except Exception as exc:
+            return SkillResult(False, f"failed to clean eBPF programs: {exc}", {"error": str(exc)})

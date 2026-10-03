@@ -126,7 +126,7 @@ class SchedulerTraceHook(EbpfHook):
 class NetworkPolicyHook(EbpfHook):
     """eBPF hook for network policy enforcement.
 
-    This hook uses TC (Traffic Control) to enforce network
+    This hook uses a cgroup v2 egress program to enforce network
     bandwidth limits per workload class.
     """
 
@@ -188,34 +188,42 @@ class NetworkPolicyHook(EbpfHook):
 
 
 class SecurityPolicyHook(EbpfHook):
-    """eBPF hook for security policy enforcement.
-
-    This hook can be used for security monitoring and policy
-    enforcement (placeholder for future implementation).
-    """
+    """Default-allow BPF LSM policy scoped to cgroup and executable."""
 
     name = "security-policy"
 
     def _get_prog_type(self) -> EbpfProgType:
-        # Not implemented yet
-        raise NotImplementedError("Security policy hook not yet implemented")
+        return EbpfProgType.SECURITY_POLICY
 
     def snapshot(self) -> dict[str, Any]:
-        """Get security policy status."""
-        return {
-            "available": False,
-            "loaded": False,
-            "name": self.name,
-            "message": "Security policy hook not yet implemented",
-        }
+        base = super().snapshot()
+        base["bpf_lsm"] = self.controller.security_lsm_available()
+        if not self._loaded:
+            base["message"] = "Security policy not loaded"
+            return base
+        stats = self.controller.get_stats().security_policy
+        if stats:
+            base["stats"] = stats
+        return base
+
+    def set_policy(
+        self,
+        cgroup_id: int,
+        executable: str | Path,
+        *,
+        deny_exec: bool = False,
+        audit_only: bool = True,
+    ) -> bool:
+        return self.controller.update_security_policy(
+            cgroup_id,
+            executable,
+            deny_exec=deny_exec,
+            audit_only=audit_only,
+        )
 
 
 class ResourceControlHook(EbpfHook):
-    """eBPF hook for resource control.
-
-    This hook monitors and controls resource usage (memory, I/O)
-    per cgroup using eBPF.
-    """
+    """Observe cgroup resource-policy activity; cgroup v2 enforces limits."""
 
     name = "resource-control"
 
@@ -238,10 +246,9 @@ class ResourceControlHook(EbpfHook):
             stats = self.controller.get_stats()
             if stats.resource_ctrl:
                 base["stats"] = stats.resource_ctrl
-                base["total_allocations"] = stats.resource_ctrl.get("total_allocations", 0)
-                base["total_frees"] = stats.resource_ctrl.get("total_frees", 0)
-                base["total_bytes_allocated"] = stats.resource_ctrl.get("total_bytes_allocated", 0)
-                base["oom_events"] = stats.resource_ctrl.get("oom_events", 0)
+                base["sched_switches"] = stats.resource_ctrl.get("sched_switches", 0)
+                base["policy_hits"] = stats.resource_ctrl.get("policy_hits", 0)
+                base["process_exits"] = stats.resource_ctrl.get("process_exits", 0)
         except Exception as e:
             base["error"] = str(e)
 
@@ -279,6 +286,14 @@ class EbpfProbe:
         self.security_policy = SecurityPolicyHook(self.controller)
         self.resource_control = ResourceControlHook(self.controller)
 
+    def _hooks(self) -> tuple[EbpfHook, ...]:
+        return (
+            self.scheduler_trace,
+            self.network_policy,
+            self.resource_control,
+            self.security_policy,
+        )
+
     def is_available(self) -> bool:
         """Check if eBPF is available."""
         return self.controller.is_available()
@@ -290,7 +305,7 @@ class EbpfProbe:
             Dictionary mapping hook name to load success
         """
         results = {}
-        for hook in [self.scheduler_trace, self.network_policy, self.resource_control]:
+        for hook in self._hooks():
             try:
                 results[hook.name] = hook.load()
             except Exception:
@@ -304,7 +319,7 @@ class EbpfProbe:
             Dictionary mapping hook name to attach success
         """
         results = {}
-        for hook in [self.scheduler_trace, self.network_policy, self.resource_control]:
+        for hook in self._hooks():
             try:
                 results[hook.name] = hook.attach()
             except Exception:
@@ -318,12 +333,16 @@ class EbpfProbe:
             Dictionary mapping hook name to unload success
         """
         results = {}
-        for hook in [self.scheduler_trace, self.network_policy, self.resource_control]:
+        for hook in reversed(self._hooks()):
             try:
                 results[hook.name] = hook.unload()
             except Exception:
                 results[hook.name] = False
         return results
+
+    def cleanup_pinned(self) -> dict[str, bool]:
+        """Clean eBPF state left active by a previous Agent process."""
+        return self.controller.cleanup_pinned()
 
     def snapshot(self) -> dict[str, Any]:
         """Get combined snapshot from all hooks."""

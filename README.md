@@ -1,6 +1,6 @@
 # SchedX-Agent
 
-SchedX-Agent is a Linux adaptive resource-control Agent for mixed workloads. It probes `/proc`, classifies user-space workloads, detects sched_ext/scx availability, and applies safe cgroup v2 CPU controls with rollback and reproducible benchmark reporting.
+SchedX-Agent is a Linux adaptive resource-control Agent for mixed workloads. It senses workloads, routes a bounded policy, applies native sched_ext and cgroup v2 controls, collects eBPF evidence, verifies service objectives, and rolls unsafe changes back.
 
 Current verified platform: openEuler 24.03 LTS SP4 with cgroup v2 and the
 config-rebuilt kernel `6.6.0-159.4.3.154.oe2403sp4.schedx1`. The stock SP4
@@ -35,18 +35,36 @@ Verified on openEuler:
 - `schedx optimize --target stress-ng --mode isolate_background` moves stress-ng PIDs into `/sys/fs/cgroup/schedx/pid-<pid>/` and sets `cpu.weight=50`.
 - `schedx rollback` restores previous CPU weights and removes empty `pid-*` cgroups. The base `/sys/fs/cgroup/schedx` cgroup is removed when no workload remains.
 - `schedx benchmark nginx` runs a three-phase nginx + stress-ng experiment and generates `summary.csv`, `summary.json`, raw wrk output, cgroup snapshots, and `report.md`.
-- The SP4 VM passes `141` tests and the fairness-gated native sched_ext run
+- `schedx benchmark redis` runs a rotated baseline/interference/Agent experiment
+  with fixed work, raw output, fairness evidence and Student-t 95% confidence
+  intervals.
+- The SP4 VM passes `167` tests, including Linux-only sched_ext and eBPF tests.
+- The four real eBPF extensions attach scheduler tracepoints, cgroup network
+  ingress/egress, cgroup resource-policy probes, and BPF LSM security audit.
+  Agent policies are written to allowlisted BPF maps, runtime counters are
+  returned as verification evidence, and rollback detaches all pinned hooks.
+- The fairness-gated native sched_ext run
   reports `62.18%` higher RPS, `33.74%` lower P99, `32.22%` background CPU
   retention and `nr_rejected=0`.
-- A real wrk canary accepted a policy with `13.32%` higher RPS, `92.82%` lower
-  P99 and `81.86%` background progress retention. A stricter valid gate also
-  exercised automatic rollback and left no cgroup or scx task-policy residue.
+- The latest real wrk canary accepted a DeepSeek proposal with `1.78%` higher
+  RPS, `86.96%` lower P99 and `93.00%` background retention. It applied nine
+  eBPF policy sets and collected all four hook families. A stricter gate then
+  exercised automatic rollback across cgroup, scx and eBPF.
 - The formal four-way ablation reports `86.66%` higher RPS and `72.33%` lower
   P99 for the combined Agent while retaining `43.92%` of background progress.
 - In the formal sysbench scenario, CPU interference reduces throughput by
   `46.71%`; SchedX recovers `64.54%` versus the interference phase, reduces
   P95 latency from `2.97 ms` to `0.37 ms`, and retains `27.19%` of background
   progress. The result passes the configured `25%` fairness floor.
+- In the five-repeat scheduler comparison, `scx_agent` delivers `79.02%`
+  higher mean RPS and `60.04%` lower mean P99 than the default scheduler while
+  retaining `30.48%` of background CPU progress. The same harness also records
+  `scx_simple`, `scx_qmap`, and `scx_flatcg` without claiming task-policy
+  capabilities those schedulers do not expose.
+- In the five-repeat Redis scenario, CPU interference reduces QPS by `34.38%`;
+  SchedX recovers `31.03%` QPS, reduces P99 by `38.75%`, and retains `61.25%`
+  of background progress. All quoted values include raw runs and 95% confidence
+  intervals.
 
 ## Quick Start
 
@@ -72,6 +90,7 @@ sudo schedx rollback
 
 - [System design](docs/design.md)
 - [Reproducible experiments](docs/experiment.md)
+- [Competition requirement evidence matrix](docs/competition_evidence_matrix.md)
 - [openEuler 24.03 LTS SP4 setup](docs/openEuler_setup.md)
 - [Five-minute demonstration script](docs/final_video_recording_script.md)
 - [Reproducible sched_ext kernel build](kernel/openEuler-24.03-LTS-SP4/README.md)
@@ -86,11 +105,15 @@ flowchart LR
   PR[Expert Policy Repository] <--> RT
   RT --> PL[Policy Planner]
   PL --> EX[Safe Action Executor]
+  PL --> EL[eBPF Load / Attach Skills]
   PL --> CB[Baseline SLO Canary]
   CB --> EX
   EX --> CG[cgroup v2 Controller]
   EX --> SCX[scx Controller Detection]
+  EX --> EP[eBPF Policy Maps]
   EX --> CC[Candidate SLO Canary]
+  EP --> ES[eBPF Runtime Statistics]
+  ES --> V
   CC --> V[Canary Verifier]
   V -->|accepted outcome| PR
   V -->|regression| RB
@@ -329,6 +352,15 @@ sudo schedx benchmark nginx-ablation \
 sudo schedx benchmark batch-throughput \
   --duration 20 --repeats 3 --threads 4 \
   --stress-cpu 4 --output results/batch-throughput
+
+sudo schedx benchmark redis \
+  --duration 10 --repeats 5 --connections 64 --threads 4 \
+  --stress-cpu 4 --output results/redis-formal-final
+
+sudo schedx benchmark scx-compare \
+  --schedulers scx_simple,scx_qmap,scx_flatcg,scx_agent \
+  --duration 20 --repeats 5 --connections 64 --threads 4 \
+  --stress-cpu 4 --output results/scx-compare-formal
 ```
 
 Generate the judge-facing summary report:
@@ -345,7 +377,12 @@ Current verified highlights:
   reduction and `32.22%` background CPU retention;
 - DeepSeek-guided policy result: `84.96%` RPS gain and `55.16%` P99 reduction;
 - multi-Agent LLM experiment: `6/6` tools used native sched_ext through daemon mode;
-- final daemon state after validation: `sched_ext=enabled`, scheduler `schedx_agent`, `nr_rejected=0`.
+- final state after validation: `sched_ext=disabled`, no stress-ng process,
+  no `/sys/fs/cgroup/schedx`, and no `/sys/fs/bpf/schedx` residue.
+- five-repeat scheduler comparison: `scx_agent` RPS `+79.02%`, P99
+  `-60.04%`, background retention `30.48%`, and complete cleanup.
+- five-repeat Redis generalization: QPS `+31.03%` and P99 `-38.75%` versus
+  interference, with `61.25%` background retention and 95% confidence intervals.
 
 The ablation compares `default`, `cgroup_only`, `scx_only`, and
 `agent_combined`. It records background CPU retention and marks a row invalid
@@ -355,6 +392,7 @@ Latest formal artifacts:
 
 ```text
 results/competition-demo/2026-07-16_07-38-05/
+results/redis-formal-final/2026-08-30_01-15-52/
 reports/competition-final.md
 ```
 

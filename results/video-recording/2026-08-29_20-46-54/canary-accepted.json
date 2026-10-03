@@ -1,0 +1,858 @@
+{
+  "returncode": 0,
+  "stdout": "{\n  \"dry_run\": false,\n  \"auto_mode\": true,\n  \"agent_decision\": {\n    \"mode\": \"latency_first\",\n    \"target\": \"nginx\",\n    \"parameters\": {\n      \"cpu_weight\": 8000,\n      \"cpu_weight_bg\": 10,\n      \"cpu_max_bg\": \"10000 100000\",\n      \"nice_target\": -5,\n      \"nice_bg\": 10,\n      \"isolate_target\": \"stress-ng-cpu\"\n    },\n    \"reason\": \"DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)\",\n    \"confidence\": 0.5399780941949617,\n    \"source\": \"deepseek-v4\",\n    \"expert_id\": \"latency_guard\"\n  },\n  \"agent_loop\": {\n    \"total_iterations\": 13,\n    \"phases_completed\": [\n      \"probe\",\n      \"analyze\",\n      \"llm_policy\",\n      \"policy\",\n      \"canary_baseline\",\n      \"ebpf_load\",\n      \"ebpf_attach\",\n      \"scx\",\n      \"act\",\n      \"ebpf_policy\",\n      \"canary_candidate\",\n      \"ebpf_stats\",\n      \"verify\"\n    ],\n    \"final_status\": \"success\",\n    \"agent_decisions\": {\n      \"mode\": \"latency_first\",\n      \"target\": \"nginx\",\n      \"parameters\": {\n        \"cpu_weight\": 8000,\n        \"cpu_weight_bg\": 10,\n        \"cpu_max_bg\": \"10000 100000\",\n        \"nice_target\": -5,\n        \"nice_bg\": 10,\n        \"isolate_target\": \"stress-ng-cpu\"\n      },\n      \"reason\": \"DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)\",\n      \"confidence\": 0.5399780941949617,\n      \"source\": \"deepseek-v4\",\n      \"expert_id\": \"latency_guard\"\n    },\n    \"iterations\": [\n      {\n        \"iteration\": 1,\n        \"phase\": \"probe\",\n        \"skill\": \"probe\",\n        \"success\": true,\n        \"message\": \"probe completed\",\n        \"duration_ms\": 247.1768856048584\n      },\n      {\n        \"iteration\": 2,\n        \"phase\": \"analyze\",\n        \"skill\": \"analyze\",\n        \"success\": true,\n        \"message\": \"classification completed\",\n        \"duration_ms\": 0.11563301086425781\n      },\n      {\n        \"iteration\": 3,\n        \"phase\": \"llm_policy\",\n        \"skill\": \"llm_policy\",\n        \"success\": true,\n        \"message\": \"policy selected by deepseek-v4\",\n        \"duration_ms\": 10732.292652130127\n      },\n      {\n        \"iteration\": 4,\n        \"phase\": \"policy\",\n        \"skill\": \"policy\",\n        \"success\": true,\n        \"message\": \"planned 7 actions for mode=latency_first\",\n        \"duration_ms\": 0.19669532775878906\n      },\n      {\n        \"iteration\": 5,\n        \"phase\": \"canary_baseline\",\n        \"skill\": \"canary_baseline\",\n        \"success\": true,\n        \"message\": \"captured baseline SLO canary\",\n        \"duration_ms\": 3004.3842792510986\n      },\n      {\n        \"iteration\": 6,\n        \"phase\": \"ebpf_load\",\n        \"skill\": \"ebpf_load\",\n        \"success\": true,\n        \"message\": \"loaded 4 eBPF programs (0 failed)\",\n        \"duration_ms\": 206.6650390625\n      },\n      {\n        \"iteration\": 7,\n        \"phase\": \"ebpf_attach\",\n        \"skill\": \"ebpf_attach\",\n        \"success\": true,\n        \"message\": \"attached 4 eBPF programs (0 failed)\",\n        \"duration_ms\": 59.19003486633301\n      },\n      {\n        \"iteration\": 8,\n        \"phase\": \"scx\",\n        \"skill\": \"scx\",\n        \"success\": true,\n        \"message\": \"applied 8 scx policies through daemon\",\n        \"duration_ms\": 3.3435821533203125\n      },\n      {\n        \"iteration\": 9,\n        \"phase\": \"act\",\n        \"skill\": \"act\",\n        \"success\": true,\n        \"message\": \"executed 11 actions successfully\",\n        \"duration_ms\": 22.879362106323242\n      },\n      {\n        \"iteration\": 10,\n        \"phase\": \"ebpf_policy\",\n        \"skill\": \"ebpf_policy\",\n        \"success\": true,\n        \"message\": \"applied 9 eBPF policies (0 failed)\",\n        \"duration_ms\": 209.80358123779297\n      },\n      {\n        \"iteration\": 11,\n        \"phase\": \"canary_candidate\",\n        \"skill\": \"canary_candidate\",\n        \"success\": true,\n        \"message\": \"captured candidate SLO canary\",\n        \"duration_ms\": 3004.3976306915283\n      },\n      {\n        \"iteration\": 12,\n        \"phase\": \"ebpf_stats\",\n        \"skill\": \"ebpf_stats\",\n        \"success\": true,\n        \"message\": \"collected eBPF statistics\",\n        \"duration_ms\": 190.75274467468262\n      },\n      {\n        \"iteration\": 13,\n        \"phase\": \"verify\",\n        \"skill\": \"verify\",\n        \"success\": true,\n        \"message\": \"verification completed: 100.0% success rate\",\n        \"duration_ms\": 144.26898956298828\n      }\n    ],\n    \"decisions\": [\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"analyze\",\n        \"reason\": \"proceeding to analyze\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"decide\",\n        \"reason\": \"proceeding to decide\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"policy\",\n        \"reason\": \"policy selected by deepseek-v4 via latency_guard (54%)\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"canary_baseline\",\n        \"reason\": \"proceeding to canary_baseline\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_load\",\n        \"reason\": \"proceeding to ebpf_load\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_attach\",\n        \"reason\": \"proceeding to ebpf_attach\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"scx\",\n        \"reason\": \"proceeding to scx\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"act\",\n        \"reason\": \"proceeding to act\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_policy\",\n        \"reason\": \"proceeding to ebpf_policy\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"canary_candidate\",\n        \"reason\": \"proceeding to canary_candidate\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_stats\",\n        \"reason\": \"proceeding to ebpf_stats\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"verify\",\n        \"reason\": \"proceeding to verify\"\n      },\n      {\n        \"should_continue\": false,\n        \"next_phase\": null,\n        \"reason\": \"optimization round completed\"\n      }\n    ],\n    \"context_data\": {\n      \"mode\": \"latency_first\",\n      \"target\": \"nginx\",\n      \"agent_decision\": {\n        \"mode\": \"latency_first\",\n        \"target\": \"nginx\",\n        \"parameters\": {\n          \"cpu_weight\": 8000,\n          \"cpu_weight_bg\": 10,\n          \"cpu_max_bg\": \"10000 100000\",\n          \"nice_target\": -5,\n          \"nice_bg\": 10,\n          \"isolate_target\": \"stress-ng-cpu\"\n        },\n        \"reason\": \"DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)\",\n        \"confidence\": 0.5399780941949617,\n        \"source\": \"deepseek-v4\",\n        \"expert_id\": \"latency_guard\"\n      },\n      \"policy_route\": {\n        \"expert_id\": \"latency_guard\",\n        \"mode\": \"latency_first\",\n        \"confidence\": 0.5399780941949617,\n        \"scores\": {\n          \"background_isolation\": 0.175246,\n          \"balanced\": 0.065717,\n          \"latency_guard\": 0.539978,\n          \"throughput_boost\": 0.219058\n        },\n        \"switched\": true,\n        \"reason\": \"initial_selection\",\n        \"timestamp\": 33873.520387412\n      },\n      \"canary_verdict\": {\n        \"accepted\": true,\n        \"status\": \"accepted\",\n        \"reasons\": [],\n        \"deltas\": {\n          \"p99_percent\": -86.959877,\n          \"requests_per_sec_percent\": 1.775368,\n          \"background_retention_percent\": 92.997199\n        }\n      },\n      \"canary\": {\n        \"baseline\": {\n          \"latency_avg_ms\": 0.8182,\n          \"latency_stdev_ms\": 2.13,\n          \"latency_max_ms\": 24.31,\n          \"req_per_sec_avg\": 49590.0,\n          \"req_per_sec_stdev\": 6870.0,\n          \"requests_per_sec\": 98643.79,\n          \"qps\": 98643.79,\n          \"transfer_sec\": \"352.68MB\",\n          \"p50_ms\": 0.217,\n          \"p50_latency_ms\": 0.217,\n          \"p75_ms\": 0.512,\n          \"p75_latency_ms\": 0.512,\n          \"p90_ms\": 1.57,\n          \"p90_latency_ms\": 1.57,\n          \"p99_ms\": 12.96,\n          \"p99_latency_ms\": 12.96,\n          \"avg_latency_ms\": 0.8182,\n          \"background_cpu_ticks\": 357,\n          \"system_cpu_ticks\": 1202,\n          \"background_cpu_share\": 0.29700499168053246,\n          \"background_pids\": [\n            103321,\n            103322,\n            103323\n          ],\n          \"raw_output\": \"Running 3s test @ http://127.0.0.1/\\n  2 threads and 32 connections\\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\\n    Latency   818.16us    2.13ms  24.31ms   94.29%\\n    Req/Sec    49.59k     6.87k   61.75k    70.00%\\n  Latency Distribution\\n     50%  217.00us\\n     75%  512.00us\\n     90%    1.57ms\\n     99%   12.96ms\\n  295959 requests in 3.00s, 1.03GB read\\nRequests/sec:  98643.79\\nTransfer/sec:    352.68MB\\n\"\n        },\n        \"background_expected\": true,\n        \"candidate\": {\n          \"latency_avg_ms\": 0.3342,\n          \"latency_stdev_ms\": 0.3679,\n          \"latency_max_ms\": 8.69,\n          \"req_per_sec_avg\": 50460.0,\n          \"req_per_sec_stdev\": 4300.0,\n          \"requests_per_sec\": 100395.08,\n          \"qps\": 100395.08,\n          \"transfer_sec\": \"358.94MB\",\n          \"p50_ms\": 0.249,\n          \"p50_latency_ms\": 0.249,\n          \"p75_ms\": 0.393,\n          \"p75_latency_ms\": 0.393,\n          \"p90_ms\": 0.651,\n          \"p90_latency_ms\": 0.651,\n          \"p99_ms\": 1.69,\n          \"p99_latency_ms\": 1.69,\n          \"avg_latency_ms\": 0.3342,\n          \"background_cpu_ticks\": 332,\n          \"system_cpu_ticks\": 1202,\n          \"background_cpu_share\": 0.2762063227953411,\n          \"background_pids\": [\n            103321,\n            103322,\n            103323\n          ],\n          \"raw_output\": \"Running 3s test @ http://127.0.0.1/\\n  2 threads and 32 connections\\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\\n    Latency   334.22us  367.85us   8.69ms   91.50%\\n    Req/Sec    50.46k     4.30k   59.46k    65.00%\\n  Latency Distribution\\n     50%  249.00us\\n     75%  393.00us\\n     90%  651.00us\\n     99%    1.69ms\\n  301326 requests in 3.00s, 1.05GB read\\nRequests/sec: 100395.08\\nTransfer/sec:    358.94MB\\n\"\n        },\n        \"background_share\": 0.2762063227953411,\n        \"background_retention\": 0.9299719887955182,\n        \"nr_rejected\": 0\n      },\n      \"execution_results\": [\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 8000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1037,\n          \"group\": \"pid-1037\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 8000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1042,\n          \"group\": \"pid-1042\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 8000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1043,\n          \"group\": \"pid-1043\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 8000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1044,\n          \"group\": \"pid-1044\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 8000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1045,\n          \"group\": \"pid-1045\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103322\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103322,\n          \"group\": \"pid-103322\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103322\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103322,\n          \"group\": \"pid-103322\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103323\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103323,\n          \"group\": \"pid-103323\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103323\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103323,\n          \"group\": \"pid-103323\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103321\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103321,\n          \"group\": \"pid-103321\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103321\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103321,\n          \"group\": \"pid-103321\"\n        }\n      ],\n      \"ebpf_load_results\": {\n        \"scheduler-trace\": true,\n        \"network-policy\": true,\n        \"resource-control\": true,\n        \"security-policy\": true\n      },\n      \"ebpf_attach_results\": {\n        \"scheduler-trace\": true,\n        \"network-policy\": true,\n        \"resource-control\": true,\n        \"security-policy\": true\n      },\n      \"ebpf_policy_results\": [\n        {\n          \"pid\": 1042,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6582,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1043,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6601,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1044,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6620,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1045,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6639,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1037,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6563,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 102852,\n          \"workload_type\": \"batch_compute\",\n          \"class_id\": 2,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 3016,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103322,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6658,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103323,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6677,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103321,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6696,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        }\n      ],\n      \"ebpf_stats\": {\n        \"available\": true,\n        \"status\": {\n          \"available\": true,\n          \"sched_ext\": true,\n          \"bpf_lsm\": true,\n          \"programs\": {\n            \"sched_trace\": {\n              \"type\": \"sched_trace\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"events\",\n                \"global_stats\",\n                \"latency_histogram\",\n                \"task_info_map\"\n              ]\n            },\n            \"net_policy\": {\n              \"type\": \"net_policy\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"/sys/fs/cgroup\",\n              \"maps\": [\n                \"net_bucket_map\",\n                \"net_global_map\",\n                \"net_policy_map\",\n                \"net_stats_map\"\n              ]\n            },\n            \"resource_ctrl\": {\n              \"type\": \"resource_ctrl\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"res_global_map\",\n                \"res_policy_map\",\n                \"res_usage_map\"\n              ]\n            },\n            \"security_policy\": {\n              \"type\": \"security_policy\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"sec_exec_map\",\n                \"sec_policy_map\",\n                \"sec_stats_map\"\n              ]\n            }\n          },\n          \"dry_run\": false,\n          \"last_error\": \"\"\n        },\n        \"hooks\": {\n          \"scheduler_trace\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"scheduler-trace\",\n            \"stats\": {\n              \"total_wakeups\": 46020,\n              \"total_switches\": 47530,\n              \"total_latency_ns\": 8924054150,\n              \"active_tasks\": 17\n            },\n            \"total_wakeups\": 46020,\n            \"total_switches\": 47530,\n            \"total_latency_ns\": 8924054150,\n            \"avg_latency_ns\": 193916.8654932638\n          },\n          \"network_policy\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"network-policy\",\n            \"stats\": {\n              \"total_packets\": 302658,\n              \"total_bytes\": 26287692,\n              \"dropped_packets\": 0,\n              \"dropped_bytes\": 0\n            },\n            \"total_packets\": 302658,\n            \"total_bytes\": 26287692,\n            \"dropped_packets\": 0,\n            \"dropped_bytes\": 0,\n            \"drop_rate\": 0.0\n          },\n          \"security_policy\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"security-policy\",\n            \"bpf_lsm\": true,\n            \"stats\": {\n              \"exec_checks\": 45,\n              \"exec_denied\": 0\n            }\n          },\n          \"resource_control\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"resource-control\",\n            \"stats\": {\n              \"sched_switches\": 47874,\n              \"policy_hits\": 44282,\n              \"process_exits\": 61\n            },\n            \"sched_switches\": 47874,\n            \"policy_hits\": 44282,\n            \"process_exits\": 61\n          }\n        }\n      },\n      \"ebpf_cleanup\": {},\n      \"rollback\": null,\n      \"decision_log\": [\n        {\n          \"iteration\": 1,\n          \"phase\": \"probe\",\n          \"success\": true,\n          \"message\": \"probe completed\",\n          \"timestamp\": \"2026-08-29T20:48:28.558576\"\n        },\n        {\n          \"iteration\": 2,\n          \"phase\": \"analyze\",\n          \"success\": true,\n          \"message\": \"classification completed\",\n          \"timestamp\": \"2026-08-29T20:48:28.558708\"\n        },\n        {\n          \"iteration\": 3,\n          \"phase\": \"llm_policy\",\n          \"success\": true,\n          \"message\": \"policy selected by deepseek-v4\",\n          \"timestamp\": \"2026-08-29T20:48:39.291030\"\n        },\n        {\n          \"iteration\": 4,\n          \"phase\": \"policy\",\n          \"success\": true,\n          \"message\": \"planned 7 actions for mode=latency_first\",\n          \"timestamp\": \"2026-08-29T20:48:39.291301\"\n        },\n        {\n          \"iteration\": 5,\n          \"phase\": \"canary_baseline\",\n          \"success\": true,\n          \"message\": \"captured baseline SLO canary\",\n          \"timestamp\": \"2026-08-29T20:48:42.295709\"\n        },\n        {\n          \"iteration\": 6,\n          \"phase\": \"ebpf_load\",\n          \"success\": true,\n          \"message\": \"loaded 4 eBPF programs (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:42.502403\"\n        },\n        {\n          \"iteration\": 7,\n          \"phase\": \"ebpf_attach\",\n          \"success\": true,\n          \"message\": \"attached 4 eBPF programs (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:42.561623\"\n        },\n        {\n          \"iteration\": 8,\n          \"phase\": \"scx\",\n          \"success\": true,\n          \"message\": \"applied 8 scx policies through daemon\",\n          \"timestamp\": \"2026-08-29T20:48:42.565003\"\n        },\n        {\n          \"iteration\": 9,\n          \"phase\": \"act\",\n          \"success\": true,\n          \"message\": \"executed 11 actions successfully\",\n          \"timestamp\": \"2026-08-29T20:48:42.587903\"\n        },\n        {\n          \"iteration\": 10,\n          \"phase\": \"ebpf_policy\",\n          \"success\": true,\n          \"message\": \"applied 9 eBPF policies (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:42.797733\"\n        },\n        {\n          \"iteration\": 11,\n          \"phase\": \"canary_candidate\",\n          \"success\": true,\n          \"message\": \"captured candidate SLO canary\",\n          \"timestamp\": \"2026-08-29T20:48:45.802159\"\n        },\n        {\n          \"iteration\": 12,\n          \"phase\": \"ebpf_stats\",\n          \"success\": true,\n          \"message\": \"collected eBPF statistics\",\n          \"timestamp\": \"2026-08-29T20:48:45.992941\"\n        },\n        {\n          \"iteration\": 13,\n          \"phase\": \"verify\",\n          \"success\": true,\n          \"message\": \"verification completed: 100.0% success rate\",\n          \"timestamp\": \"2026-08-29T20:48:46.137236\"\n        }\n      ]\n    }\n  }\n}\n",
+  "stderr": "",
+  "data": {
+    "dry_run": false,
+    "auto_mode": true,
+    "agent_decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {
+        "cpu_weight": 8000,
+        "cpu_weight_bg": 10,
+        "cpu_max_bg": "10000 100000",
+        "nice_target": -5,
+        "nice_bg": 10,
+        "isolate_target": "stress-ng-cpu"
+      },
+      "reason": "DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)",
+      "confidence": 0.5399780941949617,
+      "source": "deepseek-v4",
+      "expert_id": "latency_guard"
+    },
+    "agent_loop": {
+      "total_iterations": 13,
+      "phases_completed": [
+        "probe",
+        "analyze",
+        "llm_policy",
+        "policy",
+        "canary_baseline",
+        "ebpf_load",
+        "ebpf_attach",
+        "scx",
+        "act",
+        "ebpf_policy",
+        "canary_candidate",
+        "ebpf_stats",
+        "verify"
+      ],
+      "final_status": "success",
+      "agent_decisions": {
+        "mode": "latency_first",
+        "target": "nginx",
+        "parameters": {
+          "cpu_weight": 8000,
+          "cpu_weight_bg": 10,
+          "cpu_max_bg": "10000 100000",
+          "nice_target": -5,
+          "nice_bg": 10,
+          "isolate_target": "stress-ng-cpu"
+        },
+        "reason": "DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)",
+        "confidence": 0.5399780941949617,
+        "source": "deepseek-v4",
+        "expert_id": "latency_guard"
+      },
+      "iterations": [
+        {
+          "iteration": 1,
+          "phase": "probe",
+          "skill": "probe",
+          "success": true,
+          "message": "probe completed",
+          "duration_ms": 247.1768856048584
+        },
+        {
+          "iteration": 2,
+          "phase": "analyze",
+          "skill": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "duration_ms": 0.11563301086425781
+        },
+        {
+          "iteration": 3,
+          "phase": "llm_policy",
+          "skill": "llm_policy",
+          "success": true,
+          "message": "policy selected by deepseek-v4",
+          "duration_ms": 10732.292652130127
+        },
+        {
+          "iteration": 4,
+          "phase": "policy",
+          "skill": "policy",
+          "success": true,
+          "message": "planned 7 actions for mode=latency_first",
+          "duration_ms": 0.19669532775878906
+        },
+        {
+          "iteration": 5,
+          "phase": "canary_baseline",
+          "skill": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "duration_ms": 3004.3842792510986
+        },
+        {
+          "iteration": 6,
+          "phase": "ebpf_load",
+          "skill": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "duration_ms": 206.6650390625
+        },
+        {
+          "iteration": 7,
+          "phase": "ebpf_attach",
+          "skill": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "duration_ms": 59.19003486633301
+        },
+        {
+          "iteration": 8,
+          "phase": "scx",
+          "skill": "scx",
+          "success": true,
+          "message": "applied 8 scx policies through daemon",
+          "duration_ms": 3.3435821533203125
+        },
+        {
+          "iteration": 9,
+          "phase": "act",
+          "skill": "act",
+          "success": true,
+          "message": "executed 11 actions successfully",
+          "duration_ms": 22.879362106323242
+        },
+        {
+          "iteration": 10,
+          "phase": "ebpf_policy",
+          "skill": "ebpf_policy",
+          "success": true,
+          "message": "applied 9 eBPF policies (0 failed)",
+          "duration_ms": 209.80358123779297
+        },
+        {
+          "iteration": 11,
+          "phase": "canary_candidate",
+          "skill": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "duration_ms": 3004.3976306915283
+        },
+        {
+          "iteration": 12,
+          "phase": "ebpf_stats",
+          "skill": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "duration_ms": 190.75274467468262
+        },
+        {
+          "iteration": 13,
+          "phase": "verify",
+          "skill": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "duration_ms": 144.26898956298828
+        }
+      ],
+      "decisions": [
+        {
+          "should_continue": true,
+          "next_phase": "analyze",
+          "reason": "proceeding to analyze"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "decide",
+          "reason": "proceeding to decide"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "policy",
+          "reason": "policy selected by deepseek-v4 via latency_guard (54%)"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "canary_baseline",
+          "reason": "proceeding to canary_baseline"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_load",
+          "reason": "proceeding to ebpf_load"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_attach",
+          "reason": "proceeding to ebpf_attach"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "scx",
+          "reason": "proceeding to scx"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "act",
+          "reason": "proceeding to act"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_policy",
+          "reason": "proceeding to ebpf_policy"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "canary_candidate",
+          "reason": "proceeding to canary_candidate"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_stats",
+          "reason": "proceeding to ebpf_stats"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "verify",
+          "reason": "proceeding to verify"
+        },
+        {
+          "should_continue": false,
+          "next_phase": null,
+          "reason": "optimization round completed"
+        }
+      ],
+      "context_data": {
+        "mode": "latency_first",
+        "target": "nginx",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "nginx",
+          "parameters": {
+            "cpu_weight": 8000,
+            "cpu_weight_bg": 10,
+            "cpu_max_bg": "10000 100000",
+            "nice_target": -5,
+            "nice_bg": 10,
+            "isolate_target": "stress-ng-cpu"
+          },
+          "reason": "DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)",
+          "confidence": 0.5399780941949617,
+          "source": "deepseek-v4",
+          "expert_id": "latency_guard"
+        },
+        "policy_route": {
+          "expert_id": "latency_guard",
+          "mode": "latency_first",
+          "confidence": 0.5399780941949617,
+          "scores": {
+            "background_isolation": 0.175246,
+            "balanced": 0.065717,
+            "latency_guard": 0.539978,
+            "throughput_boost": 0.219058
+          },
+          "switched": true,
+          "reason": "initial_selection",
+          "timestamp": 33873.520387412
+        },
+        "canary_verdict": {
+          "accepted": true,
+          "status": "accepted",
+          "reasons": [],
+          "deltas": {
+            "p99_percent": -86.959877,
+            "requests_per_sec_percent": 1.775368,
+            "background_retention_percent": 92.997199
+          }
+        },
+        "canary": {
+          "baseline": {
+            "latency_avg_ms": 0.8182,
+            "latency_stdev_ms": 2.13,
+            "latency_max_ms": 24.31,
+            "req_per_sec_avg": 49590.0,
+            "req_per_sec_stdev": 6870.0,
+            "requests_per_sec": 98643.79,
+            "qps": 98643.79,
+            "transfer_sec": "352.68MB",
+            "p50_ms": 0.217,
+            "p50_latency_ms": 0.217,
+            "p75_ms": 0.512,
+            "p75_latency_ms": 0.512,
+            "p90_ms": 1.57,
+            "p90_latency_ms": 1.57,
+            "p99_ms": 12.96,
+            "p99_latency_ms": 12.96,
+            "avg_latency_ms": 0.8182,
+            "background_cpu_ticks": 357,
+            "system_cpu_ticks": 1202,
+            "background_cpu_share": 0.29700499168053246,
+            "background_pids": [
+              103321,
+              103322,
+              103323
+            ],
+            "raw_output": "Running 3s test @ http://127.0.0.1/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   818.16us    2.13ms  24.31ms   94.29%\n    Req/Sec    49.59k     6.87k   61.75k    70.00%\n  Latency Distribution\n     50%  217.00us\n     75%  512.00us\n     90%    1.57ms\n     99%   12.96ms\n  295959 requests in 3.00s, 1.03GB read\nRequests/sec:  98643.79\nTransfer/sec:    352.68MB\n"
+          },
+          "background_expected": true,
+          "candidate": {
+            "latency_avg_ms": 0.3342,
+            "latency_stdev_ms": 0.3679,
+            "latency_max_ms": 8.69,
+            "req_per_sec_avg": 50460.0,
+            "req_per_sec_stdev": 4300.0,
+            "requests_per_sec": 100395.08,
+            "qps": 100395.08,
+            "transfer_sec": "358.94MB",
+            "p50_ms": 0.249,
+            "p50_latency_ms": 0.249,
+            "p75_ms": 0.393,
+            "p75_latency_ms": 0.393,
+            "p90_ms": 0.651,
+            "p90_latency_ms": 0.651,
+            "p99_ms": 1.69,
+            "p99_latency_ms": 1.69,
+            "avg_latency_ms": 0.3342,
+            "background_cpu_ticks": 332,
+            "system_cpu_ticks": 1202,
+            "background_cpu_share": 0.2762063227953411,
+            "background_pids": [
+              103321,
+              103322,
+              103323
+            ],
+            "raw_output": "Running 3s test @ http://127.0.0.1/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   334.22us  367.85us   8.69ms   91.50%\n    Req/Sec    50.46k     4.30k   59.46k    65.00%\n  Latency Distribution\n     50%  249.00us\n     75%  393.00us\n     90%  651.00us\n     99%    1.69ms\n  301326 requests in 3.00s, 1.05GB read\nRequests/sec: 100395.08\nTransfer/sec:    358.94MB\n"
+          },
+          "background_share": 0.2762063227953411,
+          "background_retention": 0.9299719887955182,
+          "nr_rejected": 0
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1037,
+            "group": "pid-1037"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1042,
+            "group": "pid-1042"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1043,
+            "group": "pid-1043"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1044,
+            "group": "pid-1044"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1045,
+            "group": "pid-1045"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103322",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103322,
+            "group": "pid-103322"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103322",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103322,
+            "group": "pid-103322"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103323",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103323,
+            "group": "pid-103323"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103323",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103323,
+            "group": "pid-103323"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103321",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 103321,
+            "group": "pid-103321"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103321",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 103321,
+            "group": "pid-103321"
+          }
+        ],
+        "ebpf_load_results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "ebpf_attach_results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "ebpf_policy_results": [
+          {
+            "pid": 1042,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6582,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1043,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6601,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1044,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6620,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1045,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6639,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1037,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6563,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 102852,
+            "workload_type": "batch_compute",
+            "class_id": 2,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 3016,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103322,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6658,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103323,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6677,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103321,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6696,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          }
+        ],
+        "ebpf_stats": {
+          "available": true,
+          "status": {
+            "available": true,
+            "sched_ext": true,
+            "bpf_lsm": true,
+            "programs": {
+              "sched_trace": {
+                "type": "sched_trace",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "events",
+                  "global_stats",
+                  "latency_histogram",
+                  "task_info_map"
+                ]
+              },
+              "net_policy": {
+                "type": "net_policy",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "/sys/fs/cgroup",
+                "maps": [
+                  "net_bucket_map",
+                  "net_global_map",
+                  "net_policy_map",
+                  "net_stats_map"
+                ]
+              },
+              "resource_ctrl": {
+                "type": "resource_ctrl",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "res_global_map",
+                  "res_policy_map",
+                  "res_usage_map"
+                ]
+              },
+              "security_policy": {
+                "type": "security_policy",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "sec_exec_map",
+                  "sec_policy_map",
+                  "sec_stats_map"
+                ]
+              }
+            },
+            "dry_run": false,
+            "last_error": ""
+          },
+          "hooks": {
+            "scheduler_trace": {
+              "available": true,
+              "loaded": true,
+              "name": "scheduler-trace",
+              "stats": {
+                "total_wakeups": 46020,
+                "total_switches": 47530,
+                "total_latency_ns": 8924054150,
+                "active_tasks": 17
+              },
+              "total_wakeups": 46020,
+              "total_switches": 47530,
+              "total_latency_ns": 8924054150,
+              "avg_latency_ns": 193916.8654932638
+            },
+            "network_policy": {
+              "available": true,
+              "loaded": true,
+              "name": "network-policy",
+              "stats": {
+                "total_packets": 302658,
+                "total_bytes": 26287692,
+                "dropped_packets": 0,
+                "dropped_bytes": 0
+              },
+              "total_packets": 302658,
+              "total_bytes": 26287692,
+              "dropped_packets": 0,
+              "dropped_bytes": 0,
+              "drop_rate": 0.0
+            },
+            "security_policy": {
+              "available": true,
+              "loaded": true,
+              "name": "security-policy",
+              "bpf_lsm": true,
+              "stats": {
+                "exec_checks": 45,
+                "exec_denied": 0
+              }
+            },
+            "resource_control": {
+              "available": true,
+              "loaded": true,
+              "name": "resource-control",
+              "stats": {
+                "sched_switches": 47874,
+                "policy_hits": 44282,
+                "process_exits": 61
+              },
+              "sched_switches": 47874,
+              "policy_hits": 44282,
+              "process_exits": 61
+            }
+          }
+        },
+        "ebpf_cleanup": {},
+        "rollback": null,
+        "decision_log": [
+          {
+            "iteration": 1,
+            "phase": "probe",
+            "success": true,
+            "message": "probe completed",
+            "timestamp": "2026-08-29T20:48:28.558576"
+          },
+          {
+            "iteration": 2,
+            "phase": "analyze",
+            "success": true,
+            "message": "classification completed",
+            "timestamp": "2026-08-29T20:48:28.558708"
+          },
+          {
+            "iteration": 3,
+            "phase": "llm_policy",
+            "success": true,
+            "message": "policy selected by deepseek-v4",
+            "timestamp": "2026-08-29T20:48:39.291030"
+          },
+          {
+            "iteration": 4,
+            "phase": "policy",
+            "success": true,
+            "message": "planned 7 actions for mode=latency_first",
+            "timestamp": "2026-08-29T20:48:39.291301"
+          },
+          {
+            "iteration": 5,
+            "phase": "canary_baseline",
+            "success": true,
+            "message": "captured baseline SLO canary",
+            "timestamp": "2026-08-29T20:48:42.295709"
+          },
+          {
+            "iteration": 6,
+            "phase": "ebpf_load",
+            "success": true,
+            "message": "loaded 4 eBPF programs (0 failed)",
+            "timestamp": "2026-08-29T20:48:42.502403"
+          },
+          {
+            "iteration": 7,
+            "phase": "ebpf_attach",
+            "success": true,
+            "message": "attached 4 eBPF programs (0 failed)",
+            "timestamp": "2026-08-29T20:48:42.561623"
+          },
+          {
+            "iteration": 8,
+            "phase": "scx",
+            "success": true,
+            "message": "applied 8 scx policies through daemon",
+            "timestamp": "2026-08-29T20:48:42.565003"
+          },
+          {
+            "iteration": 9,
+            "phase": "act",
+            "success": true,
+            "message": "executed 11 actions successfully",
+            "timestamp": "2026-08-29T20:48:42.587903"
+          },
+          {
+            "iteration": 10,
+            "phase": "ebpf_policy",
+            "success": true,
+            "message": "applied 9 eBPF policies (0 failed)",
+            "timestamp": "2026-08-29T20:48:42.797733"
+          },
+          {
+            "iteration": 11,
+            "phase": "canary_candidate",
+            "success": true,
+            "message": "captured candidate SLO canary",
+            "timestamp": "2026-08-29T20:48:45.802159"
+          },
+          {
+            "iteration": 12,
+            "phase": "ebpf_stats",
+            "success": true,
+            "message": "collected eBPF statistics",
+            "timestamp": "2026-08-29T20:48:45.992941"
+          },
+          {
+            "iteration": 13,
+            "phase": "verify",
+            "success": true,
+            "message": "verification completed: 100.0% success rate",
+            "timestamp": "2026-08-29T20:48:46.137236"
+          }
+        ]
+      }
+    }
+  }
+}

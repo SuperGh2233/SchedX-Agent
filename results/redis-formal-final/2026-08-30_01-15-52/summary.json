@@ -1,0 +1,4765 @@
+{
+  "status": "ok",
+  "benchmark": "redis-mixed-workload",
+  "config": {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "duration": 10,
+    "connections": 64,
+    "threads": 4,
+    "repeats": 5,
+    "stress_cpu": 4,
+    "warmup": 2,
+    "minimum_background_retention_percent": 25.0,
+    "output": "results/redis-formal-final"
+  },
+  "environment": {
+    "kernel": "Linux openeuler-sp4-stock 6.6.0-159.4.3.154.oe2403sp4.schedx1 #1 SMP Wed Jul 15 23:56:40 CST 2026 x86_64 x86_64 x86_64 GNU/Linux",
+    "cpu_count": 4,
+    "cgroup_v2": true,
+    "sched_ext_available": true,
+    "redis_status": "PONG"
+  },
+  "execution_order": [
+    {
+      "repeat": 1,
+      "phases": [
+        "baseline",
+        "interference",
+        "schedx"
+      ]
+    },
+    {
+      "repeat": 2,
+      "phases": [
+        "interference",
+        "schedx",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 3,
+      "phases": [
+        "schedx",
+        "baseline",
+        "interference"
+      ]
+    },
+    {
+      "repeat": 4,
+      "phases": [
+        "baseline",
+        "interference",
+        "schedx"
+      ]
+    },
+    {
+      "repeat": 5,
+      "phases": [
+        "interference",
+        "schedx",
+        "baseline"
+      ]
+    }
+  ],
+  "phases": {
+    "baseline": {
+      "requests_per_sec": {
+        "count": 5,
+        "mean": 124881.362,
+        "median": 124875.12,
+        "stdev": 13.9575,
+        "ci95": [
+          124864.0342,
+          124898.6898
+        ]
+      },
+      "latency_avg_ms": {
+        "count": 5,
+        "mean": 0.4798,
+        "median": 0.474,
+        "stdev": 0.011,
+        "ci95": [
+          0.4661,
+          0.4935
+        ]
+      },
+      "p99_ms": {
+        "count": 5,
+        "mean": 1.0166,
+        "median": 0.983,
+        "stdev": 0.1112,
+        "ci95": [
+          0.8786,
+          1.1546
+        ]
+      },
+      "wall_seconds": {
+        "count": 5,
+        "mean": 4.0087,
+        "median": 4.0087,
+        "stdev": 0.0003,
+        "ci95": [
+          4.0083,
+          4.0091
+        ]
+      },
+      "mean_background_cpu_ticks": 0.0,
+      "background_retention_percent": null,
+      "valid_for_claims": true
+    },
+    "interference": {
+      "requests_per_sec": {
+        "count": 5,
+        "mean": 81953.024,
+        "median": 79605.16,
+        "stdev": 6538.6612,
+        "ci95": [
+          73835.5054,
+          90070.5426
+        ]
+      },
+      "latency_avg_ms": {
+        "count": 5,
+        "mean": 0.696,
+        "median": 0.709,
+        "stdev": 0.0642,
+        "ci95": [
+          0.6163,
+          0.7757
+        ]
+      },
+      "p99_ms": {
+        "count": 5,
+        "mean": 3.1174,
+        "median": 3.111,
+        "stdev": 0.0998,
+        "ci95": [
+          2.9935,
+          3.2413
+        ]
+      },
+      "wall_seconds": {
+        "count": 5,
+        "mean": 6.1428,
+        "median": 6.2889,
+        "stdev": 0.4881,
+        "ci95": [
+          5.5368,
+          6.7487
+        ]
+      },
+      "mean_background_cpu_ticks": 1644.0,
+      "background_retention_percent": 100.0,
+      "valid_for_claims": true
+    },
+    "schedx": {
+      "requests_per_sec": {
+        "count": 5,
+        "mean": 107380.948,
+        "median": 105064.09,
+        "stdev": 3202.7471,
+        "ci95": [
+          103404.8498,
+          111357.0462
+        ]
+      },
+      "latency_avg_ms": {
+        "count": 5,
+        "mean": 0.5178,
+        "median": 0.519,
+        "stdev": 0.0075,
+        "ci95": [
+          0.5085,
+          0.5271
+        ]
+      },
+      "p99_ms": {
+        "count": 5,
+        "mean": 1.9094,
+        "median": 1.879,
+        "stdev": 0.0491,
+        "ci95": [
+          1.8484,
+          1.9704
+        ]
+      },
+      "wall_seconds": {
+        "count": 5,
+        "mean": 4.6662,
+        "median": 4.7648,
+        "stdev": 0.136,
+        "ci95": [
+          4.4973,
+          4.8351
+        ]
+      },
+      "mean_background_cpu_ticks": 1007.0,
+      "background_retention_percent": 61.253,
+      "valid_for_claims": true
+    }
+  },
+  "interference_qps_drop_percent": 34.3753,
+  "schedx_qps_gain_vs_interference_percent": 31.0274,
+  "schedx_p99_reduction_vs_interference_percent": 38.7502,
+  "minimum_background_retention_percent": 25.0,
+  "action_evidence": {
+    "baseline": [
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      }
+    ],
+    "interference": [
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      },
+      {
+        "status": "not_required"
+      }
+    ],
+    "schedx": [
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "redis",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 104964,
+                "comm": "redis-server",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/redis-server 127.0.0.1:6379",
+                "utime": 67,
+                "stime": 946,
+                "rss_bytes": 18485248,
+                "voluntary_ctxt_switches": 33629,
+                "nonvoluntary_ctxt_switches": 1976,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/redis.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10133.988856,
+                  "nr_switches": 35605.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 105852,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 105793,
+                "cmdline": "python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final",
+                "utime": 5,
+                "stime": 4,
+                "rss_bytes": 32944128,
+                "voluntary_ctxt_switches": 98,
+                "nonvoluntary_ctxt_switches": 16,
+                "cpu_percent": 8.25,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 103.937617,
+                  "nr_switches": 114.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 105890,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105887,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 221,
+                "stime": 0,
+                "rss_bytes": 6193152,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 101,
+                "cpu_percent": 98.97,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2212.812864,
+                  "nr_switches": 103.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105889,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105887,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 223,
+                "stime": 0,
+                "rss_bytes": 6193152,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 62,
+                "cpu_percent": 94.85,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2239.601362,
+                  "nr_switches": 64.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105891,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105887,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 223,
+                "stime": 0,
+                "rss_bytes": 6193152,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 28,
+                "cpu_percent": 94.85,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2239.955973,
+                  "nr_switches": 30.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105888,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105887,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6193152,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 38,
+                "cpu_percent": 90.72,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2223.222903,
+                  "nr_switches": 40.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105887,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 105852,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106639360,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 31.14076,
+                  "nr_switches": 1.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 931,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 22,
+                "rss_bytes": 43622400,
+                "voluntary_ctxt_switches": 834,
+                "nonvoluntary_ctxt_switches": 9,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 287.345637,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 989,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 63,
+                "stime": 402,
+                "rss_bytes": 28815360,
+                "voluntary_ctxt_switches": 60902,
+                "nonvoluntary_ctxt_switches": 16,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2162.463108,
+                  "nr_switches": 60918.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 947,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 28,
+                "stime": 64,
+                "rss_bytes": 21704704,
+                "voluntary_ctxt_switches": 6403,
+                "nonvoluntary_ctxt_switches": 59,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 555.144265,
+                  "nr_switches": 6462.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 19,
+                "stime": 126,
+                "rss_bytes": 15810560,
+                "voluntary_ctxt_switches": 3275,
+                "nonvoluntary_ctxt_switches": 46,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1455.089466,
+                  "nr_switches": 3321.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 710,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 3,
+                "stime": 18,
+                "rss_bytes": 13094912,
+                "voluntary_ctxt_switches": 1431,
+                "nonvoluntary_ctxt_switches": 32,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 221.452775,
+                  "nr_switches": 1463.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 675,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 25,
+                "stime": 50,
+                "rss_bytes": 12746752,
+                "voluntary_ctxt_switches": 7021,
+                "nonvoluntary_ctxt_switches": 10,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 764.139872,
+                  "nr_switches": 7031.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105789,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 985,
+                "cmdline": "sshd: root [priv]",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12169216,
+                "voluntary_ctxt_switches": 18,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10.75922,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 907,
+                "comm": "rngd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rngd -f -O jitter:timeout:10",
+                "utime": 465,
+                "stime": 3,
+                "rss_bytes": 11694080,
+                "voluntary_ctxt_switches": 4510,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rngd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 64.6925,
+                  "nr_switches": 4513.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 985,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups",
+                "utime": 0,
+                "stime": 4,
+                "rss_bytes": 10334208,
+                "voluntary_ctxt_switches": 387,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 54.244344,
+                  "nr_switches": 391.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 908,
+                "comm": "systemd-logind",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-logind",
+                "utime": 2,
+                "stime": 9,
+                "rss_bytes": 10170368,
+                "voluntary_ctxt_switches": 1193,
+                "nonvoluntary_ctxt_switches": 13,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-logind.service",
+                "sched": {
+                  "se.sum_exec_runtime": 119.097117,
+                  "nr_switches": 1206.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1339,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 46,
+                "stime": 174,
+                "rss_bytes": 9728000,
+                "voluntary_ctxt_switches": 105,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 13.685322,
+                  "nr_switches": 108.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105793,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 105792,
+                "cmdline": "bash -c cd /root/SchedX-Agent && source .venv/bin/activate && systemctl stop nginx && trap 'python3 -m schedx rollback >/dev/null 2>&1 || true; pkill -x stress-ng >/dev/null 2>&1 || true; pkill -x stress-ng-cpu >/dev/null 2>&1 || true; systemctl start nginx' EXIT && python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final > /tmp/redis-formal-result.json && python3 -c 'import json; d=json.load(open(\\ /tmp/redis-formal-result.json\\)); s=d[\\summary\\]; print(json.dumps({\\status\\:d[\\status\\],\\run_dir\\:d[\\run_dir\\],\\phases\\:s[\\phases\\],\\qps_gain\\:s[\\schedx_qps_gain_vs_interference_percent\\],\\p99_reduction\\:s[\\schedx_p99_reduction_vs_interference_percent\\],\\cleanup\\:s[\\cleanup\\]}, indent=2))'",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 9240576,
+                "voluntary_ctxt_switches": 44,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 5.368106,
+                  "nr_switches": 44.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105792,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 105789,
+                "cmdline": "sshd: root@notty",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 8347648,
+                "voluntary_ctxt_switches": 6,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.119989,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "latency_first",
+          "total_actions": 6,
+          "successful": 6,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 104964,
+              "class_id": 1,
+              "weight": 10000,
+              "workload_type": "latency_sensitive",
+              "comm": "redis-server",
+              "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105890,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105889,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105891,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105888,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105887,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "redis",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 104964,
+            "group": "pid-104964"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105890",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105890,
+            "group": "pid-105890"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105890",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105890,
+            "group": "pid-105890"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105889",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105889,
+            "group": "pid-105889"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105889",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105889,
+            "group": "pid-105889"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105891",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105891,
+            "group": "pid-105891"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105891",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105891,
+            "group": "pid-105891"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105888",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105888,
+            "group": "pid-105888"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105888",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105888,
+            "group": "pid-105888"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105887",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 105887,
+            "group": "pid-105887"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105887",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 105887,
+            "group": "pid-105887"
+          }
+        ],
+        "ebpf": {
+          "load": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "attach": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "policies": [
+            {
+              "pid": 104964,
+              "workload_type": "latency_sensitive",
+              "class_id": 1,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8298,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105852,
+              "workload_type": "batch_compute",
+              "class_id": 2,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 3016,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105890,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8317,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105889,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8336,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105891,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8355,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105888,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8374,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105887,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8393,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            }
+          ],
+          "stats": {
+            "available": true,
+            "status": {
+              "available": true,
+              "sched_ext": true,
+              "bpf_lsm": true,
+              "programs": {
+                "sched_trace": {
+                  "type": "sched_trace",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "events",
+                    "global_stats",
+                    "latency_histogram",
+                    "task_info_map"
+                  ]
+                },
+                "net_policy": {
+                  "type": "net_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "/sys/fs/cgroup",
+                  "maps": [
+                    "net_bucket_map",
+                    "net_global_map",
+                    "net_policy_map",
+                    "net_stats_map"
+                  ]
+                },
+                "resource_ctrl": {
+                  "type": "resource_ctrl",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "res_global_map",
+                    "res_policy_map",
+                    "res_usage_map"
+                  ]
+                },
+                "security_policy": {
+                  "type": "security_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "sec_exec_map",
+                    "sec_policy_map",
+                    "sec_stats_map"
+                  ]
+                }
+              },
+              "dry_run": false,
+              "last_error": ""
+            },
+            "hooks": {
+              "scheduler_trace": {
+                "available": true,
+                "loaded": true,
+                "name": "scheduler-trace",
+                "stats": {
+                  "total_wakeups": 430,
+                  "total_switches": 721,
+                  "total_latency_ns": 373406554,
+                  "active_tasks": 13
+                },
+                "total_wakeups": 430,
+                "total_switches": 721,
+                "total_latency_ns": 373406554,
+                "avg_latency_ns": 868387.334883721
+              },
+              "network_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "network-policy",
+                "stats": {
+                  "total_packets": 0,
+                  "total_bytes": 0,
+                  "dropped_packets": 0,
+                  "dropped_bytes": 0
+                },
+                "total_packets": 0,
+                "total_bytes": 0,
+                "dropped_packets": 0,
+                "dropped_bytes": 0,
+                "drop_rate": 0.0
+              },
+              "security_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "security-policy",
+                "bpf_lsm": true,
+                "stats": {
+                  "exec_checks": 39,
+                  "exec_denied": 0
+                }
+              },
+              "resource_control": {
+                "available": true,
+                "loaded": true,
+                "name": "resource-control",
+                "stats": {
+                  "sched_switches": 835,
+                  "policy_hits": 275,
+                  "process_exits": 43
+                },
+                "sched_switches": 835,
+                "policy_hits": 275,
+                "process_exits": 43
+              }
+            }
+          }
+        },
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "redis",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 104964,
+                "comm": "redis-server",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/redis-server 127.0.0.1:6379",
+                "utime": 110,
+                "stime": 1338,
+                "rss_bytes": 18751488,
+                "voluntary_ctxt_switches": 53436,
+                "nonvoluntary_ctxt_switches": 2936,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/redis.service",
+                "sched": {
+                  "se.sum_exec_runtime": 14493.36289,
+                  "nr_switches": 56372.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 105852,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 105793,
+                "cmdline": "python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final",
+                "utime": 12,
+                "stime": 9,
+                "rss_bytes": 33579008,
+                "voluntary_ctxt_switches": 365,
+                "nonvoluntary_ctxt_switches": 34,
+                "cpu_percent": 4.26,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 222.620206,
+                  "nr_switches": 399.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 105988,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105985,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6799360,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 120,
+                "cpu_percent": 102.13,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2222.7815,
+                  "nr_switches": 122.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105986,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105985,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6799360,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 47,
+                "cpu_percent": 97.87,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2226.959056,
+                  "nr_switches": 49.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105989,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105985,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6799360,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 16,
+                "cpu_percent": 97.87,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2227.769545,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105987,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 105985,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 219,
+                "stime": 0,
+                "rss_bytes": 6799360,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 35,
+                "cpu_percent": 93.62,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2191.523975,
+                  "nr_switches": 37.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 105985,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 105852,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106733568,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 31.953429,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 931,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 22,
+                "rss_bytes": 43622400,
+                "voluntary_ctxt_switches": 834,
+                "nonvoluntary_ctxt_switches": 9,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 287.345637,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 989,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 63,
+                "stime": 402,
+                "rss_bytes": 28815360,
+                "voluntary_ctxt_switches": 60918,
+                "nonvoluntary_ctxt_switches": 17,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2162.914284,
+                  "nr_switches": 60935.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 947,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 28,
+                "stime": 64,
+                "rss_bytes": 21704704,
+                "voluntary_ctxt_switches": 6408,
+                "nonvoluntary_ctxt_switches": 59,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 555.411705,
+                  "nr_switches": 6467.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 19,
+                "stime": 126,
+                "rss_bytes": 15810560,
+                "voluntary_ctxt_switches": 3279,
+                "nonvoluntary_ctxt_switches": 46,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1455.543306,
+                  "nr_switches": 3325.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 710,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 3,
+                "stime": 18,
+                "rss_bytes": 13094912,
+                "voluntary_ctxt_switches": 1440,
+                "nonvoluntary_ctxt_switches": 33,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 224.671291,
+                  "nr_switches": 1473.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 675,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 25,
+                "stime": 50,
+                "rss_bytes": 12750848,
+                "voluntary_ctxt_switches": 7029,
+                "nonvoluntary_ctxt_switches": 10,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 765.177872,
+                  "nr_switches": 7039.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105789,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 985,
+                "cmdline": "sshd: root [priv]",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12169216,
+                "voluntary_ctxt_switches": 18,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10.75922,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 907,
+                "comm": "rngd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rngd -f -O jitter:timeout:10",
+                "utime": 465,
+                "stime": 3,
+                "rss_bytes": 11694080,
+                "voluntary_ctxt_switches": 4510,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rngd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 64.6925,
+                  "nr_switches": 4513.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 985,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups",
+                "utime": 0,
+                "stime": 4,
+                "rss_bytes": 10334208,
+                "voluntary_ctxt_switches": 387,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 54.244344,
+                  "nr_switches": 391.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 908,
+                "comm": "systemd-logind",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-logind",
+                "utime": 2,
+                "stime": 9,
+                "rss_bytes": 10170368,
+                "voluntary_ctxt_switches": 1194,
+                "nonvoluntary_ctxt_switches": 13,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-logind.service",
+                "sched": {
+                  "se.sum_exec_runtime": 119.200407,
+                  "nr_switches": 1207.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1339,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 46,
+                "stime": 174,
+                "rss_bytes": 9728000,
+                "voluntary_ctxt_switches": 105,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 13.685322,
+                  "nr_switches": 108.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105793,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 105792,
+                "cmdline": "bash -c cd /root/SchedX-Agent && source .venv/bin/activate && systemctl stop nginx && trap 'python3 -m schedx rollback >/dev/null 2>&1 || true; pkill -x stress-ng >/dev/null 2>&1 || true; pkill -x stress-ng-cpu >/dev/null 2>&1 || true; systemctl start nginx' EXIT && python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final > /tmp/redis-formal-result.json && python3 -c 'import json; d=json.load(open(\\ /tmp/redis-formal-result.json\\)); s=d[\\summary\\]; print(json.dumps({\\status\\:d[\\status\\],\\run_dir\\:d[\\run_dir\\],\\phases\\:s[\\phases\\],\\qps_gain\\:s[\\schedx_qps_gain_vs_interference_percent\\],\\p99_reduction\\:s[\\schedx_p99_reduction_vs_interference_percent\\],\\cleanup\\:s[\\cleanup\\]}, indent=2))'",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 9240576,
+                "voluntary_ctxt_switches": 44,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 5.368106,
+                  "nr_switches": 44.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105792,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 105789,
+                "cmdline": "sshd: root@notty",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 8347648,
+                "voluntary_ctxt_switches": 6,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.119989,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "latency_first",
+          "total_actions": 6,
+          "successful": 6,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 104964,
+              "class_id": 1,
+              "weight": 10000,
+              "workload_type": "latency_sensitive",
+              "comm": "redis-server",
+              "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105988,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105986,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105989,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105987,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 105985,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "redis",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 104964,
+            "group": "pid-104964"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105988",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105988,
+            "group": "pid-105988"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105988",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105988,
+            "group": "pid-105988"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105986",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105986,
+            "group": "pid-105986"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105986",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105986,
+            "group": "pid-105986"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105989",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105989,
+            "group": "pid-105989"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105989",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105989,
+            "group": "pid-105989"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105987",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105987,
+            "group": "pid-105987"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105987",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 105987,
+            "group": "pid-105987"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "105985",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 105985,
+            "group": "pid-105985"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "105985",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 105985,
+            "group": "pid-105985"
+          }
+        ],
+        "ebpf": {
+          "load": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "attach": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "policies": [
+            {
+              "pid": 104964,
+              "workload_type": "latency_sensitive",
+              "class_id": 1,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8455,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105852,
+              "workload_type": "batch_compute",
+              "class_id": 2,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 3016,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105988,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8474,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105986,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8493,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105989,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8512,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105987,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8531,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105985,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8550,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            }
+          ],
+          "stats": {
+            "available": true,
+            "status": {
+              "available": true,
+              "sched_ext": true,
+              "bpf_lsm": true,
+              "programs": {
+                "sched_trace": {
+                  "type": "sched_trace",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "events",
+                    "global_stats",
+                    "latency_histogram",
+                    "task_info_map"
+                  ]
+                },
+                "net_policy": {
+                  "type": "net_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "/sys/fs/cgroup",
+                  "maps": [
+                    "net_bucket_map",
+                    "net_global_map",
+                    "net_policy_map",
+                    "net_stats_map"
+                  ]
+                },
+                "resource_ctrl": {
+                  "type": "resource_ctrl",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "res_global_map",
+                    "res_policy_map",
+                    "res_usage_map"
+                  ]
+                },
+                "security_policy": {
+                  "type": "security_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "sec_exec_map",
+                    "sec_policy_map",
+                    "sec_stats_map"
+                  ]
+                }
+              },
+              "dry_run": false,
+              "last_error": ""
+            },
+            "hooks": {
+              "scheduler_trace": {
+                "available": true,
+                "loaded": true,
+                "name": "scheduler-trace",
+                "stats": {
+                  "total_wakeups": 444,
+                  "total_switches": 760,
+                  "total_latency_ns": 345685561,
+                  "active_tasks": 21
+                },
+                "total_wakeups": 444,
+                "total_switches": 760,
+                "total_latency_ns": 345685561,
+                "avg_latency_ns": 778571.0833333334
+              },
+              "network_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "network-policy",
+                "stats": {
+                  "total_packets": 0,
+                  "total_bytes": 0,
+                  "dropped_packets": 0,
+                  "dropped_bytes": 0
+                },
+                "total_packets": 0,
+                "total_bytes": 0,
+                "dropped_packets": 0,
+                "dropped_bytes": 0,
+                "drop_rate": 0.0
+              },
+              "security_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "security-policy",
+                "bpf_lsm": true,
+                "stats": {
+                  "exec_checks": 39,
+                  "exec_denied": 0
+                }
+              },
+              "resource_control": {
+                "available": true,
+                "loaded": true,
+                "name": "resource-control",
+                "stats": {
+                  "sched_switches": 905,
+                  "policy_hits": 260,
+                  "process_exits": 43
+                },
+                "sched_switches": 905,
+                "policy_hits": 260,
+                "process_exits": 43
+              }
+            }
+          }
+        },
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "redis",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 104964,
+                "comm": "redis-server",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/redis-server 127.0.0.1:6379",
+                "utime": 134,
+                "stime": 1747,
+                "rss_bytes": 18173952,
+                "voluntary_ctxt_switches": 61795,
+                "nonvoluntary_ctxt_switches": 3699,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/redis.service",
+                "sched": {
+                  "se.sum_exec_runtime": 18814.875525,
+                  "nr_switches": 65494.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 105852,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 105793,
+                "cmdline": "python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final",
+                "utime": 20,
+                "stime": 14,
+                "rss_bytes": 33660928,
+                "voluntary_ctxt_switches": 617,
+                "nonvoluntary_ctxt_switches": 55,
+                "cpu_percent": 8.42,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 342.940653,
+                  "nr_switches": 672.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 106077,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106076,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6864896,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 92,
+                "cpu_percent": 96.84,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2225.646668,
+                  "nr_switches": 94.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106078,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106076,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6864896,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 67,
+                "cpu_percent": 96.84,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2226.641293,
+                  "nr_switches": 69.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106080,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106076,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6864896,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 34,
+                "cpu_percent": 96.84,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2225.451553,
+                  "nr_switches": 36.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106079,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106076,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 219,
+                "stime": 0,
+                "rss_bytes": 6864896,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 35,
+                "cpu_percent": 92.63,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2193.520279,
+                  "nr_switches": 37.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106076,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 105852,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106594304,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 32.778065,
+                  "nr_switches": 5.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 931,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 22,
+                "rss_bytes": 43622400,
+                "voluntary_ctxt_switches": 834,
+                "nonvoluntary_ctxt_switches": 9,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 287.345637,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 989,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 63,
+                "stime": 402,
+                "rss_bytes": 28815360,
+                "voluntary_ctxt_switches": 60930,
+                "nonvoluntary_ctxt_switches": 17,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2163.250554,
+                  "nr_switches": 60947.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 947,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 28,
+                "stime": 64,
+                "rss_bytes": 21704704,
+                "voluntary_ctxt_switches": 6416,
+                "nonvoluntary_ctxt_switches": 59,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 555.828145,
+                  "nr_switches": 6475.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 19,
+                "stime": 126,
+                "rss_bytes": 15810560,
+                "voluntary_ctxt_switches": 3281,
+                "nonvoluntary_ctxt_switches": 46,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1455.823391,
+                  "nr_switches": 3327.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 710,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 3,
+                "stime": 18,
+                "rss_bytes": 13094912,
+                "voluntary_ctxt_switches": 1448,
+                "nonvoluntary_ctxt_switches": 33,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 227.270511,
+                  "nr_switches": 1481.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 675,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 25,
+                "stime": 50,
+                "rss_bytes": 12759040,
+                "voluntary_ctxt_switches": 7035,
+                "nonvoluntary_ctxt_switches": 10,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 765.969122,
+                  "nr_switches": 7045.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105789,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 985,
+                "cmdline": "sshd: root [priv]",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12169216,
+                "voluntary_ctxt_switches": 18,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10.75922,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 907,
+                "comm": "rngd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rngd -f -O jitter:timeout:10",
+                "utime": 465,
+                "stime": 3,
+                "rss_bytes": 11694080,
+                "voluntary_ctxt_switches": 4510,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rngd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 64.6925,
+                  "nr_switches": 4513.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 985,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups",
+                "utime": 0,
+                "stime": 4,
+                "rss_bytes": 10334208,
+                "voluntary_ctxt_switches": 387,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 54.244344,
+                  "nr_switches": 391.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 908,
+                "comm": "systemd-logind",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-logind",
+                "utime": 2,
+                "stime": 9,
+                "rss_bytes": 10170368,
+                "voluntary_ctxt_switches": 1195,
+                "nonvoluntary_ctxt_switches": 13,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-logind.service",
+                "sched": {
+                  "se.sum_exec_runtime": 119.246857,
+                  "nr_switches": 1208.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1339,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 46,
+                "stime": 174,
+                "rss_bytes": 9728000,
+                "voluntary_ctxt_switches": 105,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 13.685322,
+                  "nr_switches": 108.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105793,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 105792,
+                "cmdline": "bash -c cd /root/SchedX-Agent && source .venv/bin/activate && systemctl stop nginx && trap 'python3 -m schedx rollback >/dev/null 2>&1 || true; pkill -x stress-ng >/dev/null 2>&1 || true; pkill -x stress-ng-cpu >/dev/null 2>&1 || true; systemctl start nginx' EXIT && python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final > /tmp/redis-formal-result.json && python3 -c 'import json; d=json.load(open(\\ /tmp/redis-formal-result.json\\)); s=d[\\summary\\]; print(json.dumps({\\status\\:d[\\status\\],\\run_dir\\:d[\\run_dir\\],\\phases\\:s[\\phases\\],\\qps_gain\\:s[\\schedx_qps_gain_vs_interference_percent\\],\\p99_reduction\\:s[\\schedx_p99_reduction_vs_interference_percent\\],\\cleanup\\:s[\\cleanup\\]}, indent=2))'",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 9240576,
+                "voluntary_ctxt_switches": 44,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 5.368106,
+                  "nr_switches": 44.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105792,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 105789,
+                "cmdline": "sshd: root@notty",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 8347648,
+                "voluntary_ctxt_switches": 6,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.119989,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "latency_first",
+          "total_actions": 6,
+          "successful": 6,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 104964,
+              "class_id": 1,
+              "weight": 10000,
+              "workload_type": "latency_sensitive",
+              "comm": "redis-server",
+              "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106077,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106078,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106080,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106079,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106076,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "redis",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 104964,
+            "group": "pid-104964"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106077",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106077,
+            "group": "pid-106077"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106077",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106077,
+            "group": "pid-106077"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106078",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106078,
+            "group": "pid-106078"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106078",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106078,
+            "group": "pid-106078"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106080",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106080,
+            "group": "pid-106080"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106080",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106080,
+            "group": "pid-106080"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106079",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106079,
+            "group": "pid-106079"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106079",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106079,
+            "group": "pid-106079"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106076",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106076,
+            "group": "pid-106076"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106076",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106076,
+            "group": "pid-106076"
+          }
+        ],
+        "ebpf": {
+          "load": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "attach": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "policies": [
+            {
+              "pid": 104964,
+              "workload_type": "latency_sensitive",
+              "class_id": 1,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8612,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105852,
+              "workload_type": "batch_compute",
+              "class_id": 2,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 3016,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106077,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8631,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106078,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8650,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106080,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8669,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106079,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8688,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106076,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8707,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            }
+          ],
+          "stats": {
+            "available": true,
+            "status": {
+              "available": true,
+              "sched_ext": true,
+              "bpf_lsm": true,
+              "programs": {
+                "sched_trace": {
+                  "type": "sched_trace",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "events",
+                    "global_stats",
+                    "latency_histogram",
+                    "task_info_map"
+                  ]
+                },
+                "net_policy": {
+                  "type": "net_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "/sys/fs/cgroup",
+                  "maps": [
+                    "net_bucket_map",
+                    "net_global_map",
+                    "net_policy_map",
+                    "net_stats_map"
+                  ]
+                },
+                "resource_ctrl": {
+                  "type": "resource_ctrl",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "res_global_map",
+                    "res_policy_map",
+                    "res_usage_map"
+                  ]
+                },
+                "security_policy": {
+                  "type": "security_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "sec_exec_map",
+                    "sec_policy_map",
+                    "sec_stats_map"
+                  ]
+                }
+              },
+              "dry_run": false,
+              "last_error": ""
+            },
+            "hooks": {
+              "scheduler_trace": {
+                "available": true,
+                "loaded": true,
+                "name": "scheduler-trace",
+                "stats": {
+                  "total_wakeups": 459,
+                  "total_switches": 771,
+                  "total_latency_ns": 345886356,
+                  "active_tasks": 19
+                },
+                "total_wakeups": 459,
+                "total_switches": 771,
+                "total_latency_ns": 345886356,
+                "avg_latency_ns": 753565.0457516339
+              },
+              "network_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "network-policy",
+                "stats": {
+                  "total_packets": 0,
+                  "total_bytes": 0,
+                  "dropped_packets": 0,
+                  "dropped_bytes": 0
+                },
+                "total_packets": 0,
+                "total_bytes": 0,
+                "dropped_packets": 0,
+                "dropped_bytes": 0,
+                "drop_rate": 0.0
+              },
+              "security_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "security-policy",
+                "bpf_lsm": true,
+                "stats": {
+                  "exec_checks": 39,
+                  "exec_denied": 0
+                }
+              },
+              "resource_control": {
+                "available": true,
+                "loaded": true,
+                "name": "resource-control",
+                "stats": {
+                  "sched_switches": 897,
+                  "policy_hits": 276,
+                  "process_exits": 43
+                },
+                "sched_switches": 897,
+                "policy_hits": 276,
+                "process_exits": 43
+              }
+            }
+          }
+        },
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "redis",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 104964,
+                "comm": "redis-server",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/redis-server 127.0.0.1:6379",
+                "utime": 202,
+                "stime": 2741,
+                "rss_bytes": 18743296,
+                "voluntary_ctxt_switches": 94427,
+                "nonvoluntary_ctxt_switches": 6418,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/redis.service",
+                "sched": {
+                  "se.sum_exec_runtime": 29431.903827,
+                  "nr_switches": 100845.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 105852,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 105793,
+                "cmdline": "python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final",
+                "utime": 28,
+                "stime": 19,
+                "rss_bytes": 33787904,
+                "voluntary_ctxt_switches": 1002,
+                "nonvoluntary_ctxt_switches": 76,
+                "cpu_percent": 8.51,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 474.805795,
+                  "nr_switches": 1078.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 106211,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106210,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6807552,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 82,
+                "cpu_percent": 102.13,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2225.017045,
+                  "nr_switches": 84.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106212,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106210,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6807552,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 68,
+                "cpu_percent": 102.13,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2223.669592,
+                  "nr_switches": 70.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106213,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106210,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 6807552,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 48,
+                "cpu_percent": 97.87,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2227.595322,
+                  "nr_switches": 50.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106214,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106210,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 219,
+                "stime": 0,
+                "rss_bytes": 6807552,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 30,
+                "cpu_percent": 93.62,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2194.384837,
+                  "nr_switches": 32.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106210,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 105852,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 0,
+                "stime": 3,
+                "rss_bytes": 106745856,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 31.883459,
+                  "nr_switches": 1.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 931,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 22,
+                "rss_bytes": 43622400,
+                "voluntary_ctxt_switches": 834,
+                "nonvoluntary_ctxt_switches": 9,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 287.345637,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 989,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 63,
+                "stime": 403,
+                "rss_bytes": 28815360,
+                "voluntary_ctxt_switches": 60963,
+                "nonvoluntary_ctxt_switches": 17,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2164.265504,
+                  "nr_switches": 60980.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 947,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 29,
+                "stime": 64,
+                "rss_bytes": 21704704,
+                "voluntary_ctxt_switches": 6417,
+                "nonvoluntary_ctxt_switches": 59,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 555.882715,
+                  "nr_switches": 6476.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 19,
+                "stime": 126,
+                "rss_bytes": 15810560,
+                "voluntary_ctxt_switches": 3284,
+                "nonvoluntary_ctxt_switches": 46,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1456.218761,
+                  "nr_switches": 3330.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 710,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 3,
+                "stime": 19,
+                "rss_bytes": 13094912,
+                "voluntary_ctxt_switches": 1457,
+                "nonvoluntary_ctxt_switches": 33,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 230.059926,
+                  "nr_switches": 1490.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 675,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 26,
+                "stime": 50,
+                "rss_bytes": 12767232,
+                "voluntary_ctxt_switches": 7047,
+                "nonvoluntary_ctxt_switches": 10,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 767.434282,
+                  "nr_switches": 7057.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105789,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 985,
+                "cmdline": "sshd: root [priv]",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12169216,
+                "voluntary_ctxt_switches": 18,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10.75922,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 907,
+                "comm": "rngd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rngd -f -O jitter:timeout:10",
+                "utime": 465,
+                "stime": 3,
+                "rss_bytes": 11694080,
+                "voluntary_ctxt_switches": 4510,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rngd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 64.6925,
+                  "nr_switches": 4513.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 985,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups",
+                "utime": 0,
+                "stime": 4,
+                "rss_bytes": 10334208,
+                "voluntary_ctxt_switches": 387,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 54.244344,
+                  "nr_switches": 391.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 908,
+                "comm": "systemd-logind",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-logind",
+                "utime": 2,
+                "stime": 9,
+                "rss_bytes": 10170368,
+                "voluntary_ctxt_switches": 1196,
+                "nonvoluntary_ctxt_switches": 13,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-logind.service",
+                "sched": {
+                  "se.sum_exec_runtime": 119.287817,
+                  "nr_switches": 1209.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1339,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 46,
+                "stime": 174,
+                "rss_bytes": 9728000,
+                "voluntary_ctxt_switches": 105,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 13.685322,
+                  "nr_switches": 108.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105793,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 105792,
+                "cmdline": "bash -c cd /root/SchedX-Agent && source .venv/bin/activate && systemctl stop nginx && trap 'python3 -m schedx rollback >/dev/null 2>&1 || true; pkill -x stress-ng >/dev/null 2>&1 || true; pkill -x stress-ng-cpu >/dev/null 2>&1 || true; systemctl start nginx' EXIT && python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final > /tmp/redis-formal-result.json && python3 -c 'import json; d=json.load(open(\\ /tmp/redis-formal-result.json\\)); s=d[\\summary\\]; print(json.dumps({\\status\\:d[\\status\\],\\run_dir\\:d[\\run_dir\\],\\phases\\:s[\\phases\\],\\qps_gain\\:s[\\schedx_qps_gain_vs_interference_percent\\],\\p99_reduction\\:s[\\schedx_p99_reduction_vs_interference_percent\\],\\cleanup\\:s[\\cleanup\\]}, indent=2))'",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 9240576,
+                "voluntary_ctxt_switches": 44,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 5.368106,
+                  "nr_switches": 44.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105792,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 105789,
+                "cmdline": "sshd: root@notty",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 8347648,
+                "voluntary_ctxt_switches": 6,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.119989,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "latency_first",
+          "total_actions": 6,
+          "successful": 6,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 104964,
+              "class_id": 1,
+              "weight": 10000,
+              "workload_type": "latency_sensitive",
+              "comm": "redis-server",
+              "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106211,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106212,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106213,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106214,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106210,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "redis",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 104964,
+            "group": "pid-104964"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106211",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106211,
+            "group": "pid-106211"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106211",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106211,
+            "group": "pid-106211"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106212",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106212,
+            "group": "pid-106212"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106212",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106212,
+            "group": "pid-106212"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106213",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106213,
+            "group": "pid-106213"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106213",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106213,
+            "group": "pid-106213"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106214",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106214,
+            "group": "pid-106214"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106214",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106214,
+            "group": "pid-106214"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106210",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106210,
+            "group": "pid-106210"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106210",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106210,
+            "group": "pid-106210"
+          }
+        ],
+        "ebpf": {
+          "load": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "attach": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "policies": [
+            {
+              "pid": 104964,
+              "workload_type": "latency_sensitive",
+              "class_id": 1,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8769,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105852,
+              "workload_type": "batch_compute",
+              "class_id": 2,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 3016,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106211,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8788,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106212,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8807,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106213,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8826,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106214,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8845,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106210,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8864,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            }
+          ],
+          "stats": {
+            "available": true,
+            "status": {
+              "available": true,
+              "sched_ext": true,
+              "bpf_lsm": true,
+              "programs": {
+                "sched_trace": {
+                  "type": "sched_trace",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "events",
+                    "global_stats",
+                    "latency_histogram",
+                    "task_info_map"
+                  ]
+                },
+                "net_policy": {
+                  "type": "net_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "/sys/fs/cgroup",
+                  "maps": [
+                    "net_bucket_map",
+                    "net_global_map",
+                    "net_policy_map",
+                    "net_stats_map"
+                  ]
+                },
+                "resource_ctrl": {
+                  "type": "resource_ctrl",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "res_global_map",
+                    "res_policy_map",
+                    "res_usage_map"
+                  ]
+                },
+                "security_policy": {
+                  "type": "security_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "sec_exec_map",
+                    "sec_policy_map",
+                    "sec_stats_map"
+                  ]
+                }
+              },
+              "dry_run": false,
+              "last_error": ""
+            },
+            "hooks": {
+              "scheduler_trace": {
+                "available": true,
+                "loaded": true,
+                "name": "scheduler-trace",
+                "stats": {
+                  "total_wakeups": 448,
+                  "total_switches": 795,
+                  "total_latency_ns": 372457037,
+                  "active_tasks": 16
+                },
+                "total_wakeups": 448,
+                "total_switches": 795,
+                "total_latency_ns": 372457037,
+                "avg_latency_ns": 831377.3147321428
+              },
+              "network_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "network-policy",
+                "stats": {
+                  "total_packets": 0,
+                  "total_bytes": 0,
+                  "dropped_packets": 0,
+                  "dropped_bytes": 0
+                },
+                "total_packets": 0,
+                "total_bytes": 0,
+                "dropped_packets": 0,
+                "dropped_bytes": 0,
+                "drop_rate": 0.0
+              },
+              "security_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "security-policy",
+                "bpf_lsm": true,
+                "stats": {
+                  "exec_checks": 39,
+                  "exec_denied": 0
+                }
+              },
+              "resource_control": {
+                "available": true,
+                "loaded": true,
+                "name": "resource-control",
+                "stats": {
+                  "sched_switches": 913,
+                  "policy_hits": 271,
+                  "process_exits": 43
+                },
+                "sched_switches": 913,
+                "policy_hits": 271,
+                "process_exits": 43
+              }
+            }
+          }
+        },
+        "log": ""
+      },
+      {
+        "status": "success",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "redis",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "classification": {
+          "overall": "mixed",
+          "groups": {
+            "latency_sensitive": [
+              {
+                "pid": 104964,
+                "comm": "redis-server",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/redis-server 127.0.0.1:6379",
+                "utime": 245,
+                "stime": 3135,
+                "rss_bytes": 18534400,
+                "voluntary_ctxt_switches": 115896,
+                "nonvoluntary_ctxt_switches": 7334,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/redis.service",
+                "sched": {
+                  "se.sum_exec_runtime": 33805.131126,
+                  "nr_switches": 123230.0
+                },
+                "workload_type": "latency_sensitive",
+                "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule"
+              }
+            ],
+            "batch_compute": [
+              {
+                "pid": 105852,
+                "comm": "python3",
+                "state": "R",
+                "ppid": 105793,
+                "cmdline": "python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final",
+                "utime": 35,
+                "stime": 24,
+                "rss_bytes": 33869824,
+                "voluntary_ctxt_switches": 1272,
+                "nonvoluntary_ctxt_switches": 99,
+                "cpu_percent": 8.6,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 599.895307,
+                  "nr_switches": 1371.0
+                },
+                "workload_type": "batch_compute",
+                "reason": "python cmdline contains batch keyword: python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final"
+              }
+            ],
+            "background_noise": [
+              {
+                "pid": 106310,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106306,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 223,
+                "stime": 0,
+                "rss_bytes": 7008256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 31,
+                "cpu_percent": 103.23,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2230.663618,
+                  "nr_switches": 33.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106308,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106306,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 7008256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 95,
+                "cpu_percent": 98.92,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2228.122681,
+                  "nr_switches": 97.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106309,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106306,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 222,
+                "stime": 0,
+                "rss_bytes": 7008256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 70,
+                "cpu_percent": 98.92,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2229.041425,
+                  "nr_switches": 72.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106307,
+                "comm": "stress-ng-cpu",
+                "state": "R",
+                "ppid": 106306,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 219,
+                "stime": 0,
+                "rss_bytes": 7008256,
+                "voluntary_ctxt_switches": 2,
+                "nonvoluntary_ctxt_switches": 37,
+                "cpu_percent": 94.62,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2194.692906,
+                  "nr_switches": 39.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              },
+              {
+                "pid": 106306,
+                "comm": "stress-ng",
+                "state": "S",
+                "ppid": 105852,
+                "cmdline": "stress-ng --cpu 4 --timeout 42s --metrics-brief",
+                "utime": 0,
+                "stime": 2,
+                "rss_bytes": 106713088,
+                "voluntary_ctxt_switches": 1,
+                "nonvoluntary_ctxt_switches": 1,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 31.898091,
+                  "nr_switches": 2.0
+                },
+                "workload_type": "background_noise",
+                "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule"
+              }
+            ],
+            "unknown": [
+              {
+                "pid": 931,
+                "comm": "firewalld",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -s /usr/sbin/firewalld --nofork --nopid",
+                "utime": 5,
+                "stime": 22,
+                "rss_bytes": 43622400,
+                "voluntary_ctxt_switches": 834,
+                "nonvoluntary_ctxt_switches": 9,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/firewalld.service",
+                "sched": {
+                  "se.sum_exec_runtime": 287.345637,
+                  "nr_switches": 843.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 989,
+                "comm": "tuned",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/bin/python3 -Es /usr/sbin/tuned -l -P",
+                "utime": 63,
+                "stime": 403,
+                "rss_bytes": 28815360,
+                "voluntary_ctxt_switches": 60979,
+                "nonvoluntary_ctxt_switches": 17,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/tuned.service",
+                "sched": {
+                  "se.sum_exec_runtime": 2164.738464,
+                  "nr_switches": 60996.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 947,
+                "comm": "NetworkManager",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/NetworkManager --no-daemon",
+                "utime": 29,
+                "stime": 64,
+                "rss_bytes": 21704704,
+                "voluntary_ctxt_switches": 6417,
+                "nonvoluntary_ctxt_switches": 59,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/NetworkManager.service",
+                "sched": {
+                  "se.sum_exec_runtime": 555.882715,
+                  "nr_switches": 6476.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1,
+                "comm": "systemd",
+                "state": "S",
+                "ppid": 0,
+                "cmdline": "/usr/lib/systemd/systemd --switched-root --system --deserialize=36",
+                "utime": 19,
+                "stime": 126,
+                "rss_bytes": 15810560,
+                "voluntary_ctxt_switches": 3288,
+                "nonvoluntary_ctxt_switches": 46,
+                "cpu_percent": 0.0,
+                "cgroup": "/init.scope",
+                "sched": {
+                  "se.sum_exec_runtime": 1456.602196,
+                  "nr_switches": 3334.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 710,
+                "comm": "systemd-udevd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-udevd",
+                "utime": 3,
+                "stime": 19,
+                "rss_bytes": 13094912,
+                "voluntary_ctxt_switches": 1466,
+                "nonvoluntary_ctxt_switches": 33,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-udevd.service/udev",
+                "sched": {
+                  "se.sum_exec_runtime": 232.713816,
+                  "nr_switches": 1499.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 675,
+                "comm": "systemd-journal",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-journald",
+                "utime": 26,
+                "stime": 50,
+                "rss_bytes": 12771328,
+                "voluntary_ctxt_switches": 7055,
+                "nonvoluntary_ctxt_switches": 10,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-journald.service",
+                "sched": {
+                  "se.sum_exec_runtime": 768.329652,
+                  "nr_switches": 7065.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105789,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 985,
+                "cmdline": "sshd: root [priv]",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 12169216,
+                "voluntary_ctxt_switches": 18,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 10.75922,
+                  "nr_switches": 18.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 907,
+                "comm": "rngd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rngd -f -O jitter:timeout:10",
+                "utime": 465,
+                "stime": 3,
+                "rss_bytes": 11694080,
+                "voluntary_ctxt_switches": 4510,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rngd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 64.6925,
+                  "nr_switches": 4513.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 985,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "sshd: /usr/sbin/sshd -D [listener] 0 of 10-100 startups",
+                "utime": 0,
+                "stime": 4,
+                "rss_bytes": 10334208,
+                "voluntary_ctxt_switches": 387,
+                "nonvoluntary_ctxt_switches": 4,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 54.244344,
+                  "nr_switches": 391.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 908,
+                "comm": "systemd-logind",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/lib/systemd/systemd-logind",
+                "utime": 2,
+                "stime": 9,
+                "rss_bytes": 10170368,
+                "voluntary_ctxt_switches": 1197,
+                "nonvoluntary_ctxt_switches": 13,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/systemd-logind.service",
+                "sched": {
+                  "se.sum_exec_runtime": 119.381597,
+                  "nr_switches": 1210.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 1339,
+                "comm": "rsyslogd",
+                "state": "S",
+                "ppid": 1,
+                "cmdline": "/usr/sbin/rsyslogd -n -i/var/run/rsyslogd.pid",
+                "utime": 46,
+                "stime": 174,
+                "rss_bytes": 9859072,
+                "voluntary_ctxt_switches": 105,
+                "nonvoluntary_ctxt_switches": 3,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/rsyslog.service",
+                "sched": {
+                  "se.sum_exec_runtime": 13.685322,
+                  "nr_switches": 108.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105793,
+                "comm": "bash",
+                "state": "S",
+                "ppid": 105792,
+                "cmdline": "bash -c cd /root/SchedX-Agent && source .venv/bin/activate && systemctl stop nginx && trap 'python3 -m schedx rollback >/dev/null 2>&1 || true; pkill -x stress-ng >/dev/null 2>&1 || true; pkill -x stress-ng-cpu >/dev/null 2>&1 || true; systemctl start nginx' EXIT && python3 -m schedx benchmark redis --duration 10 --repeats 5 --connections 64 --threads 4 --stress-cpu 4 --warmup 2 --min-background-retention 25 --output results/redis-formal-final > /tmp/redis-formal-result.json && python3 -c 'import json; d=json.load(open(\\ /tmp/redis-formal-result.json\\)); s=d[\\summary\\]; print(json.dumps({\\status\\:d[\\status\\],\\run_dir\\:d[\\run_dir\\],\\phases\\:s[\\phases\\],\\qps_gain\\:s[\\schedx_qps_gain_vs_interference_percent\\],\\p99_reduction\\:s[\\schedx_p99_reduction_vs_interference_percent\\],\\cleanup\\:s[\\cleanup\\]}, indent=2))'",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 9240576,
+                "voluntary_ctxt_switches": 44,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 5.368106,
+                  "nr_switches": 44.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              },
+              {
+                "pid": 105792,
+                "comm": "sshd",
+                "state": "S",
+                "ppid": 105789,
+                "cmdline": "sshd: root@notty",
+                "utime": 0,
+                "stime": 0,
+                "rss_bytes": 8347648,
+                "voluntary_ctxt_switches": 6,
+                "nonvoluntary_ctxt_switches": 0,
+                "cpu_percent": 0.0,
+                "cgroup": "/system.slice/sshd.service",
+                "sched": {
+                  "se.sum_exec_runtime": 1.119989,
+                  "nr_switches": 6.0
+                },
+                "workload_type": "unknown",
+                "reason": "no workload rule matched"
+              }
+            ]
+          },
+          "psi_insight": {}
+        },
+        "scx_results": {
+          "mode": "latency_first",
+          "total_actions": 6,
+          "successful": 6,
+          "failed": 0,
+          "results": [
+            {
+              "type": "set_task_policy",
+              "pid": 104964,
+              "class_id": 1,
+              "weight": 10000,
+              "workload_type": "latency_sensitive",
+              "comm": "redis-server",
+              "reason": "comm/cmdline=redis-server /usr/bin/redis-server 127.0.0.1:6379 matches latency service rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106310,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106308,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106309,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106307,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng-cpu",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            },
+            {
+              "type": "set_task_policy",
+              "pid": 106306,
+              "class_id": 3,
+              "weight": 50,
+              "workload_type": "background_noise",
+              "comm": "stress-ng",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 4 --timeout 42s --metrics-brief matches background noise rule",
+              "success": true
+            }
+          ]
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "redis",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 104964,
+            "group": "pid-104964"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106310",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106310,
+            "group": "pid-106310"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106310",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106310,
+            "group": "pid-106310"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106308",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106308,
+            "group": "pid-106308"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106308",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106308,
+            "group": "pid-106308"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106309",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106309,
+            "group": "pid-106309"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106309",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106309,
+            "group": "pid-106309"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106307",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106307,
+            "group": "pid-106307"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106307",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 106307,
+            "group": "pid-106307"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "106306",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106306,
+            "group": "pid-106306"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "106306",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 106306,
+            "group": "pid-106306"
+          }
+        ],
+        "ebpf": {
+          "load": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "attach": {
+            "scheduler-trace": true,
+            "network-policy": true,
+            "resource-control": true,
+            "security-policy": true
+          },
+          "policies": [
+            {
+              "pid": 104964,
+              "workload_type": "latency_sensitive",
+              "class_id": 1,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8926,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 105852,
+              "workload_type": "batch_compute",
+              "class_id": 2,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 3016,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106310,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8945,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106308,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8964,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106309,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 8983,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106307,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 9002,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            },
+            {
+              "pid": 106306,
+              "workload_type": "background_noise",
+              "class_id": 3,
+              "sched_policy": "delegated_to_scx_or_cgroup",
+              "cgroup_id": 9021,
+              "net_policy": "applied",
+              "resource_policy": "applied",
+              "security_policy": "audit",
+              "status": "applied",
+              "reason": "",
+              "success": true
+            }
+          ],
+          "stats": {
+            "available": true,
+            "status": {
+              "available": true,
+              "sched_ext": true,
+              "bpf_lsm": true,
+              "programs": {
+                "sched_trace": {
+                  "type": "sched_trace",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "events",
+                    "global_stats",
+                    "latency_histogram",
+                    "task_info_map"
+                  ]
+                },
+                "net_policy": {
+                  "type": "net_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "/sys/fs/cgroup",
+                  "maps": [
+                    "net_bucket_map",
+                    "net_global_map",
+                    "net_policy_map",
+                    "net_stats_map"
+                  ]
+                },
+                "resource_ctrl": {
+                  "type": "resource_ctrl",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "res_global_map",
+                    "res_policy_map",
+                    "res_usage_map"
+                  ]
+                },
+                "security_policy": {
+                  "type": "security_policy",
+                  "loaded": true,
+                  "attached": true,
+                  "attach_target": "kernel-declared hooks",
+                  "maps": [
+                    "sec_exec_map",
+                    "sec_policy_map",
+                    "sec_stats_map"
+                  ]
+                }
+              },
+              "dry_run": false,
+              "last_error": ""
+            },
+            "hooks": {
+              "scheduler_trace": {
+                "available": true,
+                "loaded": true,
+                "name": "scheduler-trace",
+                "stats": {
+                  "total_wakeups": 459,
+                  "total_switches": 774,
+                  "total_latency_ns": 405888419,
+                  "active_tasks": 18
+                },
+                "total_wakeups": 459,
+                "total_switches": 774,
+                "total_latency_ns": 405888419,
+                "avg_latency_ns": 884288.4945533769
+              },
+              "network_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "network-policy",
+                "stats": {
+                  "total_packets": 0,
+                  "total_bytes": 0,
+                  "dropped_packets": 0,
+                  "dropped_bytes": 0
+                },
+                "total_packets": 0,
+                "total_bytes": 0,
+                "dropped_packets": 0,
+                "dropped_bytes": 0,
+                "drop_rate": 0.0
+              },
+              "security_policy": {
+                "available": true,
+                "loaded": true,
+                "name": "security-policy",
+                "bpf_lsm": true,
+                "stats": {
+                  "exec_checks": 39,
+                  "exec_denied": 0
+                }
+              },
+              "resource_control": {
+                "available": true,
+                "loaded": true,
+                "name": "resource-control",
+                "stats": {
+                  "sched_switches": 869,
+                  "policy_hits": 247,
+                  "process_exits": 43
+                },
+                "sched_switches": 869,
+                "policy_hits": 247,
+                "process_exits": 43
+              }
+            }
+          }
+        },
+        "log": ""
+      }
+    ]
+  },
+  "cleanup": {
+    "stress_processes": [],
+    "cgroup_base_exists": false,
+    "ebpf_base_exists": false,
+    "sched_ext_state": "disabled"
+  }
+}

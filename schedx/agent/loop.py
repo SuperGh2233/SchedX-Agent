@@ -60,10 +60,11 @@ class AgentLoop:
         "canary_baseline",
         "ebpf_load",
         "ebpf_attach",
-        "ebpf_policy",
         "scx",
         "act",
+        "ebpf_policy",
         "canary_candidate",
+        "ebpf_stats",
         "verify",
     ]
     MAX_ITERATIONS = 20
@@ -195,11 +196,15 @@ class AgentLoop:
         baseline_result = self._execute_skill("canary_baseline", round_num * 100 + 4)
         if not baseline_result.ok:
             return {"round": round_num, "status": "canary_baseline_failed"}
-        scx_result = self._execute_skill("scx", round_num * 100 + 5)
-        act_result = self._execute_skill("act", round_num * 100 + 6)
-        candidate_result = self._execute_skill("canary_candidate", round_num * 100 + 7)
+        ebpf_load_result = self._execute_skill("ebpf_load", round_num * 100 + 5)
+        ebpf_attach_result = self._execute_skill("ebpf_attach", round_num * 100 + 6)
+        scx_result = self._execute_skill("scx", round_num * 100 + 7)
+        act_result = self._execute_skill("act", round_num * 100 + 8)
+        ebpf_policy_result = self._execute_skill("ebpf_policy", round_num * 100 + 9)
+        candidate_result = self._execute_skill("canary_candidate", round_num * 100 + 10)
+        ebpf_stats_result = self._execute_skill("ebpf_stats", round_num * 100 + 11)
         verify_result = (
-            self._execute_skill("verify", round_num * 100 + 8)
+            self._execute_skill("verify", round_num * 100 + 12)
             if candidate_result.ok
             else SkillResult(False, candidate_result.message)
         )
@@ -212,7 +217,7 @@ class AgentLoop:
             or bool(self.context.data.get("rollback_required"))
         )
         if rollback_required:
-            rollback_result = self._execute_skill("rollback", round_num * 100 + 9)
+            rollback_result = self._execute_skill("rollback", round_num * 100 + 13)
             if rollback_result.ok:
                 self.context.data.pop("rollback_required", None)
 
@@ -235,6 +240,10 @@ class AgentLoop:
             },
             "act_success": act_result.ok,
             "scx_success": scx_result.ok,
+            "ebpf_load_success": ebpf_load_result.ok,
+            "ebpf_attach_success": ebpf_attach_result.ok,
+            "ebpf_policy_success": ebpf_policy_result.ok,
+            "ebpf_stats_success": ebpf_stats_result.ok,
             "canary_success": candidate_result.ok,
             "verify_success": verify_result.ok,
         }
@@ -468,6 +477,11 @@ class AgentLoop:
                 "canary_verdict": self.context.data.get("canary_verdict"),
                 "canary": self.context.data.get("canary"),
                 "execution_results": self.context.data.get("execution_results", []),
+                "ebpf_load_results": self.context.data.get("ebpf_load_results", {}),
+                "ebpf_attach_results": self.context.data.get("ebpf_attach_results", {}),
+                "ebpf_policy_results": self.context.data.get("ebpf_policy_results", []),
+                "ebpf_stats": self.context.data.get("ebpf_stats"),
+                "ebpf_cleanup": self.context.data.get("ebpf_cleanup", {}),
                 "rollback": self.context.data.get("rollback"),
                 "decision_log": self.context.data.get("decision_log", []),
             },

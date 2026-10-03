@@ -1,0 +1,7 @@
+phase,repeat,events_per_second,events,elapsed_seconds,latency_p95_ms,background_cpu_ticks,notes
+baseline,1,18702.75,187040.0,10.0003,0.34,0,
+interference,1,9835.66,98382.0,10.0021,3.19,1996,
+schedx,1,15582.45,155839.0,10.0004,0.34,669,
+interference,2,9861.55,98628.0,10.0009,3.19,1995,
+schedx,2,15593.6,155945.0,10.0002,0.34,660,
+baseline,2,18837.94,188392.0,10.0002,0.33,0,

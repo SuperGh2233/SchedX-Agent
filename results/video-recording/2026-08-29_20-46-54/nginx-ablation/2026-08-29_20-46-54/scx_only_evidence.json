@@ -1,0 +1,89 @@
+{
+  "phase": "scx_only",
+  "rows": [
+    {
+      "phase": "scx_only",
+      "repeat": 1,
+      "latency_avg_ms": 0.1104,
+      "latency_stdev_ms": 0.0483,
+      "latency_max_ms": 1.75,
+      "req_per_sec_avg": 33150.0,
+      "req_per_sec_stdev": 1040.0,
+      "requests_per_sec": 65972.53,
+      "qps": 65972.53,
+      "transfer_sec": "235.87MB",
+      "p50_ms": 0.101,
+      "p50_latency_ms": 0.101,
+      "p75_ms": 0.129,
+      "p75_latency_ms": 0.129,
+      "p90_ms": 0.164,
+      "p90_latency_ms": 0.164,
+      "p99_ms": 0.251,
+      "p99_latency_ms": 0.251,
+      "avg_latency_ms": 0.1104,
+      "returncode": 0,
+      "notes": ""
+    }
+  ],
+  "background_cpu_ticks": 604,
+  "action_evidence": {
+    "status": "ok",
+    "policies": [
+      {
+        "pid": 1037,
+        "class": "latency",
+        "weight": 10000,
+        "success": true
+      },
+      {
+        "pid": 1042,
+        "class": "latency",
+        "weight": 10000,
+        "success": true
+      },
+      {
+        "pid": 1043,
+        "class": "latency",
+        "weight": 10000,
+        "success": true
+      },
+      {
+        "pid": 1044,
+        "class": "latency",
+        "weight": 10000,
+        "success": true
+      },
+      {
+        "pid": 1045,
+        "class": "latency",
+        "weight": 10000,
+        "success": true
+      },
+      {
+        "pid": 102946,
+        "class": "background",
+        "weight": 100,
+        "success": true
+      },
+      {
+        "pid": 102947,
+        "class": "background",
+        "weight": 100,
+        "success": true
+      },
+      {
+        "pid": 102948,
+        "class": "background",
+        "weight": 100,
+        "success": true
+      }
+    ]
+  },
+  "sched_ext_stats": {
+    "latency_dispatches": 0,
+    "batch_dispatches": 0,
+    "background_dispatches": 0,
+    "default_dispatches": 0,
+    "total": 0
+  }
+}

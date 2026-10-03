@@ -194,3 +194,73 @@ def test_competition_report_prefers_fair_batch_summary(tmp_path: Path):
     data = module.extract(results, run_dir)
 
     assert data["batch"]["phases"]["schedx"]["valid_for_claims"]
+
+
+def test_competition_report_includes_scx_comparison(tmp_path: Path):
+    module = load_report_module()
+    results = tmp_path / "results"
+    write_json(
+        results / "scx-compare-formal" / "run" / "summary.json",
+        {
+            "schedulers": {
+                "scx_agent": {
+                    "policy_capability": "task_policy_and_fairness",
+                    "statistics": {
+                        "requests_per_sec": {"mean": 114224.98},
+                        "p99_ms": {"mean": 2.99},
+                    },
+                    "comparison_vs_default": {
+                        "rps_gain_percent": 79.02,
+                        "p99_reduction_percent": 60.04,
+                    },
+                    "background_retention_percent": 30.48,
+                    "fairness": {"valid_for_claims": True},
+                }
+            }
+        },
+    )
+
+    output = tmp_path / "competition.md"
+    module.generate(results, output)
+    text = output.read_text(encoding="utf-8")
+
+    assert "Native sched_ext Scheduler Comparison" in text
+    assert "79.02%" in text
+    assert "task_policy_and_fairness" in text
+
+
+def test_competition_report_includes_redis_confidence_intervals(tmp_path: Path):
+    module = load_report_module()
+    results = tmp_path / "results"
+    write_json(
+        results / "redis-formal-final" / "run" / "summary.json",
+        {
+            "phases": {
+                "baseline": {
+                    "requests_per_sec": {"mean": 120000, "ci95": [118000, 122000]},
+                    "p99_ms": {"mean": 1.0, "ci95": [0.9, 1.1]},
+                },
+                "interference": {
+                    "requests_per_sec": {"mean": 80000, "ci95": [76000, 84000]},
+                    "p99_ms": {"mean": 3.1, "ci95": [3.0, 3.2]},
+                },
+                "schedx": {
+                    "requests_per_sec": {"mean": 105000, "ci95": [102000, 108000]},
+                    "p99_ms": {"mean": 1.9, "ci95": [1.8, 2.0]},
+                    "background_retention_percent": 61.25,
+                    "valid_for_claims": True,
+                },
+            },
+            "schedx_qps_gain_vs_interference_percent": 31.03,
+            "schedx_p99_reduction_vs_interference_percent": 38.75,
+        },
+    )
+
+    output = tmp_path / "competition.md"
+    module.generate(results, output)
+    text = output.read_text(encoding="utf-8")
+
+    assert "Redis Latency Scenario" in text
+    assert "[102000.00, 108000.00]" in text
+    assert "31.03%" in text
+    assert "38.75%" in text

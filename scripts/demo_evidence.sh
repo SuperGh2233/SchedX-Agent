@@ -178,6 +178,7 @@ phase_names = {
     "scx": "ScxSkill（自定义调度）",
     "act": "ActSkill（资源执行）",
     "canary_candidate": "CanaryCandidateSkill（执行后测量）",
+    "ebpf_stats": "EbpfStatsSkill（内核证据采集）",
     "verify": "VerifySkill（效果验证）",
     "rollback": "RollbackSkill（自动恢复）",
 }
@@ -192,6 +193,88 @@ print(
         "已完成" if data.get("report", {}).get("returncode") == 0 else "未完成"
     )
 )
+
+ebpf = trace.get("accepted", {}).get("ebpf", {})
+hooks = ebpf.get("hooks", {}) if isinstance(ebpf, dict) else {}
+print("\n[真实 eBPF 证据]")
+print(f"策略下发进程数: {ebpf.get('policies_applied', 0)}")
+for key, label in (
+    ("scheduler_trace", "调度观测"),
+    ("network_policy", "网络策略"),
+    ("resource_control", "资源观测"),
+    ("security_policy", "安全审计"),
+):
+    item = hooks.get(key, {})
+    stats = item.get("stats", {}) if isinstance(item, dict) else {}
+    print(f"{label}: {'已挂载并采集数据' if stats else '本轮无有效统计'}")
+
+comparison_files = sorted(
+    Path("results/scx-compare-formal").glob("*/summary.json"),
+    key=lambda path: path.stat().st_mtime,
+    reverse=True,
+)
+if comparison_files:
+    comparison = json.loads(comparison_files[0].read_text(encoding="utf-8"))
+    schedulers = comparison.get("schedulers", {})
+    print("\n[五次正式调度器横向对比]")
+    print(f"证据目录: {comparison_files[0].parent}")
+    for key, label in (
+        ("default", "默认调度"),
+        ("scx_simple", "scx_simple"),
+        ("scx_qmap", "scx_qmap"),
+        ("scx_flatcg", "scx_flatcg"),
+        ("scx_agent", "SchedX 自研调度器"),
+    ):
+        item = schedulers.get(key, {})
+        stats = item.get("statistics", {})
+        print(
+            f"{label}: 每秒请求 {metric(stats.get('requests_per_sec', {}).get('mean'))}，"
+            f"最慢 1% 延迟 {metric(stats.get('p99_ms', {}).get('mean'), 3)} 毫秒，"
+            f"后台运行量 {percentage(item.get('background_retention_percent'))}"
+        )
+    agent_comparison = schedulers.get("scx_agent", {}).get(
+        "comparison_vs_default", {}
+    )
+    p99_reduction = agent_comparison.get("p99_reduction_percent")
+    print(
+        "正式结论: 自研调度器吞吐 {}，最慢 1% 延迟 {}，并通过后台运行量门槛".format(
+            measured_change(agent_comparison.get("rps_gain_percent")),
+            measured_change(
+                -p99_reduction if p99_reduction is not None else None,
+                lower_is_better=True,
+            ),
+        )
+    )
+
+redis_files = sorted(
+    Path("results/redis-formal-final").glob("*/summary.json"),
+    key=lambda path: path.stat().st_mtime,
+    reverse=True,
+)
+if redis_files:
+    redis = json.loads(redis_files[0].read_text(encoding="utf-8"))
+    phases = redis.get("phases", {})
+    print("\n[Redis 第二工作负载正式实验]")
+    print(f"证据目录: {redis_files[0].parent}")
+    for key, label in (
+        ("baseline", "无干扰基准"),
+        ("interference", "加入后台干扰"),
+        ("schedx", "Agent 优化后"),
+    ):
+        item = phases.get(key, {})
+        print(
+            f"{label}: 每秒请求 {metric(item.get('requests_per_sec', {}).get('mean'))}，"
+            f"最慢 1% 延迟 {metric(item.get('p99_ms', {}).get('mean'), 3)} 毫秒"
+        )
+    schedx_redis = phases.get("schedx", {})
+    print(
+        "正式结论: 相比干扰场景，每秒请求提高 {}，最慢 1% 延迟下降 {}，"
+        "后台运行量保持在基准的 {}。".format(
+            percentage(redis.get("schedx_qps_gain_vs_interference_percent")),
+            percentage(redis.get("schedx_p99_reduction_vs_interference_percent")),
+            percentage(schedx_redis.get("background_retention_percent")),
+        )
+    )
 
 reason_names = {
     "insufficient_p99_improvement": "未达到严格的延迟改善目标",

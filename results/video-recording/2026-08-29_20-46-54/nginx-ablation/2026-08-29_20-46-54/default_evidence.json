@@ -1,0 +1,34 @@
+{
+  "phase": "default",
+  "rows": [
+    {
+      "phase": "default",
+      "repeat": 1,
+      "latency_avg_ms": 0.224,
+      "latency_stdev_ms": 0.4196,
+      "latency_max_ms": 7.67,
+      "req_per_sec_avg": 30770.0,
+      "req_per_sec_stdev": 4160.0,
+      "requests_per_sec": 60156.46,
+      "qps": 60156.46,
+      "transfer_sec": "215.08MB",
+      "p50_ms": 0.097,
+      "p50_latency_ms": 0.097,
+      "p75_ms": 0.173,
+      "p75_latency_ms": 0.173,
+      "p90_ms": 0.472,
+      "p90_latency_ms": 0.472,
+      "p99_ms": 2.27,
+      "p99_latency_ms": 2.27,
+      "avg_latency_ms": 0.224,
+      "returncode": 0,
+      "notes": ""
+    }
+  ],
+  "background_cpu_ticks": 615,
+  "action_evidence": {
+    "phase": "default",
+    "status": "not_required"
+  },
+  "sched_ext_stats": {}
+}

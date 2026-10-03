@@ -1,93 +1,40 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * net_policy.bpf.c - Network policy enforcement using eBPF
+ * Network policy for cgroup v2 workloads.
  *
- * This BPF program implements network traffic control using TC (Traffic Control)
- * hooks. It can classify and shape network traffic based on workload type.
- *
- * Features:
- * - Per-task network bandwidth limiting
- * - Traffic classification based on workload type
- * - Rate limiting for background/noise processes
- * - Priority queuing for latency-sensitive tasks
+ * Network packets are not reliably attributable to the current userspace PID
+ * at a TC hook. A cgroup_skb hook carries the workload identity through the
+ * socket, so policies are keyed by the cgroup v2 ID instead.
  */
 
 #include <vmlinux.h>
 #include <bpf/bpf_helpers.h>
-#include <bpf/bpf_tracing.h>
-#include <bpf/bpf_core_read.h>
-#include <bpf/bpf_endian.h>
 
-/* Network policy constants */
-#define NET_CLASS_LATENCY     1
-#define NET_CLASS_BATCH       2
-#define NET_CLASS_BACKGROUND  3
-#define NET_CLASS_UNKNOWN     0
+#define NET_CLASS_LATENCY 1
 
-/* Rate limits in bytes per second */
-#define RATE_LIMIT_LATENCY    1000000000  /* 1 GB/s - essentially unlimited */
-#define RATE_LIMIT_BATCH      100000000   /* 100 MB/s */
-#define RATE_LIMIT_BACKGROUND 10000000    /* 10 MB/s */
-#define RATE_LIMIT_DEFAULT    500000000   /* 500 MB/s */
-
-/* Token bucket parameters */
-#define BURST_SIZE_LATENCY    10000000    /* 10 MB burst */
-#define BURST_SIZE_BATCH      1000000     /* 1 MB burst */
-#define BURST_SIZE_BACKGROUND 100000      /* 100 KB burst */
-
-/* Network policy entry */
 struct net_policy {
-    __u32 class_id;         /* NET_CLASS_* */
-    __u32 rate_limit_bps;   /* Rate limit in bytes/sec */
-    __u32 burst_size;       /* Token bucket burst size */
-    __u32 priority;         /* Queue priority (0-7) */
+    __u32 class_id;
+    __u32 rate_limit_bps;
+    __u32 burst_size;
+    __u32 priority;
 };
 
-/* Token bucket state */
-struct token_bucket {
-    __u64 tokens;           /* Available tokens (bytes) */
-    __u64 last_refill;      /* Last refill timestamp */
-    __u32 rate_bps;         /* Refill rate in bytes/sec */
-    __u32 burst_size;       /* Maximum burst size */
+struct schedx_token_bucket {
+    struct bpf_spin_lock lock;
+    __u32 reserved;
+    __u64 tokens;
+    __u64 last_refill;
+    __u32 rate_bps;
+    __u32 burst_size;
 };
 
-/* Network statistics per task */
 struct net_stats {
     __u64 bytes_sent;
-    __u64 bytes_received;
     __u64 packets_sent;
-    __u64 packets_received;
     __u64 packets_dropped;
     __u64 bytes_dropped;
 };
 
-/* BPF Maps */
-
-/* Per-task network policy: PID -> policy */
-struct {
-    __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 4096);
-    __type(key, __u32);              /* PID */
-    __type(value, struct net_policy);
-} net_policy_map SEC(".maps");
-
-/* Per-task token bucket: PID -> bucket state */
-struct {
-    __uint(type, BPF_MAP_TYPE_HASH);
-    __uint(max_entries, 4096);
-    __type(key, __u32);              /* PID */
-    __type(value, struct token_bucket);
-} token_bucket_map SEC(".maps");
-
-/* Per-task network statistics (per-CPU) */
-struct {
-    __uint(type, BPF_MAP_TYPE_PERCPU_HASH);
-    __uint(max_entries, 4096);
-    __type(key, __u32);              /* PID */
-    __type(value, struct net_stats);
-} net_stats_map SEC(".maps");
-
-/* Global network statistics (per-CPU) */
 struct global_net_stats {
     __u64 total_packets;
     __u64 total_bytes;
@@ -96,180 +43,119 @@ struct global_net_stats {
 };
 
 struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, 4096);
+    __type(key, __u64);
+    __type(value, struct net_policy);
+} net_policy_map SEC(".maps");
+
+struct {
+    __uint(type, BPF_MAP_TYPE_HASH);
+    __uint(max_entries, 4096);
+    __type(key, __u64);
+    __type(value, struct schedx_token_bucket);
+} net_bucket_map SEC(".maps");
+
+struct {
+    __uint(type, BPF_MAP_TYPE_PERCPU_HASH);
+    __uint(max_entries, 4096);
+    __type(key, __u64);
+    __type(value, struct net_stats);
+} net_stats_map SEC(".maps");
+
+struct {
     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
     __uint(max_entries, 1);
     __type(key, __u32);
     __type(value, struct global_net_stats);
-} global_net_stats_map SEC(".maps");
+} net_global_map SEC(".maps");
 
-/* Helper: Refill token bucket */
-static __always_inline bool refill_tokens(struct token_bucket *bucket, __u64 now)
+static __always_inline void account_packet(__u64 cgroup_id, __u32 bytes, bool dropped)
 {
-    __u64 elapsed = now - bucket->last_refill;
-    __u64 new_tokens = (elapsed * bucket->rate_bps) / 1000000000ULL;
-
-    bucket->tokens += new_tokens;
-    if (bucket->tokens > bucket->burst_size)
-        bucket->tokens = bucket->burst_size;
-
-    bucket->last_refill = now;
-    return true;
-}
-
-/* Helper: Try to consume tokens */
-static __always_inline bool consume_tokens(struct token_bucket *bucket, __u32 bytes)
-{
-    if (bucket->tokens >= bytes) {
-        bucket->tokens -= bytes;
-        return true;
-    }
-    return false;
-}
-
-/* Helper: Update statistics */
-static __always_inline void update_net_stats(__u32 pid, __u32 bytes, bool is_send, bool dropped)
-{
-    struct net_stats *stats;
-    stats = bpf_map_lookup_elem(&net_stats_map, &pid);
+    struct net_stats *stats = bpf_map_lookup_elem(&net_stats_map, &cgroup_id);
     if (!stats) {
-        struct net_stats new_stats = {};
-        bpf_map_update_elem(&net_stats_map, &pid, &new_stats, BPF_ANY);
-        stats = bpf_map_lookup_elem(&net_stats_map, &pid);
-        if (!stats)
-            return;
+        struct net_stats initial = {};
+        bpf_map_update_elem(&net_stats_map, &cgroup_id, &initial, BPF_NOEXIST);
+        stats = bpf_map_lookup_elem(&net_stats_map, &cgroup_id);
     }
 
-    if (dropped) {
-        stats->packets_dropped++;
-        stats->bytes_dropped += bytes;
-    } else if (is_send) {
-        stats->packets_sent++;
-        stats->bytes_sent += bytes;
-    } else {
-        stats->packets_received++;
-        stats->bytes_received += bytes;
+    if (stats) {
+        if (dropped) {
+            stats->packets_dropped++;
+            stats->bytes_dropped += bytes;
+        } else {
+            stats->packets_sent++;
+            stats->bytes_sent += bytes;
+        }
     }
-}
 
-/* Helper: Update global statistics */
-static __always_inline void update_global_stats(__u32 bytes, bool dropped)
-{
     __u32 key = 0;
-    struct global_net_stats *stats;
-
-    stats = bpf_map_lookup_elem(&global_net_stats_map, &key);
-    if (!stats)
-        return;
-
-    stats->total_packets++;
-    stats->total_bytes += bytes;
-
-    if (dropped) {
-        stats->dropped_packets++;
-        stats->dropped_bytes += bytes;
+    struct global_net_stats *global = bpf_map_lookup_elem(&net_global_map, &key);
+    if (global) {
+        global->total_packets++;
+        global->total_bytes += bytes;
+        if (dropped) {
+            global->dropped_packets++;
+            global->dropped_bytes += bytes;
+        }
     }
 }
 
-/*
- * TC classifier for egress traffic
- *
- * This program is attached to the TC egress hook and enforces
- * network policies for outgoing traffic.
- */
-SEC("tc")
+SEC("cgroup_skb/egress")
 int net_policy_egress(struct __sk_buff *skb)
 {
-    __u32 pid = bpf_get_current_pid_tgid() >> 32;
+    __u64 cgroup_id = bpf_skb_cgroup_id(skb);
+    struct net_policy *policy = bpf_map_lookup_elem(&net_policy_map, &cgroup_id);
+    if (!policy)
+        return 1;
+
     __u64 now = bpf_ktime_get_ns();
-
-    /* Get network policy for this task */
-    struct net_policy *policy;
-    policy = bpf_map_lookup_elem(&net_policy_map, &pid);
-    if (!policy) {
-        /* No policy, allow traffic */
-        return TC_ACT_OK;
-    }
-
-    /* Get packet size */
-    __u32 pkt_len = skb->len;
-
-    /* Get or create token bucket */
-    struct token_bucket *bucket;
-    bucket = bpf_map_lookup_elem(&token_bucket_map, &pid);
+    struct schedx_token_bucket *bucket = bpf_map_lookup_elem(&net_bucket_map, &cgroup_id);
     if (!bucket) {
-        struct token_bucket new_bucket = {
+        struct schedx_token_bucket initial = {
             .tokens = policy->burst_size,
             .last_refill = now,
             .rate_bps = policy->rate_limit_bps,
             .burst_size = policy->burst_size,
         };
-        bpf_map_update_elem(&token_bucket_map, &pid, &new_bucket, BPF_ANY);
-        bucket = bpf_map_lookup_elem(&token_bucket_map, &pid);
-        if (!bucket) {
-            update_net_stats(pid, pkt_len, true, false);
-            update_global_stats(pkt_len, false);
-            return TC_ACT_OK;
-        }
+        bpf_map_update_elem(&net_bucket_map, &cgroup_id, &initial, BPF_NOEXIST);
+        bucket = bpf_map_lookup_elem(&net_bucket_map, &cgroup_id);
     }
 
-    /* Refill tokens */
-    refill_tokens(bucket, now);
-
-    /* Check if we can send */
-    if (consume_tokens(bucket, pkt_len)) {
-        /* Allow packet */
-        update_net_stats(pid, pkt_len, true, false);
-        update_global_stats(pkt_len, false);
-        return TC_ACT_OK;
+    if (!bucket) {
+        account_packet(cgroup_id, skb->len, false);
+        return 1;
     }
 
-    /* Rate limited - drop packet */
-    update_net_stats(pid, pkt_len, true, true);
-    update_global_stats(pkt_len, true);
+    bool allowed = false;
+    bpf_spin_lock(&bucket->lock);
+    __u64 elapsed = now - bucket->last_refill;
+    __u64 refill = elapsed >= 1000000000ULL
+                     ? bucket->burst_size
+                     : elapsed * bucket->rate_bps / 1000000000ULL;
+    __u64 tokens = bucket->tokens + refill;
+    if (tokens > bucket->burst_size)
+        tokens = bucket->burst_size;
+    bucket->last_refill = now;
 
-    /* For latency-sensitive tasks, we might want to queue instead of drop */
-    if (policy->class_id == NET_CLASS_LATENCY) {
-        /* Use higher queue priority */
-        skb->priority = 7;  /* Highest priority */
-        return TC_ACT_OK;
+    if (tokens >= skb->len) {
+        bucket->tokens = tokens - skb->len;
+        allowed = true;
+    } else {
+        bucket->tokens = tokens;
     }
+    bpf_spin_unlock(&bucket->lock);
 
-    return TC_ACT_SHOT;  /* Drop packet */
-}
+    if (allowed) {
+        account_packet(cgroup_id, skb->len, false);
+        return 1;
+    }
+    account_packet(cgroup_id, skb->len, true);
 
-/*
- * TC classifier for ingress traffic
- *
- * This program is attached to the TC ingress hook and can be used
- * for traffic classification and marking.
- */
-SEC("tc")
-int net_policy_ingress(struct __sk_buff *skb)
-{
-    __u32 pid = bpf_get_current_pid_tgid() >> 32;
-
-    /* Get packet size */
-    __u32 pkt_len = skb->len;
-
-    /* Update receive statistics */
-    update_net_stats(pid, pkt_len, false, false);
-    update_global_stats(pkt_len, false);
-
-    /* For now, allow all ingress traffic */
-    return TC_ACT_OK;
-}
-
-/*
- * XDP program for fast-path packet filtering
- *
- * This can be used for very early packet filtering before the kernel
- * network stack processes the packet.
- */
-SEC("xdp")
-int net_policy_xdp(struct xdp_md *ctx)
-{
-    /* For now, pass all packets through */
-    return XDP_PASS;
+    /* Latency-sensitive workloads are measured but never dropped. */
+    if (policy->class_id == NET_CLASS_LATENCY)
+        return 1;
+    return 0;
 }
 
 char LICENSE[] SEC("license") = "GPL";

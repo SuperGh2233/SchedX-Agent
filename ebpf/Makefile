@@ -23,7 +23,6 @@
 
 # Compiler and tools
 CLANG ?= clang
-LLC ?= llc
 BPFTOOL ?= bpftool
 CC ?= gcc
 
@@ -37,25 +36,37 @@ KERNEL_HEADERS ?= /usr/include
 LIBBPF_INCLUDE ?= /usr/include
 LIBBPF_LIB ?= /usr/lib64
 
+# Generate CO-RE types from the running kernel. Override BPF_ARCH for cross-builds.
+BPF_ARCH ?= $(shell uname -m)
+ifeq ($(BPF_ARCH),aarch64)
+TARGET_ARCH := arm64
+else
+TARGET_ARCH := x86
+endif
+
 # BPF compilation flags
 BPF_CFLAGS := -g -O2 -target bpf \
-              -I$(KERNEL_HEADERS) -I$(LIBBPF_INCLUDE) \
+              -I$(BUILD_DIR) -I$(KERNEL_HEADERS) -I$(LIBBPF_INCLUDE) \
               -Wall -Wno-unused-value -Wno-pointer-sign \
               -Wno-compare-distinct-pointer-types \
-              -D__TARGET_ARCH_x86
+              -D__TARGET_ARCH_$(TARGET_ARCH)
+
+VMLINUX_H := $(BUILD_DIR)/vmlinux.h
 
 # Source files
 SCHED_TRACE_SRC := sched_trace.bpf.c
 NET_POLICY_SRC := net_policy.bpf.c
 RESOURCE_CTRL_SRC := resource_ctrl.bpf.c
+SECURITY_POLICY_SRC := security_policy.bpf.c
 
 # Output files
 SCHED_TRACE_OBJ := $(BUILD_DIR)/sched_trace.bpf.o
 NET_POLICY_OBJ := $(BUILD_DIR)/net_policy.bpf.o
 RESOURCE_CTRL_OBJ := $(BUILD_DIR)/resource_ctrl.bpf.o
+SECURITY_POLICY_OBJ := $(BUILD_DIR)/security_policy.bpf.o
 
 # All BPF objects
-BPF_OBJS := $(SCHED_TRACE_OBJ) $(NET_POLICY_OBJ) $(RESOURCE_CTRL_OBJ)
+BPF_OBJS := $(SCHED_TRACE_OBJ) $(NET_POLICY_OBJ) $(RESOURCE_CTRL_OBJ) $(SECURITY_POLICY_OBJ)
 
 # Default target
 .PHONY: all
@@ -69,11 +80,16 @@ $(BUILD_DIR):
 $(OUTPUT_DIR):
 	mkdir -p $(OUTPUT_DIR)
 
+$(VMLINUX_H): | $(BUILD_DIR)
+	@test -r /sys/kernel/btf/vmlinux || { echo "ERROR: /sys/kernel/btf/vmlinux is unavailable"; exit 1; }
+	$(BPFTOOL) btf dump file /sys/kernel/btf/vmlinux format c > $@
+	@echo "Generated: $@"
+
 # Build sched_trace BPF program
 .PHONY: sched_trace
 sched_trace: $(SCHED_TRACE_OBJ)
 
-$(SCHED_TRACE_OBJ): $(SCHED_TRACE_SRC) | $(BUILD_DIR)
+$(SCHED_TRACE_OBJ): $(SCHED_TRACE_SRC) $(VMLINUX_H) | $(BUILD_DIR)
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 	@echo "Built: $@"
 
@@ -81,7 +97,7 @@ $(SCHED_TRACE_OBJ): $(SCHED_TRACE_SRC) | $(BUILD_DIR)
 .PHONY: net_policy
 net_policy: $(NET_POLICY_OBJ)
 
-$(NET_POLICY_OBJ): $(NET_POLICY_SRC) | $(BUILD_DIR)
+$(NET_POLICY_OBJ): $(NET_POLICY_SRC) $(VMLINUX_H) | $(BUILD_DIR)
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 	@echo "Built: $@"
 
@@ -89,7 +105,14 @@ $(NET_POLICY_OBJ): $(NET_POLICY_SRC) | $(BUILD_DIR)
 .PHONY: resource_ctrl
 resource_ctrl: $(RESOURCE_CTRL_OBJ)
 
-$(RESOURCE_CTRL_OBJ): $(RESOURCE_CTRL_SRC) | $(BUILD_DIR)
+$(RESOURCE_CTRL_OBJ): $(RESOURCE_CTRL_SRC) $(VMLINUX_H) | $(BUILD_DIR)
+	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
+	@echo "Built: $@"
+
+.PHONY: security_policy
+security_policy: $(SECURITY_POLICY_OBJ)
+
+$(SECURITY_POLICY_OBJ): $(SECURITY_POLICY_SRC) $(VMLINUX_H) | $(BUILD_DIR)
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 	@echo "Built: $@"
 
@@ -107,7 +130,6 @@ skeletons: $(BPF_OBJS)
 check:
 	@echo "Checking build dependencies..."
 	@command -v $(CLANG) >/dev/null 2>&1 || { echo "ERROR: clang not found"; exit 1; }
-	@command -v $(LLC) >/dev/null 2>&1 || { echo "ERROR: llc not found"; exit 1; }
 	@command -v $(BPFTOOL) >/dev/null 2>&1 || { echo "ERROR: bpftool not found"; exit 1; }
 	@command -v $(CC) >/dev/null 2>&1 || { echo "ERROR: gcc not found"; exit 1; }
 	@test -f $(KERNEL_HEADERS)/linux/bpf.h || { echo "ERROR: kernel headers not found at $(KERNEL_HEADERS)"; exit 1; }
@@ -158,6 +180,7 @@ help:
 	@echo "  sched_trace   - Build sched_trace BPF program"
 	@echo "  net_policy    - Build net_policy BPF program"
 	@echo "  resource_ctrl - Build resource_ctrl BPF program"
+	@echo "  security_policy - Build security_policy BPF program"
 	@echo "  skeletons     - Generate BPF skeletons for user-space"
 	@echo "  check         - Check build dependencies"
 	@echo "  install       - Install BPF programs to $(INSTALL_DIR)"
@@ -168,7 +191,6 @@ help:
 	@echo ""
 	@echo "Variables:"
 	@echo "  CLANG          - Clang compiler (default: clang)"
-	@echo "  LLC            - LLVM compiler (default: llc)"
 	@echo "  BPFTOOL        - BPF tool (default: bpftool)"
 	@echo "  CC             - C compiler (default: gcc)"
 	@echo "  KERNEL_HEADERS - Kernel headers path (default: /usr/include)"

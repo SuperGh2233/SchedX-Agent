@@ -1,0 +1,832 @@
+{
+  "accepted": {
+    "decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {
+        "cpu_weight": 8000,
+        "cpu_weight_bg": 10,
+        "cpu_max_bg": "10000 100000",
+        "nice_target": -5,
+        "nice_bg": 10,
+        "isolate_target": "stress-ng-cpu"
+      },
+      "reason": "DeepSeek V4 proposal: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)",
+      "confidence": 0.5399780941949617,
+      "source": "deepseek-v4",
+      "expert_id": "latency_guard"
+    },
+    "policy_route": {
+      "expert_id": "latency_guard",
+      "mode": "latency_first",
+      "confidence": 0.5399780941949617,
+      "scores": {
+        "background_isolation": 0.175246,
+        "balanced": 0.065717,
+        "latency_guard": 0.539978,
+        "throughput_boost": 0.219058
+      },
+      "switched": true,
+      "reason": "initial_selection",
+      "timestamp": 33873.520387412
+    },
+    "phases_completed": [
+      "probe",
+      "analyze",
+      "llm_policy",
+      "policy",
+      "canary_baseline",
+      "ebpf_load",
+      "ebpf_attach",
+      "scx",
+      "act",
+      "ebpf_policy",
+      "canary_candidate",
+      "ebpf_stats",
+      "verify"
+    ],
+    "final_status": "success",
+    "canary_verdict": {
+      "accepted": true,
+      "status": "accepted",
+      "reasons": [],
+      "deltas": {
+        "p99_percent": -86.959877,
+        "requests_per_sec_percent": 1.775368,
+        "background_retention_percent": 92.997199
+      }
+    },
+    "execution_results": [
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1037,
+        "group": "pid-1037"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1042,
+        "group": "pid-1042"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1043,
+        "group": "pid-1043"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1044,
+        "group": "pid-1044"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1045,
+        "group": "pid-1045"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103322",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103322,
+        "group": "pid-103322"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103322",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103322,
+        "group": "pid-103322"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103323",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103323,
+        "group": "pid-103323"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103323",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103323,
+        "group": "pid-103323"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103321",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 103321,
+        "group": "pid-103321"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103321",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 103321,
+        "group": "pid-103321"
+      }
+    ],
+    "ebpf": {
+      "policies_applied": 9,
+      "policy_results": [
+        {
+          "pid": 1042,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6582,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1043,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6601,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1044,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6620,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1045,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6639,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1037,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6563,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 102852,
+          "workload_type": "batch_compute",
+          "class_id": 2,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 3016,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103322,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6658,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103323,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6677,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103321,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6696,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        }
+      ],
+      "hooks": {
+        "scheduler_trace": {
+          "available": true,
+          "loaded": true,
+          "name": "scheduler-trace",
+          "stats": {
+            "total_wakeups": 46020,
+            "total_switches": 47530,
+            "total_latency_ns": 8924054150,
+            "active_tasks": 17
+          },
+          "total_wakeups": 46020,
+          "total_switches": 47530,
+          "total_latency_ns": 8924054150,
+          "avg_latency_ns": 193916.8654932638
+        },
+        "network_policy": {
+          "available": true,
+          "loaded": true,
+          "name": "network-policy",
+          "stats": {
+            "total_packets": 302658,
+            "total_bytes": 26287692,
+            "dropped_packets": 0,
+            "dropped_bytes": 0
+          },
+          "total_packets": 302658,
+          "total_bytes": 26287692,
+          "dropped_packets": 0,
+          "dropped_bytes": 0,
+          "drop_rate": 0.0
+        },
+        "security_policy": {
+          "available": true,
+          "loaded": true,
+          "name": "security-policy",
+          "bpf_lsm": true,
+          "stats": {
+            "exec_checks": 45,
+            "exec_denied": 0
+          }
+        },
+        "resource_control": {
+          "available": true,
+          "loaded": true,
+          "name": "resource-control",
+          "stats": {
+            "sched_switches": 47874,
+            "policy_hits": 44282,
+            "process_exits": 61
+          },
+          "sched_switches": 47874,
+          "policy_hits": 44282,
+          "process_exits": 61
+        }
+      }
+    },
+    "rollback": null
+  },
+  "rejected": {
+    "decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {},
+      "reason": "explicit user-selected mode and target",
+      "confidence": 1.0,
+      "source": "explicit_cli",
+      "expert_id": "latency_guard"
+    },
+    "policy_route": {
+      "expert_id": "latency_guard",
+      "mode": "latency_first",
+      "confidence": 1.0,
+      "scores": {
+        "latency_guard": 1.0
+      },
+      "switched": false,
+      "reason": "explicit user-selected mode; router bypassed",
+      "timestamp": 1788007729.0128953
+    },
+    "phases_completed": [
+      "probe",
+      "analyze",
+      "policy",
+      "canary_baseline",
+      "ebpf_load",
+      "ebpf_attach",
+      "scx",
+      "act",
+      "ebpf_policy",
+      "canary_candidate",
+      "ebpf_stats",
+      "verify",
+      "rollback"
+    ],
+    "final_status": "rolled_back",
+    "canary_verdict": {
+      "accepted": false,
+      "status": "rejected",
+      "reasons": [
+        "insufficient_p99_improvement"
+      ],
+      "deltas": {
+        "p99_percent": -86.095837,
+        "requests_per_sec_percent": -2.086787,
+        "background_retention_percent": 105.135952
+      }
+    },
+    "execution_results": [
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 10000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1037,
+        "group": "pid-1037"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 10000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1042,
+        "group": "pid-1042"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 10000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1043,
+        "group": "pid-1043"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 10000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1044,
+        "group": "pid-1044"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 10000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1045,
+        "group": "pid-1045"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103423",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103423,
+        "group": "pid-103423"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103423",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103423,
+        "group": "pid-103423"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103424",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103424,
+        "group": "pid-103424"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103424",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 103424,
+        "group": "pid-103424"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "103422",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 103422,
+        "group": "pid-103422"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "103422",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 103422,
+        "group": "pid-103422"
+      }
+    ],
+    "ebpf": {
+      "policies_applied": 9,
+      "policy_results": [
+        {
+          "pid": 1042,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6777,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1043,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6796,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1044,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6815,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1045,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6834,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 1037,
+          "workload_type": "latency_sensitive",
+          "class_id": 1,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6758,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 102852,
+          "workload_type": "batch_compute",
+          "class_id": 2,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 3016,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103423,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6853,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103424,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6872,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        },
+        {
+          "pid": 103422,
+          "workload_type": "background_noise",
+          "class_id": 3,
+          "sched_policy": "delegated_to_scx_or_cgroup",
+          "cgroup_id": 6891,
+          "net_policy": "applied",
+          "resource_policy": "applied",
+          "security_policy": "audit",
+          "status": "applied",
+          "reason": "",
+          "success": true
+        }
+      ],
+      "hooks": {
+        "scheduler_trace": {
+          "available": true,
+          "loaded": true,
+          "name": "scheduler-trace",
+          "stats": {
+            "total_wakeups": 44670,
+            "total_switches": 46190,
+            "total_latency_ns": 8619762307,
+            "active_tasks": 17
+          },
+          "total_wakeups": 44670,
+          "total_switches": 46190,
+          "total_latency_ns": 8619762307,
+          "avg_latency_ns": 192965.35274233267
+        },
+        "network_policy": {
+          "available": true,
+          "loaded": true,
+          "name": "network-policy",
+          "stats": {
+            "total_packets": 303818,
+            "total_bytes": 26389234,
+            "dropped_packets": 0,
+            "dropped_bytes": 0
+          },
+          "total_packets": 303818,
+          "total_bytes": 26389234,
+          "dropped_packets": 0,
+          "dropped_bytes": 0,
+          "drop_rate": 0.0
+        },
+        "security_policy": {
+          "available": true,
+          "loaded": true,
+          "name": "security-policy",
+          "bpf_lsm": true,
+          "stats": {
+            "exec_checks": 45,
+            "exec_denied": 0
+          }
+        },
+        "resource_control": {
+          "available": true,
+          "loaded": true,
+          "name": "resource-control",
+          "stats": {
+            "sched_switches": 46541,
+            "policy_hits": 42983,
+            "process_exits": 61
+          },
+          "sched_switches": 46541,
+          "policy_hits": 42983,
+          "process_exits": 61
+        }
+      }
+    },
+    "rollback": {
+      "restored": 19,
+      "groups_removed": 9,
+      "skipped": 0,
+      "scx_entries_removed": 8,
+      "ebpf_hooks_removed": 4
+    }
+  }
+}

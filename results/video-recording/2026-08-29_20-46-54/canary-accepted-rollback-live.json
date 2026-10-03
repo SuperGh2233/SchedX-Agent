@@ -1,0 +1,191 @@
+{
+  "returncode": 0,
+  "stdout": "{\n  \"restored\": 19,\n  \"groups_removed\": 9,\n  \"skipped\": 0,\n  \"entries\": [\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103321\",\n      \"file\": \"cpu.max\",\n      \"previous\": \"max 100000\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103321\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"103321\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103323\",\n      \"file\": \"cpu.max\",\n      \"previous\": \"max 100000\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103323\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"103323\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103322\",\n      \"file\": \"cpu.max\",\n      \"previous\": \"max 100000\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103322\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"103322\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1045\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"1045\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1044\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"1044\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1043\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"1043\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1042\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"1042\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1037\",\n      \"file\": \"cpu.weight\",\n      \"previous\": \"100\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n      \"file\": \"cgroup.procs\",\n      \"previous\": \"1037\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1045\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1044\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1043\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1042\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-1037\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103323\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103322\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx/pid-103321\",\n      \"status\": \"removed\"\n    },\n    {\n      \"path\": \"/sys/fs/cgroup/schedx\",\n      \"status\": \"removed\"\n    }\n  ],\n  \"scx_entries\": [\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 1037,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 1042,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 1043,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 1044,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 1045,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 103321,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 103322,\n      \"status\": \"removed\"\n    },\n    {\n      \"source\": \"persistent_scx_daemon\",\n      \"pid\": 103323,\n      \"status\": \"removed\"\n    }\n  ],\n  \"ebpf_cleanup\": {\n    \"security_policy\": true,\n    \"resource_ctrl\": true,\n    \"net_policy\": true,\n    \"sched_trace\": true\n  }\n}\n",
+  "stderr": "",
+  "data": {
+    "restored": 19,
+    "groups_removed": 9,
+    "skipped": 0,
+    "entries": [
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103321",
+        "file": "cpu.max",
+        "previous": "max 100000"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103321",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/sshd.service",
+        "file": "cgroup.procs",
+        "previous": "103321"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103323",
+        "file": "cpu.max",
+        "previous": "max 100000"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103323",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/sshd.service",
+        "file": "cgroup.procs",
+        "previous": "103323"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103322",
+        "file": "cpu.max",
+        "previous": "max 100000"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103322",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/sshd.service",
+        "file": "cgroup.procs",
+        "previous": "103322"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1045",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/nginx.service",
+        "file": "cgroup.procs",
+        "previous": "1045"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1044",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/nginx.service",
+        "file": "cgroup.procs",
+        "previous": "1044"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1043",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/nginx.service",
+        "file": "cgroup.procs",
+        "previous": "1043"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1042",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/nginx.service",
+        "file": "cgroup.procs",
+        "previous": "1042"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1037",
+        "file": "cpu.weight",
+        "previous": "100"
+      },
+      {
+        "path": "/sys/fs/cgroup/system.slice/nginx.service",
+        "file": "cgroup.procs",
+        "previous": "1037"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1045",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1044",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1043",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1042",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-1037",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103323",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103322",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-103321",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx",
+        "status": "removed"
+      }
+    ],
+    "scx_entries": [
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 1037,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 1042,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 1043,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 1044,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 1045,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 103321,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 103322,
+        "status": "removed"
+      },
+      {
+        "source": "persistent_scx_daemon",
+        "pid": 103323,
+        "status": "removed"
+      }
+    ],
+    "ebpf_cleanup": {
+      "security_policy": true,
+      "resource_ctrl": true,
+      "net_policy": true,
+      "sched_trace": true
+    }
+  }
+}

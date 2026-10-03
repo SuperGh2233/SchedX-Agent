@@ -1,0 +1,29 @@
+{
+  "returncode": 0,
+  "stdout": "{\n  \"ok\": true,\n  \"scheduler_running\": true,\n  \"sched_ext\": {\n    \"available\": true,\n    \"state\": \"enabled\",\n    \"current_scheduler\": \"schedx_agent\",\n    \"allowlist\": \"scx_agent, scx_rusty, scx_simple\",\n    \"process_running\": true,\n    \"background_interval\": 64\n  },\n  \"reaped_policies\": 0,\n  \"reaped_metrics\": 0,\n  \"fairness\": {\n    \"mode\": \"startup\",\n    \"background_interval\": 64,\n    \"default_interval\": 0\n  },\n  \"control_telemetry\": {},\n  \"target_background_share\": {\n    \"low\": 0.12,\n    \"high\": 0.25\n  }\n}\n",
+  "stderr": "",
+  "data": {
+    "ok": true,
+    "scheduler_running": true,
+    "sched_ext": {
+      "available": true,
+      "state": "enabled",
+      "current_scheduler": "schedx_agent",
+      "allowlist": "scx_agent, scx_rusty, scx_simple",
+      "process_running": true,
+      "background_interval": 64
+    },
+    "reaped_policies": 0,
+    "reaped_metrics": 0,
+    "fairness": {
+      "mode": "startup",
+      "background_interval": 64,
+      "default_interval": 0
+    },
+    "control_telemetry": {},
+    "target_background_share": {
+      "low": 0.12,
+      "high": 0.25
+    }
+  }
+}

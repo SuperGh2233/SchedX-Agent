@@ -1,0 +1,81 @@
+{
+  "root": true,
+  "tools": {
+    "wrk": "/usr/bin/wrk",
+    "stress-ng": "/usr/bin/stress-ng",
+    "sysbench": "/usr/bin/sysbench"
+  },
+  "nginx_active": true,
+  "nginx_status": "active",
+  "schedx_status": {
+    "returncode": 0,
+    "stdout": "{\n  \"schedx\": \"0.4.0\",\n  \"platform\": \"Linux-6.6.0-159.4.3.154.oe2403sp4.schedx1-x86_64-with-glibc2.38\",\n  \"cgroup_v2\": true,\n  \"cgroup_controllers\": [\n    \"cpuset\",\n    \"cpu\",\n    \"io\",\n    \"memory\",\n    \"dmem\",\n    \"xcu\",\n    \"hugetlb\",\n    \"pids\",\n    \"rdma\",\n    \"misc\"\n  ],\n  \"cgroup_cpu_stat\": {\n    \"usage_usec\": 2356599742,\n    \"user_usec\": 1247774835,\n    \"system_usec\": 1108824906,\n    \"nr_periods\": 0,\n    \"nr_throttled\": 0,\n    \"throttled_usec\": 0,\n    \"nr_bursts\": 0,\n    \"burst_usec\": 0\n  },\n  \"cpu_topology\": {\n    \"total_cpus\": 4,\n    \"online_cpus\": [\n      0,\n      1,\n      2,\n      3\n    ],\n    \"heterogeneous\": false,\n    \"detection\": \"homogeneous_or_unknown\",\n    \"performance_cores\": [\n      0,\n      1,\n      2,\n      3\n    ],\n    \"efficiency_cores\": [],\n    \"performance_mask\": \"0,1,2,3\",\n    \"efficiency_mask\": \"\"\n  },\n  \"sched_ext\": {\n    \"available\": true,\n    \"state\": \"disabled\",\n    \"current_scheduler\": \"none\",\n    \"allowlist\": \"scx_agent, scx_rusty, scx_simple\",\n    \"process_running\": false,\n    \"background_interval\": 64\n  },\n  \"scx_daemon_available\": false,\n  \"mode\": \"sched_ext-native\",\n  \"llm_configured\": true,\n  \"llm_model\": \"deepseek-v4-pro\"\n}\n",
+    "stderr": "",
+    "data": {
+      "schedx": "0.4.0",
+      "platform": "Linux-6.6.0-159.4.3.154.oe2403sp4.schedx1-x86_64-with-glibc2.38",
+      "cgroup_v2": true,
+      "cgroup_controllers": [
+        "cpuset",
+        "cpu",
+        "io",
+        "memory",
+        "dmem",
+        "xcu",
+        "hugetlb",
+        "pids",
+        "rdma",
+        "misc"
+      ],
+      "cgroup_cpu_stat": {
+        "usage_usec": 2356599742,
+        "user_usec": 1247774835,
+        "system_usec": 1108824906,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      },
+      "cpu_topology": {
+        "total_cpus": 4,
+        "online_cpus": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "heterogeneous": false,
+        "detection": "homogeneous_or_unknown",
+        "performance_cores": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "efficiency_cores": [],
+        "performance_mask": "0,1,2,3",
+        "efficiency_mask": ""
+      },
+      "sched_ext": {
+        "available": true,
+        "state": "disabled",
+        "current_scheduler": "none",
+        "allowlist": "scx_agent, scx_rusty, scx_simple",
+        "process_running": false,
+        "background_interval": 64
+      },
+      "scx_daemon_available": false,
+      "mode": "sched_ext-native",
+      "llm_configured": true,
+      "llm_model": "deepseek-v4-pro"
+    }
+  },
+  "llm": {
+    "required": true,
+    "configured": true,
+    "model": "deepseek-v4-pro",
+    "api_base": "https://api.deepseek.com/v1"
+  },
+  "passed": true
+}

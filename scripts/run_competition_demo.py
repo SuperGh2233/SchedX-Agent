@@ -163,6 +163,7 @@ def extract_agent_trace(result: dict[str, Any]) -> dict[str, Any]:
     raw_rollback = context.get("rollback")
     rollback = None
     if isinstance(raw_rollback, dict):
+        ebpf_cleanup = raw_rollback.get("ebpf_cleanup", {})
         rollback = {
             "restored": raw_rollback.get("restored", 0),
             "groups_removed": raw_rollback.get("groups_removed", 0),
@@ -172,7 +173,14 @@ def extract_agent_trace(result: dict[str, Any]) -> dict[str, Any]:
                 for entry in raw_rollback.get("scx_entries", [])
                 if entry.get("status") == "removed"
             ),
+            "ebpf_hooks_removed": sum(
+                bool(removed) for removed in ebpf_cleanup.values()
+            ) if isinstance(ebpf_cleanup, dict) else 0,
         }
+    ebpf_policies = context.get("ebpf_policy_results", [])
+    ebpf_snapshot = context.get("ebpf_stats")
+    ebpf_snapshot = ebpf_snapshot if isinstance(ebpf_snapshot, dict) else {}
+    ebpf_hooks = ebpf_snapshot.get("hooks", {})
     return {
         "decision": data.get("agent_decision", context.get("agent_decision", {})),
         "policy_route": context.get("policy_route", {}),
@@ -180,6 +188,15 @@ def extract_agent_trace(result: dict[str, Any]) -> dict[str, Any]:
         "final_status": loop.get("final_status", ""),
         "canary_verdict": context.get("canary_verdict", {}),
         "execution_results": context.get("execution_results", []),
+        "ebpf": {
+            "policies_applied": sum(
+                item.get("status") == "applied"
+                for item in ebpf_policies
+                if isinstance(item, dict)
+            ),
+            "policy_results": ebpf_policies,
+            "hooks": ebpf_hooks,
+        },
         "rollback": rollback,
     }
 
@@ -210,6 +227,7 @@ def build_console_summary(manifest: dict[str, Any]) -> dict[str, Any]:
                 "background_retention_percent"
             ),
             "rollback": trace.get("rollback"),
+            "ebpf": trace.get("ebpf", {}),
         }
 
     trace = manifest.get("agent_trace")
@@ -296,10 +314,20 @@ def format_console_summary(summary: dict[str, Any]) -> str:
         rollback = item.get("rollback")
         if rollback:
             lines.append(
-                "回滚结果       : 恢复 {} 项，删除 {} 个资源组和 {} 个调度策略".format(
+                "回滚结果       : 恢复 {} 项，删除 {} 个资源组、{} 个调度策略和 {} 类 eBPF hook".format(
                     rollback.get("restored", 0),
                     rollback.get("groups_removed", 0),
                     rollback.get("scx_entries_removed", 0),
+                    rollback.get("ebpf_hooks_removed", 0),
+                )
+            )
+        ebpf = item.get("ebpf")
+        if isinstance(ebpf, dict):
+            hooks = ebpf.get("hooks", {})
+            lines.append(
+                "eBPF 扩展      : 下发 {} 组策略，采集 {} 类内核证据".format(
+                    ebpf.get("policies_applied", 0),
+                    sum(isinstance(value, dict) and bool(value.get("stats")) for value in hooks.values()),
                 )
             )
         return lines

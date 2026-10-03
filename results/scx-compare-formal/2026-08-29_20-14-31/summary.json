@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "benchmark": "nginx-scx-comparison",
+  "config": {
+    "schedulers": [
+      "scx_simple",
+      "scx_qmap",
+      "scx_flatcg",
+      "scx_agent"
+    ],
+    "url": "http://127.0.0.1/",
+    "duration": 20,
+    "connections": 64,
+    "threads": 4,
+    "repeats": 5,
+    "stress_cpu": 4,
+    "warmup": 3,
+    "minimum_background_retention_percent": 25.0,
+    "output": "results/scx-compare-formal"
+  },
+  "environment": {
+    "kernel": "Linux openeuler-sp4-stock 6.6.0-159.4.3.154.oe2403sp4.schedx1 #1 SMP Wed Jul 15 23:56:40 CST 2026 x86_64 x86_64 x86_64 GNU/Linux",
+    "cpu_count": 4,
+    "cgroup_v2": true,
+    "sched_ext_available": true
+  },
+  "schedulers": {
+    "default": {
+      "status": "ok",
+      "reason": "",
+      "policy_capability": "none",
+      "statistics": {
+        "requests_per_sec": {
+          "mean": 63804.608,
+          "median": 63943.24,
+          "stdev": 946.4829
+        },
+        "latency_avg_ms": {
+          "mean": 1.364,
+          "median": 1.38,
+          "stdev": 0.0456
+        },
+        "p99_ms": {
+          "mean": 7.492,
+          "median": 7.53,
+          "stdev": 0.8468
+        }
+      },
+      "background_cpu_ticks": 21297,
+      "background_retention_percent": 100.0,
+      "fairness": {
+        "minimum_background_retention_percent": 25.0,
+        "valid_for_claims": true
+      },
+      "scheduler_stats": null
+    },
+    "scx_simple": {
+      "status": "ok",
+      "reason": "",
+      "policy_capability": "lifecycle_only",
+      "statistics": {
+        "requests_per_sec": {
+          "mean": 86021.222,
+          "median": 86106.85,
+          "stdev": 936.9359
+        },
+        "latency_avg_ms": {
+          "mean": 2.24,
+          "median": 2.21,
+          "stdev": 0.268
+        },
+        "p99_ms": {
+          "mean": 24.068,
+          "median": 24.19,
+          "stdev": 1.2333
+        }
+      },
+      "background_cpu_ticks": 15038,
+      "background_retention_percent": 70.6109,
+      "fairness": {
+        "minimum_background_retention_percent": 25.0,
+        "valid_for_claims": true
+      },
+      "scheduler_stats": null,
+      "comparison_vs_default": {
+        "rps_gain_percent": 34.8198,
+        "p99_reduction_percent": -221.2493
+      }
+    },
+    "scx_qmap": {
+      "status": "ok",
+      "reason": "",
+      "policy_capability": "lifecycle_only",
+      "statistics": {
+        "requests_per_sec": {
+          "mean": 5476.452,
+          "median": 5482.87,
+          "stdev": 287.4894
+        },
+        "latency_avg_ms": {
+          "mean": 11.656,
+          "median": 11.59,
+          "stdev": 0.6564
+        },
+        "p99_ms": {
+          "mean": 21.338,
+          "median": 21.36,
+          "stdev": 0.4845
+        }
+      },
+      "background_cpu_ticks": 38240,
+      "background_retention_percent": 179.5558,
+      "fairness": {
+        "minimum_background_retention_percent": 25.0,
+        "valid_for_claims": true
+      },
+      "scheduler_stats": null,
+      "comparison_vs_default": {
+        "rps_gain_percent": -91.4168,
+        "p99_reduction_percent": -184.8105
+      }
+    },
+    "scx_flatcg": {
+      "status": "ok",
+      "reason": "",
+      "policy_capability": "lifecycle_only",
+      "statistics": {
+        "requests_per_sec": {
+          "mean": 86154.628,
+          "median": 86734.49,
+          "stdev": 1372.9273
+        },
+        "latency_avg_ms": {
+          "mean": 2.176,
+          "median": 2.17,
+          "stdev": 0.2581
+        },
+        "p99_ms": {
+          "mean": 23.838,
+          "median": 23.94,
+          "stdev": 2.6329
+        }
+      },
+      "background_cpu_ticks": 14976,
+      "background_retention_percent": 70.3198,
+      "fairness": {
+        "minimum_background_retention_percent": 25.0,
+        "valid_for_claims": true
+      },
+      "scheduler_stats": null,
+      "comparison_vs_default": {
+        "rps_gain_percent": 35.0288,
+        "p99_reduction_percent": -218.1794
+      }
+    },
+    "scx_agent": {
+      "status": "ok",
+      "reason": "",
+      "policy_capability": "task_policy_and_fairness",
+      "statistics": {
+        "requests_per_sec": {
+          "mean": 114224.976,
+          "median": 114588.71,
+          "stdev": 1817.4156
+        },
+        "latency_avg_ms": {
+          "mean": 0.6014,
+          "median": 0.5961,
+          "stdev": 0.0126
+        },
+        "p99_ms": {
+          "mean": 2.994,
+          "median": 2.96,
+          "stdev": 0.0702
+        }
+      },
+      "background_cpu_ticks": 6492,
+      "background_retention_percent": 30.4832,
+      "fairness": {
+        "minimum_background_retention_percent": 25.0,
+        "valid_for_claims": true
+      },
+      "scheduler_stats": {
+        "latency_dispatches": 1000755,
+        "batch_dispatches": 0,
+        "background_dispatches": 25916,
+        "default_dispatches": 652762,
+        "total": 1679433
+      },
+      "comparison_vs_default": {
+        "rps_gain_percent": 79.0231,
+        "p99_reduction_percent": 60.0374
+      }
+    }
+  },
+  "cleanup": {
+    "rollback": {
+      "returncode": 0,
+      "data": {
+        "restored": 0,
+        "groups_removed": 0,
+        "skipped": 0,
+        "entries": [],
+        "scx_entries": [],
+        "ebpf_cleanup": {}
+      },
+      "stderr": ""
+    },
+    "stress_stopped": true,
+    "sched_ext_disabled": true,
+    "cgroup_clean": true
+  },
+  "status": "ok"
+}

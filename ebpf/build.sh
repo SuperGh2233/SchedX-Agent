@@ -1,7 +1,7 @@
 #!/bin/bash
 # build.sh - Build script for SchedX-Agent eBPF programs
 #
-# This script handles dependency installation and building for openEuler 24.03-LTS-SP3.
+# This script handles dependency installation and building for openEuler 24.03-LTS-SP4.
 #
 # Usage:
 #   ./build.sh              # Build everything
@@ -70,34 +70,10 @@ install_deps_openeuler() {
         elfutils-libelf-devel \
         zlib-devel
 
-    # Install bpftool
-    if command -v bpftool &>/dev/null; then
-        log_info "bpftool already installed"
-    else
-        dnf install -y kernel-tools 2>/dev/null || {
-            log_warn "bpftool not found in package manager, building from source..."
-            build_bpftool_from_source
-        }
-    fi
+    # SP4 publishes bpftool as a dedicated package.
+    dnf install -y bpftool
 
     log_info "Dependencies installed successfully."
-}
-
-# Build bpftool from source
-build_bpftool_from_source() {
-    local build_dir="/tmp/bpftool-build"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-
-    git clone --depth 1 https://github.com/libbpf/bpftool.git
-    cd bpftool
-    git submodule update --init
-
-    make -j$(nproc)
-    make install
-
-    cd /
-    rm -rf "$build_dir"
 }
 
 # Check dependencies
@@ -107,7 +83,6 @@ check_deps() {
     local missing=()
 
     command -v clang &>/dev/null || missing+=("clang")
-    command -v llc &>/dev/null || missing+=("llc (llvm)")
     command -v gcc &>/dev/null || missing+=("gcc")
     command -v bpftool &>/dev/null || missing+=("bpftool")
     command -v make &>/dev/null || missing+=("make")
@@ -124,7 +99,7 @@ check_deps() {
 
     # Check for BTF support
     if [ ! -f "/sys/kernel/btf/vmlinux" ]; then
-        log_warn "BTF (BPF Type Format) not available - some programs may not compile"
+        missing+=("kernel BTF at /sys/kernel/btf/vmlinux")
     fi
 
     if [ ${#missing[@]} -eq 0 ]; then
@@ -155,6 +130,12 @@ check_ebpf_support() {
         log_info "sched_ext is available at /sys/kernel/sched_ext"
     else
         log_warn "sched_ext not found at /sys/kernel/sched_ext"
+    fi
+
+    if [ -r "/sys/kernel/security/lsm" ] && grep -qw bpf /sys/kernel/security/lsm; then
+        log_info "BPF LSM is available"
+    else
+        log_warn "BPF LSM is unavailable; security_policy will remain optional"
     fi
 
     # Check kernel config

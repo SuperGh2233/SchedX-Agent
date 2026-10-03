@@ -1,11 +1,22 @@
+import json
+from pathlib import Path
+
 from schedx.agent.context import AgentContext
 from schedx.skills.act_skill import ActSkill
 from schedx.skills.verify_skill import VerifySkill
-from schedx.skills.ebpf_skill import EbpfAttachSkill, EbpfLoadSkill, EbpfPolicySkill
+from schedx.skills.ebpf_skill import (
+    EbpfAttachSkill,
+    EbpfCleanupSkill,
+    EbpfLoadSkill,
+    EbpfPolicySkill,
+    EbpfStatsSkill,
+)
 from schedx.skills.rollback_skill import RollbackSkill
 from schedx.controllers.cgroup_controller import RollbackEntry
 from schedx.controllers.ebpf_controller import EbpfController, EbpfProgType
-import json
+from schedx.agent.loop import AgentLoop
+from schedx.probes.ebpf_probe import EbpfProbe
+from schedx.agent.skill import SkillResult
 
 
 def test_act_skill_treats_empty_plan_as_safe_noop():
@@ -119,3 +130,108 @@ def test_ebpf_attach_failure_unloads_programs(monkeypatch):
     assert not result.ok
     assert unloaded == [True]
     assert context.data["ebpf_status"] == "unavailable"
+
+
+def test_agent_applies_ebpf_policy_after_cgroup_actions():
+    phases = AgentLoop.PHASES
+
+    assert phases.index("act") < phases.index("ebpf_policy")
+    assert phases.index("ebpf_policy") < phases.index("canary_candidate")
+    assert phases.index("canary_candidate") < phases.index("ebpf_stats")
+
+
+def test_ebpf_policy_updates_network_resource_and_security(tmp_path):
+    executable = tmp_path / "123" / "exe"
+    executable.parent.mkdir()
+    executable.write_text("binary", encoding="utf-8")
+    calls = []
+
+    class Controller:
+        proc_root = tmp_path
+        dry_run = False
+        last_error = ""
+
+        @staticmethod
+        def cgroup_id_for_pid(pid):
+            return 77
+
+        @staticmethod
+        def is_program_loaded(prog_type):
+            return prog_type in {
+                EbpfProgType.NET_POLICY,
+                EbpfProgType.RESOURCE_CTRL,
+                EbpfProgType.SECURITY_POLICY,
+            }
+
+        @staticmethod
+        def update_net_cgroup_policy(cgroup_id, class_id):
+            calls.append(("network", cgroup_id, class_id))
+            return True
+
+        @staticmethod
+        def update_resource_policy(cgroup_id, class_id):
+            calls.append(("resource", cgroup_id, class_id))
+            return True
+
+        @staticmethod
+        def update_security_policy(cgroup_id, path, **policy):
+            calls.append(("security", cgroup_id, Path(path).name, policy))
+            return True
+
+    classification = {
+        "groups": {
+            "background_noise": [{"pid": 123}],
+            "unknown": [],
+        }
+    }
+    results = EbpfPolicySkill()._apply_policies(classification, Controller())
+
+    assert results[0]["status"] == "applied"
+    assert results[0]["net_policy"] == "applied"
+    assert results[0]["resource_policy"] == "applied"
+    assert results[0]["security_policy"] == "audit"
+    assert [call[0] for call in calls] == ["network", "resource", "security"]
+    assert calls[-1][-1] == {"deny_exec": False, "audit_only": True}
+
+
+def test_ebpf_stats_reuses_active_probe(monkeypatch):
+    context = AgentContext(dry_run=False)
+    probe = EbpfProbe(dry_run=False)
+    snapshot = {"hooks": {"network_policy": {"total_packets": 3}}}
+    monkeypatch.setattr(probe, "snapshot", lambda: snapshot)
+    context.data["_ebpf_probe"] = probe
+
+    result = EbpfStatsSkill().run(context)
+
+    assert result.ok
+    assert context.data["ebpf_stats"] is snapshot
+
+
+def test_ebpf_cleanup_uses_active_probe(monkeypatch):
+    context = AgentContext(dry_run=False)
+    probe = EbpfProbe(dry_run=False)
+    monkeypatch.setattr(probe, "unload_all", lambda: {"network-policy": True})
+    context.data["_ebpf_probe"] = probe
+
+    result = EbpfCleanupSkill().run(context)
+
+    assert result.ok
+    assert context.data["ebpf_cleanup"] == {"network-policy": True}
+    assert "_ebpf_probe" not in context.data
+
+
+def test_rollback_includes_ebpf_cleanup(monkeypatch):
+    monkeypatch.setattr(
+        "schedx.controllers.cgroup_controller.CgroupController.rollback",
+        lambda self: [],
+    )
+    monkeypatch.setattr(
+        EbpfCleanupSkill,
+        "run",
+        lambda self, context: SkillResult(True, "clean", {"results": {"sched_trace": True}}),
+    )
+
+    result = RollbackSkill().run(AgentContext(dry_run=False))
+
+    assert result.ok
+    assert result.data["ebpf_cleanup"] == {"sched_trace": True}

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from schedx.skills.act_skill import ActSkill
 from schedx.skills.analyze_skill import AnalyzeSkill
-from schedx.skills.ebpf_skill import EbpfLoadSkill, EbpfAttachSkill, EbpfPolicySkill, EbpfStatsSkill
+from schedx.skills.ebpf_skill import EbpfAttachSkill, EbpfCleanupSkill, EbpfLoadSkill, EbpfPolicySkill, EbpfStatsSkill
 from schedx.skills.policy_skill import PolicySkill
 from schedx.skills.probe_skill import ProbeSkill
 from schedx.skills.report_skill import ReportSkill
@@ -15,6 +15,7 @@ __all__ = [
     "AnalyzeSkill",
     "EbpfLoadSkill",
     "EbpfAttachSkill",
+    "EbpfCleanupSkill",
     "EbpfPolicySkill",
     "EbpfStatsSkill",
     "PolicySkill",

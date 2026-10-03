@@ -1,0 +1,337 @@
+{
+  "phase": "agent_combined",
+  "rows": [
+    {
+      "phase": "agent_combined",
+      "repeat": 1,
+      "latency_avg_ms": 0.1113,
+      "latency_stdev_ms": 0.0484,
+      "latency_max_ms": 1.5,
+      "req_per_sec_avg": 32720.0,
+      "req_per_sec_stdev": 1200.0,
+      "requests_per_sec": 65154.59,
+      "qps": 65154.59,
+      "transfer_sec": "232.95MB",
+      "p50_ms": 0.102,
+      "p50_latency_ms": 0.102,
+      "p75_ms": 0.132,
+      "p75_latency_ms": 0.132,
+      "p90_ms": 0.169,
+      "p90_latency_ms": 0.169,
+      "p99_ms": 0.261,
+      "p99_latency_ms": 0.261,
+      "avg_latency_ms": 0.1113,
+      "returncode": 0,
+      "notes": ""
+    }
+  ],
+  "background_cpu_ticks": 594,
+  "action_evidence": {
+    "status": "success",
+    "agent_decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {
+        "cpu_weight": 8000,
+        "cpu_weight_bg": 10,
+        "cpu_max_bg": "10000 100000",
+        "nice_target": -5,
+        "nice_bg": 10,
+        "isolate_target": "stress-ng-cpu"
+      },
+      "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (initial_selection)",
+      "confidence": 0.5399780941949617,
+      "source": "rule_engine",
+      "expert_id": "latency_guard"
+    },
+    "policy_route": {
+      "expert_id": "latency_guard",
+      "mode": "latency_first",
+      "confidence": 0.5399780941949617,
+      "scores": {
+        "background_isolation": 0.175246,
+        "balanced": 0.065717,
+        "latency_guard": 0.539978,
+        "throughput_boost": 0.219058
+      },
+      "switched": true,
+      "reason": "initial_selection",
+      "timestamp": 33787.047675777
+    },
+    "scx_results": {
+      "mode": "latency_first",
+      "total_actions": 8,
+      "successful": 8,
+      "failed": 0,
+      "results": [
+        {
+          "type": "set_task_policy",
+          "pid": 1042,
+          "class_id": 1,
+          "weight": 10000,
+          "workload_type": "latency_sensitive",
+          "comm": "nginx",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 1043,
+          "class_id": 1,
+          "weight": 10000,
+          "workload_type": "latency_sensitive",
+          "comm": "nginx",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 1044,
+          "class_id": 1,
+          "weight": 10000,
+          "workload_type": "latency_sensitive",
+          "comm": "nginx",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 1045,
+          "class_id": 1,
+          "weight": 10000,
+          "workload_type": "latency_sensitive",
+          "comm": "nginx",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 1037,
+          "class_id": 1,
+          "weight": 10000,
+          "workload_type": "latency_sensitive",
+          "comm": "nginx",
+          "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx matches latency service rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 102966,
+          "class_id": 3,
+          "weight": 50,
+          "workload_type": "background_noise",
+          "comm": "stress-ng-cpu",
+          "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 2 --timeout 25s --metrics-brief matches background noise rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 102967,
+          "class_id": 3,
+          "weight": 50,
+          "workload_type": "background_noise",
+          "comm": "stress-ng-cpu",
+          "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 2 --timeout 25s --metrics-brief matches background noise rule",
+          "success": true
+        },
+        {
+          "type": "set_task_policy",
+          "pid": 102965,
+          "class_id": 3,
+          "weight": 50,
+          "workload_type": "background_noise",
+          "comm": "stress-ng",
+          "reason": "comm/cmdline=stress-ng stress-ng --cpu 2 --timeout 25s --metrics-brief matches background noise rule",
+          "success": true
+        }
+      ]
+    },
+    "execution_results": [
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1037,
+        "group": "pid-1037"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1042,
+        "group": "pid-1042"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1043,
+        "group": "pid-1043"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1044,
+        "group": "pid-1044"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "nginx",
+          "target_type": "process_name",
+          "value": 8000,
+          "reason": "protect latency-sensitive workload",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {}
+        },
+        "status": "ok",
+        "pid": 1045,
+        "group": "pid-1045"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "102966",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 102966,
+        "group": "pid-102966"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "102966",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 102966,
+        "group": "pid-102966"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "102967",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 102967,
+        "group": "pid-102967"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "102967",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng-cpu"
+          }
+        },
+        "status": "ok",
+        "pid": 102967,
+        "group": "pid-102967"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_weight",
+          "target": "102965",
+          "target_type": "pid",
+          "value": 10,
+          "reason": "apply adaptive background weight",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 102965,
+        "group": "pid-102965"
+      },
+      {
+        "action": {
+          "action": "set_cgroup_cpu_max",
+          "target": "102965",
+          "target_type": "pid",
+          "value": "10000 100000",
+          "reason": "apply adaptive background CPU quota",
+          "risk_level": "medium",
+          "rollback_enabled": true,
+          "metadata": {
+            "comm": "stress-ng"
+          }
+        },
+        "status": "ok",
+        "pid": 102965,
+        "group": "pid-102965"
+      }
+    ],
+    "log": ""
+  },
+  "sched_ext_stats": {
+    "latency_dispatches": 0,
+    "batch_dispatches": 0,
+    "background_dispatches": 0,
+    "default_dispatches": 0,
+    "total": 0
+  }
+}

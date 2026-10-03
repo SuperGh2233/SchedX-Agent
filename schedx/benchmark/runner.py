@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 import subprocess
 import time
@@ -11,6 +10,13 @@ from typing import Sequence
 from schedx.benchmark.ablation import NginxAblationBenchmark, NginxAblationConfig
 from schedx.benchmark.batch import BatchThroughputBenchmark, BatchThroughputConfig
 from schedx.benchmark.nginx import NginxBenchmarkConfig, NginxStressBenchmark
+from schedx.benchmark.redis import RedisBenchmarkConfig, RedisMixedBenchmark
+from schedx.benchmark.redis_parser import parse_redis_benchmark_output
+from schedx.benchmark.scx_comparison import (
+    ScxComparisonConfig,
+    parse_scheduler_list,
+    run_scx_comparison,
+)
 from schedx.benchmark.sysbench_parser import parse_sysbench_output
 from schedx.benchmark.wrk_parser import parse_wrk_output
 
@@ -20,9 +26,11 @@ class BenchmarkRunner:
         "nginx",
         "nginx-ablation",
         "nginx-latency",
+        "redis",
         "redis-latency",
         "batch-cpu",
         "batch-throughput",
+        "scx-compare",
     }
     VARIANTS = {"default", "schedx"}
 
@@ -39,6 +47,9 @@ class BenchmarkRunner:
         stress_cpu: int = 4,
         warmup: int = 2,
         minimum_background_retention_percent: float = 25.0,
+        schedulers: str | Sequence[str] | None = None,
+        redis_host: str = "127.0.0.1",
+        redis_port: int = 6379,
     ) -> dict:
         if name not in self.SUPPORTED:
             raise ValueError(f"unsupported benchmark: {name}")
@@ -77,6 +88,38 @@ class BenchmarkRunner:
             return BatchThroughputBenchmark().run(
                 BatchThroughputConfig(
                     duration=duration,
+                    threads=threads,
+                    repeats=repeats,
+                    stress_cpu=stress_cpu,
+                    warmup=warmup,
+                    minimum_background_retention_percent=minimum_background_retention_percent,
+                    output=output,
+                )
+            )
+
+        if name == "scx-compare":
+            return run_scx_comparison(
+                ScxComparisonConfig(
+                    schedulers=parse_scheduler_list(schedulers)[1:],
+                    url=url,
+                    duration=duration,
+                    connections=connections,
+                    threads=threads,
+                    repeats=repeats,
+                    stress_cpu=stress_cpu,
+                    warmup=warmup,
+                    minimum_background_retention_percent=minimum_background_retention_percent,
+                    output=output,
+                )
+            )
+
+        if name == "redis":
+            return RedisMixedBenchmark().run(
+                RedisBenchmarkConfig(
+                    host=redis_host,
+                    port=redis_port,
+                    duration=duration,
+                    connections=connections,
                     threads=threads,
                     repeats=repeats,
                     stress_cpu=stress_cpu,
@@ -180,22 +223,3 @@ class BenchmarkRunner:
         }
 
 
-def parse_redis_benchmark_output(output: str) -> dict[str, float]:
-    metrics: dict[str, float] = {}
-    qps_values: list[float] = []
-    for line in output.splitlines():
-        qps = re.search(r"([0-9.]+)\s+requests per second", line)
-        if qps:
-            qps_values.append(float(qps.group(1)))
-        p50 = re.search(r"p50=([0-9.]+)\s*msec", line)
-        p95 = re.search(r"p95=([0-9.]+)\s*msec", line)
-        p99 = re.search(r"p99=([0-9.]+)\s*msec", line)
-        if p50:
-            metrics["p50_latency_ms"] = float(p50.group(1))
-        if p95:
-            metrics["p95_latency_ms"] = float(p95.group(1))
-        if p99:
-            metrics["p99_latency_ms"] = float(p99.group(1))
-    if qps_values:
-        metrics["qps"] = round(sum(qps_values) / len(qps_values), 2)
-    return metrics

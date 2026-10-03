@@ -9,6 +9,7 @@ from schedx.agent.skill import SkillResult
 from schedx.controllers.cgroup_controller import CgroupController
 from schedx.controllers.scx_controller import ScxController
 from schedx.scx_daemon import ScxDaemonClient
+from schedx.skills.ebpf_skill import EbpfCleanupSkill
 
 
 class RollbackSkill:
@@ -19,6 +20,7 @@ class RollbackSkill:
         scx_entries = self._rollback_scx(context)
         cgroup = CgroupController(dry_run=context.dry_run)
         entries = cgroup.rollback()
+        ebpf_result = EbpfCleanupSkill().run(context)
 
         context.data["rollback_results"] = entries
         context.data["scx_rollback_results"] = scx_entries
@@ -32,13 +34,15 @@ class RollbackSkill:
             "skipped": len(skipped),
             "entries": [_serialize(e) for e in entries],
             "scx_entries": scx_entries,
+            "ebpf_cleanup": ebpf_result.data.get("results", {}),
         }
         context.data["rollback"] = rollback_evidence
 
         return SkillResult(
-            True,
+            ebpf_result.ok,
             f"rollback completed: {len(restored_settings)} settings restored, "
-            f"{len(removed_groups)} groups removed, {len(skipped)} skipped",
+            f"{len(removed_groups)} groups removed, {len(skipped)} skipped; "
+            f"{ebpf_result.message}",
             rollback_evidence,
         )
 

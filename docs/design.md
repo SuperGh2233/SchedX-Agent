@@ -17,9 +17,12 @@ flowchart LR
     A --> L["LLM/Rule Policy<br/>structured proposal"]
     L --> G["PolicySkill<br/>allowlist and range checks"]
     G --> B["CanaryBaselineSkill<br/>measure before action"]
-    B --> S["ScxSkill + ActSkill<br/>sched_ext and cgroup v2"]
-    S --> C["CanaryCandidateSkill<br/>measure after action"]
-    C --> V["VerifySkill<br/>SLO and fairness gate"]
+    B --> E["EbpfLoad/AttachSkill<br/>attach observation and policy hooks"]
+    E --> S["ScxSkill + ActSkill<br/>sched_ext and cgroup v2"]
+    S --> EP["EbpfPolicySkill<br/>cgroup-scoped map updates"]
+    EP --> C["CanaryCandidateSkill<br/>measure after action"]
+    C --> ES["EbpfStatsSkill<br/>kernel evidence"]
+    ES --> V["VerifySkill<br/>SLO and fairness gate"]
     V -->|"accepted"| R["ReportSkill"]
     V -->|"rejected"| X["RollbackSkill"]
     X --> R
@@ -81,11 +84,19 @@ and deletes empty cgroups.
 
 ## eBPF Extension Boundary
 
-The repository includes standardized eBPF Skills, controller interfaces and
-program prototypes for scheduler tracing, network policy and resource
-monitoring. The independent trace/network/resource hooks are extension work
-and are not claimed as production-attached features in the current release.
-The native sched_ext scheduler itself is a validated BPF struct_ops program.
+The repository includes four independent, pinned eBPF hook families:
+scheduler tracing, cgroup-v2 network policy, resource-policy telemetry and an
+inode-scoped BPF LSM execution policy. `EbpfController` performs real attach,
+detach and map updates through bpftool. Resource limits remain enforced by
+cgroup v2 and CPU scheduling remains owned by the native sched_ext struct_ops
+program; the observation hooks do not pretend to replace either subsystem.
+
+The Agent attaches hooks before mutation, creates and populates dedicated
+cgroups, then updates network, resource-intent and audit-only security maps by
+cgroup ID. The same controller instance supplies post-action statistics. An
+accepted policy remains pinned and active; `schedx rollback`, including a new
+CLI process, discovers the pinned state, detaches links and removes maps after
+restoring cgroup and sched_ext state.
 
 ## Reproducibility
 

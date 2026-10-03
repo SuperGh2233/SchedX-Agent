@@ -1,241 +1,88 @@
-# SchedX-Agent eBPF Programs
+# SchedX-Agent eBPF Hooks
 
-This directory contains eBPF programs for enhanced resource control in SchedX-Agent.
+These programs extend the Agent with kernel observation and narrowly scoped
+policy hooks. They do not replace Linux subsystems that already enforce the
+same resource correctly.
 
-## Overview
+| Object | Hook | Responsibility |
+|---|---|---|
+| `sched_trace.bpf.o` | scheduler tracepoints | Measure wakeup and scheduling latency |
+| `net_policy.bpf.o` | `cgroup_skb/egress` | Per-cgroup token-bucket network policy |
+| `resource_ctrl.bpf.o` | scheduler tracepoints | Count cgroup policy activity |
+| `security_policy.bpf.o` | `lsm/bprm_check_security` | Audit or deny one executable in one cgroup |
 
-The eBPF programs provide:
+CPU scheduling is performed by `sched_ext/scx` and hard CPU, memory and I/O
+limits are performed by cgroup v2. The resource eBPF program is telemetry, not
+a second and less reliable resource controller.
 
-1. **sched_trace** - Scheduling latency tracing
-2. **net_policy** - Network policy enforcement via TC
-3. **resource_ctrl** - Resource control monitoring
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SchedX-Agent (Python)                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │  Probe   │→│ Classify │→│  Policy  │→│   Act    │    │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│              EbpfController (Python)                         │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                  │
-│  │  Load    │→│  Attach  │→│  Policy  │                  │
-│  └──────────┘  └──────────┘  └──────────┘                  │
-└─────────────────────────────────────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    eBPF Programs (Kernel)                     │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  sched_trace.bpf.o    │  net_policy.bpf.o            │  │
-│  │  - sched_switch       │  - TC egress classifier      │  │
-│  │  - sched_wakeup       │  - TC ingress classifier     │  │
-│  │  - latency histograms │  - rate limiting             │  │
-│  ├──────────────────────────────────────────────────────┤  │
-│  │  resource_ctrl.bpf.o                                 │  │
-│  │  - memory tracking    │  - cgroup monitoring         │  │
-│  │  - I/O tracking       │  - OOM notification          │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## eBPF Programs
-
-### 1. sched_trace.bpf.c
-
-Traces scheduling events to measure latency per workload.
-
-**Features:**
-- Hooks into `sched_switch` and `sched_wakeup` tracepoints
-- Tracks scheduling latency per task
-- Generates latency histograms
-- Provides per-task statistics
-
-**BPF Maps:**
-- `task_info_map` - Per-task tracking information
-- `latency_histogram` - Latency distribution (per-CPU)
-- `global_stats` - Global scheduling statistics
-- `events` - Ring buffer for real-time events
-
-### 2. net_policy.bpf.c
-
-Enforces network policies using TC (Traffic Control).
-
-**Features:**
-- Per-task rate limiting
-- Traffic classification by workload type
-- Token bucket algorithm for smooth rate limiting
-- Priority queuing for latency-sensitive tasks
-
-**BPF Maps:**
-- `net_policy_map` - Per-task network policy
-- `token_bucket_map` - Per-task token bucket state
-- `net_stats_map` - Per-task network statistics
-- `global_net_stats_map` - Global network statistics
-
-**Rate Limits:**
-| Class | Rate Limit | Burst Size |
-|-------|-----------|------------|
-| Latency | 1 GB/s | 10 MB |
-| Batch | 100 MB/s | 1 MB |
-| Background | 10 MB/s | 100 KB |
-
-### 3. resource_ctrl.bpf.c
-
-Monitors and controls resource usage per cgroup.
-
-**Features:**
-- Memory allocation tracking
-- I/O bandwidth monitoring
-- CPU usage accounting
-- OOM notification
-- Resource limit enforcement
-
-**BPF Maps:**
-- `resource_policy_map` - Per-cgroup resource policy
-- `resource_usage_map` - Per-cgroup resource usage
-- `task_cgroup_map` - Task to cgroup mapping
-- `resource_events` - Ring buffer for resource events
-
-## Building
-
-### Prerequisites
+## Build on openEuler 24.03 LTS SP4
 
 ```bash
-# openEuler 24.03-LTS-SP3
-sudo dnf install -y gcc clang llvm llvm-tools make cmake git
-sudo dnf install -y kernel-devel kernel-headers kernel-debuginfo
-sudo dnf install -y libbpf-devel libbpf elfutils-libelf-devel zlib-devel
-sudo dnf install -y kernel-tools  # for bpftool
+dnf install -y clang llvm make bpftool libbpf-devel elfutils-libelf-devel
+make -C ebpf check
+make -C ebpf all
 ```
 
-### Build
+The Makefile generates `build/vmlinux.h` from the running kernel's BTF at
+`/sys/kernel/btf/vmlinux`, then builds all four CO-RE objects. x86_64 and
+aarch64 target macros are selected automatically.
 
-```bash
-cd ebpf
-make              # Build all BPF programs
-make sched_trace  # Build sched_trace only
-make net_policy   # Build net_policy only
-make resource_ctrl # Build resource_ctrl only
-```
+## Lifecycle
 
-### Install
+`schedx.controllers.ebpf_controller.EbpfController` uses only `bpftool`:
 
-```bash
-sudo make install  # Install to /usr/lib/schedx/ebpf
-```
+1. load programs and pin maps under `/sys/fs/bpf/schedx/<type>/`;
+2. attach tracepoint/LSM programs with `autoattach` and pin their BPF links;
+3. attach network policy to the cgroup v2 root with `bpftool cgroup attach`;
+4. update pinned maps with exact binary key/value layouts;
+5. detach and remove pins during unload.
 
-## Usage
+Pinned links are important: without them, tracepoint and LSM attachments would
+disappear as soon as the short-lived `bpftool` process exits.
 
-### From Python (EbpfController)
+## Policy Safety
+
+- Network policies are keyed by cgroup ID, not PID. A packet may be processed
+  outside the originating process context, so PID attribution at TC is unsafe.
+- The cgroup v2 root is never accepted as a per-process network-policy target.
+- Security is default-allow. A key contains cgroup ID, device ID and inode, so
+  one policy cannot accidentally block every executable in a workload.
+- `audit_only=true` records matching executions without denying them.
+- BPF LSM is optional. Check `cat /sys/kernel/security/lsm`; it must contain
+  `bpf`. When it is absent, the controller reports unsupported rather than
+  returning a false success.
+
+## Python Example
 
 ```python
+from pathlib import Path
 from schedx.controllers.ebpf_controller import EbpfController, EbpfProgType
 
-# Initialize controller
 controller = EbpfController(dry_run=False)
+for kind in EbpfProgType:
+    if controller.load_program(kind):
+        controller.attach_program(kind)
 
-# Load programs
-controller.load_program(EbpfProgType.SCHED_TRACE)
-controller.load_program(EbpfProgType.NET_POLICY)
-controller.load_program(EbpfProgType.RESOURCE_CTRL)
+# A process API resolves PID -> cgroup v2 ID before updating the map.
+controller.update_net_policy(pid=1234, class_id=controller.CLASS_BACKGROUND)
 
-# Attach to hooks
-controller.attach_program(EbpfProgType.SCHED_TRACE)
-controller.attach_program(EbpfProgType.NET_POLICY)
-controller.attach_program(EbpfProgType.RESOURCE_CTRL)
+# Resource values are policy telemetry; CgroupController performs hard limits.
+controller.update_resource_policy(cgroup_id=42, class_id=controller.CLASS_BATCH)
 
-# Update policies
-controller.update_sched_policy(pid=1234, class_id=1, weight=10000)
-controller.update_net_policy(pid=1234, class_id=1, rate_limit=1000000000)
-controller.update_resource_policy(cgroup_id=42, class_id=1, memory_limit=4*1024*1024*1024)
-
-# Get statistics
-stats = controller.get_stats()
+# Audit one executable in one cgroup. Set deny_exec=True and audit_only=False
+# only in an isolated test cgroup.
+controller.update_security_policy(42, Path("/usr/bin/true"))
 ```
 
-### From SchedX-Agent CLI
+## Verification
 
 ```bash
-# Load and attach eBPF programs (via agent pipeline)
-schedx optimize --target stress-ng --mode isolate_background
-
-# Check eBPF status
-schedx status
+bpftool feature probe kernel
+bpftool link show
+bpftool cgroup show /sys/fs/cgroup effective
+bpftool map show
 ```
 
-### Manual Testing
-
-```bash
-# Load sched_trace manually
-sudo bpftool prog load build/sched_trace.bpf.o /sys/fs/bpf/schedx/sched_trace
-
-# List loaded programs
-sudo bpftool prog list
-
-# Dump program statistics
-sudo bpftool map dump name global_stats
-```
-
-## Integration with Agent Pipeline
-
-The eBPF programs are integrated into the SchedX-Agent pipeline:
-
-1. **probe** - Collects process information
-2. **analyze** - Classifies workloads
-3. **policy** - Plans optimization actions
-4. **ebpf_load** - Loads eBPF programs
-5. **ebpf_attach** - Attaches to kernel hooks
-6. **ebpf_policy** - Applies workload policies
-7. **scx** - Applies scx scheduler policies (if available)
-8. **act** - Applies cgroup controls
-9. **verify** - Verifies optimization results
-10. **report** - Generates optimization report
-
-## Performance Considerations
-
-- **Overhead**: eBPF programs run in kernel space with minimal overhead
-- **Sampling**: sched_trace samples 1 in 100 events to reduce overhead
-- **Per-CPU maps**: Statistics use per-CPU maps to avoid contention
-- **Ring buffers**: Events use efficient ring buffers for user-space communication
-
-## Troubleshooting
-
-### BPF compilation fails
-
-```bash
-# Check for BTF support
-ls -la /sys/kernel/btf/vmlinux
-
-# If missing, install kernel-debuginfo
-sudo dnf install -y kernel-debuginfo
-```
-
-### Permission denied
-
-```bash
-# Must run as root
-sudo ./build.sh
-```
-
-### Program fails to load
-
-```bash
-# Check kernel version (needs 5.8+ for most features)
-uname -r
-
-# Check BPF support
-sudo bpftool feature probe
-```
-
-## References
-
-- [eBPF documentation](https://ebpf.io/)
-- [libbpf documentation](https://libbpf.readthedocs.io/)
-- [BPF CO-RE reference](https://nakryiko.com/posts/bpf-core-reference-guide/)
-- [TC BPF documentation](https://man7.org/linux/man-pages/man8/tc-bpf.8.html)
+Run security enforcement tests only inside a disposable cgroup. A production
+workload should start in audit-only mode and graduate to enforcement after the
+Agent's verification step succeeds.

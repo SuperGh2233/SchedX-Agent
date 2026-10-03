@@ -1,0 +1,1031 @@
+{
+  "returncode": 0,
+  "stdout": "{\n  \"dry_run\": false,\n  \"auto_mode\": false,\n  \"agent_decision\": {\n    \"mode\": \"latency_first\",\n    \"target\": \"nginx\",\n    \"parameters\": {},\n    \"reason\": \"explicit user-selected mode and target\",\n    \"confidence\": 1.0,\n    \"source\": \"explicit_cli\",\n    \"expert_id\": \"latency_guard\"\n  },\n  \"agent_loop\": {\n    \"total_iterations\": 13,\n    \"phases_completed\": [\n      \"probe\",\n      \"analyze\",\n      \"policy\",\n      \"canary_baseline\",\n      \"ebpf_load\",\n      \"ebpf_attach\",\n      \"scx\",\n      \"act\",\n      \"ebpf_policy\",\n      \"canary_candidate\",\n      \"ebpf_stats\",\n      \"verify\",\n      \"rollback\"\n    ],\n    \"final_status\": \"rolled_back\",\n    \"agent_decisions\": {\n      \"mode\": \"latency_first\",\n      \"target\": \"nginx\",\n      \"parameters\": {},\n      \"reason\": \"explicit user-selected mode and target\",\n      \"confidence\": 1.0,\n      \"source\": \"explicit_cli\",\n      \"expert_id\": \"latency_guard\"\n    },\n    \"iterations\": [\n      {\n        \"iteration\": 1,\n        \"phase\": \"probe\",\n        \"skill\": \"probe\",\n        \"success\": true,\n        \"message\": \"probe completed\",\n        \"duration_ms\": 245.6192970275879\n      },\n      {\n        \"iteration\": 2,\n        \"phase\": \"analyze\",\n        \"skill\": \"analyze\",\n        \"success\": true,\n        \"message\": \"classification completed\",\n        \"duration_ms\": 0.09799003601074219\n      },\n      {\n        \"iteration\": 4,\n        \"phase\": \"policy\",\n        \"skill\": \"policy\",\n        \"success\": true,\n        \"message\": \"planned 7 actions for mode=latency_first\",\n        \"duration_ms\": 0.1304149627685547\n      },\n      {\n        \"iteration\": 5,\n        \"phase\": \"canary_baseline\",\n        \"skill\": \"canary_baseline\",\n        \"success\": true,\n        \"message\": \"captured baseline SLO canary\",\n        \"duration_ms\": 3106.872797012329\n      },\n      {\n        \"iteration\": 6,\n        \"phase\": \"ebpf_load\",\n        \"skill\": \"ebpf_load\",\n        \"success\": true,\n        \"message\": \"loaded 4 eBPF programs (0 failed)\",\n        \"duration_ms\": 209.54442024230957\n      },\n      {\n        \"iteration\": 7,\n        \"phase\": \"ebpf_attach\",\n        \"skill\": \"ebpf_attach\",\n        \"success\": true,\n        \"message\": \"attached 4 eBPF programs (0 failed)\",\n        \"duration_ms\": 83.79840850830078\n      },\n      {\n        \"iteration\": 8,\n        \"phase\": \"scx\",\n        \"skill\": \"scx\",\n        \"success\": true,\n        \"message\": \"applied 8 scx policies through daemon\",\n        \"duration_ms\": 2.988576889038086\n      },\n      {\n        \"iteration\": 9,\n        \"phase\": \"act\",\n        \"skill\": \"act\",\n        \"success\": true,\n        \"message\": \"executed 11 actions successfully\",\n        \"duration_ms\": 21.790504455566406\n      },\n      {\n        \"iteration\": 10,\n        \"phase\": \"ebpf_policy\",\n        \"skill\": \"ebpf_policy\",\n        \"success\": true,\n        \"message\": \"applied 9 eBPF policies (0 failed)\",\n        \"duration_ms\": 179.91876602172852\n      },\n      {\n        \"iteration\": 11,\n        \"phase\": \"canary_candidate\",\n        \"skill\": \"canary_candidate\",\n        \"success\": true,\n        \"message\": \"captured candidate SLO canary\",\n        \"duration_ms\": 3004.025459289551\n      },\n      {\n        \"iteration\": 12,\n        \"phase\": \"ebpf_stats\",\n        \"skill\": \"ebpf_stats\",\n        \"success\": true,\n        \"message\": \"collected eBPF statistics\",\n        \"duration_ms\": 177.7966022491455\n      },\n      {\n        \"iteration\": 13,\n        \"phase\": \"verify\",\n        \"skill\": \"verify\",\n        \"success\": false,\n        \"message\": \"canary rejected; rollback required\",\n        \"duration_ms\": 141.1154270172119\n      },\n      {\n        \"iteration\": 14,\n        \"phase\": \"rollback\",\n        \"skill\": \"rollback\",\n        \"success\": true,\n        \"message\": \"rollback completed: 19 settings restored, 9 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed\",\n        \"duration_ms\": 19.263267517089844\n      }\n    ],\n    \"decisions\": [\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"analyze\",\n        \"reason\": \"proceeding to analyze\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"decide\",\n        \"reason\": \"proceeding to decide\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"policy\",\n        \"reason\": \"user-specified mode=latency_first, target=nginx\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"canary_baseline\",\n        \"reason\": \"proceeding to canary_baseline\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_load\",\n        \"reason\": \"proceeding to ebpf_load\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_attach\",\n        \"reason\": \"proceeding to ebpf_attach\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"scx\",\n        \"reason\": \"proceeding to scx\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"act\",\n        \"reason\": \"proceeding to act\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_policy\",\n        \"reason\": \"proceeding to ebpf_policy\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"canary_candidate\",\n        \"reason\": \"proceeding to canary_candidate\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"ebpf_stats\",\n        \"reason\": \"proceeding to ebpf_stats\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"verify\",\n        \"reason\": \"proceeding to verify\"\n      },\n      {\n        \"should_continue\": true,\n        \"next_phase\": \"rollback\",\n        \"reason\": \"canary rejected; initiating rollback\"\n      },\n      {\n        \"should_continue\": false,\n        \"next_phase\": null,\n        \"reason\": \"all phases completed\"\n      }\n    ],\n    \"context_data\": {\n      \"mode\": \"latency_first\",\n      \"target\": \"nginx\",\n      \"agent_decision\": {\n        \"mode\": \"latency_first\",\n        \"target\": \"nginx\",\n        \"parameters\": {},\n        \"reason\": \"explicit user-selected mode and target\",\n        \"confidence\": 1.0,\n        \"source\": \"explicit_cli\",\n        \"expert_id\": \"latency_guard\"\n      },\n      \"policy_route\": {\n        \"expert_id\": \"latency_guard\",\n        \"mode\": \"latency_first\",\n        \"confidence\": 1.0,\n        \"scores\": {\n          \"latency_guard\": 1.0\n        },\n        \"switched\": false,\n        \"reason\": \"explicit user-selected mode; router bypassed\",\n        \"timestamp\": 1788007729.0128953\n      },\n      \"canary_verdict\": {\n        \"accepted\": false,\n        \"status\": \"rejected\",\n        \"reasons\": [\n          \"insufficient_p99_improvement\"\n        ],\n        \"deltas\": {\n          \"p99_percent\": -86.095837,\n          \"requests_per_sec_percent\": -2.086787,\n          \"background_retention_percent\": 105.135952\n        }\n      },\n      \"canary\": {\n        \"baseline\": {\n          \"latency_avg_ms\": 0.87,\n          \"latency_stdev_ms\": 2.55,\n          \"latency_max_ms\": 43.12,\n          \"req_per_sec_avg\": 52640.0,\n          \"req_per_sec_stdev\": 5510.0,\n          \"requests_per_sec\": 102929.54,\n          \"qps\": 102929.54,\n          \"transfer_sec\": \"368.01MB\",\n          \"p50_ms\": 0.207,\n          \"p50_latency_ms\": 0.207,\n          \"p75_ms\": 0.51,\n          \"p75_latency_ms\": 0.51,\n          \"p90_ms\": 1.69,\n          \"p90_latency_ms\": 1.69,\n          \"p99_ms\": 12.73,\n          \"p99_latency_ms\": 12.73,\n          \"avg_latency_ms\": 0.87,\n          \"background_cpu_ticks\": 331,\n          \"system_cpu_ticks\": 1242,\n          \"background_cpu_share\": 0.2665056360708535,\n          \"background_pids\": [\n            103422,\n            103423,\n            103424\n          ],\n          \"raw_output\": \"Running 3s test @ http://127.0.0.1/\\n  2 threads and 32 connections\\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\\n    Latency     0.87ms    2.55ms  43.12ms   94.92%\\n    Req/Sec    52.64k     5.51k   69.69k    70.49%\\n  Latency Distribution\\n     50%  207.00us\\n     75%  510.00us\\n     90%    1.69ms\\n     99%   12.73ms\\n  319061 requests in 3.10s, 1.11GB read\\nRequests/sec: 102929.54\\nTransfer/sec:    368.01MB\\n\"\n        },\n        \"background_expected\": true,\n        \"candidate\": {\n          \"latency_avg_ms\": 0.3328,\n          \"latency_stdev_ms\": 0.3233,\n          \"latency_max_ms\": 3.17,\n          \"req_per_sec_avg\": 50670.0,\n          \"req_per_sec_stdev\": 4380.0,\n          \"requests_per_sec\": 100781.62,\n          \"qps\": 100781.62,\n          \"transfer_sec\": \"360.33MB\",\n          \"p50_ms\": 0.25,\n          \"p50_latency_ms\": 0.25,\n          \"p75_ms\": 0.39,\n          \"p75_latency_ms\": 0.39,\n          \"p90_ms\": 0.655,\n          \"p90_latency_ms\": 0.655,\n          \"p99_ms\": 1.77,\n          \"p99_latency_ms\": 1.77,\n          \"avg_latency_ms\": 0.3328,\n          \"background_cpu_ticks\": 348,\n          \"system_cpu_ticks\": 1202,\n          \"background_cpu_share\": 0.2895174708818636,\n          \"background_pids\": [\n            103422,\n            103423,\n            103424\n          ],\n          \"raw_output\": \"Running 3s test @ http://127.0.0.1/\\n  2 threads and 32 connections\\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\\n    Latency   332.84us  323.27us   3.17ms   90.05%\\n    Req/Sec    50.67k     4.38k   61.54k    68.33%\\n  Latency Distribution\\n     50%  250.00us\\n     75%  390.00us\\n     90%  655.00us\\n     99%    1.77ms\\n  302491 requests in 3.00s, 1.06GB read\\nRequests/sec: 100781.62\\nTransfer/sec:    360.33MB\\n\"\n        },\n        \"background_share\": 0.2895174708818636,\n        \"background_retention\": 1.051359516616314,\n        \"nr_rejected\": 0\n      },\n      \"execution_results\": [\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 10000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1037,\n          \"group\": \"pid-1037\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 10000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1042,\n          \"group\": \"pid-1042\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 10000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1043,\n          \"group\": \"pid-1043\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 10000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1044,\n          \"group\": \"pid-1044\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"nginx\",\n            \"target_type\": \"process_name\",\n            \"value\": 10000,\n            \"reason\": \"protect latency-sensitive workload\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {}\n          },\n          \"status\": \"ok\",\n          \"pid\": 1045,\n          \"group\": \"pid-1045\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103423\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103423,\n          \"group\": \"pid-103423\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103423\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103423,\n          \"group\": \"pid-103423\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103424\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103424,\n          \"group\": \"pid-103424\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103424\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng-cpu\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103424,\n          \"group\": \"pid-103424\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_weight\",\n            \"target\": \"103422\",\n            \"target_type\": \"pid\",\n            \"value\": 10,\n            \"reason\": \"apply adaptive background weight\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103422,\n          \"group\": \"pid-103422\"\n        },\n        {\n          \"action\": {\n            \"action\": \"set_cgroup_cpu_max\",\n            \"target\": \"103422\",\n            \"target_type\": \"pid\",\n            \"value\": \"10000 100000\",\n            \"reason\": \"apply adaptive background CPU quota\",\n            \"risk_level\": \"medium\",\n            \"rollback_enabled\": true,\n            \"metadata\": {\n              \"comm\": \"stress-ng\"\n            }\n          },\n          \"status\": \"ok\",\n          \"pid\": 103422,\n          \"group\": \"pid-103422\"\n        }\n      ],\n      \"ebpf_load_results\": {\n        \"scheduler-trace\": true,\n        \"network-policy\": true,\n        \"resource-control\": true,\n        \"security-policy\": true\n      },\n      \"ebpf_attach_results\": {\n        \"scheduler-trace\": true,\n        \"network-policy\": true,\n        \"resource-control\": true,\n        \"security-policy\": true\n      },\n      \"ebpf_policy_results\": [\n        {\n          \"pid\": 1042,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6777,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1043,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6796,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1044,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6815,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1045,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6834,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 1037,\n          \"workload_type\": \"latency_sensitive\",\n          \"class_id\": 1,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6758,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 102852,\n          \"workload_type\": \"batch_compute\",\n          \"class_id\": 2,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 3016,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103423,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6853,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103424,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6872,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        },\n        {\n          \"pid\": 103422,\n          \"workload_type\": \"background_noise\",\n          \"class_id\": 3,\n          \"sched_policy\": \"delegated_to_scx_or_cgroup\",\n          \"cgroup_id\": 6891,\n          \"net_policy\": \"applied\",\n          \"resource_policy\": \"applied\",\n          \"security_policy\": \"audit\",\n          \"status\": \"applied\",\n          \"reason\": \"\",\n          \"success\": true\n        }\n      ],\n      \"ebpf_stats\": {\n        \"available\": true,\n        \"status\": {\n          \"available\": true,\n          \"sched_ext\": true,\n          \"bpf_lsm\": true,\n          \"programs\": {\n            \"sched_trace\": {\n              \"type\": \"sched_trace\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"events\",\n                \"global_stats\",\n                \"latency_histogram\",\n                \"task_info_map\"\n              ]\n            },\n            \"net_policy\": {\n              \"type\": \"net_policy\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"/sys/fs/cgroup\",\n              \"maps\": [\n                \"net_bucket_map\",\n                \"net_global_map\",\n                \"net_policy_map\",\n                \"net_stats_map\"\n              ]\n            },\n            \"resource_ctrl\": {\n              \"type\": \"resource_ctrl\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"res_global_map\",\n                \"res_policy_map\",\n                \"res_usage_map\"\n              ]\n            },\n            \"security_policy\": {\n              \"type\": \"security_policy\",\n              \"loaded\": true,\n              \"attached\": true,\n              \"attach_target\": \"kernel-declared hooks\",\n              \"maps\": [\n                \"sec_exec_map\",\n                \"sec_policy_map\",\n                \"sec_stats_map\"\n              ]\n            }\n          },\n          \"dry_run\": false,\n          \"last_error\": \"\"\n        },\n        \"hooks\": {\n          \"scheduler_trace\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"scheduler-trace\",\n            \"stats\": {\n              \"total_wakeups\": 44670,\n              \"total_switches\": 46190,\n              \"total_latency_ns\": 8619762307,\n              \"active_tasks\": 17\n            },\n            \"total_wakeups\": 44670,\n            \"total_switches\": 46190,\n            \"total_latency_ns\": 8619762307,\n            \"avg_latency_ns\": 192965.35274233267\n          },\n          \"network_policy\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"network-policy\",\n            \"stats\": {\n              \"total_packets\": 303818,\n              \"total_bytes\": 26389234,\n              \"dropped_packets\": 0,\n              \"dropped_bytes\": 0\n            },\n            \"total_packets\": 303818,\n            \"total_bytes\": 26389234,\n            \"dropped_packets\": 0,\n            \"dropped_bytes\": 0,\n            \"drop_rate\": 0.0\n          },\n          \"security_policy\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"security-policy\",\n            \"bpf_lsm\": true,\n            \"stats\": {\n              \"exec_checks\": 45,\n              \"exec_denied\": 0\n            }\n          },\n          \"resource_control\": {\n            \"available\": true,\n            \"loaded\": true,\n            \"name\": \"resource-control\",\n            \"stats\": {\n              \"sched_switches\": 46541,\n              \"policy_hits\": 42983,\n              \"process_exits\": 61\n            },\n            \"sched_switches\": 46541,\n            \"policy_hits\": 42983,\n            \"process_exits\": 61\n          }\n        }\n      },\n      \"ebpf_cleanup\": {\n        \"security-policy\": true,\n        \"resource-control\": true,\n        \"network-policy\": true,\n        \"scheduler-trace\": true\n      },\n      \"rollback\": {\n        \"restored\": 19,\n        \"groups_removed\": 9,\n        \"skipped\": 0,\n        \"entries\": [\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103422\",\n            \"file\": \"cpu.max\",\n            \"previous\": \"max 100000\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103422\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"103422\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103424\",\n            \"file\": \"cpu.max\",\n            \"previous\": \"max 100000\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103424\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"103424\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103423\",\n            \"file\": \"cpu.max\",\n            \"previous\": \"max 100000\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103423\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/sshd.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"103423\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1045\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"1045\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1044\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"1044\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1043\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"1043\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1042\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"1042\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1037\",\n            \"file\": \"cpu.weight\",\n            \"previous\": \"100\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/system.slice/nginx.service\",\n            \"file\": \"cgroup.procs\",\n            \"previous\": \"1037\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1045\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1044\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1043\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1042\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-1037\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103424\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103423\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx/pid-103422\",\n            \"status\": \"removed\"\n          },\n          {\n            \"path\": \"/sys/fs/cgroup/schedx\",\n            \"status\": \"removed\"\n          }\n        ],\n        \"scx_entries\": [\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 1037,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 1042,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 1043,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 1044,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 1045,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 103422,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 103423,\n            \"status\": \"removed\"\n          },\n          {\n            \"source\": \"persistent_scx_daemon\",\n            \"pid\": 103424,\n            \"status\": \"removed\"\n          }\n        ],\n        \"ebpf_cleanup\": {\n          \"security-policy\": true,\n          \"resource-control\": true,\n          \"network-policy\": true,\n          \"scheduler-trace\": true\n        }\n      },\n      \"decision_log\": [\n        {\n          \"iteration\": 1,\n          \"phase\": \"probe\",\n          \"success\": true,\n          \"message\": \"probe completed\",\n          \"timestamp\": \"2026-08-29T20:48:49.012778\"\n        },\n        {\n          \"iteration\": 2,\n          \"phase\": \"analyze\",\n          \"success\": true,\n          \"message\": \"classification completed\",\n          \"timestamp\": \"2026-08-29T20:48:49.012889\"\n        },\n        {\n          \"iteration\": 4,\n          \"phase\": \"policy\",\n          \"success\": true,\n          \"message\": \"planned 7 actions for mode=latency_first\",\n          \"timestamp\": \"2026-08-29T20:48:49.013034\"\n        },\n        {\n          \"iteration\": 5,\n          \"phase\": \"canary_baseline\",\n          \"success\": true,\n          \"message\": \"captured baseline SLO canary\",\n          \"timestamp\": \"2026-08-29T20:48:52.119935\"\n        },\n        {\n          \"iteration\": 6,\n          \"phase\": \"ebpf_load\",\n          \"success\": true,\n          \"message\": \"loaded 4 eBPF programs (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:52.329510\"\n        },\n        {\n          \"iteration\": 7,\n          \"phase\": \"ebpf_attach\",\n          \"success\": true,\n          \"message\": \"attached 4 eBPF programs (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:52.413349\"\n        },\n        {\n          \"iteration\": 8,\n          \"phase\": \"scx\",\n          \"success\": true,\n          \"message\": \"applied 8 scx policies through daemon\",\n          \"timestamp\": \"2026-08-29T20:48:52.416363\"\n        },\n        {\n          \"iteration\": 9,\n          \"phase\": \"act\",\n          \"success\": true,\n          \"message\": \"executed 11 actions successfully\",\n          \"timestamp\": \"2026-08-29T20:48:52.438178\"\n        },\n        {\n          \"iteration\": 10,\n          \"phase\": \"ebpf_policy\",\n          \"success\": true,\n          \"message\": \"applied 9 eBPF policies (0 failed)\",\n          \"timestamp\": \"2026-08-29T20:48:52.618124\"\n        },\n        {\n          \"iteration\": 11,\n          \"phase\": \"canary_candidate\",\n          \"success\": true,\n          \"message\": \"captured candidate SLO canary\",\n          \"timestamp\": \"2026-08-29T20:48:55.622179\"\n        },\n        {\n          \"iteration\": 12,\n          \"phase\": \"ebpf_stats\",\n          \"success\": true,\n          \"message\": \"collected eBPF statistics\",\n          \"timestamp\": \"2026-08-29T20:48:55.800007\"\n        },\n        {\n          \"iteration\": 13,\n          \"phase\": \"verify\",\n          \"success\": false,\n          \"message\": \"canary rejected; rollback required\",\n          \"timestamp\": \"2026-08-29T20:48:55.941145\"\n        },\n        {\n          \"iteration\": 14,\n          \"phase\": \"rollback\",\n          \"success\": true,\n          \"message\": \"rollback completed: 19 settings restored, 9 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed\",\n          \"timestamp\": \"2026-08-29T20:48:55.960428\"\n        }\n      ]\n    }\n  }\n}\n",
+  "stderr": "",
+  "data": {
+    "dry_run": false,
+    "auto_mode": false,
+    "agent_decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "parameters": {},
+      "reason": "explicit user-selected mode and target",
+      "confidence": 1.0,
+      "source": "explicit_cli",
+      "expert_id": "latency_guard"
+    },
+    "agent_loop": {
+      "total_iterations": 13,
+      "phases_completed": [
+        "probe",
+        "analyze",
+        "policy",
+        "canary_baseline",
+        "ebpf_load",
+        "ebpf_attach",
+        "scx",
+        "act",
+        "ebpf_policy",
+        "canary_candidate",
+        "ebpf_stats",
+        "verify",
+        "rollback"
+      ],
+      "final_status": "rolled_back",
+      "agent_decisions": {
+        "mode": "latency_first",
+        "target": "nginx",
+        "parameters": {},
+        "reason": "explicit user-selected mode and target",
+        "confidence": 1.0,
+        "source": "explicit_cli",
+        "expert_id": "latency_guard"
+      },
+      "iterations": [
+        {
+          "iteration": 1,
+          "phase": "probe",
+          "skill": "probe",
+          "success": true,
+          "message": "probe completed",
+          "duration_ms": 245.6192970275879
+        },
+        {
+          "iteration": 2,
+          "phase": "analyze",
+          "skill": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "duration_ms": 0.09799003601074219
+        },
+        {
+          "iteration": 4,
+          "phase": "policy",
+          "skill": "policy",
+          "success": true,
+          "message": "planned 7 actions for mode=latency_first",
+          "duration_ms": 0.1304149627685547
+        },
+        {
+          "iteration": 5,
+          "phase": "canary_baseline",
+          "skill": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "duration_ms": 3106.872797012329
+        },
+        {
+          "iteration": 6,
+          "phase": "ebpf_load",
+          "skill": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "duration_ms": 209.54442024230957
+        },
+        {
+          "iteration": 7,
+          "phase": "ebpf_attach",
+          "skill": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "duration_ms": 83.79840850830078
+        },
+        {
+          "iteration": 8,
+          "phase": "scx",
+          "skill": "scx",
+          "success": true,
+          "message": "applied 8 scx policies through daemon",
+          "duration_ms": 2.988576889038086
+        },
+        {
+          "iteration": 9,
+          "phase": "act",
+          "skill": "act",
+          "success": true,
+          "message": "executed 11 actions successfully",
+          "duration_ms": 21.790504455566406
+        },
+        {
+          "iteration": 10,
+          "phase": "ebpf_policy",
+          "skill": "ebpf_policy",
+          "success": true,
+          "message": "applied 9 eBPF policies (0 failed)",
+          "duration_ms": 179.91876602172852
+        },
+        {
+          "iteration": 11,
+          "phase": "canary_candidate",
+          "skill": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "duration_ms": 3004.025459289551
+        },
+        {
+          "iteration": 12,
+          "phase": "ebpf_stats",
+          "skill": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "duration_ms": 177.7966022491455
+        },
+        {
+          "iteration": 13,
+          "phase": "verify",
+          "skill": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "duration_ms": 141.1154270172119
+        },
+        {
+          "iteration": 14,
+          "phase": "rollback",
+          "skill": "rollback",
+          "success": true,
+          "message": "rollback completed: 19 settings restored, 9 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+          "duration_ms": 19.263267517089844
+        }
+      ],
+      "decisions": [
+        {
+          "should_continue": true,
+          "next_phase": "analyze",
+          "reason": "proceeding to analyze"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "decide",
+          "reason": "proceeding to decide"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "policy",
+          "reason": "user-specified mode=latency_first, target=nginx"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "canary_baseline",
+          "reason": "proceeding to canary_baseline"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_load",
+          "reason": "proceeding to ebpf_load"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_attach",
+          "reason": "proceeding to ebpf_attach"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "scx",
+          "reason": "proceeding to scx"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "act",
+          "reason": "proceeding to act"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_policy",
+          "reason": "proceeding to ebpf_policy"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "canary_candidate",
+          "reason": "proceeding to canary_candidate"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "ebpf_stats",
+          "reason": "proceeding to ebpf_stats"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "verify",
+          "reason": "proceeding to verify"
+        },
+        {
+          "should_continue": true,
+          "next_phase": "rollback",
+          "reason": "canary rejected; initiating rollback"
+        },
+        {
+          "should_continue": false,
+          "next_phase": null,
+          "reason": "all phases completed"
+        }
+      ],
+      "context_data": {
+        "mode": "latency_first",
+        "target": "nginx",
+        "agent_decision": {
+          "mode": "latency_first",
+          "target": "nginx",
+          "parameters": {},
+          "reason": "explicit user-selected mode and target",
+          "confidence": 1.0,
+          "source": "explicit_cli",
+          "expert_id": "latency_guard"
+        },
+        "policy_route": {
+          "expert_id": "latency_guard",
+          "mode": "latency_first",
+          "confidence": 1.0,
+          "scores": {
+            "latency_guard": 1.0
+          },
+          "switched": false,
+          "reason": "explicit user-selected mode; router bypassed",
+          "timestamp": 1788007729.0128953
+        },
+        "canary_verdict": {
+          "accepted": false,
+          "status": "rejected",
+          "reasons": [
+            "insufficient_p99_improvement"
+          ],
+          "deltas": {
+            "p99_percent": -86.095837,
+            "requests_per_sec_percent": -2.086787,
+            "background_retention_percent": 105.135952
+          }
+        },
+        "canary": {
+          "baseline": {
+            "latency_avg_ms": 0.87,
+            "latency_stdev_ms": 2.55,
+            "latency_max_ms": 43.12,
+            "req_per_sec_avg": 52640.0,
+            "req_per_sec_stdev": 5510.0,
+            "requests_per_sec": 102929.54,
+            "qps": 102929.54,
+            "transfer_sec": "368.01MB",
+            "p50_ms": 0.207,
+            "p50_latency_ms": 0.207,
+            "p75_ms": 0.51,
+            "p75_latency_ms": 0.51,
+            "p90_ms": 1.69,
+            "p90_latency_ms": 1.69,
+            "p99_ms": 12.73,
+            "p99_latency_ms": 12.73,
+            "avg_latency_ms": 0.87,
+            "background_cpu_ticks": 331,
+            "system_cpu_ticks": 1242,
+            "background_cpu_share": 0.2665056360708535,
+            "background_pids": [
+              103422,
+              103423,
+              103424
+            ],
+            "raw_output": "Running 3s test @ http://127.0.0.1/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency     0.87ms    2.55ms  43.12ms   94.92%\n    Req/Sec    52.64k     5.51k   69.69k    70.49%\n  Latency Distribution\n     50%  207.00us\n     75%  510.00us\n     90%    1.69ms\n     99%   12.73ms\n  319061 requests in 3.10s, 1.11GB read\nRequests/sec: 102929.54\nTransfer/sec:    368.01MB\n"
+          },
+          "background_expected": true,
+          "candidate": {
+            "latency_avg_ms": 0.3328,
+            "latency_stdev_ms": 0.3233,
+            "latency_max_ms": 3.17,
+            "req_per_sec_avg": 50670.0,
+            "req_per_sec_stdev": 4380.0,
+            "requests_per_sec": 100781.62,
+            "qps": 100781.62,
+            "transfer_sec": "360.33MB",
+            "p50_ms": 0.25,
+            "p50_latency_ms": 0.25,
+            "p75_ms": 0.39,
+            "p75_latency_ms": 0.39,
+            "p90_ms": 0.655,
+            "p90_latency_ms": 0.655,
+            "p99_ms": 1.77,
+            "p99_latency_ms": 1.77,
+            "avg_latency_ms": 0.3328,
+            "background_cpu_ticks": 348,
+            "system_cpu_ticks": 1202,
+            "background_cpu_share": 0.2895174708818636,
+            "background_pids": [
+              103422,
+              103423,
+              103424
+            ],
+            "raw_output": "Running 3s test @ http://127.0.0.1/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   332.84us  323.27us   3.17ms   90.05%\n    Req/Sec    50.67k     4.38k   61.54k    68.33%\n  Latency Distribution\n     50%  250.00us\n     75%  390.00us\n     90%  655.00us\n     99%    1.77ms\n  302491 requests in 3.00s, 1.06GB read\nRequests/sec: 100781.62\nTransfer/sec:    360.33MB\n"
+          },
+          "background_share": 0.2895174708818636,
+          "background_retention": 1.051359516616314,
+          "nr_rejected": 0
+        },
+        "execution_results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1037,
+            "group": "pid-1037"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1042,
+            "group": "pid-1042"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1043,
+            "group": "pid-1043"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1044,
+            "group": "pid-1044"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 10000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 1045,
+            "group": "pid-1045"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103423",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103423,
+            "group": "pid-103423"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103423",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103423,
+            "group": "pid-103423"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103424",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103424,
+            "group": "pid-103424"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103424",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 103424,
+            "group": "pid-103424"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "103422",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 103422,
+            "group": "pid-103422"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "103422",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 103422,
+            "group": "pid-103422"
+          }
+        ],
+        "ebpf_load_results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "ebpf_attach_results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "ebpf_policy_results": [
+          {
+            "pid": 1042,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6777,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1043,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6796,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1044,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6815,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1045,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6834,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 1037,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6758,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 102852,
+            "workload_type": "batch_compute",
+            "class_id": 2,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 3016,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103423,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6853,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103424,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6872,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 103422,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 6891,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          }
+        ],
+        "ebpf_stats": {
+          "available": true,
+          "status": {
+            "available": true,
+            "sched_ext": true,
+            "bpf_lsm": true,
+            "programs": {
+              "sched_trace": {
+                "type": "sched_trace",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "events",
+                  "global_stats",
+                  "latency_histogram",
+                  "task_info_map"
+                ]
+              },
+              "net_policy": {
+                "type": "net_policy",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "/sys/fs/cgroup",
+                "maps": [
+                  "net_bucket_map",
+                  "net_global_map",
+                  "net_policy_map",
+                  "net_stats_map"
+                ]
+              },
+              "resource_ctrl": {
+                "type": "resource_ctrl",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "res_global_map",
+                  "res_policy_map",
+                  "res_usage_map"
+                ]
+              },
+              "security_policy": {
+                "type": "security_policy",
+                "loaded": true,
+                "attached": true,
+                "attach_target": "kernel-declared hooks",
+                "maps": [
+                  "sec_exec_map",
+                  "sec_policy_map",
+                  "sec_stats_map"
+                ]
+              }
+            },
+            "dry_run": false,
+            "last_error": ""
+          },
+          "hooks": {
+            "scheduler_trace": {
+              "available": true,
+              "loaded": true,
+              "name": "scheduler-trace",
+              "stats": {
+                "total_wakeups": 44670,
+                "total_switches": 46190,
+                "total_latency_ns": 8619762307,
+                "active_tasks": 17
+              },
+              "total_wakeups": 44670,
+              "total_switches": 46190,
+              "total_latency_ns": 8619762307,
+              "avg_latency_ns": 192965.35274233267
+            },
+            "network_policy": {
+              "available": true,
+              "loaded": true,
+              "name": "network-policy",
+              "stats": {
+                "total_packets": 303818,
+                "total_bytes": 26389234,
+                "dropped_packets": 0,
+                "dropped_bytes": 0
+              },
+              "total_packets": 303818,
+              "total_bytes": 26389234,
+              "dropped_packets": 0,
+              "dropped_bytes": 0,
+              "drop_rate": 0.0
+            },
+            "security_policy": {
+              "available": true,
+              "loaded": true,
+              "name": "security-policy",
+              "bpf_lsm": true,
+              "stats": {
+                "exec_checks": 45,
+                "exec_denied": 0
+              }
+            },
+            "resource_control": {
+              "available": true,
+              "loaded": true,
+              "name": "resource-control",
+              "stats": {
+                "sched_switches": 46541,
+                "policy_hits": 42983,
+                "process_exits": 61
+              },
+              "sched_switches": 46541,
+              "policy_hits": 42983,
+              "process_exits": 61
+            }
+          }
+        },
+        "ebpf_cleanup": {
+          "security-policy": true,
+          "resource-control": true,
+          "network-policy": true,
+          "scheduler-trace": true
+        },
+        "rollback": {
+          "restored": 19,
+          "groups_removed": 9,
+          "skipped": 0,
+          "entries": [
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103422",
+              "file": "cpu.max",
+              "previous": "max 100000"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103422",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/sshd.service",
+              "file": "cgroup.procs",
+              "previous": "103422"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103424",
+              "file": "cpu.max",
+              "previous": "max 100000"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103424",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/sshd.service",
+              "file": "cgroup.procs",
+              "previous": "103424"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103423",
+              "file": "cpu.max",
+              "previous": "max 100000"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103423",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/sshd.service",
+              "file": "cgroup.procs",
+              "previous": "103423"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1045",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/nginx.service",
+              "file": "cgroup.procs",
+              "previous": "1045"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1044",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/nginx.service",
+              "file": "cgroup.procs",
+              "previous": "1044"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1043",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/nginx.service",
+              "file": "cgroup.procs",
+              "previous": "1043"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1042",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/nginx.service",
+              "file": "cgroup.procs",
+              "previous": "1042"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1037",
+              "file": "cpu.weight",
+              "previous": "100"
+            },
+            {
+              "path": "/sys/fs/cgroup/system.slice/nginx.service",
+              "file": "cgroup.procs",
+              "previous": "1037"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1045",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1044",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1043",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1042",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-1037",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103424",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103423",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx/pid-103422",
+              "status": "removed"
+            },
+            {
+              "path": "/sys/fs/cgroup/schedx",
+              "status": "removed"
+            }
+          ],
+          "scx_entries": [
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 1037,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 1042,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 1043,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 1044,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 1045,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 103422,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 103423,
+              "status": "removed"
+            },
+            {
+              "source": "persistent_scx_daemon",
+              "pid": 103424,
+              "status": "removed"
+            }
+          ],
+          "ebpf_cleanup": {
+            "security-policy": true,
+            "resource-control": true,
+            "network-policy": true,
+            "scheduler-trace": true
+          }
+        },
+        "decision_log": [
+          {
+            "iteration": 1,
+            "phase": "probe",
+            "success": true,
+            "message": "probe completed",
+            "timestamp": "2026-08-29T20:48:49.012778"
+          },
+          {
+            "iteration": 2,
+            "phase": "analyze",
+            "success": true,
+            "message": "classification completed",
+            "timestamp": "2026-08-29T20:48:49.012889"
+          },
+          {
+            "iteration": 4,
+            "phase": "policy",
+            "success": true,
+            "message": "planned 7 actions for mode=latency_first",
+            "timestamp": "2026-08-29T20:48:49.013034"
+          },
+          {
+            "iteration": 5,
+            "phase": "canary_baseline",
+            "success": true,
+            "message": "captured baseline SLO canary",
+            "timestamp": "2026-08-29T20:48:52.119935"
+          },
+          {
+            "iteration": 6,
+            "phase": "ebpf_load",
+            "success": true,
+            "message": "loaded 4 eBPF programs (0 failed)",
+            "timestamp": "2026-08-29T20:48:52.329510"
+          },
+          {
+            "iteration": 7,
+            "phase": "ebpf_attach",
+            "success": true,
+            "message": "attached 4 eBPF programs (0 failed)",
+            "timestamp": "2026-08-29T20:48:52.413349"
+          },
+          {
+            "iteration": 8,
+            "phase": "scx",
+            "success": true,
+            "message": "applied 8 scx policies through daemon",
+            "timestamp": "2026-08-29T20:48:52.416363"
+          },
+          {
+            "iteration": 9,
+            "phase": "act",
+            "success": true,
+            "message": "executed 11 actions successfully",
+            "timestamp": "2026-08-29T20:48:52.438178"
+          },
+          {
+            "iteration": 10,
+            "phase": "ebpf_policy",
+            "success": true,
+            "message": "applied 9 eBPF policies (0 failed)",
+            "timestamp": "2026-08-29T20:48:52.618124"
+          },
+          {
+            "iteration": 11,
+            "phase": "canary_candidate",
+            "success": true,
+            "message": "captured candidate SLO canary",
+            "timestamp": "2026-08-29T20:48:55.622179"
+          },
+          {
+            "iteration": 12,
+            "phase": "ebpf_stats",
+            "success": true,
+            "message": "collected eBPF statistics",
+            "timestamp": "2026-08-29T20:48:55.800007"
+          },
+          {
+            "iteration": 13,
+            "phase": "verify",
+            "success": false,
+            "message": "canary rejected; rollback required",
+            "timestamp": "2026-08-29T20:48:55.941145"
+          },
+          {
+            "iteration": 14,
+            "phase": "rollback",
+            "success": true,
+            "message": "rollback completed: 19 settings restored, 9 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+            "timestamp": "2026-08-29T20:48:55.960428"
+          }
+        ]
+      }
+    }
+  }
+}

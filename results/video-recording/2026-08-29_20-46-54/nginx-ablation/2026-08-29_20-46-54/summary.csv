@@ -1,0 +1,5 @@
+phase,repeat,requests_per_sec,latency_avg_ms,p99_ms,notes
+default,1,60156.46,0.224,2.27,
+cgroup_only,1,78703.17,0.1308,1.12,
+scx_only,1,65972.53,0.1104,0.251,
+agent_combined,1,65154.59,0.1113,0.261,

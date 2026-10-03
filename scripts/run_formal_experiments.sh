@@ -17,7 +17,7 @@ for repeat in $(seq 1 "$REPEATS"); do
     echo "Running formal experiment repeat $repeat/$REPEATS"
     SCHEDX_OUTPUT="$output" SCHEDX_DURATION="$DURATION" SCHEDX_STRESS_CPU="$STRESS_CPU" \
         bash scripts/run_nginx_experiment.sh
-    SCHEDX_OUTPUT="$output" SCHEDX_DURATION="$DURATION" SCHEDX_STRESS_CPU="$STRESS_CPU" \
+    SCHEDX_REPEATS=1 SCHEDX_OUTPUT="$output" SCHEDX_DURATION="$DURATION" SCHEDX_STRESS_CPU="$STRESS_CPU" \
         bash scripts/run_redis_experiment.sh
     SCHEDX_OUTPUT="$output" SCHEDX_DURATION="$DURATION" SCHEDX_STRESS_CPU="$STRESS_CPU" \
         bash scripts/run_batch_experiment.sh
