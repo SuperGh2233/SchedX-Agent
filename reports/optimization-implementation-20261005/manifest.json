@@ -1,0 +1,62 @@
+{
+  "recorded_at_utc": "2026-10-04T18:34:12.441133+00:00",
+  "implementation_commit": "3380b4d71f2d8150cee815aa76cf2eed265063bc",
+  "production_source_sha256": "808b4104e5c817a6289f4a972f3261ebb07f6777785786fd0725125d45253d58",
+  "local_tests": {
+    "tests": 356,
+    "failures": 0,
+    "errors": 0,
+    "runtime_seconds": 3.725,
+    "junit": "local-tests.xml",
+    "log": "local-tests.log"
+  },
+  "lint": {
+    "rules": [
+      "F821",
+      "F401"
+    ],
+    "status": "passed"
+  },
+  "cli_help": {
+    "scripts/run_final_round_comparison.py": "passed",
+    "scripts/verify_autonomous_flow.py": "passed"
+  },
+  "native_source_comparisons": {
+    "preliminary_and_october_baseline_byte_identical": true,
+    "first_validated_native_and_current_candidate_byte_identical": true,
+    "files": {
+      "scx/scx_agent.bpf.c": {
+        "preliminary_sha256": "b38cf2c12497a1e07994923938cabef1709c5e841eb145fa51eaa40f5c2a6f37",
+        "candidate_sha256": "3204832e582705a7ae0d482c3c1ec5ae1a81ba332f611417461b2f5f8c0dccbb"
+      },
+      "scx/scx_agent_user.c": {
+        "preliminary_sha256": "607d135de1dbfaaf2847e12ec742a4ccc1499dfb62a6fa6978f69be4a50c90e5",
+        "candidate_sha256": "00a9ed0fc4e9fdfe0b446d62964edb1394a73a7bea598b1c1fe62d73d540e3ec"
+      },
+      "scx/scx_agent_common.h": {
+        "preliminary_sha256": "3133fce7bd450042e4a3313bc4c17a6c0343f8b64bf8d322f85ba16ea753ef3a",
+        "candidate_sha256": "cbec9e68971e9129cce3a14c6a0c034e1f9addd018b340426db874ffe0ea7508"
+      }
+    },
+    "limitation": "Source equality alone does not prove a binary was built from those sources, or establish full Agent performance gains."
+  },
+  "evidence_hashes": {
+    "local-tests.log": "a115e372085d4c68ce8d8f5d35eae1b1a7fa78134b85a42fe76fcf93b4ab27e1",
+    "local-tests.xml": "fab1b17aae550d3d8a5d96ba0262686b16a2726503740a8ba8dbba162232e852"
+  },
+  "real_kernel_validation": "pending; user asked to defer until the remote machine is powered on again",
+  "preliminary_vs_final_performance": "not_yet_measured",
+  "real_autonomous_flow": "not_yet_run",
+  "future_routes": {
+    "agent_group_fairness": "measurement_needed",
+    "outcome_feedback_routing": "not_implemented",
+    "native_hard_cpu_quota": "unsupported_on_verified_SP4_backend"
+  },
+  "shutdown": {
+    "authorization": "renewed after all optimization and acceptance work is complete",
+    "today_action": "none; user reports remote computer is already off",
+    "final_shutdown_verification": "pending"
+  },
+  "automation": "not_recreated",
+  "push_or_pull_request": "not_performed"
+}
