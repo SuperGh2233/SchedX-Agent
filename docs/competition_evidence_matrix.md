@@ -8,15 +8,18 @@ claim needs to be verified.
 
 The current implementation continues the same repository history. See
 [final-round improvements](final-round-improvements.md) for the substantive
-code changes and their evidence. The official preliminary submission commit
-must still be confirmed: `58903fe` is the optimization starting point, and
-must not be presented as the official preliminary version without confirmation.
+code changes and their evidence. The team has confirmed the preliminary
+submission as `b0591a10785b74cf980c8f0b4ed703a9a95e1aa2` (2026-07-30).
+Its Git object and ancestry to the current branch have been checked.
+`58903fe` remains the October optimization starting point, not the preliminary
+submission. The preliminary suite collects 141 tests; the current suite passes 241.
 
 The October paired experiments compare `59c1ca4` with `58903fe`; they show
 nginx/Redis P99 reductions of 49.48%/30.67% and a 2.26% batch throughput cost
 on the verified four-vCPU VM. The current implementation has 241 passing
 tests and additional monitor-state and task-idempotence verification. Keep
 these version-specific results separate from the earlier formal results below.
+An exact preliminary-versus-final paired performance comparison is still pending.
 
 Sources: [kernel/performance acceptance](../reports/optimization-20261004/report.md)
 and [continuous monitoring followup](../reports/optimization-continuous-20261004/report.md).
