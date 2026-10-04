@@ -14,24 +14,15 @@ from schedx.agent.context import AgentContext
 from schedx.agent.decision import DecisionEngine
 from schedx import __version__
 from schedx.agent.loop import AgentLoop
-from schedx.agent.executor import SafeActionExecutor
 from schedx.benchmark.runner import BenchmarkRunner
-from schedx.controllers.cgroup_controller import CgroupController
 from schedx.controllers.scx_controller import ScxController
-from schedx.policies.classifier import WorkloadClassifier
-from schedx.policies.planner import PolicyPlanner
 from schedx.policies.repository import PolicyRepository
 from schedx.probes.cgroup_probe import CgroupProbe
-from schedx.probes.procfs_probe import ProcfsProbe
 from schedx.report.report_generator import ReportGenerator
 from schedx.report.repeat_summary import RepeatSummaryGenerator
-from schedx.skills.act_skill import ActSkill
 from schedx.skills.analyze_skill import AnalyzeSkill
-from schedx.skills.policy_skill import PolicySkill
 from schedx.skills.probe_skill import ProbeSkill
-from schedx.skills.report_skill import ReportSkill
 from schedx.skills.rollback_skill import RollbackSkill
-from schedx.skills.verify_skill import VerifySkill
 from schedx.tool_runner import PROFILES, ToolCallRunner, emit_tool_result
 from schedx.scx_daemon import DEFAULT_SOCKET, ScxDaemonClient, serve_scx_daemon
 
@@ -85,6 +76,11 @@ def configure_canary(context: AgentContext, args: argparse.Namespace) -> None:
     min_p99_improvement = getattr(args, "canary_min_p99_improvement", None)
     if min_p99_improvement is not None:
         context.data["canary_min_p99_improvement"] = float(min_p99_improvement)
+    context.data["canary_error_limits"] = {
+        name: getattr(args, f"canary_{name}", 0.0)
+        for name in ("max_response_error_rate", "max_response_error_increase",
+                     "max_socket_errors_per_second", "max_socket_error_increase")
+    }
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -555,6 +551,22 @@ def _add_canary_arguments(parser: argparse.ArgumentParser) -> None:
         type=nonnegative_float,
         default=None,
         help="Required P99 latency improvement percentage for latency policies",
+    )
+    parser.add_argument(
+        "--canary-max-response-error-rate", type=unit_interval, default=0.0,
+        help="Maximum non-success responses / completed responses (default: zero)",
+    )
+    parser.add_argument(
+        "--canary-max-response-error-increase", type=unit_interval, default=0.0,
+        help="Maximum response-error ratio increase over baseline (default: zero)",
+    )
+    parser.add_argument(
+        "--canary-max-socket-errors-per-second", type=nonnegative_float, default=0.0,
+        help="Maximum socket error events per second (default: zero)",
+    )
+    parser.add_argument(
+        "--canary-max-socket-error-increase", type=nonnegative_float, default=0.0,
+        help="Maximum socket error events/second increase over baseline (default: zero)",
     )
 
 

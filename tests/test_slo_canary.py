@@ -14,6 +14,7 @@ def wrk_output(rps: float, p99_ms: float) -> str:
   75%    1.10ms
   90%    2.00ms
   99%    {p99_ms:.2f}ms
+{int(rps)} requests in 1.00s, 10.00MB read
 Requests/sec:  {rps:.2f}
 Transfer/sec:  10.00MB
 """

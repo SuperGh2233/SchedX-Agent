@@ -1,10 +1,49 @@
 from __future__ import annotations
 
+import math
 import re
 
 
-def parse_wrk_output(output: str) -> dict[str, float | str]:
-    metrics: dict[str, float | str] = {}
+def parse_wrk_output(output: str) -> dict[str, object]:
+    metrics: dict[str, object] = {}
+
+    completed = re.search(r"(\d+)\s+requests in\s+([0-9.]+)(us|ms|s|m|h)\s*,", output)
+    if completed:
+        metrics["requests_completed"] = int(completed.group(1))
+        metrics["elapsed_seconds"] = (
+            float(completed.group(2))
+            * {
+                "us": 0.000001,
+                "ms": 0.001,
+                "s": 1,
+                "m": 60,
+                "h": 3600,
+            }[completed.group(3)]
+        )
+
+    socket_errors = re.search(
+        r"Socket errors:[ \t]*connect (\d+), read (\d+), write (\d+), timeout (\d+)[ \t]*\r?$",
+        output,
+        re.MULTILINE,
+    )
+    response_errors = re.search(
+        r"Non-2xx or 3xx responses:[ \t]*(\d+)[ \t]*\r?$", output, re.MULTILINE
+    )
+    if completed or socket_errors:
+        metrics["socket_errors"] = dict(
+            zip(
+                ("connect", "read", "write", "timeout"),
+                map(int, socket_errors.groups()) if socket_errors else (0, 0, 0, 0),
+            )
+        )
+    if completed or response_errors:
+        metrics["non_success_responses"] = (
+            int(response_errors.group(1)) if response_errors else 0
+        )
+    if ("Socket errors:" in output and not socket_errors) or (
+        "Non-2xx or 3xx responses:" in output and not response_errors
+    ):
+        metrics["request_quality_invalid"] = True
 
     latency = re.search(
         r"Latency\s+([0-9.]+)(us|ms|s)\s+([0-9.]+)(us|ms|s)\s+([0-9.]+)(us|ms|s)",
@@ -41,6 +80,22 @@ def parse_wrk_output(output: str) -> dict[str, float | str]:
 
     if "latency_avg_ms" in metrics:
         metrics["avg_latency_ms"] = metrics["latency_avg_ms"]
+
+    if completed and not metrics.get("request_quality_invalid"):
+        count = metrics["requests_completed"]
+        elapsed = metrics["elapsed_seconds"]
+        errors = metrics["non_success_responses"]
+        if not math.isfinite(elapsed) or elapsed <= 0 or errors > count:
+            metrics["request_quality_invalid"] = True
+        else:
+            successful_rate = (count - errors) / elapsed
+            socket_rate = sum(metrics["socket_errors"].values()) / elapsed
+            if not math.isfinite(successful_rate) or not math.isfinite(socket_rate):
+                metrics["request_quality_invalid"] = True
+            else:
+                metrics["successful_requests_per_sec"] = successful_rate
+                metrics["response_error_rate"] = errors / count if count else 0.0
+                metrics["socket_errors_per_second"] = socket_rate
 
     return metrics
 

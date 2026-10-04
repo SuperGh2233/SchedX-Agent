@@ -48,12 +48,11 @@ class VerifySkill:
         if isinstance(canary, dict):
             try:
                 verifier = CanaryVerifier(
-                    min_background_retention=float(
-                        context.data.get("canary_min_background_retention", 0.25)
-                    ),
+                    min_background_retention=context.data.get("canary_min_background_retention", 0.25),
                     min_p99_improvement_percent=context.data.get(
                         "canary_min_p99_improvement"
                     ),
+                    **context.data.get("canary_error_limits", {}),
                 )
             except (TypeError, ValueError) as exc:
                 verdict_data = {
@@ -79,6 +78,7 @@ class VerifySkill:
                 background_share=canary.get("background_share"),
                 background_retention=canary.get("background_retention"),
                 background_expected=bool(canary.get("background_expected")),
+                error_metrics_expected=isinstance(context.data.get("canary_config"), dict),
             )
             verdict_data = verdict.to_dict()
             context.data["canary_verdict"] = verdict_data

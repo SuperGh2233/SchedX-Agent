@@ -17,12 +17,12 @@ class WrkCanaryConfig:
     threads: int = 2
 
     def __post_init__(self) -> None:
-        if not self.url.startswith(("http://", "https://")):
+        if not isinstance(self.url, str) or not self.url.startswith(("http://", "https://")):
             raise ValueError("canary URL must use http:// or https://")
-        if self.duration < 1:
-            raise ValueError("canary duration must be at least one second")
-        if self.connections < 1 or self.threads < 1:
-            raise ValueError("canary connections and threads must be positive")
+        for name in ("duration", "connections", "threads"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                raise ValueError(f"canary {name} must be a positive integer")
 
 
 class WrkSloProbe:

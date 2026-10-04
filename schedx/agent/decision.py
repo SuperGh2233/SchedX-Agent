@@ -166,7 +166,7 @@ class DecisionEngine:
         if not isinstance(metrics, Mapping):
             return None
         latency = ("p99_ms", ("p99_ms", "p99_latency_ms", "mean_p99_ms"))
-        throughput = ("requests_per_sec", ("requests_per_sec", "rps", "mean_requests_per_sec", "qps"))
+        throughput = ("requests_per_sec", ("successful_requests_per_sec", "requests_per_sec", "rps", "mean_requests_per_sec", "qps"))
         choices = [latency] if mode in {"latency_first", "isolate_background"} else [throughput]
         if mode == "balanced":
             choices.append(latency)
