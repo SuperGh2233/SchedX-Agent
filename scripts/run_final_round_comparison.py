@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+"""Common external measurements for preliminary/final native scheduler binaries.
+
+Both binaries use their compiled fairness defaults and identical cgroup policy
+commands. This measures the native component, not the entire autonomous Agent.
+Unsupported historical Python benchmark APIs are never invoked.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import re
+import shutil
+import subprocess
+import sys
+import threading
+import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from schedx.benchmark.common import describe
+from schedx.benchmark.redis_parser import parse_redis_benchmark_output
+from schedx.benchmark.scoped_workloads import OwnedWorkloads, process_ticks
+from schedx.benchmark.sysbench_parser import parse_sysbench_output
+from schedx.benchmark.versioning import version_identity
+from schedx.benchmark.wrk_parser import parse_wrk_output
+from schedx.controllers.scx_controller import ScxController
+from schedx.cpu_backend import CpuBackendLease, backend_lock_path
+from schedx.policies.verifier import CanaryVerifier
+from schedx.scx_daemon import ScxDaemonClient
+from schedx.state import atomic_json
+
+
+METRICS = {"nginx": {"requests_per_sec": "higher", "p99_ms": "lower"},
+           "redis": {"requests_per_sec": "higher", "p99_ms": "lower"},
+           "batch": {"events_per_second": "higher"}}
+POLICIES = {"service": (1, 10000), "redis": (1, 10000), "noise": (3, 100), "batch": (2, 1500)}
+
+
+def execution_order(repeat: int) -> list[str]:
+    order = ["baseline", "candidate"] if repeat % 2 else ["candidate", "baseline"]
+    order.insert((repeat - 1) % 3, "reference")
+    return order
+
+
+class NativeSession:
+    """Bounded IPC without changing either binary's compiled fairness defaults."""
+
+    def __init__(self, binary: Path, groups: dict[str, Path], output: Path):
+        self.binary, self.groups, self.output = binary, groups, output
+        self.controller = ScxController(dry_run=False)
+        self.threads = []
+        self.logs = []
+        self.lease = None
+        self.evidence = {"binary": str(binary), "fairness_configuration": "compiled defaults; no set fairness command"}
+
+    def __enter__(self):
+        if self.controller.state() != "disabled":
+            raise RuntimeError("another native scheduler is active")
+        self.lease = CpuBackendLease(backend_lock_path(self.controller.sys_root), native=True).acquire()
+        self.controller._process = subprocess.Popen([str(self.binary.resolve())], stdin=subprocess.PIPE,
+                                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1,
+                                                    pass_fds=(self.lease.fd,))
+        for name in ("stdout", "stderr"):
+            log = (self.output / f"native-{name}.log").open("w")
+            self.logs.append(log)
+            stream = getattr(self.controller._process, name)
+            thread = threading.Thread(target=self._pump, args=(stream, log, name), daemon=True)
+            thread.start()
+            self.threads.append(thread)
+        try:
+            self.evidence["startup"] = self.controller._read_until_prompt()
+            if self.controller.state() != "enabled" or self.controller.current_scheduler() != "schedx_agent":
+                raise RuntimeError("requested native binary did not attach")
+            self.evidence["policies"] = {}
+            for role, group in self.groups.items():
+                class_id, weight = POLICIES[role]
+                inode = group.stat().st_ino
+                accepted = self.controller.set_cgroup_policy(inode, class_id, weight)
+                self.evidence["policies"][role] = {"cgroup_id": inode, "class_id": class_id,
+                                                   "weight": weight, "acknowledged": accepted}
+                if not accepted:
+                    raise RuntimeError(f"native policy was not acknowledged: {role}")
+            return self
+        except BaseException:
+            self.close()
+            raise
+
+    def _pump(self, stream, log, name):
+        for line in iter(stream.readline, ""):
+            log.write(line)
+            log.flush()
+            if name == "stdout":
+                self.controller._stdout_lines.put(line)
+            else:
+                self.controller._stderr_tail.append(line)
+        if name == "stdout":
+            self.controller._stdout_lines.put(None)
+
+    def alive(self) -> bool:
+        return self.controller._process is not None and self.controller._process.poll() is None and self.controller.state() == "enabled"
+
+    def close(self):
+        self.controller.stop_scheduler()
+        if self.lease is not None:
+            self.lease.release()
+            self.lease = None
+        for thread in self.threads:
+            thread.join(timeout=2)
+        self.evidence["output_readers_stopped"] = not any(thread.is_alive() for thread in self.threads)
+        if self.evidence["output_readers_stopped"]:
+            for log in self.logs:
+                log.close()
+        self.evidence["final_scheduler_state"] = self.controller.state()
+
+
+def client_metrics(case: str, raw: str, returncode: int) -> tuple[dict, list[str]]:
+    failures = []
+    if returncode != 0:
+        failures.append("client_nonzero_exit")
+    if case == "nginx":
+        metrics = parse_wrk_output(raw)
+        verdict = CanaryVerifier().evaluate("balanced", metrics, metrics, error_metrics_expected=True)
+        if not verdict.accepted or verdict.status != "accepted":
+            failures.extend(verdict.reasons)
+        if "successful_requests_per_sec" in metrics:
+            metrics["raw_requests_per_sec"] = metrics.get("requests_per_sec")
+            metrics["requests_per_sec"] = metrics["successful_requests_per_sec"]
+    elif case == "redis":
+        metrics = parse_redis_benchmark_output(raw)
+        if re.search(r"(?:^|\n)\s*(?:Error:|Error from server:|Unexpected error reply)", raw, re.IGNORECASE):
+            failures.append("redis_client_error")
+        if not metrics.get("requests") or not metrics.get("elapsed_seconds"):
+            failures.append("missing_redis_completion")
+    else:
+        metrics = parse_sysbench_output(raw)
+        if not metrics.get("events") or not metrics.get("elapsed_seconds"):
+            failures.append("missing_batch_completion")
+    for metric in METRICS[case]:
+        value = metrics.get(metric)
+        if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value) or value < 0:
+            failures.append(f"missing_or_invalid_{metric}")
+    return metrics, failures
+
+
+def compare(rows: list[dict], minimum_pairs: int = 5) -> dict:
+    results, failures = {}, []
+    for case, metrics in METRICS.items():
+        rounds = {}
+        for row in rows:
+            if row["case"] == case:
+                rounds.setdefault(row["repeat"], {})[row["version"]] = row
+        results[case] = {}
+        for metric, direction in metrics.items():
+            pairs = []
+            for repeat, versions in sorted(rounds.items()):
+                invalid = []
+                retention = {}
+                if set(versions) != {"reference", "baseline", "candidate"}:
+                    invalid.append("missing_version_or_reference")
+                reference = versions.get("reference", {}).get("background_cpu_seconds_per_wall_second")
+                for version in ("reference", "baseline", "candidate"):
+                    invalid.extend(f"{version}:{reason}" for reason in versions.get(version, {}).get("failures", []))
+                for version in ("baseline", "candidate"):
+                    progress = versions.get(version, {}).get("background_cpu_seconds_per_wall_second")
+                    if any(isinstance(value, bool) or not isinstance(value, (float, int))
+                           or not math.isfinite(value) or value < 0 for value in (reference, progress)) or reference == 0:
+                        invalid.append("missing_background_reference")
+                    else:
+                        retention[version] = progress / reference
+                        if retention[version] < 0.25:
+                            invalid.append(f"{version}:background_retention_below_25_percent")
+                before = versions.get("baseline", {}).get("metrics", {}).get(metric)
+                after = versions.get("candidate", {}).get("metrics", {}).get(metric)
+                values = (before, after)
+                if any(isinstance(value, bool) or not isinstance(value, (int, float))
+                       or not math.isfinite(value) or value < 0 for value in values) or before == 0:
+                    invalid.append("metric_not_comparable")
+                delta = (after / before - 1) * 100 if not invalid else None
+                if delta is not None and not math.isfinite(delta):
+                    invalid.append("nonfinite_delta")
+                    delta = None
+                pairs.append({"repeat": repeat, "baseline": before, "candidate": after,
+                              "background_retention": retention, "change_percent": delta,
+                              "valid": not invalid, "invalid_reasons": sorted(set(invalid))})
+            valid = [pair for pair in pairs if pair["valid"]]
+            statistics = describe(valid, "change_percent")
+            interval = statistics["ci95"]
+            regressed = bool(interval and (interval[1] < -5 if direction == "higher" else interval[0] > 5))
+            if len(valid) < minimum_pairs:
+                failures.append(f"{case}:{metric}:insufficient_valid_pairs")
+            if regressed:
+                failures.append(f"{case}:{metric}:stable_regression_over_5_percent")
+            results[case][metric] = {"direction": direction, "pairs": pairs,
+                                     "valid_pair_count": len(valid), "statistics": statistics,
+                                     "stable_regression_over_5_percent": regressed}
+    return {"status": "passed" if not failures else "not_accepted", "failures": failures, "comparisons": results}
+
+
+def measure(case, version, binary, workloads, output, duration, warmup, repeat, threads):
+    output.mkdir(parents=True, exist_ok=False)
+    row = {"case": case, "version": version, "repeat": repeat, "failures": []}
+    native = None
+    try:
+        workloads.noise(True)
+        if version != "reference":
+            native = NativeSession(binary, workloads.groups, output)
+            native.__enter__()
+        time.sleep(warmup)
+        background_before = workloads.pids("noise")
+        before = process_ticks(background_before)
+        start = time.monotonic()
+        if case == "nginx":
+            command = ["wrk", "-t2", "-c64", f"-d{duration}s", "--latency", workloads.url]
+        elif case == "redis":
+            command = ["redis-benchmark", "-h", "127.0.0.1", "-p", str(workloads.redis_port),
+                       "-n", str(duration * 50000), "-c", "64", "--threads", "2", "--precision", "3", "-t", "get"]
+        else:
+            command = ["sysbench", "cpu", f"--threads={threads}", f"--time={duration}", "run"]
+        if case == "batch":
+            process = workloads.spawn("batch", command)
+            process.wait(timeout=duration + 30)
+            raw = Path(workloads.logs[-1].name).read_text()
+            returncode = process.returncode
+        else:
+            completed = subprocess.run(command, capture_output=True, text=True, timeout=duration * 5 + 30)
+            raw = completed.stdout + completed.stderr
+            returncode = completed.returncode
+        elapsed = time.monotonic() - start
+        background_after = workloads.pids("noise")
+        after = process_ticks(background_after)
+        if not background_before or background_before != background_after:
+            row["failures"].append("background_process_set_changed")
+        (output / "client-output.txt").write_text(raw)
+        row.update(command=command, client_returncode=returncode, wall_seconds=elapsed,
+                   background_cpu_ticks=max(0, after - before),
+                   background_cpu_seconds_per_wall_second=max(0, after - before) / os.sysconf("SC_CLK_TCK") / elapsed)
+        row["metrics"], client_failures = client_metrics(case, raw, returncode)
+        row["failures"].extend(client_failures)
+        if case == "redis" and row["metrics"].get("requests") != duration * 50000:
+            row["failures"].append("redis_incomplete_work")
+        if native is not None and not native.alive():
+            row["failures"].append("unexpected_native_scheduler_exit")
+        if version == "reference" and ScxController().state() != "disabled":
+            row["failures"].append("reference_scheduler_changed")
+    except Exception as exc:
+        row["failures"].append(f"{type(exc).__name__}: {exc}")
+        if isinstance(exc, subprocess.TimeoutExpired):
+            pieces = [value.decode(errors="replace") if isinstance(value, bytes) else (value or "")
+                      for value in (exc.stdout, exc.stderr)]
+            (output / "client-output-partial.txt").write_text("".join(pieces))
+    except BaseException as exc:
+        row["failures"].append(f"{type(exc).__name__}: interrupted")
+        raise
+    finally:
+        if native is not None:
+            native.close()
+            row["native_evidence"] = native.evidence
+            if not native.evidence.get("output_readers_stopped"):
+                row["failures"].append("native_output_reader_still_running")
+        workloads.stop("batch")
+        workloads.stop("noise")
+        row["final_scheduler_state"] = ScxController().state()
+        if row["final_scheduler_state"] != "disabled":
+            row["failures"].append("native_cleanup_incomplete")
+        atomic_json(output / "measurement.json", row)
+    return row
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--repository", type=Path, default=Path(__file__).resolve().parents[1])
+    for version in ("baseline", "candidate"):
+        parser.add_argument(f"--{version}-source", type=Path, required=True)
+        parser.add_argument(f"--{version}-ref", required=True)
+        parser.add_argument(f"--{version}-binary", type=Path, required=True)
+        parser.add_argument(f"--{version}-build-manifest", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--duration", type=int, default=10)
+    parser.add_argument("--warmup", type=float, default=1.0)
+    parser.add_argument("--workers", type=int, default=3)
+    parser.add_argument("--batch-threads", type=int, default=3)
+    args = parser.parse_args()
+    if not sys.platform.startswith("linux") or os.geteuid() != 0:
+        parser.error("native comparison requires Linux root")
+    if args.repeats < 5 or args.duration < 1 or args.workers < 1 or args.batch_threads < 1 or not math.isfinite(args.warmup) or args.warmup < 0:
+        parser.error("at least five pairs, positive workloads and finite non-negative warmup are required")
+    if ScxController().state() != "disabled" or ScxDaemonClient().is_available():
+        parser.error("comparison requires no active native scheduler or persistent daemon")
+    if shutil.which("sysbench") is None:
+        parser.error("sysbench is required")
+    identities = {version: version_identity(args.repository, getattr(args, version + "_source"),
+                                            getattr(args, version + "_ref"), getattr(args, version + "_binary"),
+                                            getattr(args, version + "_build_manifest"))
+                  for version in ("baseline", "candidate")}
+    btf_digest = hashlib.sha256(Path("/sys/kernel/btf/vmlinux").read_bytes()).hexdigest()
+    for version, identity in identities.items():
+        manifest = identity["build_manifest"]
+        if manifest.get("kernel_release") != os.uname().release or manifest.get("btf_sha256") != btf_digest:
+            parser.error(f"{version} build manifest does not match this kernel/BTF")
+    allowed = sorted(os.sched_getaffinity(0))
+    if len(allowed) < 2:
+        parser.error("two or more allowed CPUs are needed to reserve a measurement/control CPU")
+    work_cpus, housekeeping_cpu = set(allowed[:-1]), allowed[-1]
+    args.output.mkdir(parents=True, exist_ok=False)
+    report = {"status": "running", "comparison_scope": "native sched_ext component with common static class policies",
+              "fairness_parameters": "each binary's compiled defaults; preliminary algorithm and settings are not patched",
+              "version_identity": identities, "kernel": os.uname().release,
+              "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
+              "background_progress_definition": "owned noise CPU seconds / wall second; minimum 25% of paired default-scheduler reference",
+              "duration": args.duration, "repeats": args.repeats, "runs": [], "execution_order": []}
+    workloads = OwnedWorkloads(args.output / "workloads", workers=args.workers, redis=True, cpus=work_cpus)
+    try:
+        os.sched_setaffinity(0, {housekeeping_cpu})
+        workloads.__enter__()
+        # Check the installed client's error behavior on an owned Redis server.
+        error_probe = subprocess.run(["redis-benchmark", "-h", "127.0.0.1", "-p", str(workloads.redis_port),
+                                      "-n", "1", "-c", "1", "SCHEDX_UNKNOWN_COMMAND"],
+                                     capture_output=True, text=True, timeout=5)
+        error_text = error_probe.stdout + error_probe.stderr
+        (args.output / "redis-error-probe.txt").write_text(error_text)
+        if error_probe.returncode == 0 or "unknown command" not in error_text.lower():
+            raise RuntimeError("installed Redis benchmark did not demonstrate fatal server-error reporting")
+        report["redis_error_probe"] = {"returncode": error_probe.returncode, "fatal_server_error_observed": True}
+        for repeat in range(1, args.repeats + 1):
+            cases = list(METRICS)
+            offset = (repeat - 1) % len(cases)
+            for case in cases[offset:] + cases[:offset]:
+                order = execution_order(repeat)
+                report["execution_order"].append({"repeat": repeat, "case": case, "versions": order})
+                for version in order:
+                    binary = None if version == "reference" else getattr(args, version + "_binary")
+                    row = measure(case, version, binary, workloads, args.output / case / f"repeat-{repeat}" / version,
+                                  args.duration, args.warmup, repeat, args.batch_threads)
+                    report["runs"].append(row)
+                    report["assessment"] = compare(report["runs"])
+                    atomic_json(args.output / "summary.json", report)
+                    print(json.dumps({"case": case, "repeat": repeat, "version": version, "failures": row["failures"]}), flush=True)
+                    if row["final_scheduler_state"] != "disabled":
+                        raise RuntimeError("cleanup did not restore the default scheduler; stopping comparisons")
+                    if "unexpected_native_scheduler_exit" in row["failures"]:
+                        raise RuntimeError("unexpected scheduler exit; evidence saved, repair required before more trials")
+        report["status"] = report["assessment"]["status"]
+    except BaseException as exc:
+        report.update(status="failed", error=f"{type(exc).__name__}: {exc}")
+    finally:
+        workloads.close()
+        os.sched_setaffinity(0, set(allowed))
+        report["cleanup"] = workloads.cleanup
+        report["final_scheduler_state"] = ScxController().state()
+        if workloads.cleanup["status"] != "passed" or report["final_scheduler_state"] != "disabled":
+            report["status"] = "failed"
+        atomic_json(args.output / "summary.json", report)
+    if report["status"] != "passed":
+        raise SystemExit(1)
+
+
+if __name__ == "__main__":
+    main()

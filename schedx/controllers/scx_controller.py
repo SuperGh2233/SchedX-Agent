@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import signal
@@ -12,6 +11,7 @@ from collections import deque
 from functools import wraps
 from dataclasses import dataclass
 from pathlib import Path
+from schedx.cpu_backend import CpuBackendLease, backend_lock_path
 from typing import Any
 
 def _serialized(method):
@@ -94,6 +94,7 @@ class ScxController:
         scheduler_binary: str = "scx_agent",
         background_interval: int | None = None,
         command_timeout: float = 5.0,
+        backend_lock_file: Path | None = None,
     ) -> None:
         self.sys_root = sys_root
         self.dry_run = dry_run
@@ -120,6 +121,8 @@ class ScxController:
         self._adaptive_stop = threading.Event()
         self._adaptive_thread = None
         self._adaptive_report = {}
+        self.backend_lock_file = backend_lock_file or backend_lock_path(sys_root)
+        self._backend_lease = None
 
     def is_available(self) -> bool:
         """Check if sched_ext is available on this system."""
@@ -191,6 +194,17 @@ class ScxController:
         if self.dry_run:
             return True
 
+        if self._process is not None and self._process.poll() is None:
+            return True
+        self.stop_scheduler()
+        self._backend_lease = CpuBackendLease(self.backend_lock_file, native=True).acquire()
+        try:
+            return self._start_process(command, scheduler_name)
+        except BaseException:
+            self.stop_scheduler()
+            raise
+
+    def _start_process(self, command: list[str], scheduler_name: str) -> bool:
         # Start the scheduler process with pipe for communication
         self._process = subprocess.Popen(
             command,
@@ -199,6 +213,7 @@ class ScxController:
             stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
+            pass_fds=(self._backend_lease.fd,),
         )
 
         self._stdout_lines = queue.Queue()
@@ -235,10 +250,16 @@ class ScxController:
         """
         self._adaptive_stop.set()
         if not self._process:
+            if self._backend_lease is not None:
+                self._backend_lease.release()
+                self._backend_lease = None
             return True
 
         if self.dry_run:
             self._process = None
+            if self._backend_lease is not None:
+                self._backend_lease.release()
+                self._backend_lease = None
             return True
 
         try:
@@ -262,6 +283,9 @@ class ScxController:
                 pass
 
         self._process = None
+        if self._backend_lease is not None:
+            self._backend_lease.release()
+            self._backend_lease = None
         return True
 
     @_serialized
@@ -596,6 +620,9 @@ class ScxController:
                 process.kill()
                 process.wait(timeout=2)
                 self._process = None
+                if self._backend_lease is not None:
+                    self._backend_lease.release()
+                    self._backend_lease = None
                 raise TimeoutError("scheduler response deadline exceeded: " + "".join(self._stderr_tail)[-4096:])
             if line is None:
                 raise RuntimeError("scheduler closed its response stream: " + "".join(self._stderr_tail)[-4096:])

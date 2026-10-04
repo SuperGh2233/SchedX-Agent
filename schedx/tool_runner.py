@@ -22,6 +22,7 @@ from schedx.controllers.scx_controller import (
     ScxController,
 )
 from schedx.scx_daemon import ScxDaemonClient
+from schedx.cpu_backend import CpuBackendBusy, CpuBackendLease, backend_lock_path
 
 
 @dataclass(frozen=True)
@@ -138,7 +139,8 @@ class ToolCallRunner:
         parent = self.root / "schedx-agents" / agent
         tool = parent / run_id
         self.state_dir.mkdir(parents=True, exist_ok=True)
-        scx, daemon = ScxController(dry_run=False), ScxDaemonClient()
+        lease_path = backend_lock_path() if self.root == Path("/sys/fs/cgroup") else self.root.parent / "schedx-cpu-backend.lock"
+        scx, daemon = ScxController(dry_run=False, backend_lock_file=lease_path), ScxDaemonClient()
         if hard_quota and scx.state() == "enabled":
             raise CpuQuotaUnavailable(
                 "The active native scheduler has no verified hard CPU quota support; "
@@ -147,12 +149,18 @@ class ToolCallRunner:
         process = None
         cgroup_id = None
         started = time.monotonic()
-        scx_started = scx_used = timed_out = False
+        scx_started = scx_used = timed_out = contract_breached = False
         scx_error = ""
         descriptors = []
         readers, captures = [], {}
         result = None
+        quota_lease = None
         try:
+            if hard_quota:
+                try:
+                    quota_lease = CpuBackendLease(lease_path, native=False).acquire()
+                except CpuBackendBusy as exc:
+                    raise CpuQuotaUnavailable(str(exc)) from exc
             self._prepare_group(parent, tool, profile)
             if hard_quota:
                 self._require_cgroup_quota(scx, tool, quota)
@@ -163,7 +171,7 @@ class ToolCallRunner:
             process = subprocess.Popen(
                 [sys.executable, str(Path(__file__).with_name("tool_child.py")), str(ready_w), str(gate_r), str(tool), *command],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                pass_fds=(ready_w, gate_r), start_new_session=True,
+                pass_fds=(ready_w, gate_r, *((quota_lease.fd,) if quota_lease else ())), start_new_session=True,
             )
             for descriptor in (ready_w, gate_r):
                 os.close(descriptor)
@@ -197,11 +205,20 @@ class ToolCallRunner:
             os.write(gate_w, b"G")
             os.close(gate_w)
             descriptors.remove(gate_w)
-            try:
-                process.wait(timeout=max(0.01, timeout - (time.monotonic() - started)))
-            except subprocess.TimeoutExpired:
-                timed_out = True
-                self._stop_tree(process, tool)
+            while process.poll() is None:
+                if hard_quota and scx.state() == "enabled":
+                    contract_breached = True
+                    self._stop_tree(process, tool)
+                    break
+                remaining = timeout - (time.monotonic() - started)
+                if remaining <= 0:
+                    timed_out = True
+                    self._stop_tree(process, tool)
+                    break
+                try:
+                    process.wait(timeout=min(remaining, 0.1) if hard_quota else remaining)
+                except subprocess.TimeoutExpired:
+                    continue
             metrics = self._metrics(tool)
             scx_metrics = {}
             if scx_used and not scx_started:
@@ -218,7 +235,8 @@ class ToolCallRunner:
                 "cpu_control_support": scx.cpu_control_support(),
                 "cpu_control_support_at_launch": support_at_launch,
                 "cpu_limit_mode": cpu_limit_mode, "hard_cpu_quota_requested": hard_quota,
-                "returncode": 124 if timed_out else process.returncode, "timed_out": timed_out,
+                "returncode": 125 if contract_breached else 124 if timed_out else process.returncode,
+                "timed_out": timed_out, "cpu_contract_breached": contract_breached,
                 "duration_seconds": time.monotonic() - started, "metrics": metrics, "scx_cgroup_metrics": scx_metrics,
             }
         finally:
@@ -237,6 +255,8 @@ class ToolCallRunner:
             if scx_started:
                 scx.stop_scheduler()
             cleanup = self._cleanup(tool, parent)
+            if quota_lease is not None:
+                quota_lease.release()
             if result is not None:
                 result["cleanup"] = {"policy_removed": policy_cleanup, **cleanup}
                 for name, capture in captures.items():
@@ -260,6 +280,8 @@ class ToolCallRunner:
             )
         if timed_out:
             result["feedback"].append("tool exceeded its time limit; process tree stopped")
+        if contract_breached:
+            result["feedback"].append("CPU backend changed during a hard-quota run; process tree stopped")
         result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"])
         result["retry_recommended"] = bool(result["next_resource_hint"])
         self._save(result)

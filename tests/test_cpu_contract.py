@@ -96,3 +96,16 @@ def test_cli_defaults_to_hard_and_allows_explicit_soft_mode():
     parser = build_parser()
     assert parser.parse_args(["tool-run", "--", "true"]).cpu_limit_mode == "hard"
     assert parser.parse_args(["tool-run", "--cpu-limit-mode", "soft", "--", "true"]).cpu_limit_mode == "soft"
+
+
+def test_external_backend_change_during_execution_is_reported_as_failure(monkeypatch, tmp_path):
+    marker = tmp_path / "running"
+    monkeypatch.setattr(ScxController, "state", lambda self: "enabled" if marker.exists() else "disabled")
+    monkeypatch.setattr(ScxController, "cpu_control_support", lambda self: {"cpu_max": "cgroup_v2"})
+    runner = QuotaFilesystemRunner(root=tmp_path / "groups", state_dir=tmp_path / "state")
+    result = runner.run([sys.executable, "-c", f"from pathlib import Path; import time; Path({str(marker)!r}).touch(); time.sleep(60)"],
+                        intent="background", timeout=5)
+    assert result["returncode"] == 125
+    assert result["cpu_contract_breached"]
+    assert not result["timed_out"]
+    assert result["cleanup"]["cgroup_removed"]
