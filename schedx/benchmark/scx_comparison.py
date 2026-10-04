@@ -276,8 +276,10 @@ def _start_scheduler_context(
 def _stop_scheduler_context(context: dict[str, Any], log_entries: list[dict[str, Any]]) -> None:
     controller = context.get("controller")
     if controller is not None:
-        controller.stop_scheduler()
-        log_entries.append({"event": "stop", "scheduler": "scx_agent", "stopped": True})
+        stopped = controller.stop_scheduler()
+        log_entries.append({"event": "stop", "scheduler": "scx_agent", "stopped": stopped})
+        if not stopped:
+            raise RuntimeError("native scheduler cleanup failed; stop comparisons and retry recovery")
     process = context.get("process")
     if process is not None and process.poll() is None:
         try:

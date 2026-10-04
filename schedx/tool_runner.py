@@ -197,7 +197,8 @@ class ToolCallRunner:
                         scx_error = "scheduler did not acknowledge tool policy; using cgroup-only"
                 except Exception as exc:
                     scx_error = str(exc)
-                    scx.stop_scheduler()
+                    if not scx.stop_scheduler():
+                        raise RuntimeError("failed to stop the attempted native scheduler before tool execution") from exc
                     scx_started = False
             if hard_quota:
                 self._require_cgroup_quota(scx, tool, quota)
@@ -252,13 +253,14 @@ class ToolCallRunner:
                     policy_cleanup = (scx if scx_started else daemon).remove_cgroup_policy(cgroup_id)
                 except (OSError, RuntimeError):
                     policy_cleanup = False
-            if scx_started:
-                scx.stop_scheduler()
+            scheduler_stopped = True
+            if scx_started or getattr(scx, "_process", None) is not None or getattr(scx, "_backend_lease", None) is not None:
+                scheduler_stopped = scx.stop_scheduler()
             cleanup = self._cleanup(tool, parent)
             if quota_lease is not None:
                 quota_lease.release()
             if result is not None:
-                result["cleanup"] = {"policy_removed": policy_cleanup, **cleanup}
+                result["cleanup"] = {"policy_removed": policy_cleanup, "scheduler_stopped": scheduler_stopped, **cleanup}
                 for name, capture in captures.items():
                     path = Path(capture["path"])
                     result[name] = path.read_bytes().decode("utf-8", errors="replace") if path.exists() else ""
@@ -268,7 +270,7 @@ class ToolCallRunner:
                         result.setdefault("capture_errors", []).append(capture["error"])
         if result is None:
             raise RuntimeError("tool did not produce an execution result")
-        if not result["cleanup"]["policy_removed"] or not result["cleanup"]["cgroup_removed"]:
+        if not result["cleanup"]["policy_removed"] or not result["cleanup"]["cgroup_removed"] or not result["cleanup"]["scheduler_stopped"]:
             if result["returncode"] == 0:
                 result["returncode"] = 125
         result["feedback"] = self._feedback(result["metrics"], result["returncode"])

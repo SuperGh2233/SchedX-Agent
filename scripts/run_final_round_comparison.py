@@ -105,8 +105,9 @@ class NativeSession:
         return self.controller._process is not None and self.controller._process.poll() is None and self.controller.state() == "enabled"
 
     def close(self):
-        self.controller.stop_scheduler()
-        if self.lease is not None:
+        stopped = self.controller.stop_scheduler()
+        self.evidence["scheduler_stopped"] = stopped
+        if stopped and self.lease is not None:
             self.lease.release()
             self.lease = None
         for thread in self.threads:
@@ -262,6 +263,8 @@ def measure(case, version, binary, workloads, output, duration, warmup, repeat, 
             row["native_evidence"] = native.evidence
             if not native.evidence.get("output_readers_stopped"):
                 row["failures"].append("native_output_reader_still_running")
+            if not native.evidence.get("scheduler_stopped"):
+                row["failures"].append("native_scheduler_stop_failed")
         workloads.stop("batch")
         workloads.stop("noise")
         row["final_scheduler_state"] = ScxController().state()

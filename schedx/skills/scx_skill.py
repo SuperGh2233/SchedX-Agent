@@ -116,9 +116,14 @@ class ScxSkill:
         # Start scheduler if not running
         if not self.controller.status().get("process_running"):
             try:
+                # Persist lifecycle ownership before attachment, including a
+                # failed start that cannot subsequently stop its child.
+                context.data["_scx_controller"] = self.controller
+                self._record_rollback(context, "standalone_scx", [], {})
                 if mode == "throughput_first":
                     self.controller.background_interval = SCX_FAIRNESS_THROUGHPUT_BACKGROUND
-                self.controller.start_scheduler("scx_agent")
+                if not self.controller.start_scheduler("scx_agent"):
+                    raise RuntimeError("scheduler did not start")
             except Exception as e:
                 context.data["scx_status"] = "error"
                 return SkillResult(

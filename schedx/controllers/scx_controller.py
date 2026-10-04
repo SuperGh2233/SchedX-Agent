@@ -123,6 +123,7 @@ class ScxController:
         self._adaptive_report = {}
         self.backend_lock_file = backend_lock_file or backend_lock_path(sys_root)
         self._backend_lease = None
+        self._last_stop_error = ""
 
     def is_available(self) -> bool:
         """Check if sched_ext is available on this system."""
@@ -151,6 +152,8 @@ class ScxController:
             "current_scheduler": self.current_scheduler(),
             "allowlist": ", ".join(sorted(self.ALLOWLIST)),
             "process_running": self._process is not None and self._process.poll() is None,
+            "process_pid": self._process.pid if self._process is not None else None,
+            "last_stop_error": self._last_stop_error,
             "background_interval": self.background_interval,
             "cpu_control_support": self.cpu_control_support(),
         }
@@ -194,9 +197,10 @@ class ScxController:
         if self.dry_run:
             return True
 
-        if self._process is not None and self._process.poll() is None:
+        if self._process is not None and self._process.poll() is None and not self._last_stop_error:
             return True
-        self.stop_scheduler()
+        if not self.stop_scheduler():
+            raise RuntimeError("previous scheduler could not be stopped; recovery required")
         self._backend_lease = CpuBackendLease(self.backend_lock_file, native=True).acquire()
         try:
             return self._start_process(command, scheduler_name)
@@ -249,10 +253,12 @@ class ScxController:
             True if scheduler stopped successfully
         """
         self._adaptive_stop.set()
-        if not self._process:
+        process = self._process
+        if process is None:
             if self._backend_lease is not None:
                 self._backend_lease.release()
                 self._backend_lease = None
+            self._last_stop_error = ""
             return True
 
         if self.dry_run:
@@ -262,30 +268,36 @@ class ScxController:
                 self._backend_lease = None
             return True
 
-        try:
-            # Send quit command
-            self._send_command("quit")
-
-            # Wait for graceful shutdown
+        errors = []
+        if process.poll() is None:
             try:
-                self._process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                # Force kill if graceful shutdown fails
-                self._process.send_signal(signal.SIGTERM)
-                self._process.wait(timeout=2)
-
-        except Exception:
-            # Force kill on any error
+                if not self._send_command("quit"):
+                    raise RuntimeError("scheduler did not accept quit")
+                process.wait(timeout=5)
+            except Exception as exc:
+                errors.append(str(exc))
+        if process.poll() is None:
             try:
-                self._process.kill()
-                self._process.wait(timeout=1)
-            except Exception:
-                pass
+                process.send_signal(signal.SIGTERM)
+                process.wait(timeout=2)
+            except Exception as exc:
+                errors.append(str(exc))
+        if process.poll() is None:
+            try:
+                process.kill()
+                process.wait(timeout=1)
+            except Exception as exc:
+                errors.append(str(exc))
+        if process.poll() is None:
+            self._process = process
+            self._last_stop_error = "; ".join(errors) or "scheduler process remains alive"
+            return False
 
         self._process = None
         if self._backend_lease is not None:
             self._backend_lease.release()
             self._backend_lease = None
+        self._last_stop_error = ""
         return True
 
     @_serialized

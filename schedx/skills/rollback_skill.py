@@ -126,11 +126,19 @@ class RollbackSkill:
                     pending.append(row)
                     blocked.add(key)
                     results.append({"source": source, "pid": pid, "status": "failed", "reason": str(exc)})
+            stop_pending = False
             if source == "standalone_scx" and not pending:
-                client.stop_scheduler()
-            if pending:
+                try:
+                    stop_pending = not client.stop_scheduler()
+                except Exception as exc:
+                    stop_pending = True
+                    results.append({"source": source, "status": "failed", "reason": f"scheduler_stop_failed: {exc}"})
+                if stop_pending and not any(row.get("reason", "").startswith("scheduler_stop_failed") for row in results):
+                    results.append({"source": source, "status": "failed", "reason": "scheduler_stop_failed"})
+            if pending or stop_pending:
                 payload["entries"] = list(reversed(pending))
                 payload["pids"] = [row["pid"] for row in pending if "pid" in row]
+                payload["scheduler_stop_pending"] = stop_pending
                 atomic_json(context.scx_rollback_file, payload)
                 context.data["scx_rollback"] = payload
             else:

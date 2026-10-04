@@ -395,5 +395,7 @@ def serve_scx_daemon(
     finally:
         if server is not None:
             server.server_close()
-        ctl.stop_scheduler()
+        stopped = ctl.stop_scheduler()
         socket_path.unlink(missing_ok=True)
+        if not stopped:
+            raise RuntimeError("scx daemon stopped accepting requests but its scheduler could not be terminated")
