@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import json
 import time
 import uuid
 import math
 import copy
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime
-from pathlib import Path
 from typing import Any
 
 from schedx.agent.context import AgentContext
@@ -72,13 +70,18 @@ class AgentLoop:
         "verify",
     ]
     MAX_ITERATIONS = 20
+    HISTORY_LIMIT = DecisionEngine.MAX_STABILITY_WINDOW
+    LOG_LIMIT = 1000
 
     def __init__(self, context: AgentContext, max_iterations: int = MAX_ITERATIONS) -> None:
         self.context = context
         self.max_iterations = max_iterations
         self.iterations: list[LoopIteration] = []
         self.decisions: list[LoopDecision] = []
-        self.engine = DecisionEngine()
+        self.engine = DecisionEngine(
+            stability_window=context.data.get("stability_window", 3),
+            stability_tolerance_percent=context.data.get("stability_tolerance_percent", 1.0),
+        )
         self.round = 0
         self.round_history: list[dict] = []
         self.policy_repository = PolicyRepository(
@@ -143,25 +146,34 @@ class AgentLoop:
         if not math.isfinite(interval) or interval < 0 or max_rounds < 0:
             raise ValueError("interval and max_rounds must be non-negative")
         round_num, failures = 0, 0
-        failure_limit = int(self.context.data.get("max_consecutive_failures", 3))
+        failure_limit = self.context.data.get("max_consecutive_failures", 3)
+        if isinstance(failure_limit, bool) or not isinstance(failure_limit, int) or failure_limit < 1:
+            raise ValueError("max_consecutive_failures must be a positive integer")
+        self.round_history.clear()
+        self._completed_rounds = 0
+        self.context.data["converged"] = False
+        self.context.data.pop("stop_reason", None)
         try:
             while max_rounds == 0 or round_num < max_rounds:
                 round_num += 1
                 self.context.data["round"] = round_num
                 result = self._run_one_round(round_num)
-                self.round_history.append(result)
-                self.round_history[:] = self.round_history[-128:]
+                self.round_history.append(copy.deepcopy(result))
+                self._completed_rounds += 1
+                self.round_history[:] = self.round_history[-self.HISTORY_LIMIT:]
+                was_stable = self.context.data["converged"]
+                self.context.data["stability"] = self.engine.assess_stability(self.round_history)
+                self.context.data["converged"] = self.context.data["stability"]["stable"]
                 failures = 0 if result["status"] == "ok" else failures + 1
                 if result["status"] == "rollback_failed":
-                    self.context.data["stop_reason"] = "rollback_failed"
-                    return "rollback_failed"
+                    return self._finish_continuous("rollback_failed", round_num)
                 if failures >= failure_limit:
-                    self.context.data["stop_reason"] = "consecutive_failures"
-                    return "consecutive_failures"
-                self.context.data["converged"] = self.engine.should_stop(self.round_history)
-                if self.context.data["converged"]:
+                    return self._finish_continuous("consecutive_failures", round_num)
+                if self.context.data["converged"] and not was_stable:
                     print("Agent: measured objectives stable; continuing observation.")
-                self.context.save_session()
+                elif was_stable and not self.context.data["converged"]:
+                    print("Agent: objective or policy changed; reassessing stability.")
+                self._save_continuous_state(round_num)
                 if max_rounds and round_num >= max_rounds:
                     break
                 time.sleep(min(interval * (2 ** max(0, failures - 1)), max(interval, 300.0)))
@@ -169,12 +181,29 @@ class AgentLoop:
             if self.context.data.get("mutation_started"):
                 result = self._execute_skill("rollback", round_num * 100 + 99)
                 if not result.ok:
-                    self.context.data["stop_reason"] = "rollback_failed"
-                    return "rollback_failed"
-            self.context.data["stop_reason"] = "interrupted"
-            return "interrupted"
-        self.context.data["stop_reason"] = "max_rounds"
-        return "max_rounds"
+                    return self._finish_continuous("rollback_failed", round_num)
+            return self._finish_continuous("interrupted", round_num)
+        return self._finish_continuous("max_rounds", round_num)
+
+    def _finish_continuous(self, reason: str, rounds: int) -> str:
+        self.context.data["stop_reason"] = reason
+        self._save_continuous_state(rounds)
+        return reason
+
+    def _save_continuous_state(self, rounds: int) -> None:
+        if self.context.session:
+            self.context.session.metrics["continuous"] = {
+                "round_count": rounds,
+                "completed_round_count": self._completed_rounds,
+                "history_limit": self.HISTORY_LIMIT,
+                "log_limit": self.LOG_LIMIT,
+                "round_history": self.round_history,
+                "stability": self.context.data.get("stability", {}),
+                "converged": self.context.data.get("converged", False),
+                "stop_reason": self.context.data.get("stop_reason"),
+                "phase_log": self.context.data.get("decision_log", [])[-self.LOG_LIMIT:],
+            }
+        self.context.save_session()
 
     def _run_one_round(self, round_num: int) -> dict[str, Any]:
         if self.context.data.get("rollback_required"):
@@ -247,6 +276,8 @@ class AgentLoop:
             "round": round_num, "status": "ok", "decision": {
                 "mode": agent_decision.mode, "target": agent_decision.target,
                 "reason": agent_decision.reason, "confidence": agent_decision.confidence,
+                "parameters": copy.deepcopy(agent_decision.parameters),
+                "expert_id": self.context.data.get("policy_route", {}).get("expert_id"),
             },
             **{phase + "_success": result.ok for phase, result in results.items()},
             "canary_success": results["canary_candidate"].ok,
@@ -268,11 +299,14 @@ class AgentLoop:
         if verdict.get("status") != "accepted":
             return None
         deltas = verdict.get("deltas", {})
-        if self.context.data.get("mode") in {"latency_first", "isolate_background"}:
-            value = deltas.get("p99_percent")
-            return -float(value) if value is not None else None
-        value = deltas.get("requests_per_sec_percent")
-        return float(value) if value is not None else None
+        objective = self.engine.objective_metric(
+            str(self.context.data.get("mode")), self.context.data.get("canary", {}).get("candidate")
+        )
+        if objective is None:
+            return None
+        key = "p99_percent" if objective[0] == "p99_ms" else "requests_per_sec_percent"
+        value = self.engine._finite_number(deltas.get(key))
+        return -value if value is not None and key == "p99_percent" else value
 
     def _auto_decide(self, iteration: int) -> LoopDecision:
         classification = self.context.data.get("classification", {})
@@ -411,7 +445,7 @@ class AgentLoop:
             context_snapshot=self._snapshot_context(),
         )
         self.iterations.append(iteration_record)
-        self.iterations[:] = self.iterations[-1000:]
+        self.iterations[:] = self.iterations[-self.LOG_LIMIT:]
         self._record_decision_log(phase, result, iteration)
         return result
 
@@ -472,6 +506,7 @@ class AgentLoop:
             "message": result.message,
             "timestamp": datetime.now().isoformat(),
         })
+        self.context.data["decision_log"][:] = self.context.data["decision_log"][-self.LOG_LIMIT:]
 
     def _build_report(self) -> dict[str, Any]:
         if self.iterations and self.iterations[-1].phase == "rollback":

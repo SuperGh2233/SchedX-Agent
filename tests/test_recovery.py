@@ -359,7 +359,7 @@ def test_three_failed_rounds_are_faults_not_convergence(tmp_path, monkeypatch):
 
 def test_convergence_requires_stable_measured_objectives():
     engine = DecisionEngine()
-    row = {"status": "ok", "objective_status": "accepted", "improvement": 0.5, "decision": {"mode": "latency_first", "target": "nginx"}}
+    row = {"status": "ok", "objective_status": "accepted", "improvement": 0.5, "decision": {"mode": "latency_first", "target": "nginx"}, "metrics": {"p99_ms": 10.0}}
     assert engine.should_stop([row, row, row])
     assert not engine.should_stop([{"status": "probe_failed"}] * 3)
     assert not engine.should_stop([{**row, "improvement": None}] * 3)

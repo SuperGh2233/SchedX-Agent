@@ -4,12 +4,14 @@ import argparse
 import json
 import os
 import platform
+import math
 from dataclasses import asdict
 from dataclasses import is_dataclass
 from pathlib import Path
 from typing import Any
 
 from schedx.agent.context import AgentContext
+from schedx.agent.decision import DecisionEngine
 from schedx import __version__
 from schedx.agent.loop import AgentLoop
 from schedx.agent.executor import SafeActionExecutor
@@ -43,8 +45,15 @@ def unit_interval(value: str) -> float:
 
 def nonnegative_float(value: str) -> float:
     parsed = float(value)
-    if parsed < 0.0:
-        raise argparse.ArgumentTypeError("value cannot be negative")
+    if not math.isfinite(parsed) or parsed < 0.0:
+        raise argparse.ArgumentTypeError("value must be finite and non-negative")
+    return parsed
+
+
+def stable_window_size(value: str) -> int:
+    parsed = int(value)
+    if not 2 <= parsed <= DecisionEngine.MAX_STABILITY_WINDOW:
+        raise argparse.ArgumentTypeError("stable window must be in [2, 128]")
     return parsed
 
 
@@ -205,6 +214,8 @@ def cmd_optimize(args: argparse.Namespace) -> int:
 def cmd_run(args: argparse.Namespace) -> int:
     context = build_context(args)
     context.data["llm_policy_enabled"] = args.llm_policy
+    context.data["stability_window"] = args.stable_window
+    context.data["stability_tolerance_percent"] = args.stable_tolerance
     configure_canary(context, args)
     loop = AgentLoop(context, max_iterations=50)
     print(f"SchedX Agent starting continuous mode (interval={args.interval}s, max_rounds={args.max_rounds})")
@@ -428,8 +439,10 @@ def build_parser() -> argparse.ArgumentParser:
     optimize.set_defaults(func=cmd_optimize)
 
     run_cmd = sub.add_parser("run")
-    run_cmd.add_argument("--interval", type=float, default=30, help="Seconds between rounds")
+    run_cmd.add_argument("--interval", type=nonnegative_float, default=30, help="Seconds between rounds")
     run_cmd.add_argument("--max-rounds", type=int, default=0, help="Max rounds (0=unlimited)")
+    run_cmd.add_argument("--stable-window", type=stable_window_size, default=3, help="Measured rounds of the same policy needed for stability (2-128)")
+    run_cmd.add_argument("--stable-tolerance", type=nonnegative_float, default=1.0, help="Maximum objective variation and per-round change, in percent")
     run_cmd.add_argument("--llm-policy", action="store_true", default=False)
     _add_canary_arguments(run_cmd)
     run_cmd.set_defaults(func=cmd_run)

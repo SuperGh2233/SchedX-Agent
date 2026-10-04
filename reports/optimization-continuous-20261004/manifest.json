@@ -1,0 +1,17 @@
+{
+  "baseline_commit": "e75ef3a",
+  "production_source_sha256": "00f3eb55601eb5773f6cd9348d2464855c43b52e3a321a71a3327dec3b6421d7",
+  "source_comparison": "Local and isolated VM production sources match.",
+  "local_tests_passed": 241,
+  "linux_vm_tests_passed": 241,
+  "functional_verification": "passed",
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "kernel_changes": false,
+  "measurement_scope": "Real loopback HTTP samples through a monitoring adapter, plus owned Linux task-attribute mutation, idempotence and restoration. Not a performance-gain experiment.",
+  "evidence_sha256": "fbca7d0e9a45a45e1ea9b0359e7fc86f6e5ef09ed7b3af06726299dbe39dcb48",
+  "vm_directory": "/root/SchedX-Agent-continuous-20261004",
+  "native_scheduler_final_state": "disabled",
+  "task_restore_journal_removed": true,
+  "automation_recreated": false,
+  "shutdown_after_completion": false
+}

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 import math
+import json
+from collections.abc import Mapping
 from typing import Any
 
 
@@ -20,6 +22,17 @@ class DecisionEngine:
     Given workload classification and system pressure, selects the
     optimization mode and tunes parameters without user input.
     """
+
+    MAX_STABILITY_WINDOW = 128
+
+    def __init__(self, *, stability_window: int = 3, stability_tolerance_percent: float = 1.0) -> None:
+        if isinstance(stability_window, bool) or not isinstance(stability_window, int) or not 2 <= stability_window <= self.MAX_STABILITY_WINDOW:
+            raise ValueError("stability_window must be an integer in [2, 128]")
+        tolerance = self._finite_number(stability_tolerance_percent)
+        if tolerance is None or tolerance < 0:
+            raise ValueError("stability_tolerance_percent must be finite and non-negative")
+        self.stability_window = stability_window
+        self.stability_tolerance_percent = tolerance
 
     def decide(self, classification: dict, pressure: dict, topology: dict | None = None, preferred_target: str = "") -> Decision:
         groups = classification.get("groups", {})
@@ -98,17 +111,82 @@ class DecisionEngine:
         }
 
     def should_stop(self, history: list[dict]) -> bool:
-        """Recognize three measured, stable rounds of the same objective."""
-        if len(history) < 3:
-            return False
-        window = history[-3:]
+        """Compatibility entry point; stability never stops continuous monitoring."""
+        return self.assess_stability(history)["stable"]
+
+    def assess_stability(self, history: list[dict]) -> dict[str, Any]:
+        result: dict[str, Any] = {
+            "stable": False, "window": self.stability_window,
+            "tolerance_percent": self.stability_tolerance_percent,
+        }
+
+        def reject(reason: str) -> dict[str, Any]:
+            return {**result, "reason": reason}
+
+        if len(history) < self.stability_window:
+            return reject("insufficient_rounds")
+        window = history[-self.stability_window:]
         if any(row.get("status") != "ok" or row.get("objective_status") != "accepted" for row in window):
-            return False
-        decisions = {(row.get("decision", {}).get("mode"), row.get("decision", {}).get("target")) for row in window}
-        if len(decisions) != 1:
-            return False
-        values = [row.get("improvement") for row in window]
-        return all(isinstance(value, (int, float)) and math.isfinite(value) and abs(value) <= 1.0 for value in values)
+            return reject("unmeasured_or_failed_round")
+        decisions = [row.get("decision") for row in window]
+        if any(not isinstance(d, Mapping) or any(not isinstance(d.get(key), str) or not d[key] for key in ("mode", "target")) for d in decisions):
+            return reject("missing_objective_identity")
+        identities = {(d["mode"], d["target"]) for d in decisions}
+        if len(identities) != 1:
+            return reject("objective_changed")
+        try:
+            policies = [json.dumps({"expert_id": d.get("expert_id"), "parameters": d.get("parameters", {})}, sort_keys=True, allow_nan=False) for d in decisions]
+        except (TypeError, ValueError):
+            return reject("invalid_policy_parameters")
+        if len(set(policies)) != 1:
+            return reject("policy_changed")
+        objectives = [self.objective_metric(d["mode"], row.get("metrics")) for d, row in zip(decisions, window)]
+        if any(value is None for value in objectives):
+            return reject("missing_or_invalid_objective_metrics")
+        if len({value[0] for value in objectives}) != 1:
+            return reject("objective_metric_changed")
+        values = [value[1] for value in objectives]
+        average = sum(value / len(values) for value in values)
+        variation = (max(values) - min(values)) / average * 100 if average else 0.0
+        if not math.isfinite(variation):
+            return reject("invalid_objective_variation")
+        result.update(metric=objectives[0][0], values=values, variation_percent=round(variation, 6))
+        improvements = [self._finite_number(row.get("improvement")) for row in window]
+        if any(value is None for value in improvements):
+            return reject("missing_or_invalid_improvement")
+        result["maximum_step_change_percent"] = max(abs(value) for value in improvements)
+        if variation > self.stability_tolerance_percent:
+            return reject("objective_variation")
+        if result["maximum_step_change_percent"] > self.stability_tolerance_percent:
+            return reject("ongoing_objective_change")
+        return {**result, "stable": True, "reason": "stable_measured_objective"}
+
+    @classmethod
+    def objective_metric(cls, mode: str, metrics: object) -> tuple[str, float] | None:
+        if not isinstance(metrics, Mapping):
+            return None
+        latency = ("p99_ms", ("p99_ms", "p99_latency_ms", "mean_p99_ms"))
+        throughput = ("requests_per_sec", ("requests_per_sec", "rps", "mean_requests_per_sec", "qps"))
+        choices = [latency] if mode in {"latency_first", "isolate_background"} else [throughput]
+        if mode == "balanced":
+            choices.append(latency)
+        for name, aliases in choices:
+            for key in aliases:
+                if metrics.get(key) is None:
+                    continue
+                value = cls._finite_number(metrics[key])
+                return (name, value) if value is not None and value >= 0 else None
+        return None
+
+    @staticmethod
+    def _finite_number(value: object) -> float | None:
+        if isinstance(value, bool):
+            return None
+        try:
+            number = float(value)
+        except (TypeError, ValueError, OverflowError):
+            return None
+        return number if math.isfinite(number) else None
 
     def adjust_parameters(self, base_params: dict, adjustment: dict) -> dict:
         params = dict(base_params)

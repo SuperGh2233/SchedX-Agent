@@ -1,0 +1,209 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cases": {
+    "task_settings": {
+      "status": "passed",
+      "repetitions": 30,
+      "journal_entries": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "original_settings_restored": true
+    },
+    "http_monitor": {
+      "status": "passed",
+      "source": "real loopback HTTP requests",
+      "actuation": "sampling adapter; no service resource changes",
+      "stability_window": 3,
+      "stability_tolerance_percent": 10,
+      "states": [
+        {
+          "round": 1,
+          "stable": false,
+          "reason": "insufficient_rounds"
+        },
+        {
+          "round": 2,
+          "stable": false,
+          "reason": "insufficient_rounds"
+        },
+        {
+          "round": 3,
+          "stable": true,
+          "reason": "stable_measured_objective"
+        },
+        {
+          "round": 4,
+          "stable": false,
+          "reason": "objective_variation"
+        },
+        {
+          "round": 5,
+          "stable": false,
+          "reason": "objective_variation"
+        },
+        {
+          "round": 6,
+          "stable": true,
+          "reason": "stable_measured_objective"
+        },
+        {
+          "round": 6,
+          "stable": true,
+          "reason": "stable_measured_objective"
+        }
+      ],
+      "round_history": [
+        {
+          "round": 1,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 101.69815699919127,
+            "requests_per_sec": 9.882307459904009
+          },
+          "baseline_metrics": {
+            "p99_ms": 101.58176299592014,
+            "requests_per_sec": 9.87291446286513
+          },
+          "improvement": -0.114582,
+          "configured_http_delay_ms": 100.0
+        },
+        {
+          "round": 2,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 101.57396001159213,
+            "requests_per_sec": 9.89186600828972
+          },
+          "baseline_metrics": {
+            "p99_ms": 101.76427799160592,
+            "requests_per_sec": 9.891332045695783
+          },
+          "improvement": 0.187018,
+          "configured_http_delay_ms": 100.0
+        },
+        {
+          "round": 3,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 101.52722799102776,
+            "requests_per_sec": 9.876128549018631
+          },
+          "baseline_metrics": {
+            "p99_ms": 101.57357899879571,
+            "requests_per_sec": 9.889259713625814
+          },
+          "improvement": 0.045633,
+          "configured_http_delay_ms": 100.0
+        },
+        {
+          "round": 4,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 401.72578299825545,
+            "requests_per_sec": 2.4924587153388664
+          },
+          "baseline_metrics": {
+            "p99_ms": 401.6441029962152,
+            "requests_per_sec": 2.4918437052792526
+          },
+          "improvement": -0.020336,
+          "configured_http_delay_ms": 400.0
+        },
+        {
+          "round": 5,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 401.4030309917871,
+            "requests_per_sec": 2.493196809500232
+          },
+          "baseline_metrics": {
+            "p99_ms": 401.94948099087924,
+            "requests_per_sec": 2.4917628816399495
+          },
+          "improvement": 0.13595,
+          "configured_http_delay_ms": 400.0
+        },
+        {
+          "round": 6,
+          "status": "ok",
+          "objective_status": "accepted",
+          "decision": {
+            "mode": "latency_first",
+            "target": "http://127.0.0.1:34979/",
+            "parameters": {}
+          },
+          "metrics": {
+            "p99_ms": 401.93504399212543,
+            "requests_per_sec": 2.4916467387357475
+          },
+          "baseline_metrics": {
+            "p99_ms": 401.8624769960297,
+            "requests_per_sec": 2.4921329245010484
+          },
+          "improvement": -0.018058,
+          "configured_http_delay_ms": 400.0
+        }
+      ]
+    }
+  },
+  "status": "passed"
+}

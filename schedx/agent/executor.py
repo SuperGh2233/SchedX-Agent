@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import re
 from dataclasses import asdict
 from dataclasses import is_dataclass
 from pathlib import Path
@@ -176,7 +177,11 @@ class SafeActionExecutor:
             try:
                 if not -20 <= nice_val <= 19:
                     raise ValueError("nice must be between -20 and 19")
-                self.process_state.record(pid, "nice", os.getpriority(os.PRIO_PROCESS, pid))
+                previous = os.getpriority(os.PRIO_PROCESS, pid)
+                if previous == nice_val:
+                    results.append({"action": asdict(action), "status": "ok", "pid": pid, "nice": nice_val, "unchanged": True})
+                    continue
+                self.process_state.record(pid, "nice", previous)
                 os.setpriority(os.PRIO_PROCESS, pid, nice_val)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "nice": nice_val})
             except Exception as exc:
@@ -201,7 +206,11 @@ class SafeActionExecutor:
                 if policy not in flags:
                     raise ValueError(f"unsupported scheduling policy: {policy}")
                 priority = int(action.metadata.get("priority", 0))
-                self.process_state.record(pid, "sched_policy", {"policy": os.sched_getscheduler(pid), "priority": os.sched_getparam(pid).sched_priority})
+                previous = {"policy": os.sched_getscheduler(pid), "priority": os.sched_getparam(pid).sched_priority}
+                if previous == {"policy": getattr(os, policy, None), "priority": priority}:
+                    results.append({"action": asdict(action), "status": "ok", "pid": pid, "policy": policy, "unchanged": True})
+                    continue
+                self.process_state.record(pid, "sched_policy", previous)
                 subprocess.run(["chrt", flags[policy], "--pid", str(priority), str(pid)],
                                check=True, capture_output=True, text=True, timeout=5)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "policy": policy})
@@ -223,13 +232,34 @@ class SafeActionExecutor:
                 results.append({"action": asdict(action), "status": "dry_run", "pid": pid, "cpus": cpus})
                 continue
             try:
-                self.process_state.record(pid, "affinity", sorted(os.sched_getaffinity(pid)))
+                previous = os.sched_getaffinity(pid)
+                if self._affinity_matches(cpus, previous):
+                    results.append({"action": asdict(action), "status": "ok", "pid": pid, "cpus": cpus, "unchanged": True})
+                    continue
+                self.process_state.record(pid, "affinity", sorted(previous))
                 subprocess.run(["taskset", "-p", "-c", cpus, str(pid)],
                                check=True, capture_output=True, text=True, timeout=5)
                 results.append({"action": asdict(action), "status": "ok", "pid": pid, "cpus": cpus})
             except Exception as exc:
                 results.append({"action": asdict(action), "status": "failed", "pid": pid, "error": str(exc)})
         return results
+
+    @staticmethod
+    def _affinity_matches(cpus: str, current: set[int]) -> bool:
+        if not current:
+            return False
+        requested: set[int] = set()
+        for part in cpus.split(","):
+            if not re.fullmatch(r"[0-9]+(?:-[0-9]+)?", part.strip()):
+                return False
+            bounds = [int(value) for value in part.strip().split("-")]
+            low, high = bounds[0], bounds[-1]
+            # Compare simple masks without allocating arbitrary user ranges.
+            # Other taskset formats retain its normal validation path.
+            if low > high or high > max(current):
+                return False
+            requested.update(range(low, high + 1))
+        return requested == current
 
 
 def _serialize(value):

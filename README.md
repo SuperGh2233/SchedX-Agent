@@ -38,7 +38,7 @@ Verified on openEuler:
 - `schedx benchmark redis` runs a rotated baseline/interference/Agent experiment
   with fixed work, raw output, fairness evidence and Student-t 95% confidence
   intervals.
-- The SP4 VM passes `202` tests, including Linux-only sched_ext and eBPF tests.
+- The SP4 VM passes `241` tests, including Linux-only sched_ext and eBPF tests.
 - The four real eBPF extensions attach scheduler tracepoints, cgroup network
   egress, cgroup resource-policy probes, and BPF LSM security audit.
   Agent policies are written to allowlisted BPF maps, runtime counters are
@@ -103,6 +103,25 @@ cgroup and optional native policy are registered, and timeout cleanup covers
 the tool's process tree. Real kernel verification lives in
 `scripts/verify_optimization.py`; Python test success alone does not establish
 kernel-level scheduling or network behavior.
+
+### Continuous monitoring stability
+
+```bash
+sudo schedx run --canary-url http://127.0.0.1/ --stable-window 5 --stable-tolerance 1
+```
+
+Stability requires accepted measurements of the same target, mode, expert and
+policy parameters. Both actual objective variation and per-round change must
+fit the percentage tolerance; small before/after gains alone do not establish
+stability. The default window is 3 measured rounds (allowed range 2–128), and
+the default tolerance is 1%. Missing metrics, policy changes and invalid
+values reset the stability assessment. Monitoring continues after stability.
+
+`session.json` records the last 128 rounds, the stability reason and objective
+values, the last 1000 phase events, and the final stop reason. Repeated nice,
+scheduling-policy and equivalent CPU-affinity settings report `unchanged`
+without adding recovery entries. Balanced mode can track measured latency
+when throughput is unavailable.
 
 ```bash
 python3 -m venv .venv
