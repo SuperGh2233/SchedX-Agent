@@ -35,6 +35,8 @@ def main() -> None:
                 f"convergence-{index}-{intent}",
                 "--intent",
                 intent,
+                "--cpu-limit-mode",
+                "soft",
                 "--",
                 "stress-ng",
                 "--cpu",

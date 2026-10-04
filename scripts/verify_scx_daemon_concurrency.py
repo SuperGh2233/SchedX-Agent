@@ -40,6 +40,8 @@ def main() -> None:
                     f"concurrent-{index}",
                     "--intent",
                     intents[index % len(intents)],
+                    "--cpu-limit-mode",
+                    "soft",
                     "--",
                     "sleep",
                     str(args.duration),

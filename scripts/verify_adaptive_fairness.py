@@ -32,6 +32,8 @@ def main() -> None:
                     agent,
                     "--intent",
                     intent,
+                    "--cpu-limit-mode",
+                    "soft",
                     "--",
                     "stress-ng",
                     "--cpu",

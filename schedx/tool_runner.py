@@ -45,6 +45,10 @@ PROFILES = {
 }
 
 
+class CpuQuotaUnavailable(RuntimeError):
+    """A requested hard quota cannot be established before the tool executes."""
+
+
 def infer_intent(command: Sequence[str]) -> str:
     text = " ".join(command).lower()
     if any(token in text for token in ("pytest", "unittest", "ctest", "cargo test", "go test")):
@@ -112,6 +116,7 @@ class ToolCallRunner:
         self, command: Sequence[str], *, agent_id: str = "default", intent: str = "auto",
         profile_overrides: dict[str, str | int] | None = None, resource_hint: str = "",
         timeout: float = 300.0, output_limit: int = 1024 * 1024,
+        cpu_limit_mode: str = "hard",
     ) -> dict:
         if not command:
             raise ValueError("tool command is required")
@@ -124,12 +129,21 @@ class ToolCallRunner:
         profile = asdict(PROFILES[selected_intent])
         profile.update(hinted_overrides)
         profile.update(profile_overrides or {})
+        if cpu_limit_mode not in {"hard", "soft"}:
+            raise ValueError("cpu_limit_mode must be hard or soft")
+        quota = self._quota_parts(str(profile["cpu_max"]))
+        hard_quota = cpu_limit_mode == "hard" and quota[0] != "max"
         run_id = f"tool-{uuid.uuid4().hex}"
         agent = self._safe_name(agent_id)
         parent = self.root / "schedx-agents" / agent
         tool = parent / run_id
         self.state_dir.mkdir(parents=True, exist_ok=True)
         scx, daemon = ScxController(dry_run=False), ScxDaemonClient()
+        if hard_quota and scx.state() == "enabled":
+            raise CpuQuotaUnavailable(
+                "The active native scheduler has no verified hard CPU quota support; "
+                "use the default scheduler or explicitly request soft priority."
+            )
         process = None
         cgroup_id = None
         started = time.monotonic()
@@ -140,6 +154,8 @@ class ToolCallRunner:
         result = None
         try:
             self._prepare_group(parent, tool, profile)
+            if hard_quota:
+                self._require_cgroup_quota(scx, tool, quota)
             cgroup_id = tool.stat().st_ino
             ready_r, ready_w = os.pipe()
             gate_r, gate_w = os.pipe()
@@ -160,7 +176,7 @@ class ToolCallRunner:
                 readers.append(reader)
             if not select.select([ready_r], [], [], min(timeout, 5.0))[0] or os.read(ready_r, 1) != b"R":
                 raise RuntimeError("tool failed to enter its cgroup before startup deadline")
-            if self.native_scx and scx.is_available():
+            if self.native_scx and not hard_quota and scx.is_available():
                 try:
                     if daemon.is_available():
                         scx_used = daemon.set_cgroup_policy(cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"]), str(tool))
@@ -175,6 +191,9 @@ class ToolCallRunner:
                     scx_error = str(exc)
                     scx.stop_scheduler()
                     scx_started = False
+            if hard_quota:
+                self._require_cgroup_quota(scx, tool, quota)
+            support_at_launch = scx.cpu_control_support()
             os.write(gate_w, b"G")
             os.close(gate_w)
             descriptors.remove(gate_w)
@@ -197,6 +216,8 @@ class ToolCallRunner:
                 "native_scx": scx_used, "scx_mode": ("standalone" if scx_started else "daemon") if scx_used else "cgroup",
                 "scx_policy_scope": "cgroup" if scx_used else "none", "scx_error": scx_error,
                 "cpu_control_support": scx.cpu_control_support(),
+                "cpu_control_support_at_launch": support_at_launch,
+                "cpu_limit_mode": cpu_limit_mode, "hard_cpu_quota_requested": hard_quota,
                 "returncode": 124 if timed_out else process.returncode, "timed_out": timed_out,
                 "duration_seconds": time.monotonic() - started, "metrics": metrics, "scx_cgroup_metrics": scx_metrics,
             }
@@ -231,14 +252,37 @@ class ToolCallRunner:
             if result["returncode"] == 0:
                 result["returncode"] = 125
         result["feedback"] = self._feedback(result["metrics"], result["returncode"])
-        if result["cpu_control_support"]["cpu_max"] == "not_enforced" and not str(profile["cpu_max"]).startswith("max"):
-            result["feedback"].append("the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota")
+        if result["cpu_control_support_at_launch"]["cpu_max"] != "cgroup_v2" and quota[0] != "max":
+            result["feedback"].append(
+                "the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota"
+                if result["cpu_control_support_at_launch"]["cpu_max"] == "not_enforced"
+                else "hard CPU quota enforcement is unverified for the active scheduler; this run explicitly requested soft priority"
+            )
         if timed_out:
             result["feedback"].append("tool exceeded its time limit; process tree stopped")
         result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"])
         result["retry_recommended"] = bool(result["next_resource_hint"])
         self._save(result)
         return result
+
+    @staticmethod
+    def _quota_parts(value: str) -> tuple[str, str]:
+        parts = value.split()
+        if parts == ["max"]:
+            return "max", "100000"
+        if len(parts) != 2 or not parts[1].isdigit() or int(parts[1]) <= 0:
+            raise ValueError("cpu.max must be 'max' or '<positive quota|max> <positive period>'")
+        if parts[0] != "max" and (not parts[0].isdigit() or int(parts[0]) <= 0):
+            raise ValueError("cpu.max quota must be max or a positive integer")
+        return parts[0] if parts[0] == "max" else str(int(parts[0])), str(int(parts[1]))
+
+    @staticmethod
+    def _require_cgroup_quota(scx: ScxController, tool: Path, quota: tuple[str, str]) -> None:
+        if scx.state() == "enabled" or scx.cpu_control_support()["cpu_max"] != "cgroup_v2":
+            raise CpuQuotaUnavailable("Hard CPU quota support is unavailable before execution.")
+        path = tool / "cpu.max"
+        if not path.exists() or ToolCallRunner._quota_parts(path.read_text()) != quota:
+            raise CpuQuotaUnavailable("The requested hard CPU quota was not established in the tool cgroup.")
 
     @staticmethod
     def _capture_output(stream, capture: dict, limit: int) -> None:
@@ -402,6 +446,8 @@ def emit_tool_result(result: dict) -> None:
                 "native_scx": result["native_scx"],
                 "scx_mode": result["scx_mode"],
                 "cpu_control_support": result["cpu_control_support"],
+                "cpu_limit_mode": result["cpu_limit_mode"],
+                "hard_cpu_quota_requested": result["hard_cpu_quota_requested"],
             }
         )
         + "\n"

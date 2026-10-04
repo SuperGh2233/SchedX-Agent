@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
+import ast
 import json
 import os
 import subprocess
@@ -14,6 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from schedx.benchmark.common import describe
+from schedx.benchmark.versioning import source_digest, version_identity
 from schedx.state import atomic_json
 
 
@@ -24,15 +25,15 @@ CASES = {
 }
 
 
-def source_digest(root: Path) -> str:
-    digest = hashlib.sha256()
-    for directory in ("schedx", "scx", "ebpf"):
-        for path in sorted((root / directory).rglob("*")):
-            if path.suffix not in {".py", ".c", ".h"} or any(name in {"build", "output", "__pycache__"} for name in path.parts):
-                continue
-            digest.update(str(path.relative_to(root)).encode())
-            digest.update(path.read_bytes())
-    return digest.hexdigest()
+def require_structured_interface(source: Path) -> None:
+    tree = ast.parse((source / "schedx/benchmark/runner.py").read_text())
+    supported = next((ast.literal_eval(node.value) for node in ast.walk(tree)
+                      if isinstance(node, ast.Assign)
+                      and any(isinstance(target, ast.Name) and target.id == "SUPPORTED"
+                              for target in node.targets)), set())
+    missing = set(CASES) - set(supported)
+    if missing:
+        raise ValueError(f"revision lacks structured benchmark cases {sorted(missing)}; use a common external measurement adapter")
 
 
 def summarize(rows: list[dict]) -> dict:
@@ -77,12 +78,31 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--duration", type=int, default=5)
     parser.add_argument("--redis-port", type=int, default=6380)
+    parser.add_argument("--repository", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--baseline-ref", required=True)
+    parser.add_argument("--candidate-ref", required=True)
+    parser.add_argument("--baseline-build-manifest", type=Path, required=True)
+    parser.add_argument("--candidate-build-manifest", type=Path, required=True)
     args = parser.parse_args()
+    identities = {
+        version: version_identity(
+            args.repository, getattr(args, version).resolve(), getattr(args, version + "_ref"),
+            getattr(args, version + "_bin") / "scx_agent", getattr(args, version + "_build_manifest"),
+        ) for version in ("baseline", "candidate")
+    }
+    # This legacy runner requires the structured benchmark API in both trees.
+    # Preliminary July sources require the common external measurement adapter.
+    for version in identities:
+        try:
+            require_structured_interface(getattr(args, version))
+        except ValueError as exc:
+            parser.error(f"{version}: {exc}")
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if Path("/sys/kernel/sched_ext/state").read_text().strip() != "disabled":
         raise RuntimeError("performance comparison requires no active native scheduler")
-    report = {"baseline_commit": "58903fe", "kernel": os.uname().release, "repeats": args.repeats, "duration": args.duration,
+    report = {"baseline_commit": identities["baseline"]["commit"], "candidate_commit": identities["candidate"]["commit"],
+              "version_identity": identities, "kernel": os.uname().release, "repeats": args.repeats, "duration": args.duration,
               "source_sha256": {version: source_digest(path.resolve()) for version, path in (("baseline", args.baseline), ("candidate", args.candidate))}, "runs": []}
     redis_log = (output / "redis-server.log").open("w")
     redis = subprocess.Popen(["redis-server", "--bind", "127.0.0.1", "--port", str(args.redis_port), "--save", "", "--appendonly", "no", "--dir", str(output)], stdout=redis_log, stderr=redis_log)

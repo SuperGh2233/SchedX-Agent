@@ -132,8 +132,12 @@ class ProcfsProbe:
                 return parts[2]
         return lines[0] if lines else ""
 
-    def list_processes(self) -> list[ProcessSample]:
+    def list_processes(self, pids: list[int] | None = None) -> list[ProcessSample]:
         samples: list[ProcessSample] = []
+        if pids is not None:
+            if any(isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0 for pid in pids):
+                raise ValueError("scope PIDs must be positive integers")
+            return [sample for pid in sorted(set(pids)) if (sample := self._read_process(pid)) is not None]
         if not self.proc_root.exists():
             return samples
         for entry in self.proc_root.iterdir():
@@ -164,12 +168,12 @@ class ProcfsProbe:
             return 1
         return 0
 
-    def snapshot(self, interval: float = 0.2, top: int = 20) -> dict:
+    def snapshot(self, interval: float = 0.2, top: int = 20, pids: list[int] | None = None) -> dict:
         before_total = self._read_total_cpu_ticks()
-        before = {p.pid: p for p in self.list_processes()}
+        before = {p.pid: p for p in self.list_processes(pids)}
         time.sleep(max(interval, 0.01))
         after_total = self._read_total_cpu_ticks()
-        after = self.list_processes()
+        after = self.list_processes(pids)
         total_delta = max(after_total - before_total, 1)
 
         enriched: list[ProcessSample] = []
@@ -188,4 +192,6 @@ class ProcfsProbe:
             "pressure": pressure,
             "cgroup": CgroupProbe().snapshot(),
             "processes": [asdict(p) for p in enriched[:top]],
+            "process_scope": "host" if pids is None else "explicit_pids",
+            "scope_pids": sorted(set(pids)) if pids is not None else None,
         }

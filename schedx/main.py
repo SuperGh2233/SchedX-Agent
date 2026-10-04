@@ -23,7 +23,7 @@ from schedx.report.repeat_summary import RepeatSummaryGenerator
 from schedx.skills.analyze_skill import AnalyzeSkill
 from schedx.skills.probe_skill import ProbeSkill
 from schedx.skills.rollback_skill import RollbackSkill
-from schedx.tool_runner import PROFILES, ToolCallRunner, emit_tool_result
+from schedx.tool_runner import PROFILES, CpuQuotaUnavailable, ToolCallRunner, emit_tool_result
 from schedx.scx_daemon import DEFAULT_SOCKET, ScxDaemonClient, serve_scx_daemon
 
 
@@ -57,7 +57,11 @@ def dry_run_from_args(args: argparse.Namespace) -> bool:
 
 
 def build_context(args: argparse.Namespace) -> AgentContext:
-    return AgentContext(dry_run=dry_run_from_args(args), state_dir=Path(getattr(args, "state_dir", ".schedx")))
+    context = AgentContext(dry_run=dry_run_from_args(args), state_dir=Path(getattr(args, "state_dir", ".schedx")))
+    scope = getattr(args, "scope_pid", None)
+    if scope is not None:
+        context.data["scope_pids"] = scope
+    return context
 
 
 def configure_canary(context: AgentContext, args: argparse.Namespace) -> None:
@@ -356,15 +360,20 @@ def cmd_tool_run(args: argparse.Namespace) -> int:
         }.items()
         if value is not None
     }
-    result = ToolCallRunner(native_scx=not args.no_scx, state_dir=Path(args.state_dir) / "tool-runs").run(
-        command,
-        agent_id=args.agent_id,
-        intent=args.intent,
-        profile_overrides=overrides,
-        resource_hint=args.resource_hint or os.environ.get("AGENT_RESOURCE_HINT", ""),
-        timeout=args.timeout,
-        output_limit=args.output_limit,
-    )
+    try:
+        result = ToolCallRunner(native_scx=not args.no_scx, state_dir=Path(args.state_dir) / "tool-runs").run(
+            command,
+            agent_id=args.agent_id,
+            intent=args.intent,
+            profile_overrides=overrides,
+            resource_hint=args.resource_hint or os.environ.get("AGENT_RESOURCE_HINT", ""),
+            timeout=args.timeout,
+            output_limit=args.output_limit,
+            cpu_limit_mode=args.cpu_limit_mode,
+        )
+    except CpuQuotaUnavailable as exc:
+        print_json({"status": "unsupported_cpu_quota", "command_started": False, "error": str(exc)})
+        return 2
     emit_tool_result(result)
     return int(result["returncode"])
 
@@ -431,6 +440,8 @@ def build_parser() -> argparse.ArgumentParser:
     optimize.add_argument("--interval", type=float, default=0.2)
     optimize.add_argument("--dry-run", action="store_true", default=False)
     optimize.add_argument("--llm-policy", action="store_true", default=False)
+    optimize.add_argument("--scope-pid", type=int, action="append", default=None,
+                          help="Only classify and plan actions for this PID; repeat for all owned workload processes")
     _add_canary_arguments(optimize)
     optimize.set_defaults(func=cmd_optimize)
 
@@ -440,6 +451,8 @@ def build_parser() -> argparse.ArgumentParser:
     run_cmd.add_argument("--stable-window", type=stable_window_size, default=3, help="Measured rounds of the same policy needed for stability (2-128)")
     run_cmd.add_argument("--stable-tolerance", type=nonnegative_float, default=1.0, help="Maximum objective variation and per-round change, in percent")
     run_cmd.add_argument("--llm-policy", action="store_true", default=False)
+    run_cmd.add_argument("--scope-pid", type=int, action="append", default=None,
+                         help="Only classify and plan actions for this PID; repeat to scope the workload")
     _add_canary_arguments(run_cmd)
     run_cmd.set_defaults(func=cmd_run)
 
@@ -511,6 +524,8 @@ def build_parser() -> argparse.ArgumentParser:
     tool_run.add_argument("--memory-max")
     tool_run.add_argument("--cpu-weight", type=int)
     tool_run.add_argument("--cpu-max")
+    tool_run.add_argument("--cpu-limit-mode", choices=["hard", "soft"], default="hard",
+                          help="Finite cpu.max requires a hard quota by default; soft explicitly allows priority-only native control")
     tool_run.add_argument("--pids-max")
     tool_run.add_argument("--no-scx", action="store_true", default=False)
     tool_run.add_argument("--resource-hint", default="")

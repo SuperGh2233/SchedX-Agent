@@ -79,7 +79,9 @@ def cpu_controls(output: Path) -> dict:
     """Observe actual controller semantics under the currently loaded scheduler."""
     runner = ToolCallRunner(state_dir=output / "cpu-controls", native_scx=False)
     code = "import time; start=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-start)"
-    quota = runner.run([sys.executable, "-c", code], profile_overrides={"cpu_max": "10000 100000"})
+    # This probe deliberately observes whether the active backend enforces the
+    # configured quota; it does not request a guaranteed hard quota.
+    quota = runner.run([sys.executable, "-c", code], profile_overrides={"cpu_max": "10000 100000"}, cpu_limit_mode="soft")
     assert quota["returncode"] == 0
     cpu = min(os.sched_getaffinity(0))
     weight_code = "import time,os,sys; os.sched_setaffinity(0,{int(sys.argv[1])}); start=time.process_time(); end=time.monotonic()+3\nwhile time.monotonic()<end: pass\nprint(time.process_time()-start)"
@@ -193,7 +195,7 @@ print(n)
     wait_budgets = {"0": ordinary_wait_ms, "1": latency_wait_ms, "2": 2000, "3": 2000}
     samples = []
     with ThreadPoolExecutor(max_workers=len(intents)) as pool:
-        futures = [pool.submit(runner.run, [sys.executable, "-c", busy, str(cpu), str(duration), str(index), str(int(vary_load)), str(load_phase_seconds)], agent_id="fairness-verification", intent=intent, timeout=duration+30) for index, intent in enumerate(intents)]
+        futures = [pool.submit(runner.run, [sys.executable, "-c", busy, str(cpu), str(duration), str(index), str(int(vary_load)), str(load_phase_seconds)], agent_id="fairness-verification", intent=intent, timeout=duration+30, cpu_limit_mode="soft") for index, intent in enumerate(intents)]
         start = time.monotonic()
         previous = None
         failures = []
