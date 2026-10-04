@@ -194,6 +194,7 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 	u64 dsq_id = class_dsq(class_id);
 	u64 slice = task_slice(p, class_id);
 	u64 vtime = p->scx.dsq_vtime;
+	u64 idle_credit = SCX_SLICE_DFL * WEIGHT_BASE / task_weight(p);
 	u64 cgroup_id;
 	struct schedx_cgroup_metrics *metrics;
 	struct schedx_task_ctx *taskc;
@@ -216,10 +217,17 @@ void BPF_STRUCT_OPS(schedx_enqueue, struct task_struct *p, u64 enq_flags)
 	struct schedx_class_metrics *classm = bpf_map_lookup_elem(&class_metrics_map, &class_id);
 	if (classm)
 		classm->enqueues++;
-	if (time_before(vtime, dsq_vtime_now[dsq_id] - SCX_SLICE_DFL))
-		vtime = dsq_vtime_now[dsq_id] - SCX_SLICE_DFL;
-	scx_bpf_dsq_insert_vtime(p, dsq_id, slice, vtime,
-				 enq_flags);
+	/* Sleep-heavy peers must not repeatedly overtake latency or control work.
+	 * Use round-robin order and weight-scaled, capped slices for these classes.
+	 */
+	if (class_id == SCX_CLASS_LATENCY || class_id == SCX_CLASS_UNKNOWN) {
+		scx_bpf_dsq_insert(p, dsq_id, slice, enq_flags);
+	} else {
+		/* Vtime is weight-scaled, so limit idle credit in the same units. */
+		if (time_before(vtime, dsq_vtime_now[dsq_id] - idle_credit))
+			vtime = dsq_vtime_now[dsq_id] - idle_credit;
+		scx_bpf_dsq_insert_vtime(p, dsq_id, slice, vtime, enq_flags);
+	}
 }
 
 void BPF_STRUCT_OPS(schedx_dispatch, s32 cpu, struct task_struct *prev)
@@ -305,10 +313,10 @@ void BPF_STRUCT_OPS(schedx_stopping, struct task_struct *p, bool runnable)
 {
 	struct schedx_task_ctx *taskc;
 	u32 class_id = task_class(p);
-	u64 runtime_used;
 	u64 assigned_slice = task_slice(p, class_id);
 	u64 slice_used = assigned_slice > p->scx.slice ?
 		assigned_slice - p->scx.slice : 0;
+	u64 runtime_used = slice_used;
 	u32 weight = task_weight(p);
 
 	taskc = bpf_task_storage_get(&task_ctx_stor, p, 0, 0);
@@ -326,8 +334,10 @@ void BPF_STRUCT_OPS(schedx_stopping, struct task_struct *p, bool runnable)
 			classm->runtime_ns += runtime_used;
 	}
 
-	/* Vtime accounting must not depend on optional task-storage telemetry. */
-	p->scx.dsq_vtime += slice_used * WEIGHT_BASE / weight;
+	/* Charge measured execution even when the kernel replenishes the slice.
+	 * Keep slice accounting as a fallback if task storage is unavailable.
+	 */
+	p->scx.dsq_vtime += runtime_used * WEIGHT_BASE / weight;
 }
 
 void BPF_STRUCT_OPS(schedx_enable, struct task_struct *p)

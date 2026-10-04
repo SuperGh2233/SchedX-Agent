@@ -5,7 +5,7 @@ real `sched_ext_ops` BPF scheduler and is not an emulation layer.
 
 ## Design
 
-The scheduler exposes three policy classes:
+The scheduler exposes four policy classes:
 
 | Class | ID | Default weight | Purpose |
 | --- | ---: | ---: | --- |
@@ -19,14 +19,18 @@ Userspace updates two BPF maps:
 - `task_policy_map`: PID to class and weight.
 - `cgroup_policy_map`: cgroup ID to class and weight, inherited by descendants.
 
-Each class has its own DSQ. Tasks within a class use weighted virtual time and
-weight-scaled slices. Cross-class fairness is controlled by a background
-service interval. The validated initial interval is `64`; the daemon can tune
-it from observed background runtime share.
+Each class has its own DSQ. Latency and ordinary tasks use round-robin order
+with capped, weight-scaled slices so sleeping peers cannot repeatedly overtake
+a queued task. Batch and background tasks retain weighted virtual-time
+ordering with weight-scaled idle credit and execution-time charging.
+Cross-class fairness gives ordinary and batch queues separate service
+opportunities every `32` dispatches. The initial background interval is `64`;
+the daemon can tune it from observed background runtime share.
 
 The scheduler also exports:
 
-- per-class dispatch counters;
+- per-class enqueue counters (the legacy `stats` protocol) and actual run,
+  runtime, wait and maximum-wait metrics (`class_metrics`);
 - per-cgroup enqueue, run, runtime and wait metrics;
 - dynamic task/cgroup policy removal;
 - fairness updates without reloading struct_ops.
@@ -71,6 +75,7 @@ remove cgroup <cgroup_id>
 set fairness <background_interval> <default_interval>
 stats
 metrics
+class_metrics
 dump
 quit
 ```
@@ -81,7 +86,7 @@ Example:
 sudo scx_agent
 schedx> set task 1234 1 10000
 schedx> set task 5678 3 100
-schedx> set fairness 64 0
+schedx> set fairness 64 32
 schedx> stats
 schedx> quit
 ```

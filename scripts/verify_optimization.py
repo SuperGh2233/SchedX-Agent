@@ -166,15 +166,34 @@ for line in sys.stdin:
         server.close()
 
 
-def fairness(output: Path, duration: int) -> dict:
+def fairness(
+    output: Path, duration: int, *, vary_load: bool = False,
+    load_phase_seconds: int = 60, latency_wait_ms: float = 2000,
+    ordinary_wait_ms: float = 3000,
+) -> dict:
     client = ScxDaemonClient(timeout=5)
     runner = ToolCallRunner(state_dir=output / "fairness-tools")
     cpu = min(os.sched_getaffinity(0))
-    busy = "import os,time,sys; os.sched_setaffinity(0,{int(sys.argv[1])}); start=time.monotonic(); duration=float(sys.argv[2]); end=start+duration; index=int(sys.argv[3]); n=0\nwhile time.monotonic()<end:\n n+=1\n if duration>=7200 and int((time.monotonic()-start)//60)%3==index%3: time.sleep(0.001)\nprint(n)"
+    vary_load = vary_load or duration >= 7200
+    busy = """import os, time, sys
+os.sched_setaffinity(0, {int(sys.argv[1])})
+start = time.monotonic()
+end = start + float(sys.argv[2])
+index = int(sys.argv[3])
+vary = bool(int(sys.argv[4]))
+phase = int(sys.argv[5])
+n = 0
+while time.monotonic() < end:
+    n += 1
+    if vary and int((time.monotonic() - start) // phase) % 3 == index % 3:
+        time.sleep(0.001)
+print(n)
+"""
     intents = ["interactive"] * 4 + ["compile", "background"]
+    wait_budgets = {"0": ordinary_wait_ms, "1": latency_wait_ms, "2": 2000, "3": 2000}
     samples = []
     with ThreadPoolExecutor(max_workers=len(intents)) as pool:
-        futures = [pool.submit(runner.run, [sys.executable, "-c", busy, str(cpu), str(duration), str(index)], agent_id="fairness-verification", intent=intent, timeout=duration+30) for index, intent in enumerate(intents)]
+        futures = [pool.submit(runner.run, [sys.executable, "-c", busy, str(cpu), str(duration), str(index), str(int(vary_load)), str(load_phase_seconds)], agent_id="fairness-verification", intent=intent, timeout=duration+30) for index, intent in enumerate(intents)]
         start = time.monotonic()
         previous = None
         failures = []
@@ -192,6 +211,10 @@ def fairness(output: Path, duration: int) -> dict:
             atomic_json(output / "fairness-progress.json", {"duration": duration, "samples": samples, "failures": failures})
             if not status["scheduler_running"]:
                 failures.append("scheduler exited unexpectedly")
+            for key, budget in wait_budgets.items():
+                message = f"class {key} exceeded {budget:g} ms queue wait budget"
+                if metrics.get(key, {}).get("max_wait_ns", 0) / 1e6 > budget and message not in failures:
+                    failures.append(message)
             if elapsed > 10 and elapsed < duration - 5:
                 for key in (1, 2, 3):
                     if delta.get(key, 0) <= 0:
@@ -206,11 +229,9 @@ def fairness(output: Path, duration: int) -> dict:
             if int(elapsed) % 30 < 5:
                 print(json.dumps({"elapsed": round(elapsed), "duration": duration, "runtime_progress": delta, "failures": len(failures)}), flush=True)
         results = [future.result() for future in futures]
-    assert not failures, failures
     assert all(row["returncode"] == 0 and row["cleanup"]["cgroup_removed"] and row["native_scx"] for row in results)
     max_wait_ms = {key: row["max_wait_ns"] / 1e6 for key, row in samples[-1]["class_metrics"].items()}
-    assert max_wait_ms.get("2", 0) < 2000, max_wait_ms
-    return {"status": "passed", "duration": duration, "single_cpu_contenders": len(intents), "samples": len(samples), "max_wait_ms": max_wait_ms, "load_pattern": "rotating busy/sleep every minute" if duration >= 7200 else "fixed saturation", "periodic_recoveries": len(recovery_checks), "tool_results": [{"intent": row["intent"], "duration": row["duration_seconds"], "cleanup": row["cleanup"]} for row in results]}
+    return {"status": "failed" if failures else "passed", "failures": failures, "duration": duration, "single_cpu_contenders": len(intents), "samples": len(samples), "max_wait_ms": max_wait_ms, "wait_budgets_ms": wait_budgets, "load_pattern": f"rotating busy/sleep every {load_phase_seconds} seconds" if vary_load else "fixed saturation", "periodic_recoveries": len(recovery_checks), "tool_results": [{"intent": row["intent"], "duration": row["duration_seconds"], "cleanup": row["cleanup"]} for row in results]}
 
 
 def main() -> None:
@@ -218,7 +239,13 @@ def main() -> None:
     parser.add_argument("--duration", type=int, default=30)
     parser.add_argument("--output", type=Path, default=Path("results/optimization-validation"))
     parser.add_argument("--fairness-only", action="store_true")
+    parser.add_argument("--vary-load", action="store_true")
+    parser.add_argument("--load-phase-seconds", type=int, default=60)
+    parser.add_argument("--latency-wait-ms", type=float, default=2000)
+    parser.add_argument("--ordinary-wait-ms", type=float, default=3000)
     args = parser.parse_args()
+    if min(args.duration, args.load_phase_seconds, args.latency_wait_ms, args.ordinary_wait_ms) <= 0:
+        parser.error("duration, load phase and queue wait budgets must be positive")
     if os.geteuid() != 0 or args.duration < 15:
         parser.error("root and duration >= 15 seconds are required")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -247,7 +274,12 @@ def main() -> None:
                 report["cases"][name] = case(args.output)
                 atomic_json(args.output / "summary.json", report)
                 print(json.dumps({"case": name, "status": "passed"}), flush=True)
-        report["cases"]["fairness"] = fairness(args.output, args.duration)
+        report["cases"]["fairness"] = fairness(
+            args.output, args.duration, vary_load=args.vary_load,
+            load_phase_seconds=args.load_phase_seconds,
+            latency_wait_ms=args.latency_wait_ms, ordinary_wait_ms=args.ordinary_wait_ms,
+        )
+        assert report["cases"]["fairness"]["status"] == "passed", report["cases"]["fairness"]["failures"]
         report["status"] = "passed"
     except Exception as exc:
         report["status"] = "failed"
