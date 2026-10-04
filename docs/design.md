@@ -65,9 +65,10 @@ The candidate is accepted only after a bounded canary compares:
 
 `scx/scx_agent.bpf.c` is a real `sched_ext_ops` scheduler. It provides:
 
-- latency, default/batch and background dispatch queues;
+- independent latency, ordinary, batch and background dispatch queues;
 - per-task and per-cgroup policy maps;
-- weighted virtual-time ordering;
+- round-robin latency and ordinary ordering with capped, weight-scaled slices,
+  and weighted virtual-time ordering for batch and background work;
 - configurable cross-class fairness;
 - dispatch and cgroup runtime metrics.
 
@@ -81,6 +82,27 @@ The cgroup controller creates `/sys/fs/cgroup/schedx/pid-<pid>` groups and can
 apply CPU weight, CPU quota and CPU affinity controls. Every mutation records
 its previous value. Rollback restores values, removes persistent scx policies
 and deletes empty cgroups.
+
+On the verified SP4 kernel, cgroup CPU quotas and relative cgroup weights are
+effective with the default fair scheduler. Native `schedx_agent` weights use
+policy maps, and this kernel does not enforce `cpu.max` for its sched_ext tasks.
+Hard CPU quotas therefore require cgroup-only operation with the native
+scheduler disabled; memory and PID controls remain managed by cgroup v2.
+
+Recovery journals are locked and replaced atomically. They retain failed
+entries and separate session ownership from individual candidate transactions,
+so rejecting a later candidate can restore previously accepted settings. eBPF
+pins are scoped to the state directory, and an explicit rollback is required
+before taking over hooks owned by a different session in that scope.
+
+Latency and ordinary work use round-robin order because a mixture of sleeping
+and busy tasks caused multi-second queue waits with virtual-time ordering on
+the SP4 kernel. Batch and background classes retain virtual-time ordering with weight-scaled
+idle credit. Execution timestamps charge virtual time, with remaining-slice
+accounting as a fallback when task storage is unavailable. Kernel validation
+checks observed queue waits against configurable latency and ordinary budgets
+(2 and 3 seconds by default), plus 2-second batch and background budgets;
+these are experimental acceptance thresholds, not hard real-time guarantees.
 
 ## eBPF Extension Boundary
 

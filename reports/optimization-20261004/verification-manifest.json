@@ -1,0 +1,13 @@
+{
+  "candidate_commit": "59c1ca4c5c6f78a44b7d88649f7af9e4703fbedb",
+  "baseline_commit": "58903feb8e51d223f0401e6ecd2a5ae4b58adecd",
+  "verified_utc": "2026-10-04T01:04:59Z",
+  "production_source_sha256": "4d9a581ac4461f6c3fdaaccad632a691a225a858f4578d3e9faf7d9e41efe275",
+  "source_comparison": "Local and isolated VM schedx/scx/ebpf source digests match, excluding build, output and cache directories.",
+  "native_binary_sha256": "3cd52f4acb9b019ee69bd0c2ab371da1c82578443093cf6728a80577c70d7a1e",
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "final_revalidation": "running",
+  "pipeline_pid": 25191,
+  "pipeline_status_path": "/root/SchedX-Agent-optimization-20261003/results/final-revalidation/pipeline.json"
+}

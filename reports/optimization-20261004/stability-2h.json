@@ -1,0 +1,79 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 7200,
+  "cases": {
+    "fairness": {
+      "status": "passed",
+      "duration": 7200,
+      "single_cpu_contenders": 6,
+      "samples": 1428,
+      "max_wait_ms": {
+        "0": 987.925653,
+        "1": 12092.968366,
+        "2": 290.691672,
+        "3": 283.957009
+      },
+      "load_pattern": "rotating busy/sleep every minute",
+      "periodic_recoveries": 59,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 7200.1245427059985,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.070276161001,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.124472604999,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.122789596,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 7200.121952544003,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 7200.1230249889995,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}

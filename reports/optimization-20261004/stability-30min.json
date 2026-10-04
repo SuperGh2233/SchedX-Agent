@@ -1,0 +1,155 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 1800,
+  "cases": {
+    "cpu_controls_default": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 0.20535022600000002,
+      "quota_observed": true,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        0.266334123,
+        2.649064298
+      ],
+      "weight_runtime_ratio": 9.946394657060146,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "disabled"
+    },
+    "cpu_controls_native": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 1.9477696729999998,
+      "quota_observed": false,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        1.468248296,
+        1.462240983
+      ],
+      "weight_runtime_ratio": 0.9959085169610848,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "enabled"
+    },
+    "recovery": {
+      "status": "passed",
+      "journal_retry": true,
+      "original_cgroup_restored": true,
+      "nice_restored": true
+    },
+    "tools": {
+      "status": "passed",
+      "concurrent_tools": 4,
+      "registration_before_exec": true,
+      "timeout_tree_cleanup": {
+        "policy_removed": true,
+        "cgroup_removed": true,
+        "errors": []
+      },
+      "bounded_output": true
+    },
+    "network": {
+      "status": "passed",
+      "same_cgroup_rate_switches": [
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 103000
+        },
+        {
+          "rate_bytes_per_second": 180000,
+          "delivered_bytes": 540000
+        },
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 91000
+        }
+      ],
+      "latency_overlimit_is_allowed": true,
+      "stats": {
+        "total_packets": 3847,
+        "total_bytes": 3954716,
+        "dropped_packets": 2727,
+        "dropped_bytes": 2803356,
+        "overlimit_allowed_packets": 386
+      }
+    },
+    "fairness": {
+      "status": "passed",
+      "duration": 1800,
+      "single_cpu_contenders": 6,
+      "samples": 360,
+      "max_wait_ms": {
+        "0": 2185.07524,
+        "1": 120.940463,
+        "2": 342.324983,
+        "3": 733.659247
+      },
+      "load_pattern": "fixed saturation",
+      "periodic_recoveries": 0,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 1800.1069197190009,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1061507819977,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1561816549984,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1548807660001,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 1800.1546673260018,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 1800.1036718739997,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}

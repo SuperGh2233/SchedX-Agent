@@ -38,9 +38,9 @@ Verified on openEuler:
 - `schedx benchmark redis` runs a rotated baseline/interference/Agent experiment
   with fixed work, raw output, fairness evidence and Student-t 95% confidence
   intervals.
-- The SP4 VM passes `167` tests, including Linux-only sched_ext and eBPF tests.
+- The SP4 VM passes `202` tests, including Linux-only sched_ext and eBPF tests.
 - The four real eBPF extensions attach scheduler tracepoints, cgroup network
-  ingress/egress, cgroup resource-policy probes, and BPF LSM security audit.
+  egress, cgroup resource-policy probes, and BPF LSM security audit.
   Agent policies are written to allowlisted BPF maps, runtime counters are
   returned as verification evidence, and rollback detaches all pinned hooks.
 - The fairness-gated native sched_ext run
@@ -67,6 +67,42 @@ Verified on openEuler:
   intervals.
 
 ## Quick Start
+
+### CPU control semantics
+
+On the verified SP4 kernel, `cpu.weight` and `cpu.max` are enforced by the
+default fair scheduler. With `schedx_agent` active, scheduling weights come
+from its policy maps; the native scheduler does not enforce `cpu.max` on this
+kernel. A two-second 10% quota probe used 0.20 CPU seconds under the default
+scheduler and 1.95 CPU seconds under native sched_ext. Concurrent 100:1000
+cgroup weights produced about a 9.88:1 runtime ratio under the default
+scheduler and about 0.98:1 under native sched_ext.
+
+Use cgroup-only operation with native sched_ext disabled when a hard CPU quota
+is required. `tool-run --no-scx` skips registering a tool policy; it does not
+disable a scheduler already loaded by the daemon. `schedx status` and tool-run
+results report the active CPU control semantics. Memory and PID controls
+continue to use cgroup v2.
+
+### Recovery and bounded tool execution
+
+Failed restorations remain in the state directory for retry. `optimize` exits
+with code 1 when the candidate fails (including successful rollback), and code
+3 when recovery is incomplete. Continuous mode keeps observing after measured
+stability; consecutive failures and incomplete recovery have separate stop
+reasons. Ordinary and batch queues have independent service guarantees.
+
+```bash
+sudo schedx optimize --state-dir .schedx --dry-run
+sudo schedx rollback --state-dir .schedx
+sudo schedx tool-run --timeout 300 --output-limit 1048576 -- pytest -q
+```
+
+Tool output is drained into bounded files. Tool commands begin after their
+cgroup and optional native policy are registered, and timeout cleanup covers
+the tool's process tree. Real kernel verification lives in
+`scripts/verify_optimization.py`; Python test success alone does not establish
+kernel-level scheduling or network behavior.
 
 ```bash
 python3 -m venv .venv
@@ -476,7 +512,7 @@ cleanup is skipped with a reason such as `process_still_alive`.
 
 SchedX-Agent detects `/sys/kernel/sched_ext` and reports whether sched_ext is
 available. `scx/scx_agent.bpf.c` is a native `sched_ext_ops` scheduler with
-class-specific dispatch queues for latency, default/batch, and background
+class-specific dispatch queues for latency, ordinary, batch, and background
 tasks. The stock openEuler SP4 kernel automatically uses the cgroup-only
 fallback.
 
