@@ -8,6 +8,12 @@
   "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
   "cpus": 4,
   "final_revalidation": "running",
+  "performance_revalidation": "passed",
+  "performance_runs": 30,
+  "performance_paired_samples_per_metric": 5,
+  "performance_evidence_sha256": "1f67e7f320688d3b2737f019ba626965c795df94636a7087ead0780f3f117753",
+  "stability_30min": "running",
+  "stability_2h": "pending",
   "pipeline_pid": 25191,
   "pipeline_status_path": "/root/SchedX-Agent-optimization-20261003/results/final-revalidation/pipeline.json"
 }
