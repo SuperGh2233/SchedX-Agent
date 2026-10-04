@@ -1,0 +1,162 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 1800,
+  "cases": {
+    "cpu_controls_default": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 0.204491544,
+      "quota_observed": true,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        0.26652061800000004,
+        2.648232068
+      ],
+      "weight_runtime_ratio": 9.936312199306094,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "disabled"
+    },
+    "cpu_controls_native": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 1.949512805,
+      "quota_observed": false,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        1.467627748,
+        1.469516875
+      ],
+      "weight_runtime_ratio": 1.0012871976579718,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "enabled"
+    },
+    "recovery": {
+      "status": "passed",
+      "journal_retry": true,
+      "original_cgroup_restored": true,
+      "nice_restored": true
+    },
+    "tools": {
+      "status": "passed",
+      "concurrent_tools": 4,
+      "registration_before_exec": true,
+      "timeout_tree_cleanup": {
+        "policy_removed": true,
+        "cgroup_removed": true,
+        "errors": []
+      },
+      "bounded_output": true
+    },
+    "network": {
+      "status": "passed",
+      "same_cgroup_rate_switches": [
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 103000
+        },
+        {
+          "rate_bytes_per_second": 180000,
+          "delivered_bytes": 541000
+        },
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 90000
+        }
+      ],
+      "latency_overlimit_is_allowed": true,
+      "stats": {
+        "total_packets": 3899,
+        "total_bytes": 4008172,
+        "dropped_packets": 2770,
+        "dropped_bytes": 2847560,
+        "overlimit_allowed_packets": 395
+      }
+    },
+    "fairness": {
+      "status": "passed",
+      "failures": [],
+      "duration": 1800,
+      "single_cpu_contenders": 6,
+      "samples": 360,
+      "max_wait_ms": {
+        "0": 942.040164,
+        "1": 81.845058,
+        "2": 341.18866,
+        "3": 730.962606
+      },
+      "wait_budgets_ms": {
+        "0": 3000,
+        "1": 2000,
+        "2": 2000,
+        "3": 2000
+      },
+      "load_pattern": "fixed saturation",
+      "periodic_recoveries": 0,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 1800.100978000999,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1519592250042,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1010661999971,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1524262200037,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 1800.1510900739959,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 1800.125180899995,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}
