@@ -4,12 +4,29 @@ This index maps every explicit competition requirement to executable code and
 real openEuler SP4 evidence. It is the quickest judge-facing entry point when a
 claim needs to be verified.
 
+## Final-round iteration evidence (2026-10-04)
+
+The current implementation continues the same repository history. See
+[final-round improvements](final-round-improvements.md) for the substantive
+code changes and their evidence. The official preliminary submission commit
+must still be confirmed: `58903fe` is the optimization starting point, and
+must not be presented as the official preliminary version without confirmation.
+
+The October paired experiments compare `59c1ca4` with `58903fe`; they show
+nginx/Redis P99 reductions of 49.48%/30.67% and a 2.26% batch throughput cost
+on the verified four-vCPU VM. The current implementation has 241 passing
+tests and additional monitor-state and task-idempotence verification. Keep
+these version-specific results separate from the earlier formal results below.
+
+Sources: [kernel/performance acceptance](../reports/optimization-20261004/report.md)
+and [continuous monitoring followup](../reports/optimization-continuous-20261004/report.md).
+
 | Competition requirement | Implemented capability | Code evidence | Runtime evidence | Verification command |
 | --- | --- | --- | --- | --- |
 | Standard tools and Skills | Unified `Skill`/`SkillResult`; Probe, Analyze, LLM Policy, Policy, Canary, eBPF, scx, Act, Verify, Rollback and Report phases | `schedx/agent/loop.py`, `schedx/skills/` | `results/video-recording/2026-08-29_20-46-54/agent-trace.json` | `bash scripts/demo_evidence.sh` |
 | Workload sensing | procfs process metrics, scheduler fields, PSI, cgroup statistics, CPU topology and rule reasons | `schedx/probes/`, `schedx/policies/classifier.py` | classification embedded in the video and Redis action evidence | `schedx classify --top 50` |
 | sched_ext CPU policy | Native SP4 sched_ext, task classes, weights, fairness and rollback | `scx/`, `schedx/controllers/scx_controller.py` | `results/scx-compare-formal/2026-08-29_20-14-31/summary.json` | `schedx status` |
-| Integrated scx scheduler | Custom `scx_agent` with latency/background dispatch counters | `scx/scx_agent.bpf.c`, `scx/scx_agent_user.c` | 1,679,433 recorded dispatches in the formal comparison | `schedx benchmark scx-compare ...` |
+| Integrated scx scheduler | Custom `scx_agent` with class enqueue and actual runtime metrics | `scx/scx_agent.bpf.c`, `scx/scx_agent_user.c` | legacy counter total 1,679,433 in the earlier formal comparison (enqueue events, not actual dispatches) | `schedx benchmark scx-compare ...` |
 | eBPF extension hooks | Real scheduler trace, cgroup network, resource and BPF-LSM security hooks; structured maps and counters | `ebpf/`, `schedx/controllers/ebpf_controller.py`, `schedx/skills/ebpf_skill.py` | four attached hook families and nine policies in the Agent trace | `make -C ebpf clean all` |
 | Safe policy execution | Structured Action schema, target allowlist, explicit dry-run, Canary gate and multi-plane rollback | `schedx/agent/executor.py`, `schedx/skills/verify_skill.py`, `schedx/skills/rollback_skill.py` | strict gate removes cgroup state, eight scx policies and four eBPF hook families | `schedx rollback` |
 | Nginx performance | Four-way default/cgroup/scx/Agent ablation | `schedx/benchmark/ablation.py` | formal and video-recording summaries | `schedx benchmark nginx-ablation ...` |
