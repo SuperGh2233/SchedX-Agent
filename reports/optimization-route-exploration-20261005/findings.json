@@ -1,0 +1,514 @@
+{
+  "observed_at_utc": "2026-10-04T16:42:59.568130+00:00",
+  "repository_head": "eb0a8497d9284168edb484f0c5403fd64db03e2c",
+  "implementation_commit": "069276c0c40ff69bd3766c057d9acc8be8217efb",
+  "scope": "Local deterministic probes and archived evidence inspection; no live workload or production changes.",
+  "nonfinite_verifier_config": {
+    "input_config": {
+      "max_regression_percent": "NaN"
+    },
+    "mode": "latency_first",
+    "baseline": {
+      "p99_ms": 10
+    },
+    "candidate": {
+      "p99_ms": 100
+    },
+    "verdict": {
+      "accepted": true,
+      "status": "accepted",
+      "reasons": [],
+      "deltas": {
+        "p99_percent": 900.0
+      }
+    },
+    "limitation": "Direct constructor use. CLI validation already rejects nonfinite numbers; default threshold remains finite."
+  },
+  "wrk_error_omission": {
+    "raw_fixture": "  99% 9.00ms\nRequests/sec: 1000.00\nSocket errors: connect 0, read 0, write 0, timeout 100\nNon-2xx or 3xx responses: 20\n",
+    "parsed_metrics": {
+      "requests_per_sec": 1000.0,
+      "qps": 1000.0,
+      "p99_ms": 9.0,
+      "p99_latency_ms": 9.0
+    },
+    "baseline": {
+      "p99_ms": 10,
+      "requests_per_sec": 1000
+    },
+    "verdict": {
+      "accepted": true,
+      "status": "accepted",
+      "reasons": [],
+      "deltas": {
+        "p99_percent": -10.0,
+        "requests_per_sec_percent": 0.0
+      }
+    }
+  },
+  "explicit_error_payload_ignored": {
+    "candidate": {
+      "p99_ms": 9,
+      "requests_per_sec": 1000,
+      "socket_errors": {
+        "timeout": 100
+      }
+    },
+    "verdict": {
+      "accepted": true,
+      "status": "accepted",
+      "reasons": [],
+      "deltas": {
+        "p99_percent": -10.0,
+        "requests_per_sec_percent": 0.0
+      }
+    }
+  },
+  "existing_wrk_evidence_scan": {
+    "archive": "reports/optimization-20261004/final-evidence.tar.gz",
+    "sha256": "b59c809a133347f280f03eb18b158d61e26083c960a2e43b3f9a646495fb3dff",
+    "selection": "All regular .txt members with _wrk_repeat in their name",
+    "files_checked": 40,
+    "files_with_nonzero_errors": 0,
+    "limitation": "Inspecting archived output counts does not prove all possible client/server errors were measured.",
+    "files": [
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/baseline/2026-10-04_09-05-02/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/baseline/2026-10-04_09-05-02/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/baseline/2026-10-04_09-05-02/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/baseline/2026-10-04_09-05-02/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/candidate/2026-10-04_09-05-49/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/candidate/2026-10-04_09-05-49/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/candidate/2026-10-04_09-05-49/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-1/candidate/2026-10-04_09-05-49/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/baseline/2026-10-04_09-09-12/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/baseline/2026-10-04_09-09-12/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/baseline/2026-10-04_09-09-12/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/baseline/2026-10-04_09-09-12/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/candidate/2026-10-04_09-08-24/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/candidate/2026-10-04_09-08-24/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/candidate/2026-10-04_09-08-24/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-2/candidate/2026-10-04_09-08-24/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/baseline/2026-10-04_09-11-50/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/baseline/2026-10-04_09-11-50/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/baseline/2026-10-04_09-11-50/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/baseline/2026-10-04_09-11-50/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/candidate/2026-10-04_09-12-36/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/candidate/2026-10-04_09-12-36/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/candidate/2026-10-04_09-12-36/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-3/candidate/2026-10-04_09-12-36/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/baseline/2026-10-04_09-16-01/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/baseline/2026-10-04_09-16-01/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/baseline/2026-10-04_09-16-01/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/baseline/2026-10-04_09-16-01/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/candidate/2026-10-04_09-15-13/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/candidate/2026-10-04_09-15-13/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/candidate/2026-10-04_09-15-13/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-4/candidate/2026-10-04_09-15-13/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/baseline/2026-10-04_09-18-37/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/baseline/2026-10-04_09-18-37/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/baseline/2026-10-04_09-18-37/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/baseline/2026-10-04_09-18-37/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/candidate/2026-10-04_09-19-24/agent_combined_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/candidate/2026-10-04_09-19-24/cgroup_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/candidate/2026-10-04_09-19-24/default_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      },
+      {
+        "path": "results/final-revalidation/performance/nginx-ablation/repeat-5/candidate/2026-10-04_09-19-24/scx_only_wrk_repeat1.txt",
+        "socket_error_counts": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "non_success_responses": 0
+      }
+    ]
+  },
+  "preliminary_benchmark_interface": {
+    "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+    "supported_names": [
+      "batch-cpu",
+      "batch-throughput",
+      "nginx",
+      "nginx-ablation",
+      "nginx-latency",
+      "redis-latency"
+    ],
+    "current_comparison_script": "scripts/run_optimization_benchmarks.py",
+    "current_report_baseline_literal": "58903fe",
+    "current_redis_case": "redis",
+    "exact_preliminary_comparison_completed": false
+  },
+  "other_findings": [
+    {
+      "id": "full_agent_scenario",
+      "evidence": "scripts/verify_continuous_monitor.py replaces AgentLoop._run_one_round with a sampling adapter",
+      "status": "End-to-end autonomous changing-load validation still needed"
+    },
+    {
+      "id": "hard_cpu_contract",
+      "evidence": "cpu_control_support marks current SP4 native cpu.max not_enforced; ToolRunner warning is appended after execution",
+      "status": "Verified platform limitation; pre-launch policy proposed"
+    },
+    {
+      "id": "group_fairness",
+      "evidence": "Class DSQs and task weights/slices do not by themselves establish aggregate per-agent fairness",
+      "status": "Hypothesis; requires different-thread-count workloads"
+    },
+    {
+      "id": "outcome_routing",
+      "evidence": "Repository stores outcomes, while router scores use classifications and proposals rather than outcome_for/last_metrics",
+      "status": "Code observation; performance benefit unmeasured"
+    }
+  ]
+}
