@@ -1,0 +1,9 @@
+{
+  "scope": "local failure injection; no kernel changes",
+  "stop_returned_success": false,
+  "fixture_process_still_alive": true,
+  "process_handle_preserved": true,
+  "hard_quota_still_blocked": true,
+  "retry_stop_succeeded": true,
+  "retry_released_lease": true
+}

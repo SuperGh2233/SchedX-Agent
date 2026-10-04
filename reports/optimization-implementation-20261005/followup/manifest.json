@@ -1,0 +1,20 @@
+{
+  "recorded_at_utc": "2026-10-04T19:06:34.115304+00:00",
+  "implementation_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+  "production_source_sha256": "c21c2cf74efe9c30e0e0303138fa2b50e9274726d70f45bc22fcc5f0de9fe5d7",
+  "local_tests": {
+    "tests": 364,
+    "failures": 0,
+    "errors": 0,
+    "runtime_seconds": 3.676
+  },
+  "evidence_hashes": {
+    "local-tests.xml": "7dca431c5b5ddcd3f9c0ca6a824ded3fd26ce98bd5976ef7dbae5ff6a56b4d80",
+    "local-tests.log": "d54257a1bd92fa1b53f2d57b079bf1c359771fabe29921f6bc6258a90dd5ad53",
+    "stop-failure-before.json": "aa16cbdb23885d9cbf36476e016eafa07eb166157a191fa40ed8ac0e1fb5de87",
+    "stop-failure-after.json": "c18d8881206d41b206bbcb99f2a7869ac5e1e0a16894975429bde76441cb9a20"
+  },
+  "real_kernel_validation": "pending until remote machine is powered on; no connection or shutdown attempted",
+  "preliminary_performance_and_real_autonomous_validation": "pending",
+  "goal_complete": false
+}

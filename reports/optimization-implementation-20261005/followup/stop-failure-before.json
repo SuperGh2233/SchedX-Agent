@@ -1,0 +1,8 @@
+{
+  "revision": "9fcd18c5491756c4316826e9bb5ef056074b1c61",
+  "scope": "local failure-injection fixture; no real scheduler or kernel changes",
+  "stop_returned_success": true,
+  "fixture_process_still_alive": true,
+  "process_handle_preserved": false,
+  "hard_quota_still_blocked": false
+}
