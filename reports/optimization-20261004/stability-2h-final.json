@@ -1,0 +1,86 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 7200,
+  "cases": {
+    "fairness": {
+      "status": "passed",
+      "failures": [],
+      "duration": 7200,
+      "single_cpu_contenders": 6,
+      "samples": 1428,
+      "max_wait_ms": {
+        "0": 686.13748,
+        "1": 75.926795,
+        "2": 207.40528,
+        "3": 404.680562
+      },
+      "wait_budgets_ms": {
+        "0": 3000,
+        "1": 2000,
+        "2": 2000,
+        "3": 2000
+      },
+      "load_pattern": "rotating busy/sleep every 60 seconds",
+      "periodic_recoveries": 59,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 7200.093898619001,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.142478494003,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.0944697239975,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.092636966001,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 7200.140863754001,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 7200.091163851997,
+          "cleanup": {
+            "policy_removed": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}

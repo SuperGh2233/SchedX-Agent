@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "pid": 25191,
+  "started_utc": "2026-10-04T01:04:59.263683+00:00",
+  "source_sha256": "4d9a581ac4461f6c3fdaaccad632a691a225a858f4578d3e9faf7d9e41efe275",
+  "native_binary_sha256": "3cd52f4acb9b019ee69bd0c2ab371da1c82578443093cf6728a80577c70d7a1e",
+  "stages": [
+    {
+      "name": "unit-tests",
+      "started_utc": "2026-10-04T01:04:59.268753+00:00",
+      "status": "passed",
+      "returncode": 0,
+      "finished_utc": "2026-10-04T01:05:01.372054+00:00"
+    },
+    {
+      "name": "compileall",
+      "started_utc": "2026-10-04T01:05:01.373917+00:00",
+      "status": "passed",
+      "returncode": 0,
+      "finished_utc": "2026-10-04T01:05:01.403575+00:00"
+    },
+    {
+      "name": "performance",
+      "started_utc": "2026-10-04T01:05:01.405441+00:00",
+      "status": "passed",
+      "returncode": 0,
+      "finished_utc": "2026-10-04T01:22:01.149209+00:00"
+    },
+    {
+      "name": "stability-30min",
+      "started_utc": "2026-10-04T01:22:01.151004+00:00",
+      "status": "passed",
+      "returncode": 0,
+      "finished_utc": "2026-10-04T01:52:27.130221+00:00"
+    },
+    {
+      "name": "stability-2h",
+      "started_utc": "2026-10-04T01:52:27.131926+00:00",
+      "status": "passed",
+      "returncode": 0,
+      "finished_utc": "2026-10-04T03:52:32.069873+00:00"
+    }
+  ],
+  "finished_utc": "2026-10-04T03:52:32.078695+00:00",
+  "final_sched_ext_state": "disabled"
+}

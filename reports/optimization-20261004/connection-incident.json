@@ -25,8 +25,15 @@
   "last_verified_test_elapsed_seconds": 1682.35,
   "last_verified_test_samples": 335,
   "last_verified_test_failures": [],
-  "test_result": "unverified_after_connection_loss",
+  "test_result": "passed_after_connection_recovery",
   "physical_power_state": "unknown",
   "shutdown_after_completion": false,
-  "followup": "Await connectivity recovery; inspect existing pipeline before deciding whether any test needs restarting."
+  "followup": "Complete original results retrieved and verified; no test restart was needed.",
+  "status": "resolved",
+  "initial_test_result": "unverified_after_connection_loss",
+  "recovery_observed_utc": "2026-10-04T07:06:05Z",
+  "linux_ssh_reachable_after_recovery": true,
+  "windows_smb_reachable_after_recovery": true,
+  "complete_test_samples": 1428,
+  "maximum_sample_gap_seconds": 5.37
 }

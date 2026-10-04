@@ -1,0 +1,28 @@
+{
+  "checked_utc": "2026-10-04T07:10:28.362358+00:00",
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "sched_ext_state": "disabled",
+  "source_sha256": "4d9a581ac4461f6c3fdaaccad632a691a225a858f4578d3e9faf7d9e41efe275",
+  "candidate_binary_sha256": "3cd52f4acb9b019ee69bd0c2ab371da1c82578443093cf6728a80577c70d7a1e",
+  "global_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+  "processes": [],
+  "cgroups": [],
+  "pins": [],
+  "daemon_socket_exists": false,
+  "active_final_journals": [],
+  "schedx_bpf_programs": [],
+  "original_backup_files_checked": 2393,
+  "original_backup_mismatches": [],
+  "global_binary_backup_comparisons": [
+    {
+      "backup_path": "scx/output/scx_agent",
+      "matches_global_binary": true
+    }
+  ],
+  "original_git_head": "63f76e09faf79463ccaca4a94c1c5f130d37e007",
+  "history_bundle_valid": true,
+  "status": "passed",
+  "ebpf_extension_programs": [],
+  "benchmark_processes": [],
+  "isolated_redis_6380_listening": false
+}
