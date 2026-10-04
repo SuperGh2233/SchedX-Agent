@@ -7,7 +7,7 @@
   "native_binary_sha256": "3cd52f4acb9b019ee69bd0c2ab371da1c82578443093cf6728a80577c70d7a1e",
   "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
   "cpus": 4,
-  "final_revalidation": "running",
+  "final_revalidation": "awaiting_remote_connection",
   "shutdown_after_completion": false,
   "shutdown_cancelled_date": "2026-10-04",
   "performance_revalidation": "passed",
@@ -17,7 +17,8 @@
   "stability_30min": "passed",
   "stability_30min_samples": 360,
   "stability_30min_evidence_sha256": "60cfec3738ada8820f40092a3abe5c7c5c585fb4bca69c2e65c55169ba25e17f",
-  "stability_2h": "running",
+  "stability_2h": "unverified_after_connection_loss",
+  "connection_incident": "connection-incident.json",
   "pipeline_pid": 25191,
   "pipeline_status_path": "/root/SchedX-Agent-optimization-20261003/results/final-revalidation/pipeline.json"
 }

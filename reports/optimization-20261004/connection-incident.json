@@ -1,0 +1,32 @@
+{
+  "observed_utc": "2026-10-04T02:35:30Z",
+  "local_tailscale_backend": "Running",
+  "local_tailscale_online": true,
+  "local_tailscale_health": [],
+  "remote_nodes": [
+    {
+      "ip": "100.121.207.17",
+      "role": "Linux VM",
+      "tailscale_online": false,
+      "last_seen_utc": "2026-10-04T02:30:00.1Z",
+      "ssh_port_22_reachable": false,
+      "tailscale_ping_reply": false
+    },
+    {
+      "ip": "100.105.181.122",
+      "role": "Windows VMware host",
+      "tailscale_online": false,
+      "last_seen_utc": "2026-10-04T02:30:00.1Z",
+      "smb_port_445_reachable": false,
+      "rdp_port_3389_reachable": false,
+      "tailscale_ping_reply": false
+    }
+  ],
+  "last_verified_test_elapsed_seconds": 1682.35,
+  "last_verified_test_samples": 335,
+  "last_verified_test_failures": [],
+  "test_result": "unverified_after_connection_loss",
+  "physical_power_state": "unknown",
+  "shutdown_after_completion": false,
+  "followup": "Await connectivity recovery; inspect existing pipeline before deciding whether any test needs restarting."
+}
