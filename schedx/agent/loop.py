@@ -272,6 +272,7 @@ class AgentLoop:
         self.context.data.pop("mutation_started", None)
         self.context.data["accepted_classification"] = copy.deepcopy(classification)
         self.context.data["accepted_cgroup_ids"] = [row.get("cgroup_id") for row in self.context.data.get("ebpf_policy_results", []) if row.get("cgroup_id")]
+        self.context.data["accepted_ebpf_policy_results"] = copy.deepcopy(self.context.data.get("ebpf_policy_results", []))
         return {
             "round": round_num, "status": "ok", "decision": {
                 "mode": agent_decision.mode, "target": agent_decision.target,

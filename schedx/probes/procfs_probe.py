@@ -24,6 +24,7 @@ class ProcessSample:
     cpu_percent: float = 0.0
     cgroup: str = ""
     sched: dict[str, float] | None = None
+    start_time: int = 0
 
 
 class ProcfsProbe:
@@ -73,6 +74,7 @@ class ProcfsProbe:
             utime=utime,
             stime=stime,
             rss_bytes=max(rss_pages, 0) * self.page_size,
+            start_time=int(fields[19]),
         )
 
         try:
