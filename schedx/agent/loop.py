@@ -271,7 +271,10 @@ class AgentLoop:
                     return {"round": round_num, "status": "failed_rolled_back" if rollback.ok else "rollback_failed",
                             "failed_phase": phase, "verify_success": results.get("verify", SkillResult(False, "not run")).ok,
                             "rollback_success": rollback.ok,
-                            "canary_rejected": phase == "verify" and self.context.data.get("canary_verdict", {}).get("status") == "rejected"}
+                            "canary_rejected": phase == "verify"
+                                and self.context.data.get("canary_verdict", {}).get("status") == "rejected"
+                                and not set(self.context.data.get("canary_verdict", {}).get("reasons", [])) & {
+                                    "invalid_metric_payload", "invalid_metric_value", "invalid_metric_delta", "invalid_request_quality"}}
                 return {"round": round_num, "status": f"{phase}_failed", "failed_phase": phase}
         verdict = self.context.data.get("canary_verdict", {})
         self.context.data.pop("mutation_started", None)

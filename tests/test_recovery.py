@@ -339,6 +339,22 @@ def test_verification_errors_still_count_as_operational_failures(tmp_path):
     assert len(loop.round_history) == 3
 
 
+def test_invalid_canary_metrics_are_not_marked_as_a_safe_policy_rejection(tmp_path):
+    loop = AgentLoop(AgentContext(state_dir=tmp_path))
+    fake_round(loop, "verify", rollback_ok=True)
+    original = loop._execute_skill
+
+    def execute(phase, iteration):
+        if phase == "verify":
+            loop.context.data["canary_verdict"] = {"status": "rejected", "reasons": ["invalid_request_quality"]}
+        return original(phase, iteration)
+
+    loop._execute_skill = execute
+    result = loop._run_one_round(1)
+    assert result["status"] == "failed_rolled_back"
+    assert result["canary_rejected"] is False
+
+
 def test_failed_plan_never_executes_stale_actions(tmp_path):
     loop = AgentLoop(AgentContext(state_dir=tmp_path, data={"actions": ["stale"]}))
     phases = fake_round(loop, "policy")
