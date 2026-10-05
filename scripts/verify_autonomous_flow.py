@@ -72,12 +72,18 @@ class ScenarioLoop(AgentLoop):
         self.evidence = {}
         self.phase_results = {}
         self.pre_verification_states = {}
+        self.fault_service_reset_done = False
 
     def _execute_skill(self, phase, iteration):
         index = self.context.data["round"]
         stage = scenario_phase(index, self.rounds_per_stage)
         if phase == "probe":
             self.workloads.noise(stage == "interference")
+            if stage == "http_fault" and not self.fault_service_reset_done:
+                # A separate service identity exercises a fresh candidate even
+                # when the preceding policy is in its production cooldown.
+                self.workloads.restart_service()
+                self.fault_service_reset_done = True
             scope = self.workloads.pids()
             self.context.data["scope_pids"] = scope
             for pid in scope:
@@ -110,6 +116,8 @@ class ScenarioLoop(AgentLoop):
                     "canary", "canary_verdict", "rollback", "degraded_phases", "stability", "converged"):
             if key in self.context.data:
                 evidence[key] = safe_json(self.context.data[key])
+        if "policy_observation" in self.context.data:
+            evidence["policy_observation"] = safe_json(self.context.data["policy_observation"])
         evidence["scheduler_state"] = ScxController().state()
         evidence["phase_results"] = self.phase_results.get(row["round"], {})
         evidence["pre_verification_state"] = self.pre_verification_states.get(row["round"], {})
@@ -125,10 +133,39 @@ def assess(evidence: dict[int, dict], rounds_per_stage: int) -> dict:
     stages = {stage: [row for row in evidence.values() if row["stage"] == stage]
               for stage in ("stable", "interference", "recovery", "http_fault")}
     for stage in ("stable", "interference", "recovery"):
-        if not any(row["result"].get("objective_status") == "accepted" for row in stages[stage]):
-            failures.append(f"{stage}_has_no_accepted_measurement")
+        if not any(row["result"].get("objective_status") in {"accepted", "observed_healthy"} for row in stages[stage]):
+            failures.append(f"{stage}_has_no_healthy_measurement")
+        if all("policy_observation" in row for row in stages[stage]):
+            failures.append(f"{stage}_has_no_production_trial")
         for row in stages[stage]:
             result = row["result"]
+            observation = row.get("policy_observation")
+            if observation is not None:
+                current = observation.get("metrics", {})
+                expected = bool(observation.get("background_expected"))
+                measured = CanaryVerifier().evaluate(
+                    str(row.get("agent_decision", {}).get("mode", "balanced")), current, current,
+                    nr_rejected=observation.get("nr_rejected", 0),
+                    background_share=current.get("background_cpu_share") if expected else None,
+                    background_retention=1.0 if current.get("background_cpu_ticks", 0) > 0 else None,
+                    background_expected=expected, error_metrics_expected=True)
+                previous = evidence.get(observation.get("rejected_round"), {})
+                rejection = previous.get("result", {})
+                if (result.get("status") != "ok" or result.get("objective_status") != "observed_healthy"
+                        or result.get("observation_verified") is not True or result.get("noop") is not True
+                        or result.get("improvement") is not None or result.get("metrics") != current
+                        or current != row.get("canary", {}).get("baseline")
+                        or measured.status != "accepted"
+                        or measured.to_dict() != observation.get("verdict")
+                        or rejection.get("status") != "failed_rolled_back"
+                        or rejection.get("failed_phase") != "verify" or not rejection.get("rollback_success")
+                        or not observation.get("context_key") or observation["context_key"] != rejection.get("trial_context")
+                        or result["round"] > observation.get("retry_after_round", 0)
+                        or observation.get("scheduler_state") != row.get("scheduler_state")
+                        or row.get("actions") or row.get("execution_results")
+                        or set(row.get("phase_results", {})) != {"probe", "analyze", "canary_baseline"}):
+                    failures.append(f"invalid_policy_observation_round_{result['round']}")
+                continue
             expected_rejection = result.get("status") == "failed_rolled_back" and result.get("failed_phase") == "verify"
             if result.get("status") != "ok" and not expected_rejection:
                 failures.append(f"unexpected_failure_round_{result['round']}")
@@ -196,7 +233,8 @@ def assess(evidence: dict[int, dict], rounds_per_stage: int) -> dict:
         failures.append("fault_recovery_phase_evidence_missing")
     return {"status": "passed" if not failures else "failed", "failures": failures,
             "completed_rounds": len(evidence), "fault_response_errors": response_errors,
-            "claim_scope": "real Agent flow, changing-load observation and controlled HTTP fault recovery; no performance gain is implied"}
+            "observed_without_mutation": sum("policy_observation" in row for row in evidence.values()),
+            "claim_scope": "real Agent trials, measured no-action observations after rejection, changing load and controlled candidate HTTP fault recovery; no performance gain is implied"}
 
 
 def main():
@@ -244,6 +282,8 @@ def main():
                "scope": "owned services and PIDs", "stability_tolerance_percent": 10.0,
                "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
                "measurement_control": "Agent and wrk on reserved CPU; private service and interference share work CPUs"}
+    summary["rejection_observation_rounds"] = loop.rejection_observation_rounds if loop else 3
+    summary["fault_control"] = "restart only the owned service before the candidate fault, creating a fresh process identity"
     loop = None
     try:
         os.sched_setaffinity(0, {housekeeping_cpu})

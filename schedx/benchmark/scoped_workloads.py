@@ -173,6 +173,13 @@ class OwnedWorkloads:
         else:
             self.stop("noise")
 
+    def restart_service(self) -> None:
+        """Start a new owned service identity for a separate fault trial."""
+        self.stop("service")
+        config = self.output / "nginx.conf"
+        self.spawn("service", [shutil.which("nginx"), "-p", str(self.output) + "/", "-c", str(config)])
+        self._wait_http()
+
     def pids(self, role: str | None = None) -> list[int]:
         return sorted({pid for name, process in self.processes.items()
                        if (role is None or name == role) and process.poll() is None

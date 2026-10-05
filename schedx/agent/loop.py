@@ -25,6 +25,10 @@ from schedx.skills.llm_analyze_skill import LlmAnalyzeSkill
 from schedx.skills.llm_policy_skill import LlmPolicySkill
 from schedx.policies.repository import PolicyRepository
 from schedx.policies.router import MODE_TO_EXPERT, SchedulerRouter, target_for_mode
+from schedx.policies.trials import trial_context_key
+from schedx.policies.verifier import CanaryVerifier
+from schedx.probes.slo_probe import sched_ext_rejected
+from schedx.controllers.scx_controller import ScxController
 
 
 @dataclass
@@ -88,6 +92,14 @@ class AgentLoop:
             self.context.state_dir / "policy_repository.json"
         )
         self.policy_router = SchedulerRouter(self.policy_repository)
+        self._rejected_trial: dict | None = None
+        self._policy_generation = 0
+        self._accepted_decision: dict | None = None
+        self.rejection_observation_rounds = context.data.get("rejection_observation_rounds", 3)
+        if (isinstance(self.rejection_observation_rounds, bool)
+                or not isinstance(self.rejection_observation_rounds, int)
+                or not 0 <= self.rejection_observation_rounds <= 128):
+            raise ValueError("rejection_observation_rounds must be an integer in [0, 128]")
 
         self._skills: dict[str, Skill] = {
             "probe": ProbeSkill(),
@@ -150,6 +162,7 @@ class AgentLoop:
         if isinstance(failure_limit, bool) or not isinstance(failure_limit, int) or failure_limit < 1:
             raise ValueError("max_consecutive_failures must be a positive integer")
         self.round_history.clear()
+        self._rejected_trial = None
         self._completed_rounds = 0
         self.context.data["converged"] = False
         self.context.data.pop("stop_reason", None)
@@ -248,6 +261,13 @@ class AgentLoop:
         print(f"  reason: {agent_decision.reason}")
         print(f"  confidence: {agent_decision.confidence:.0%}")
 
+        trial_key = trial_context_key(agent_decision, self.context.data, self._policy_generation)
+        rejected = self._rejected_trial
+        if (trial_key and rejected and rejected["key"] == trial_key and round_num <= rejected["until_round"]
+                and isinstance(self.context.data.get("canary_config"), dict)
+                and ScxController().state() == rejected["scheduler_state"]):
+            return self._observe_current_policy(round_num, agent_decision, rejected)
+
         results: dict[str, SkillResult] = {}
         for offset, phase in enumerate(("policy", "canary_baseline", "ebpf_load", "ebpf_attach", "scx", "act", "scx_cgroups", "ebpf_policy", "canary_candidate", "ebpf_stats", "verify"), 3):
             if phase in {"ebpf_load", "scx", "act"}:
@@ -268,7 +288,19 @@ class AgentLoop:
                     if rollback.ok:
                         self.context.data.pop("rollback_required", None)
                         self.context.data.pop("mutation_started", None)
+                    verdict = self.context.data.get("canary_verdict", {})
+                    if (trial_key and rollback.ok and phase == "verify" and verdict.get("status") == "rejected"
+                            and verdict.get("reasons") and not set(verdict["reasons"]) & {
+                                "invalid_metric_payload", "invalid_metric_value", "invalid_metric_delta",
+                                "invalid_request_quality", "missing_background_progress"}):
+                        self._rejected_trial = {
+                            "key": trial_key, "round": round_num,
+                            "until_round": round_num + self.rejection_observation_rounds,
+                            "scheduler_state": ScxController().state(),
+                            "reasons": copy.deepcopy(verdict["reasons"]),
+                        }
                     return {"round": round_num, "status": "failed_rolled_back" if rollback.ok else "rollback_failed",
+                            "trial_context": trial_key,
                             "failed_phase": phase, "verify_success": results.get("verify", SkillResult(False, "not run")).ok,
                             "rollback_success": rollback.ok,
                             "canary_rejected": phase == "verify"
@@ -281,12 +313,21 @@ class AgentLoop:
         self.context.data["accepted_classification"] = copy.deepcopy(classification)
         self.context.data["accepted_cgroup_ids"] = [row.get("cgroup_id") for row in self.context.data.get("ebpf_policy_results", []) if row.get("cgroup_id")]
         self.context.data["accepted_ebpf_policy_results"] = copy.deepcopy(self.context.data.get("ebpf_policy_results", []))
+        self._policy_generation += 1
+        self._rejected_trial = None
+        self._accepted_decision = {
+            "mode": agent_decision.mode, "target": agent_decision.target,
+            "parameters": copy.deepcopy(agent_decision.parameters),
+            "expert_id": self.context.data.get("policy_route", {}).get("expert_id"),
+            "workload_context": trial_context_key(agent_decision, self.context.data, 0),
+        }
         return {
             "round": round_num, "status": "ok", "decision": {
                 "mode": agent_decision.mode, "target": agent_decision.target,
                 "reason": agent_decision.reason, "confidence": agent_decision.confidence,
                 "parameters": copy.deepcopy(agent_decision.parameters),
                 "expert_id": self.context.data.get("policy_route", {}).get("expert_id"),
+                "workload_context": trial_context_key(agent_decision, self.context.data, 0),
             },
             **{phase + "_success": result.ok for phase, result in results.items()},
             "canary_success": results["canary_candidate"].ok,
@@ -300,8 +341,53 @@ class AgentLoop:
         self.context.data["transaction_id"] = uuid.uuid4().hex
         self.context.data["transaction_owner"] = self.context.session.session_id
         self.context.data.pop("mutation_started", None)
-        for key in ("actions", "execution_results", "execution_noop", "canary", "canary_verdict", "verification", "degraded_phases"):
+        for key in ("actions", "execution_results", "execution_noop", "canary", "canary_verdict", "verification", "degraded_phases", "policy_observation"):
             self.context.data.pop(key, None)
+
+    def _observe_current_policy(self, round_num: int, proposal: Decision, rejected: dict) -> dict:
+        """Measure retained controls during a bounded pause in a rejected trial.
+
+        An observation is not an accepted candidate or a performance gain.
+        Request quality and background progress still have to pass the same
+        safety limits; a workload/context change immediately permits a new trial.
+        """
+        sampled = self._execute_skill("canary_baseline", round_num * 100 + 3)
+        if not sampled.ok:
+            return {"round": round_num, "status": "observation_failed", "failed_phase": "canary_baseline"}
+        canary = self.context.data.get("canary", {})
+        metrics = canary.get("baseline", {})
+        expected = bool(canary.get("background_expected"))
+        try:
+            # This verifies health, never improvement relative to a rejected candidate.
+            verdict = CanaryVerifier(
+                min_background_retention=self.context.data.get("canary_min_background_retention", 0.25),
+                **self.context.data.get("canary_error_limits", {}),
+            ).evaluate(proposal.mode, metrics, metrics, nr_rejected=sched_ext_rejected(),
+                       background_share=metrics.get("background_cpu_share") if expected else None,
+                       background_retention=1.0 if metrics.get("background_cpu_ticks", 0) > 0 else None,
+                       background_expected=expected, error_metrics_expected=True)
+        except (TypeError, ValueError) as exc:
+            return {"round": round_num, "status": "observation_failed", "reason": str(exc)}
+        identity = copy.deepcopy(self._accepted_decision) if self._accepted_decision else {
+            "parameters": {}, "expert_id": "current_system_controls",
+        }
+        identity.update(mode=proposal.mode, target=proposal.target)
+        identity["workload_context"] = trial_context_key(proposal, self.context.data, 0)
+        observation = {
+            "reason": "rejected_candidate_cooldown", "rejected_round": rejected["round"],
+            "context_key": rejected["key"], "retry_after_round": rejected["until_round"],
+            "rejection_reasons": rejected["reasons"], "verdict": verdict.to_dict(),
+            "policy_generation": self._policy_generation, "decision": identity,
+            "metrics": metrics, "background_expected": expected,
+            "nr_rejected": sched_ext_rejected(), "scheduler_state": ScxController().state(),
+        }
+        self.context.data["policy_observation"] = observation
+        return {
+            "round": round_num, "status": "ok" if verdict.status == "accepted" else "observation_failed",
+            "objective_status": "observed_healthy" if verdict.status == "accepted" else verdict.status,
+            "observation_verified": verdict.status == "accepted", "noop": True,
+            "decision": identity, "metrics": metrics, "improvement": None,
+        }
 
     def _objective_improvement(self) -> float | None:
         verdict = self.context.data.get("canary_verdict", {})

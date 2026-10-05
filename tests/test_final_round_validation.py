@@ -8,6 +8,7 @@ import pytest
 
 from schedx.agent.loop import AgentLoop
 from schedx.controllers.scx_controller import ScxController
+from schedx.policies.verifier import CanaryVerifier
 
 
 def load_script(name):
@@ -201,3 +202,38 @@ def test_rejected_candidate_uses_pre_rollback_backend_evidence():
     assessment = module.assess(evidence, 3)
     assert "scheduler_inactive_round_1" not in assessment["failures"]
     assert "incomplete_ebpf_chain_round_1" not in assessment["failures"]
+
+
+@pytest.mark.parametrize("fault", [None, "request_error", "missing_quality", "outside_pause", "missing_recovery", "fake_gain", "mutation"])
+def test_observation_assessment_requires_health_and_prior_confirmed_recovery(fault):
+    module = load_script("verify_autonomous_flow")
+    evidence = flow_evidence()
+    prior = evidence[1]
+    prior["result"].update(status="failed_rolled_back", failed_phase="verify", rollback_success=True,
+                           trial_context="context-1")
+    prior["canary"]["candidate"]["p99_ms"] = 11
+    prior["canary_verdict"]["status"] = "rejected"
+    row = evidence[2]
+    sample = row["canary"]["baseline"]
+    verdict = CanaryVerifier().evaluate("latency_first", sample, sample, error_metrics_expected=True)
+    row["policy_observation"] = {
+        "metrics": sample, "verdict": verdict.to_dict(), "context_key": "context-1",
+        "rejected_round": 1, "retry_after_round": 4, "scheduler_state": "enabled"}
+    row["result"].update(objective_status="observed_healthy", observation_verified=True, noop=True,
+                          improvement=None, metrics=sample)
+    row["actions"] = row["execution_results"] = []
+    row["phase_results"] = {phase: {"ok": True} for phase in ("probe", "analyze", "canary_baseline")}
+    if fault == "request_error":
+        sample["non_success_responses"] = 100
+    elif fault == "missing_quality":
+        sample.pop("socket_errors")
+    elif fault == "outside_pause":
+        row["policy_observation"]["retry_after_round"] = 1
+    elif fault == "missing_recovery":
+        prior["result"]["rollback_success"] = False
+    elif fault == "fake_gain":
+        row["result"]["improvement"] = 10
+    elif fault == "mutation":
+        row["actions"] = [{"target_type": "pid", "target": 21}]
+    failures = module.assess(evidence, 3)["failures"]
+    assert ("invalid_policy_observation_round_2" in failures) == bool(fault)

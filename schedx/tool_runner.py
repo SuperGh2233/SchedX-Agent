@@ -84,7 +84,7 @@ def parse_resource_hint(value: str) -> tuple[str | None, dict[str, str | int]]:
     return intent, overrides
 
 
-def recommend_next_hint(intent: str, metrics: dict, returncode: int) -> str:
+def recommend_next_hint(intent: str, metrics: dict, returncode: int, *, hard_cpu_limit: bool = False) -> str:
     """Translate kernel pressure signals into a hint for the Agent's next run."""
     dimensions = [f"intent:{intent}"]
     memory_events = metrics.get("memory_events") or {}
@@ -95,7 +95,7 @@ def recommend_next_hint(intent: str, metrics: dict, returncode: int) -> str:
         or memory_events.get("oom_kill", 0)
     ):
         dimensions.append("memory:high")
-    if cpu_stat.get("nr_throttled", 0):
+    if cpu_stat.get("nr_throttled", 0) and not hard_cpu_limit:
         dimensions.append("cpu:high")
     return ",".join(dimensions) if len(dimensions) > 1 or returncode else ""
 
@@ -273,7 +273,8 @@ class ToolCallRunner:
         if not result["cleanup"]["policy_removed"] or not result["cleanup"]["cgroup_removed"] or not result["cleanup"]["scheduler_stopped"]:
             if result["returncode"] == 0:
                 result["returncode"] = 125
-        result["feedback"] = self._feedback(result["metrics"], result["returncode"])
+        hard_cpu_limit = hard_quota
+        result["feedback"] = self._feedback(result["metrics"], result["returncode"], hard_cpu_limit=hard_cpu_limit)
         if result["cpu_control_support_at_launch"]["cpu_max"] != "cgroup_v2" and quota[0] != "max":
             result["feedback"].append(
                 "the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota"
@@ -284,7 +285,7 @@ class ToolCallRunner:
             result["feedback"].append("tool exceeded its time limit; process tree stopped")
         if contract_breached:
             result["feedback"].append("CPU backend changed during a hard-quota run; process tree stopped")
-        result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"])
+        result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"], hard_cpu_limit=hard_cpu_limit)
         result["retry_recommended"] = bool(result["next_resource_hint"])
         self._save(result)
         return result
@@ -394,7 +395,7 @@ class ToolCallRunner:
         }
 
     @staticmethod
-    def _feedback(metrics: dict, returncode: int) -> list[str]:
+    def _feedback(metrics: dict, returncode: int, *, hard_cpu_limit: bool = False) -> list[str]:
         feedback = []
         memory_events = metrics.get("memory_events") or {}
         cpu_stat = metrics.get("cpu_stat") or {}
@@ -403,7 +404,9 @@ class ToolCallRunner:
         if memory_events.get("oom", 0) or memory_events.get("oom_kill", 0):
             feedback.append("memory limit reached; split the operation before retrying")
         if cpu_stat.get("nr_throttled", 0):
-            feedback.append("CPU throttling detected; reduce parallel workers or request a compile profile")
+            feedback.append(
+                "CPU throttling reflects the requested hard limit; preserve the limit and reduce parallel workers if needed"
+                if hard_cpu_limit else "CPU throttling detected; reduce parallel workers or request a compile profile")
         if returncode:
             feedback.append("tool failed; use collected pressure metrics when planning the retry")
         return feedback

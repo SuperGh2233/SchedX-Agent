@@ -126,7 +126,10 @@ class DecisionEngine:
         if len(history) < self.stability_window:
             return reject("insufficient_rounds")
         window = history[-self.stability_window:]
-        if any(row.get("status") != "ok" or row.get("objective_status") != "accepted" for row in window):
+        if any(row.get("status") != "ok" or not (
+                row.get("objective_status") == "accepted" or (
+                    row.get("objective_status") == "observed_healthy"
+                    and row.get("observation_verified") is True and row.get("noop") is True)) for row in window):
             return reject("unmeasured_or_failed_round")
         decisions = [row.get("decision") for row in window]
         if any(not isinstance(d, Mapping) or any(not isinstance(d.get(key), str) or not d[key] for key in ("mode", "target")) for d in decisions):
@@ -135,7 +138,9 @@ class DecisionEngine:
         if len(identities) != 1:
             return reject("objective_changed")
         try:
-            policies = [json.dumps({"expert_id": d.get("expert_id"), "parameters": d.get("parameters", {})}, sort_keys=True, allow_nan=False) for d in decisions]
+            policies = [json.dumps({"expert_id": d.get("expert_id"), "parameters": d.get("parameters", {}),
+                                   "workload_context": d.get("workload_context")},
+                                  sort_keys=True, allow_nan=False) for d in decisions]
         except (TypeError, ValueError):
             return reject("invalid_policy_parameters")
         if len(set(policies)) != 1:
@@ -151,7 +156,10 @@ class DecisionEngine:
         if not math.isfinite(variation):
             return reject("invalid_objective_variation")
         result.update(metric=objectives[0][0], values=values, variation_percent=round(variation, 6))
-        improvements = [self._finite_number(row.get("improvement")) for row in window]
+        # A measured no-action observation makes no claim about candidate gain.
+        # Absolute objective variation above still has to satisfy the full gate.
+        improvements = [0.0 if row.get("objective_status") == "observed_healthy"
+                        else self._finite_number(row.get("improvement")) for row in window]
         if any(value is None for value in improvements):
             return reject("missing_or_invalid_improvement")
         result["maximum_step_change_percent"] = max(abs(value) for value in improvements)
