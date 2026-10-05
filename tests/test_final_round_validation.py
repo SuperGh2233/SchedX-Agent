@@ -96,7 +96,7 @@ def test_shared_throughput_profile_is_explicit_and_uses_existing_production_sett
     assert defaults["fairness"] is None
     assert defaults["policies"] == comparison.POLICIES
     shared = comparison.profile_settings("shared-throughput", "batch")
-    assert shared["fairness"] == [40, 32]
+    assert shared["fairness"] == [20, 32]
     assert shared["policies"]["noise"] == (3, 300)
     assert shared["policies"]["batch"] == (2, 2000)
     assert comparison.profile_settings("shared-throughput", "nginx") == defaults
@@ -123,7 +123,7 @@ print('schedx>', flush=True)
 try:
  for line in sys.stdin:
   if line.strip() == 'quit': break
-  print('fairness updated background_interval=40 default_interval=32' if line.startswith('set fairness') else 'policy updated', flush=True)
+  print('fairness updated background_interval=' + line.split()[2] + ' default_interval=' + line.split()[3] if line.startswith('set fairness') else 'policy updated', flush=True)
   print('schedx>', flush=True)
 finally:
  state.write_text('disabled')

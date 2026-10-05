@@ -52,7 +52,10 @@ SCX_FAIRNESS_BACKGROUND_DEFAULT = 64
 SCX_FAIRNESS_BACKGROUND_MIN = 1
 SCX_FAIRNESS_BACKGROUND_MAX = 4096
 SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL = 32
-SCX_FAIRNESS_THROUGHPUT_BACKGROUND = 40
+# Saturated batch/noise with the throughput weights retained only 16%-18%
+# of CFS background progress at 40. Use the existing feedback rule's next
+# step (20), and continue checking runtime progress for the actual workload.
+SCX_FAIRNESS_THROUGHPUT_BACKGROUND = 20
 
 
 @dataclass
