@@ -96,12 +96,52 @@ def test_shared_throughput_profile_is_explicit_and_uses_existing_production_sett
     assert defaults["fairness"] is None
     assert defaults["policies"] == comparison.POLICIES
     shared = comparison.profile_settings("shared-throughput", "batch")
-    assert shared["fairness"] == [20, 32]
+    assert shared["fairness"] == [40, 32]
     assert shared["policies"]["noise"] == (3, 300)
     assert shared["policies"]["batch"] == (2, 2000)
+    assert not shared["adaptive"]
+    assert comparison.profile_settings("shared-adaptive", "batch")["adaptive"]
     assert comparison.profile_settings("shared-throughput", "nginx") == defaults
     with pytest.raises(ValueError):
         comparison.profile_settings("hidden-tuning", "batch")
+
+
+@pytest.mark.parametrize("acknowledged", [True, False])
+def test_common_feedback_reacts_to_zero_progress_and_requires_acknowledgement(comparison, tmp_path, acknowledged):
+    groups = {name: tmp_path / name for name in comparison.POLICIES}
+    for group in groups.values():
+        group.mkdir()
+    session = comparison.NativeSession(tmp_path / "binary", groups, tmp_path, profile="shared-adaptive", case="batch")
+    foreground, background = groups["batch"].stat().st_ino, groups["noise"].stat().st_ino
+    values = iter(({foreground: {"runtime_ns": 100}, background: {"runtime_ns": 0}},
+                   {foreground: {"runtime_ns": 200}, background: {"runtime_ns": 0}},
+                   {foreground: {"runtime_ns": 300}, background: {"runtime_ns": 100}}))
+    calls = []
+
+    class Stop:
+        count = 0
+        def wait(self, seconds):
+            self.count += 1
+            return self.count > 3
+
+    class Controller:
+        background_interval = 40
+        def get_cgroup_metrics(self):
+            return next(values)
+        def set_fairness(self, interval, ordinary):
+            calls.append((interval, ordinary))
+            if acknowledged:
+                self.background_interval = interval
+            return acknowledged
+
+    session.controller, session.feedback_stop = Controller(), Stop()
+    session._adapt_cgroup_runtime()
+    assert calls[0] == (20, 32)  # A zero-runtime background sample must be actionable.
+    if acknowledged:
+        assert calls == [(20, 32), (40, 32)]
+        assert len(session.feedback_samples) == 2 and not session.feedback_errors
+    else:
+        assert session.feedback_errors and not session.feedback_samples
 
 
 @pytest.mark.parametrize("profile", ["compiled-defaults", "shared-throughput"])

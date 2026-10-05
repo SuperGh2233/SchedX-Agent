@@ -52,10 +52,9 @@ SCX_FAIRNESS_BACKGROUND_DEFAULT = 64
 SCX_FAIRNESS_BACKGROUND_MIN = 1
 SCX_FAIRNESS_BACKGROUND_MAX = 4096
 SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL = 32
-# Saturated batch/noise with the throughput weights retained only 16%-18%
-# of CFS background progress at 40. Use the existing feedback rule's next
-# step (20), and continue checking runtime progress for the actual workload.
-SCX_FAIRNESS_THROUGHPUT_BACKGROUND = 20
+# The standalone Agent enables runtime feedback after registering its groups.
+# A fixed interval alone must not be advertised as a runtime-share guarantee.
+SCX_FAIRNESS_THROUGHPUT_BACKGROUND = 40
 
 
 @dataclass
@@ -469,7 +468,12 @@ class ScxController:
                     delta = {key: max(0, row["runtime_ns"] - previous.get(key, {}).get("runtime_ns", row["runtime_ns"])) for key, row in current.items()}
                     foreground = delta.get(1, 0) + delta.get(2, 0)
                     background = delta.get(3, 0)
-                    if foreground and background:
+                    bg_metrics = current.get(3, {})
+                    background_queued = bg_metrics.get("enqueues", 0) > bg_metrics.get("runs", 0)
+                    # Zero runtime can mean actual starvation. Waiting for a
+                    # positive sample would prevent the feedback from helping
+                    # a queued background task that never got to run.
+                    if foreground and (background or background_queued):
                         share = background / (foreground + background)
                         reason, interval = choose_background_interval(self.background_interval, share, foreground + background, 0, True, 0.15, 0.25)
                         if stop.is_set():

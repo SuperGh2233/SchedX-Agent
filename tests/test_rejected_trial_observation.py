@@ -8,6 +8,7 @@ from schedx.agent.loop import AgentLoop
 from schedx.agent.skill import SkillResult
 from schedx.policies.trials import trial_context_key
 from schedx.tool_runner import ToolCallRunner, recommend_next_hint
+from schedx.controllers.scx_controller import ScxController
 
 
 def metrics(p99=1.0, errors=0):
@@ -161,3 +162,24 @@ def test_healthy_hard_quota_never_recommends_removing_the_requested_cap():
     measured["memory_events"] = {"oom_kill": 1}
     hint = recommend_next_hint("test", measured, 1, hard_cpu_limit=True)
     assert "memory:high" in hint and "cpu:high" not in hint
+
+
+@pytest.mark.parametrize("queued", [True, False])
+def test_standalone_feedback_distinguishes_starved_background_from_absent_work(queued, monkeypatch):
+    controller = ScxController(dry_run=False)
+    values = iter(({1: {"runtime_ns": 100}, 3: {"runtime_ns": 0, "enqueues": 3 if queued else 0, "runs": 0}},
+                   {1: {"runtime_ns": 200}, 3: {"runtime_ns": 0, "enqueues": 3 if queued else 0, "runs": 0}}))
+    calls = []
+
+    class Stop:
+        count = 0
+        def wait(self, seconds):
+            self.count += 1
+            return self.count > 2
+        def is_set(self):
+            return False
+
+    monkeypatch.setattr(controller, "get_class_metrics", lambda: next(values))
+    monkeypatch.setattr(controller, "set_fairness", lambda interval, ordinary: calls.append((interval, ordinary)))
+    controller._adapt_runtime(Stop())
+    assert calls == ([(32, 32)] if queued else [])

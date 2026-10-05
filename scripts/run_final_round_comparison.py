@@ -37,7 +37,7 @@ from schedx.controllers.scx_controller import (
 from schedx.policies.scx_mapper import ScxPolicyMapper
 from schedx.cpu_backend import CpuBackendLease, backend_lock_path
 from schedx.policies.verifier import CanaryVerifier
-from schedx.scx_daemon import ScxDaemonClient
+from schedx.scx_daemon import ScxDaemonClient, _runtime_shares, choose_background_interval
 from schedx.state import atomic_json
 
 
@@ -48,7 +48,7 @@ POLICIES = {"service": (1, 10000), "redis": (1, 10000), "noise": (3, 100), "batc
 
 
 def profile_settings(profile: str, case: str) -> dict:
-    if profile not in {"compiled-defaults", "shared-throughput"}:
+    if profile not in {"compiled-defaults", "shared-throughput", "shared-adaptive"}:
         raise ValueError("unsupported native comparison profile")
     if profile == "compiled-defaults" or case != "batch":
         return {"policies": POLICIES, "fairness": None,
@@ -65,7 +65,8 @@ def profile_settings(profile: str, case: str) -> dict:
     }
     return {"policies": policies,
             "fairness": [SCX_FAIRNESS_THROUGHPUT_BACKGROUND, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL],
-            "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"}
+            "adaptive": profile == "shared-adaptive", "target_runtime_share": [0.15, 0.25],
+            "description": "same existing Agent throughput settings on both binaries; batch only; feedback choice recorded explicitly"}
 
 
 def execution_order(repeat: int) -> list[str]:
@@ -85,6 +86,10 @@ class NativeSession:
         self.logs = []
         self.lease = None
         self.settings = profile_settings(profile, case)
+        self.feedback_stop = threading.Event()
+        self.feedback_thread = None
+        self.feedback_errors = []
+        self.feedback_samples = []
         self.evidence = {"binary": str(binary), "fairness_configuration": "compiled defaults; no set fairness command"}
         self.evidence.update(profile=profile, settings=self.settings)
 
@@ -121,6 +126,9 @@ class NativeSession:
                                                    "weight": weight, "acknowledged": accepted}
                 if not accepted:
                     raise RuntimeError(f"native policy was not acknowledged: {role}")
+            if self.settings.get("adaptive"):
+                self.feedback_thread = threading.Thread(target=self._adapt_cgroup_runtime, daemon=True)
+                self.feedback_thread.start()
             return self
         except BaseException:
             self.close()
@@ -140,7 +148,38 @@ class NativeSession:
     def alive(self) -> bool:
         return self.controller._process is not None and self.controller._process.poll() is None and self.controller.state() == "enabled"
 
+    def _adapt_cgroup_runtime(self):
+        # The historical binary has cgroup runtime metrics, but lacks the newer
+        # class-metrics command. Use the same production feedback rule and
+        # target on both; this is a declared common measurement adapter.
+        policies = {group.stat().st_ino: {"class_id": self.settings["policies"][role][0]}
+                    for role, group in self.groups.items()}
+        previous = None
+        while not self.feedback_stop.wait(1.0):
+            try:
+                current = self.controller.get_cgroup_metrics()
+                shares = _runtime_shares(policies, previous or {}, current)
+                total, background = shares["sample_runtime_ns"], shares["background_runtime_ns"]
+                if previous is not None and total > background:
+                    before = self.controller.background_interval
+                    reason, interval = choose_background_interval(
+                        before, shares["background_share"], total, 0, True, 0.15, 0.25)
+                    if interval != before and not self.controller.set_fairness(interval, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL):
+                        raise RuntimeError("adaptive fairness command was not acknowledged")
+                    self.feedback_samples.append({"background_runtime_share": shares["background_share"],
+                                                  "sample_runtime_ns": total, "previous_interval": before,
+                                                  "interval": interval, "reason": reason})
+                previous = current
+            except (OSError, RuntimeError, ValueError) as exc:
+                self.feedback_errors.append(f"{type(exc).__name__}: {exc}")
+                return
+
     def close(self):
+        self.feedback_stop.set()
+        if self.feedback_thread:
+            self.feedback_thread.join(timeout=self.controller.command_timeout + 2)
+        self.evidence["feedback"] = {"samples": self.feedback_samples, "errors": self.feedback_errors,
+                                     "stopped": not self.feedback_thread or not self.feedback_thread.is_alive()}
         stopped = self.controller.stop_scheduler()
         self.evidence["scheduler_stopped"] = stopped
         if stopped and self.lease is not None:
@@ -303,6 +342,11 @@ def measure(case, version, binary, workloads, output, duration, warmup, repeat, 
                 row["failures"].append("native_output_reader_still_running")
             if not native.evidence.get("scheduler_stopped"):
                 row["failures"].append("native_scheduler_stop_failed")
+            feedback = native.evidence["feedback"]
+            if not feedback["stopped"] or feedback["errors"]:
+                row["failures"].append("native_feedback_failed_or_not_stopped")
+            if native.settings.get("adaptive") and not feedback["samples"]:
+                row["failures"].append("missing_adaptive_runtime_evidence")
         workloads.stop("batch")
         workloads.stop("noise")
         row["final_scheduler_state"] = ScxController().state()
@@ -326,7 +370,7 @@ def main():
     parser.add_argument("--warmup", type=float, default=1.0)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--batch-threads", type=int, default=3)
-    parser.add_argument("--profile", choices=("compiled-defaults", "shared-throughput"),
+    parser.add_argument("--profile", choices=("compiled-defaults", "shared-throughput", "shared-adaptive"),
                         default="compiled-defaults", help="explicit common batch configuration; never patches either algorithm")
     args = parser.parse_args()
     if not sys.platform.startswith("linux") or os.geteuid() != 0:
@@ -355,7 +399,7 @@ def main():
               "profile": args.profile,
               "fairness_parameters": ("each binary's compiled defaults; preliminary algorithm and settings are not patched"
                                       if args.profile == "compiled-defaults" else
-                                      "existing Agent throughput settings applied equally for batch; service cases retain compiled fairness defaults"),
+                                      "existing Agent throughput settings applied equally for batch; shared-adaptive uses the same cgroup runtime feedback on both; service cases retain compiled defaults"),
               "settings_by_case": {case: profile_settings(args.profile, case) for case in METRICS},
               "version_identity": identities, "kernel": os.uname().release,
               "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
