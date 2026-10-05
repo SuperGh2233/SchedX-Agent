@@ -223,6 +223,11 @@ def main():
             or identity["build_manifest"].get("btf_sha256") != btf_digest):
         parser.error("build manifest must match the running kernel and BTF")
     args.output.mkdir(parents=True, exist_ok=False)
+    allowed_cpus = set(os.sched_getaffinity(0))
+    if len(allowed_cpus) < 2:
+        parser.error("two or more allowed CPUs are required to isolate the measurement driver")
+    housekeeping_cpu = max(allowed_cpus)
+    work_cpus = allowed_cpus - {housekeeping_cpu}
     binary_dir = args.output.resolve() / "bin"
     binary_dir.mkdir()
     (binary_dir / "scx_agent").symlink_to(args.binary.resolve())
@@ -234,11 +239,14 @@ def main():
         "stability_window": 3, "stability_tolerance_percent": 10.0,
     })
     context.data["transaction_owner"] = context.session.session_id
-    workloads = OwnedWorkloads(args.output / "workloads", workers=args.workers)
+    workloads = OwnedWorkloads(args.output / "workloads", workers=args.workers, cpus=work_cpus)
     summary = {"status": "running", "version_identity": identity, "kernel": os.uname().release,
-               "scope": "owned services and PIDs", "stability_tolerance_percent": 10.0}
+               "scope": "owned services and PIDs", "stability_tolerance_percent": 10.0,
+               "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
+               "measurement_control": "Agent and wrk on reserved CPU; private service and interference share work CPUs"}
     loop = None
     try:
+        os.sched_setaffinity(0, {housekeeping_cpu})
         workloads.__enter__()
         context.data["canary_config"]["url"] = workloads.url
         loop = ScenarioLoop(context, workloads, args.output, args.rounds_per_stage)
@@ -275,6 +283,7 @@ def main():
                 or any(value is False for value in summary.get("task_restoration", {}).values())):
             summary["status"] = "failed"
         os.environ["PATH"] = old_path
+        os.sched_setaffinity(0, allowed_cpus)
         atomic_json(args.output / "summary.json", summary)
         print(json.dumps(summary, indent=2), flush=True)
     if summary["status"] != "passed":

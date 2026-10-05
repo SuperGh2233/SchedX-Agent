@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import asdict
-
 from schedx.agent.context import AgentContext
 from schedx.agent.executor import SafeActionExecutor
 from schedx.agent.skill import SkillResult
