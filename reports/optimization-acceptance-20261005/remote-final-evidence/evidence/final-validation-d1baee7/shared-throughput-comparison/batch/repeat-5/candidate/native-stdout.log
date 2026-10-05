@@ -1,0 +1,12 @@
+SchedX native sched_ext scheduler attached.
+schedx>
+fairness updated background_interval=20 default_interval=32
+schedx>
+policy updated cgroup_id=53291 class=latency weight=5000
+schedx>
+policy updated cgroup_id=53305 class=latency weight=5000
+schedx>
+policy updated cgroup_id=53319 class=background weight=300
+schedx>
+policy updated cgroup_id=53333 class=batch weight=2000
+schedx>

@@ -1,0 +1,348 @@
+{
+  "status": "failed",
+  "version_identity": {
+    "commit": "4c712c43c3aaf2094070d2a396863e0956527ee2",
+    "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-4c712c4",
+    "source_sha256": "7d5806cec373f79b85429b2189cdcacceac4259e10a7e37aec3dbdbacf515f4b",
+    "source_verified_against_git": true,
+    "source_file_count": 77,
+    "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "4c712c43c3aaf2094070d2a396863e0956527ee2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-4c712c4",
+      "source_sha256": "7d5806cec373f79b85429b2189cdcacceac4259e10a7e37aec3dbdbacf515f4b",
+      "source_verified_against_git": true,
+      "source_file_count": 77,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log",
+      "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "native_source_byte_identity_verified": true
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "scope": "owned services and PIDs",
+  "stability_tolerance_percent": 10.0,
+  "work_cpus": [
+    0,
+    1,
+    2
+  ],
+  "housekeeping_cpu": 3,
+  "measurement_control": "Agent and wrk on reserved CPU; private service and interference share work CPUs",
+  "stop_reason": "max_rounds",
+  "assessment": {
+    "status": "failed",
+    "failures": [
+      "stable_plateau_not_observed",
+      "recovery_plateau_not_observed"
+    ],
+    "completed_rounds": 16,
+    "fault_response_errors": 1399820,
+    "claim_scope": "real Agent flow, changing-load observation and controlled HTTP fault recovery; no performance gain is implied"
+  },
+  "rollback": {
+    "ok": true,
+    "message": "rollback completed: 10 settings restored, 6 groups removed, 4 skipped; eBPF cleanup completed: 4/4 removed",
+    "data": {
+      "restored": 10,
+      "groups_removed": 6,
+      "skipped": 4,
+      "entries": [
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45530",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45530",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45531",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45531",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45533",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45533",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45532",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45532",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "8d1155c31b9143de867545419607b735"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45294",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": null,
+          "transaction": "2fefc7688d8949b180a63b28364ec2b6"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/service",
+          "file": "cgroup.procs",
+          "previous": "45294",
+          "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+          "pid_start": "10960410",
+          "transaction": "2fefc7688d8949b180a63b28364ec2b6"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45533",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45532",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45531",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45530",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-45294",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx",
+          "status": "removed"
+        }
+      ],
+      "scx_entries": [
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45530,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45533,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45532,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45531,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45530,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45533,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45532,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45531,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 51807,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 51788,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 51769,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 51750,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45530,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45531,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45533,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45532,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 51674,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 45294,
+          "status": "removed"
+        }
+      ],
+      "process_entries": [],
+      "ebpf_cleanup": {
+        "security-policy": true,
+        "resource-control": true,
+        "network-policy": true,
+        "scheduler-trace": true
+      }
+    }
+  },
+  "task_restoration": {
+    "45293": true,
+    "45294": true,
+    "45530": "exited",
+    "45531": "exited",
+    "45532": "exited",
+    "45533": "exited"
+  },
+  "workload_cleanup": {
+    "status": "passed",
+    "errors": [],
+    "cgroup_removed": true,
+    "leaders_reaped": true
+  },
+  "final_scheduler_state": "disabled",
+  "remaining_journals": [],
+  "pinned_hooks_remaining": false
+}

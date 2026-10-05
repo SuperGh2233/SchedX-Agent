@@ -1,33 +1,779 @@
 {
-  "recorded_client_utc": "2026-10-05T10:08:11.383100+00:00",
+  "recorded_client_utc": "2026-10-05T14:09:46.749394+00:00",
   "candidate_commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
   "production_source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+  "candidate_binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+  "initial_commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+  "initial_is_candidate_ancestor": true,
   "local_tests": {
     "tests": 412,
     "failures": 0,
     "errors": 0,
-    "skipped": 0
+    "skipped": 0,
+    "sha256": "11d577eab4794efca728e33411fb2161d6fb7c895225222638b542325d9ade7a",
+    "path": "local-tests-adaptive.xml"
   },
   "linux_tests": {
     "tests": 412,
     "failures": 0,
     "errors": 0,
-    "skipped": 0
+    "skipped": 0,
+    "sha256": "1cfe4c6e070ffbf5424dba1b054d77a263d42aa2947d27b6ff36c121f0295af9",
+    "path": "remote-final-evidence/evidence/linux-tests-47440e2.xml"
   },
   "unit_evidence_covers_current_candidate": true,
+  "implementation_and_required_acceptance_complete": true,
   "active_validation": {
-    "status": "running",
+    "status": "passed",
     "pid": 52340,
-    "path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/pipeline.json"
+    "candidate_commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+    "version_identity": {
+      "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2",
+      "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+      "source_verified_against_git": true,
+      "source_file_count": 78,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": true,
+      "build_manifest": {
+        "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+        "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2",
+        "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+        "source_verified_against_git": true,
+        "source_file_count": 78,
+        "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+        "build_manifest_matches": false,
+        "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+        "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+        "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+        "build_command": [
+          "make",
+          "-C",
+          "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+          "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+          "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+          "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+          "-j2",
+          "scx_agent"
+        ],
+        "build_log": "build-native-candidate.log",
+        "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+        "native_source_byte_identity_verified": true,
+        "ebpf_objects_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+        "ebpf_source_byte_identity_verified": true
+      }
+    },
+    "guest_started_utc": "2026-10-04T22:35:43.204276+00:00",
+    "stages": [
+      {
+        "name": "shared-adaptive-comparison",
+        "status": "passed",
+        "command": [
+          "/usr/bin/python3",
+          "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2/scripts/run_final_round_comparison.py",
+          "--repository",
+          "/tmp/schedx-acceptance-20261005-79905fb/repository.git",
+          "--baseline-source",
+          "/tmp/schedx-acceptance-20261005-79905fb/baseline",
+          "--baseline-ref",
+          "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+          "--baseline-binary",
+          "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+          "--baseline-build-manifest",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/build-baseline.json",
+          "--candidate-source",
+          "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2",
+          "--candidate-ref",
+          "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+          "--candidate-binary",
+          "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+          "--candidate-build-manifest",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/build-candidate-47440e2.json",
+          "--output",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/shared-adaptive-comparison",
+          "--repeats",
+          "5",
+          "--duration",
+          "20",
+          "--workers",
+          "3",
+          "--batch-threads",
+          "3",
+          "--profile",
+          "shared-adaptive"
+        ],
+        "guest_started_utc": "2026-10-04T22:35:43.204588+00:00",
+        "pid": 52343,
+        "returncode": 0,
+        "summary_status": "passed",
+        "final_scheduler_state": "disabled",
+        "guest_finished_utc": "2026-10-04T22:52:03.607914+00:00"
+      },
+      {
+        "name": "autonomous-flow",
+        "status": "passed",
+        "command": [
+          "/usr/bin/python3",
+          "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2/scripts/verify_autonomous_flow.py",
+          "--repository",
+          "/tmp/schedx-acceptance-20261005-79905fb/repository.git",
+          "--candidate-ref",
+          "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+          "--binary",
+          "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+          "--build-manifest",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/build-candidate-47440e2.json",
+          "--output",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/autonomous-flow",
+          "--rounds-per-stage",
+          "15",
+          "--duration",
+          "20",
+          "--workers",
+          "3"
+        ],
+        "guest_started_utc": "2026-10-04T22:52:03.608387+00:00",
+        "pid": 53114,
+        "returncode": 0,
+        "summary_status": "passed",
+        "final_scheduler_state": "disabled",
+        "guest_finished_utc": "2026-10-04T23:12:41.785571+00:00"
+      },
+      {
+        "name": "stability-30min",
+        "status": "passed",
+        "command": [
+          "/usr/bin/python3",
+          "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2/scripts/verify_optimization.py",
+          "--duration",
+          "1800",
+          "--output",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min"
+        ],
+        "guest_started_utc": "2026-10-04T23:12:41.785874+00:00",
+        "pid": 54291,
+        "returncode": 0,
+        "summary_status": "passed",
+        "final_scheduler_state": "disabled",
+        "guest_finished_utc": "2026-10-04T23:43:08.244286+00:00"
+      },
+      {
+        "name": "stability-2h",
+        "status": "passed",
+        "command": [
+          "/usr/bin/python3",
+          "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2/scripts/verify_optimization.py",
+          "--duration",
+          "7200",
+          "--fairness-only",
+          "--output",
+          "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-2h"
+        ],
+        "guest_started_utc": "2026-10-04T23:43:08.244620+00:00",
+        "pid": 55390,
+        "returncode": 0,
+        "summary_status": "passed",
+        "final_scheduler_state": "disabled",
+        "guest_finished_utc": "2026-10-05T01:43:14.157113+00:00"
+      }
+    ],
+    "harness_sha256": {
+      "shared-adaptive-comparison": "2027e7dbc73322b3076b90b1b6c18ddee42bc1327b07f3d2ea5cf93bc620e74a",
+      "autonomous-flow": "5265530579b11e7b701fa57163b5f4a59801cd018317b366e87d4c4e045495f9",
+      "stability-30min": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8",
+      "stability-2h": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8"
+    },
+    "guest_finished_utc": "2026-10-05T01:43:14.171695+00:00",
+    "elapsed_seconds": 11250.96730632399,
+    "final_scheduler_state": "disabled",
+    "pid_alive": false
   },
-  "goal_complete": false,
+  "archive_verification": {
+    "status": "passed",
+    "archive_sha256": "88ed357ea81fa1b2ee39800faeb3222e54484a66dc56d24e1bd1b207d4da33b5",
+    "archive_bytes": 4294978,
+    "inventory_sha256": "7845da85b5318d3320ea88a92b76036c63b846c4e20410897fa7d7557383a612",
+    "ordinary_evidence_files_verified": 1436,
+    "harnesses_matched_git": {
+      "shared-adaptive-comparison": "2027e7dbc73322b3076b90b1b6c18ddee42bc1327b07f3d2ea5cf93bc620e74a",
+      "autonomous-flow": "5265530579b11e7b701fa57163b5f4a59801cd018317b366e87d4c4e045495f9",
+      "stability-30min": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8",
+      "stability-2h": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8"
+    }
+  },
+  "local_source_matches_frozen_git_candidate": true,
+  "shared_adaptive_comparison": {
+    "status": "passed",
+    "runs": 45,
+    "valid_pairs_per_metric": 5,
+    "metrics": {
+      "nginx": {
+        "requests_per_sec": {
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": -0.3517,
+            "median": -0.4937,
+            "stdev": 0.5838,
+            "ci95": [
+              -1.0766,
+              0.3731
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        },
+        "p99_ms": {
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": 1.2233,
+            "median": 0.8621,
+            "stdev": 1.4515,
+            "ci95": [
+              -0.5787,
+              3.0253
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        }
+      },
+      "redis": {
+        "requests_per_sec": {
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": 0.8333,
+            "median": 1.2391,
+            "stdev": 1.5003,
+            "ci95": [
+              -1.0293,
+              2.6959
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        },
+        "p99_ms": {
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": -0.1285,
+            "median": -0.2156,
+            "stdev": 0.7161,
+            "ci95": [
+              -1.0176,
+              0.7605
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        }
+      },
+      "batch": {
+        "events_per_second": {
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": -0.2279,
+            "median": -0.6236,
+            "stdev": 0.7908,
+            "ci95": [
+              -1.2096,
+              0.7538
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        }
+      }
+    },
+    "batch_background_retention": {
+      "baseline": {
+        "min": 0.3484079344174635,
+        "max": 0.3780821944461491
+      },
+      "candidate": {
+        "min": 0.35937447802201333,
+        "max": 0.37068272574470607
+      }
+    },
+    "scope": "native baseline/candidate binaries with the same declared cgroup runtime adapter; not unmodified preliminary whole Agent",
+    "settings_by_case": {
+      "nginx": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "redis": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "batch": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "adaptive": true,
+        "target_runtime_share": [
+          0.15,
+          0.25
+        ],
+        "description": "same existing Agent throughput settings on both binaries; batch only; feedback choice recorded explicitly"
+      }
+    },
+    "local_raw_evidence_archived": true,
+    "claim": "regression and background-progress gates passed; no statistically significant performance gain"
+  },
+  "real_autonomous_flow": {
+    "status": "passed",
+    "failures": [],
+    "completed_rounds": 46,
+    "fault_response_errors": 1838455,
+    "observed_without_mutation": 31,
+    "claim_scope": "real Agent trials, measured no-action observations after rejection, changing load and controlled candidate HTTP fault recovery; no performance gain is implied",
+    "elapsed_seconds": 1238.0775765720027,
+    "cleanup_passed": true,
+    "local_raw_evidence_archived": true,
+    "stability_tolerance_percent": 10.0,
+    "production_default_stability_tolerance_percent": 1,
+    "final_scheduler_state": "disabled"
+  },
+  "long_validation": {
+    "30min": {
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "cpus": 4,
+      "duration": 1800,
+      "cases": {
+        "cpu_controls_default": {
+          "quota": "10000 100000",
+          "quota_wall_seconds": 2,
+          "quota_cpu_seconds": 0.201373099,
+          "quota_observed": true,
+          "weights": [
+            100,
+            1000
+          ],
+          "cpu_seconds": [
+            0.24477262100000002,
+            2.437862875
+          ],
+          "weight_runtime_ratio": 9.959704092068367,
+          "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+          "sched_ext_state": "disabled"
+        },
+        "cpu_controls_native": {
+          "quota": "10000 100000",
+          "quota_wall_seconds": 2,
+          "quota_cpu_seconds": 1.7921934449999999,
+          "quota_observed": false,
+          "weights": [
+            100,
+            1000
+          ],
+          "cpu_seconds": [
+            1.3542431970000002,
+            1.3512229690000002
+          ],
+          "weight_runtime_ratio": 0.9977698038235003,
+          "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+          "sched_ext_state": "enabled"
+        },
+        "recovery": {
+          "status": "passed",
+          "journal_retry": true,
+          "original_cgroup_restored": true,
+          "nice_restored": true
+        },
+        "tools": {
+          "status": "passed",
+          "concurrent_tools": 4,
+          "registration_before_exec": true,
+          "timeout_tree_cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          },
+          "bounded_output": true
+        },
+        "network": {
+          "status": "passed",
+          "same_cgroup_rate_switches": [
+            {
+              "rate_bytes_per_second": 30000,
+              "delivered_bytes": 103000
+            },
+            {
+              "rate_bytes_per_second": 180000,
+              "delivered_bytes": 540000
+            },
+            {
+              "rate_bytes_per_second": 30000,
+              "delivered_bytes": 91000
+            }
+          ],
+          "latency_overlimit_is_allowed": true,
+          "stats": {
+            "total_packets": 3913,
+            "total_bytes": 4022564,
+            "dropped_packets": 2789,
+            "dropped_bytes": 2867092,
+            "overlimit_allowed_packets": 390
+          }
+        },
+        "fairness": {
+          "status": "passed",
+          "failures": [],
+          "duration": 1800,
+          "single_cpu_contenders": 6,
+          "samples": 360,
+          "max_wait_ms": {
+            "0": 1138.923688,
+            "1": 87.305903,
+            "2": 365.858898,
+            "3": 788.136275
+          },
+          "wait_budgets_ms": {
+            "0": 3000,
+            "1": 2000,
+            "2": 2000,
+            "3": 2000
+          },
+          "load_pattern": "fixed saturation",
+          "periodic_recoveries": 0,
+          "tool_results": [
+            {
+              "intent": "interactive",
+              "duration": 1800.0706742309994,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 1800.1243927500036,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 1800.1274639890034,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 1800.1223634319904,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "compile",
+              "duration": 1800.1739666810026,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "background",
+              "duration": 1800.1267630509974,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            }
+          ]
+        }
+      },
+      "status": "passed",
+      "final_sched_ext_state": "disabled"
+    },
+    "2h": {
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "cpus": 4,
+      "duration": 7200,
+      "cases": {
+        "fairness": {
+          "status": "passed",
+          "failures": [],
+          "duration": 7200,
+          "single_cpu_contenders": 6,
+          "samples": 1428,
+          "max_wait_ms": {
+            "0": 741.974852,
+            "1": 80.848426,
+            "2": 218.159642,
+            "3": 435.233177
+          },
+          "wait_budgets_ms": {
+            "0": 3000,
+            "1": 2000,
+            "2": 2000,
+            "3": 2000
+          },
+          "load_pattern": "rotating busy/sleep every 60 seconds",
+          "periodic_recoveries": 59,
+          "tool_results": [
+            {
+              "intent": "interactive",
+              "duration": 7200.081326144005,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 7200.132504769004,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 7200.144981548001,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "interactive",
+              "duration": 7200.153115789013,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "compile",
+              "duration": 7200.050945929979,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            },
+            {
+              "intent": "background",
+              "duration": 7200.13062929899,
+              "cleanup": {
+                "policy_removed": true,
+                "scheduler_stopped": true,
+                "cgroup_removed": true,
+                "errors": []
+              }
+            }
+          ]
+        }
+      },
+      "status": "passed",
+      "final_sched_ext_state": "disabled"
+    }
+  },
+  "final_audit": {
+    "status": "passed",
+    "guest_verified_utc": "2026-10-05T02:51:36.964340+00:00",
+    "failures": [],
+    "regular_files_checked": 2393,
+    "regular_files_matched": 2393,
+    "installed_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+    "original_nginx": {
+      "1034": {
+        "cgroup": "0::/system.slice/nginx.service",
+        "nice": 0,
+        "affinity": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "policy": 0
+      },
+      "1035": {
+        "cgroup": "0::/system.slice/nginx.service",
+        "nice": 0,
+        "affinity": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "policy": 0
+      },
+      "1036": {
+        "cgroup": "0::/system.slice/nginx.service",
+        "nice": 0,
+        "affinity": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "policy": 0
+      },
+      "1037": {
+        "cgroup": "0::/system.slice/nginx.service",
+        "nice": 0,
+        "affinity": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "policy": 0
+      },
+      "1038": {
+        "cgroup": "0::/system.slice/nginx.service",
+        "nice": 0,
+        "affinity": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "policy": 0
+      }
+    },
+    "native_state": "disabled",
+    "owned_processes": [],
+    "owned_cgroups": [],
+    "pinned_hooks": [],
+    "remaining_journals": [],
+    "daemon_socket_remaining": false,
+    "bpf_inventory_note": "systemd cgroup programs are unrelated; bpftool may expose transient enumeration maps"
+  },
+  "current_kernel_limitations": {
+    "cpu_max_native": "not_enforced",
+    "ordinary_cgroup_cpu_weight_native": "default-scheduler weight effect not observed",
+    "hard_quota_tool_contract": "use verified default-scheduler path or reject before execution",
+    "root_filesystem_full": true,
+    "client_guest_clock_offset_hours_approximately": 12
+  },
+  "historical_experiments": {
+    "checkpoint_sha256": "eaf6bdedfd82935b990c7b6603b00f7f9fced0881d1fab21dda96aa21d84677d",
+    "checkpoint_ordinary_files": 888,
+    "static_compiled_defaults_comparison": "not_accepted: batch background progress below 25%",
+    "static_throughput40_comparison": "not_accepted: batch background progress below 25%",
+    "static_throughput20_comparison": "not_accepted: batch background progress below 25%",
+    "earlier_autonomous_failures_retained": true,
+    "49_48_and_30_67_percent_p99_gains_scope": "historical 59c1ca4 vs 58903fe, not official initial b0591a1"
+  },
+  "deferred_independent_research": [
+    "unmodified initial whole-system performance comparison",
+    "fixed-policy vs full-Agent performance comparison",
+    "Agent/cgroup group fairness at different thread counts",
+    "learned expert routing from valid gain",
+    "native hard CPU quota implementation"
+  ],
   "automation_recreated": false,
+  "pushed": false,
+  "pull_request_created": false,
+  "goal_complete": false,
   "shutdown_sent": false,
-  "checkpoint_evidence_hashes": {
-    "local-tests-adaptive.xml": "11d577eab4794efca728e33411fb2161d6fb7c895225222638b542325d9ade7a",
-    "local-tests-adaptive.log": "6336a3c10340b82374b102eddc970cee261dae80b1face8f1cacaf421f6d7922",
-    "remote-checkpoint.tar.gz": "eaf6bdedfd82935b990c7b6603b00f7f9fced0881d1fab21dda96aa21d84677d",
-    "report.md": "2334bc9a8b71808d38e6a365e431aef96555a81548936d2bcae62f3bad2d90d4"
+  "shutdown": {
+    "status": "pending_after_local_commit",
+    "authorized_objective": "继续按计划推进  完成后关闭完的 远程windows 机器",
+    "linux_vm": {
+      "ip": "100.121.207.17",
+      "status": "running"
+    },
+    "windows": {
+      "ip": "100.105.181.122",
+      "status": "not_yet_requested"
+    }
   },
-  "checkpoint_scope": "terminal historical experiments; excludes the new active final-validation-47440e2 pipeline"
+  "final_file_hashes": {
+    "reports/optimization-acceptance-20261005/report.md": "9fc4b5bf6a8948792b11879f31b8f1bdc934e9ff7538fd0dabf6fa980cb0384c",
+    "reports/optimization-acceptance-20261005/local-final-verification.json": "e456436e144b9696c27744681d7deae824627e91866e6fa538f6a06002f1f921",
+    "reports/optimization-acceptance-20261005/remote-final-evidence.tar.gz": "88ed357ea81fa1b2ee39800faeb3222e54484a66dc56d24e1bd1b207d4da33b5",
+    "reports/optimization-acceptance-20261005/remote-final-evidence/final-evidence-inventory.json": "7845da85b5318d3320ea88a92b76036c63b846c4e20410897fa7d7557383a612",
+    "reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-validation-47440e2/pipeline.json": "a7baceff7ee362d2f9dcb1d57ef47434f227de05880eff51ab5188f664caffa2",
+    "reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-audit/summary.json": "762694ab30b797c086975559aa51a826e31c5ae2e61168c33ca553d5b60e7e98",
+    "docs/optimization-plan.md": "3adc61f6324c6feb3d5a94ff3bb1ac98225f395e56338eccc9f0d6b2eb717a5a",
+    "docs/final-round-improvements.md": "c05e5eb1b6e36398f31b7aa2b6e9d7e0e721cb91ef71a77ab7125b2a93aa3db8",
+    "docs/optimization-routes-20261005.md": "c943a44a9dc35895fbc8e2b4e64402160e7587e383c49c9b721ebc92180ce72c"
+  }
 }

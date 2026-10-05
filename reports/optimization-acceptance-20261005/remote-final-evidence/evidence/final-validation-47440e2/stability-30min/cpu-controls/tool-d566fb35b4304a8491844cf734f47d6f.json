@@ -1,0 +1,83 @@
+{
+  "run_id": "tool-d566fb35b4304a8491844cf734f47d6f",
+  "agent_id": "default",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time; start=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-start)"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "10000 100000",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-d566fb35b4304a8491844cf734f47d6f",
+  "cgroup_id": 54454,
+  "pid": 54310,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_limit_mode": "soft",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 2.0754736559902085,
+  "metrics": {
+    "memory_current_bytes": 258048,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 1800079,
+      "user_usec": 1796491,
+      "system_usec": 3587,
+      "nr_periods": 2,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "1.7921934449999999\n",
+  "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/cpu-controls/tool-d566fb35b4304a8491844cf734f47d6f.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/cpu-controls/tool-d566fb35b4304a8491844cf734f47d6f.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [
+    "the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota"
+  ],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

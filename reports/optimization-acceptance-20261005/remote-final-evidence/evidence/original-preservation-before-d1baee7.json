@@ -1,0 +1,69 @@
+{
+  "status": "passed",
+  "guest_verified_utc": "2026-10-04T21:57:26.292286+00:00",
+  "regular_files_checked": 2393,
+  "regular_files_matched": 2393,
+  "failures": [],
+  "original_workspace": "/root/SchedX-Agent",
+  "backup": "/root/schedx-optimization-backup-20261003/workspace.tar.gz",
+  "installed_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+  "installed_binary_matches_initial": true,
+  "native_state": "disabled",
+  "original_nginx": {
+    "1034": {
+      "cgroup": "0::/system.slice/nginx.service",
+      "nice": 0,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "policy": 0
+    },
+    "1035": {
+      "cgroup": "0::/system.slice/nginx.service",
+      "nice": 0,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "policy": 0
+    },
+    "1036": {
+      "cgroup": "0::/system.slice/nginx.service",
+      "nice": 0,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "policy": 0
+    },
+    "1037": {
+      "cgroup": "0::/system.slice/nginx.service",
+      "nice": 0,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "policy": 0
+    },
+    "1038": {
+      "cgroup": "0::/system.slice/nginx.service",
+      "nice": 0,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "policy": 0
+    }
+  }
+}

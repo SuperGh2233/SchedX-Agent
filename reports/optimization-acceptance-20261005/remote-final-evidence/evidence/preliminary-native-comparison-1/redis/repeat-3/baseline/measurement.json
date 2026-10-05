@@ -1,0 +1,77 @@
+{
+  "case": "redis",
+  "version": "baseline",
+  "repeat": 3,
+  "failures": [],
+  "command": [
+    "redis-benchmark",
+    "-h",
+    "127.0.0.1",
+    "-p",
+    "42015",
+    "-n",
+    "500000",
+    "-c",
+    "64",
+    "--threads",
+    "2",
+    "--precision",
+    "3",
+    "-t",
+    "get"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 9.542779349008924,
+  "background_cpu_ticks": 2196,
+  "background_cpu_seconds_per_wall_second": 2.301216364421198,
+  "metrics": {
+    "requests_per_sec": 52471.4,
+    "qps": 52471.4,
+    "requests": 500000.0,
+    "elapsed_seconds": 9.53,
+    "latency_avg_ms": 1.074,
+    "latency_min_ms": 0.04,
+    "p50_ms": 0.935,
+    "p95_ms": 3.087,
+    "p99_ms": 3.799,
+    "latency_max_ms": 25.903,
+    "p50_latency_ms": 0.935,
+    "p95_latency_ms": 3.087,
+    "p99_latency_ms": 3.799
+  },
+  "native_evidence": {
+    "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+    "fairness_configuration": "compiled defaults; no set fairness command",
+    "startup": "SchedX native sched_ext scheduler attached.\n",
+    "policies": {
+      "service": {
+        "cgroup_id": 50887,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "redis": {
+        "cgroup_id": 50901,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "noise": {
+        "cgroup_id": 50915,
+        "class_id": 3,
+        "weight": 100,
+        "acknowledged": true
+      },
+      "batch": {
+        "cgroup_id": 50929,
+        "class_id": 2,
+        "weight": 1500,
+        "acknowledged": true
+      }
+    },
+    "scheduler_stopped": true,
+    "output_readers_stopped": true,
+    "final_scheduler_state": "disabled"
+  },
+  "final_scheduler_state": "disabled"
+}

@@ -1,0 +1,82 @@
+{
+  "run_id": "tool-fa47bbb2e131452ba0ff9cb5106804fb",
+  "agent_id": "default",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time,os,sys; os.sched_setaffinity(0,{int(sys.argv[1])}); start=time.process_time(); end=time.monotonic()+3\nwhile time.monotonic()<end: pass\nprint(time.process_time()-start)",
+    "0"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "max",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-fa47bbb2e131452ba0ff9cb5106804fb",
+  "cgroup_id": 54282,
+  "pid": 54297,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 3.0485706979961833,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3141632,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 2445919,
+      "user_usec": 2444137,
+      "system_usec": 1781,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "2.437862875\n",
+  "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/cpu-controls/tool-fa47bbb2e131452ba0ff9cb5106804fb.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/cpu-controls/tool-fa47bbb2e131452ba0ff9cb5106804fb.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

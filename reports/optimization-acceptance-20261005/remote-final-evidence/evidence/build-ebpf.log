@@ -1,0 +1,14 @@
+make: Warning: File 'Makefile' has modification time 6225 s in the future
+mkdir -p build
+bpftool btf dump file /sys/kernel/btf/vmlinux format c > build/vmlinux.h
+Generated: build/vmlinux.h
+clang -g -O2 -target bpf -Ibuild -I/usr/include -I/usr/include -Wall -Wno-unused-value -Wno-pointer-sign -Wno-compare-distinct-pointer-types -D__TARGET_ARCH_x86 -c sched_trace.bpf.c -o build/sched_trace.bpf.o
+clang -g -O2 -target bpf -Ibuild -I/usr/include -I/usr/include -Wall -Wno-unused-value -Wno-pointer-sign -Wno-compare-distinct-pointer-types -D__TARGET_ARCH_x86 -c net_policy.bpf.c -o build/net_policy.bpf.o
+Built: build/sched_trace.bpf.o
+clang -g -O2 -target bpf -Ibuild -I/usr/include -I/usr/include -Wall -Wno-unused-value -Wno-pointer-sign -Wno-compare-distinct-pointer-types -D__TARGET_ARCH_x86 -c resource_ctrl.bpf.c -o build/resource_ctrl.bpf.o
+Built: build/net_policy.bpf.o
+clang -g -O2 -target bpf -Ibuild -I/usr/include -I/usr/include -Wall -Wno-unused-value -Wno-pointer-sign -Wno-compare-distinct-pointer-types -D__TARGET_ARCH_x86 -c security_policy.bpf.c -o build/security_policy.bpf.o
+Built: build/resource_ctrl.bpf.o
+Built: build/security_policy.bpf.o
+All BPF programs built successfully.
+make: warning:  Clock skew detected.  Your build may be incomplete.

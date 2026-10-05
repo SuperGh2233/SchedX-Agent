@@ -1,0 +1,10 @@
+stress-ng: info:  [49763] setting to a 10 mins run per stressor
+stress-ng: info:  [49763] dispatching hogs: 3 cpu
+stress-ng: metrc: [49763] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s
+stress-ng: metrc: [49763]                           (secs)    (secs)    (secs)   (real time) (usr+sys time)
+stress-ng: metrc: [49763] cpu               58140     10.79     25.22      0.12      5386.79        2294.37
+stress-ng: info:  [49763] skipped: 0
+stress-ng: info:  [49763] passed: 3: cpu (3)
+stress-ng: info:  [49763] failed: 0
+stress-ng: info:  [49763] metrics untrustworthy: 0
+stress-ng: info:  [49763] successful run completed in 10.80 secs

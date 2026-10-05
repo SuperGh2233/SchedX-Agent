@@ -1,0 +1,145 @@
+{
+  "status": "passed",
+  "recorded_client_utc": "2026-10-05T14:04:55.467117+00:00",
+  "archive_sha256": "88ed357ea81fa1b2ee39800faeb3222e54484a66dc56d24e1bd1b207d4da33b5",
+  "archive_bytes": 4294978,
+  "inventory_sha256": "7845da85b5318d3320ea88a92b76036c63b846c4e20410897fa7d7557383a612",
+  "ordinary_evidence_files_verified": 1436,
+  "baseline_identity": {
+    "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+    "source_path": "/private/tmp/schedx-final-source-verification-47440e2/baseline",
+    "source_sha256": "4f40c854b2d48863d2b621d73c69b46dbd4837fdd60535882b137086d35c1c05",
+    "source_verified_against_git": true,
+    "source_file_count": 69,
+    "binary_path": "/Users/a123/Projects/SchedX-Agent/reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-artifacts/scx_agent-baseline",
+    "binary_sha256": "1d0a7aeacf1341581ac14ca09daafa2bd7c19912745af8111e4bc0e121164eb8",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/baseline",
+      "source_sha256": "4f40c854b2d48863d2b621d73c69b46dbd4837fdd60535882b137086d35c1c05",
+      "source_verified_against_git": true,
+      "source_file_count": 69,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+      "binary_sha256": "1d0a7aeacf1341581ac14ca09daafa2bd7c19912745af8111e4bc0e121164eb8",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-baseline",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/baseline",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-baseline.log"
+    }
+  },
+  "candidate_identity": {
+    "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+    "source_path": "/private/tmp/schedx-final-source-verification-47440e2/candidate-47440e2",
+    "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+    "source_verified_against_git": true,
+    "source_file_count": 78,
+    "binary_path": "/Users/a123/Projects/SchedX-Agent/reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-artifacts/scx_agent-candidate",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2",
+      "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+      "source_verified_against_git": true,
+      "source_file_count": 78,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log",
+      "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "native_source_byte_identity_verified": true,
+      "ebpf_objects_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "ebpf_source_byte_identity_verified": true
+    }
+  },
+  "local_source_identity": {
+    "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+    "source_path": "/Users/a123/Projects/SchedX-Agent",
+    "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+    "source_verified_against_git": true,
+    "source_file_count": 78,
+    "binary_path": "/Users/a123/Projects/SchedX-Agent/reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-artifacts/scx_agent-candidate",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-47440e2",
+      "source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+      "source_verified_against_git": true,
+      "source_file_count": 78,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log",
+      "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "native_source_byte_identity_verified": true,
+      "ebpf_objects_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "ebpf_source_byte_identity_verified": true
+    }
+  },
+  "harnesses_matched_git": {
+    "shared-adaptive-comparison": "2027e7dbc73322b3076b90b1b6c18ddee42bc1327b07f3d2ea5cf93bc620e74a",
+    "autonomous-flow": "5265530579b11e7b701fa57163b5f4a59801cd018317b366e87d4c4e045495f9",
+    "stability-30min": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8",
+    "stability-2h": "1be7c4ba827442fdb98739229978b69dee07b7a34d48a6168b16d9e79f1c0ae8"
+  },
+  "tests": {
+    "local": {
+      "tests": 412,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "11d577eab4794efca728e33411fb2161d6fb7c895225222638b542325d9ade7a",
+      "path": "local-tests-adaptive.xml"
+    },
+    "linux": {
+      "tests": 412,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1cfe4c6e070ffbf5424dba1b054d77a263d42aa2947d27b6ff36c121f0295af9",
+      "path": "remote-final-evidence/evidence/linux-tests-47440e2.xml"
+    }
+  },
+  "initial_is_candidate_ancestor": true,
+  "audit_status": "passed",
+  "pipeline_status": "passed"
+}

@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "experts": [
+    {
+      "expert_id": "background_isolation",
+      "mode": "isolate_background",
+      "description": "Constrain explicitly matched background interference.",
+      "workload_types": [
+        "background_noise"
+      ],
+      "parameters": {
+        "cpu_weight_bg": 50,
+        "cpu_max_bg": "25000 100000",
+        "nice_bg": 10
+      }
+    },
+    {
+      "expert_id": "balanced",
+      "mode": "balanced",
+      "description": "Conservative fallback when no workload pattern is confident.",
+      "workload_types": [
+        "unknown",
+        "mixed"
+      ],
+      "parameters": {
+        "cpu_weight": 500
+      }
+    },
+    {
+      "expert_id": "latency_guard",
+      "mode": "latency_first",
+      "description": "Protect latency-sensitive services from batch and background interference.",
+      "workload_types": [
+        "latency_sensitive",
+        "background_noise",
+        "mixed"
+      ],
+      "parameters": {
+        "cpu_weight": 10000,
+        "cpu_weight_bg": 25,
+        "cpu_max_bg": "25000 100000",
+        "nice_target": -10,
+        "nice_bg": 10
+      }
+    },
+    {
+      "expert_id": "throughput_boost",
+      "mode": "throughput_first",
+      "description": "Favor sustained batch-compute throughput.",
+      "workload_types": [
+        "batch_compute"
+      ],
+      "parameters": {
+        "cpu_weight": 9000,
+        "cpu_max": "max 100000",
+        "cpu_weight_bg": 300,
+        "cpu_max_bg": "80000 100000"
+      }
+    }
+  ],
+  "outcomes": {
+    "background_isolation": {
+      "observations": 0,
+      "accepts": 0,
+      "rejects": 0,
+      "inconclusive": 0,
+      "last_accepted": null,
+      "last_metrics": {},
+      "last_reason": "",
+      "last_updated": ""
+    },
+    "balanced": {
+      "observations": 0,
+      "accepts": 0,
+      "rejects": 0,
+      "inconclusive": 0,
+      "last_accepted": null,
+      "last_metrics": {},
+      "last_reason": "",
+      "last_updated": ""
+    },
+    "latency_guard": {
+      "observations": 8,
+      "accepts": 4,
+      "rejects": 4,
+      "inconclusive": 0,
+      "last_accepted": false,
+      "last_metrics": {
+        "response_error_rate_increase": 0.0,
+        "socket_errors_per_second_increase": 0.0,
+        "raw_requests_per_sec_percent": 38.967537,
+        "p99_percent": 18.888889,
+        "requests_per_sec_percent": 39.004723,
+        "successful_requests_per_sec_percent": 39.004723,
+        "background_retention_percent": 83.456973
+      },
+      "last_reason": "p99_regression",
+      "last_updated": "2026-10-04T17:45:43.913555+00:00"
+    },
+    "throughput_boost": {
+      "observations": 0,
+      "accepts": 0,
+      "rejects": 0,
+      "inconclusive": 0,
+      "last_accepted": null,
+      "last_metrics": {},
+      "last_reason": "",
+      "last_updated": ""
+    }
+  }
+}

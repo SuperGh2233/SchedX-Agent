@@ -1,0 +1,10 @@
+SchedX native sched_ext scheduler attached.
+schedx>
+policy updated cgroup_id=53603 class=latency weight=10000
+schedx>
+policy updated cgroup_id=53617 class=latency weight=10000
+schedx>
+policy updated cgroup_id=53631 class=background weight=100
+schedx>
+policy updated cgroup_id=53645 class=batch weight=1500
+schedx>

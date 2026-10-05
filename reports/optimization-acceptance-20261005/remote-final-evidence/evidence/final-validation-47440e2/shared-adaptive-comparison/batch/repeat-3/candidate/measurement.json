@@ -1,0 +1,267 @@
+{
+  "case": "batch",
+  "version": "candidate",
+  "repeat": 3,
+  "failures": [],
+  "profile": "shared-adaptive",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        5000
+      ],
+      "redis": [
+        1,
+        5000
+      ],
+      "noise": [
+        3,
+        300
+      ],
+      "batch": [
+        2,
+        2000
+      ]
+    },
+    "fairness": [
+      40,
+      32
+    ],
+    "adaptive": true,
+    "target_runtime_share": [
+      0.15,
+      0.25
+    ],
+    "description": "same existing Agent throughput settings on both binaries; batch only; feedback choice recorded explicitly"
+  },
+  "command": [
+    "sysbench",
+    "cpu",
+    "--threads=3",
+    "--time=20",
+    "run"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 20.075344554003095,
+  "background_cpu_ticks": 975,
+  "background_cpu_seconds_per_wall_second": 0.4856703691322606,
+  "metrics": {
+    "elapsed_seconds": 20.0078,
+    "events": 229472.0,
+    "events_per_second": 11468.96,
+    "latency_p95_ms": 0.28
+  },
+  "native_evidence": {
+    "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "fairness_configuration": "same existing Agent throughput settings on both binaries; batch only; feedback choice recorded explicitly",
+    "profile": "shared-adaptive",
+    "settings": {
+      "policies": {
+        "service": [
+          1,
+          5000
+        ],
+        "redis": [
+          1,
+          5000
+        ],
+        "noise": [
+          3,
+          300
+        ],
+        "batch": [
+          2,
+          2000
+        ]
+      },
+      "fairness": [
+        40,
+        32
+      ],
+      "adaptive": true,
+      "target_runtime_share": [
+        0.15,
+        0.25
+      ],
+      "description": "same existing Agent throughput settings on both binaries; batch only; feedback choice recorded explicitly"
+    },
+    "startup": "SchedX native sched_ext scheduler attached.\n",
+    "policies": {
+      "service": {
+        "cgroup_id": 53603,
+        "class_id": 1,
+        "weight": 5000,
+        "acknowledged": true
+      },
+      "redis": {
+        "cgroup_id": 53617,
+        "class_id": 1,
+        "weight": 5000,
+        "acknowledged": true
+      },
+      "noise": {
+        "cgroup_id": 53631,
+        "class_id": 3,
+        "weight": 300,
+        "acknowledged": true
+      },
+      "batch": {
+        "cgroup_id": 53645,
+        "class_id": 2,
+        "weight": 2000,
+        "acknowledged": true
+      }
+    },
+    "fairness_acknowledged": true,
+    "feedback": {
+      "samples": [
+        {
+          "background_runtime_share": 0.20002436233568457,
+          "sample_runtime_ns": 3383764228,
+          "previous_interval": 40,
+          "interval": 40,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.06701786715742211,
+          "sample_runtime_ns": 2994666848,
+          "previous_interval": 40,
+          "interval": 20,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.07015170314321716,
+          "sample_runtime_ns": 3005314790,
+          "previous_interval": 20,
+          "interval": 10,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.08098061625308238,
+          "sample_runtime_ns": 2992907318,
+          "previous_interval": 10,
+          "interval": 5,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.0905690288027517,
+          "sample_runtime_ns": 3023676555,
+          "previous_interval": 5,
+          "interval": 2,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.13224294038096956,
+          "sample_runtime_ns": 2959156140,
+          "previous_interval": 2,
+          "interval": 1,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.25047485826170723,
+          "sample_runtime_ns": 3063603642,
+          "previous_interval": 1,
+          "interval": 2,
+          "reason": "runtime_share_high"
+        },
+        {
+          "background_runtime_share": 0.1287428702093212,
+          "sample_runtime_ns": 2996512936,
+          "previous_interval": 2,
+          "interval": 1,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.24800292148044523,
+          "sample_runtime_ns": 3000755324,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.22007851474133278,
+          "sample_runtime_ns": 3009808553,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.24334843567141315,
+          "sample_runtime_ns": 2979547257,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.2430965381767829,
+          "sample_runtime_ns": 3039526007,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.25173772755012863,
+          "sample_runtime_ns": 3014216325,
+          "previous_interval": 1,
+          "interval": 2,
+          "reason": "runtime_share_high"
+        },
+        {
+          "background_runtime_share": 0.13573718723920034,
+          "sample_runtime_ns": 2971392278,
+          "previous_interval": 2,
+          "interval": 1,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.24605050107208276,
+          "sample_runtime_ns": 2994443717,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.2187293118715502,
+          "sample_runtime_ns": 3059079276,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.24776409585362916,
+          "sample_runtime_ns": 2998460158,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        },
+        {
+          "background_runtime_share": 0.25153243287617433,
+          "sample_runtime_ns": 2952209079,
+          "previous_interval": 1,
+          "interval": 2,
+          "reason": "runtime_share_high"
+        },
+        {
+          "background_runtime_share": 0.13114756171591854,
+          "sample_runtime_ns": 3058502886,
+          "previous_interval": 2,
+          "interval": 1,
+          "reason": "runtime_share_low"
+        },
+        {
+          "background_runtime_share": 0.22548663328356142,
+          "sample_runtime_ns": 2971449958,
+          "previous_interval": 1,
+          "interval": 1,
+          "reason": "runtime_share_target"
+        }
+      ],
+      "errors": [],
+      "stopped": true
+    },
+    "scheduler_stopped": true,
+    "output_readers_stopped": true,
+    "final_scheduler_state": "disabled"
+  },
+  "final_scheduler_state": "disabled"
+}

@@ -1,0 +1,74 @@
+{
+  "case": "nginx",
+  "version": "reference",
+  "repeat": 1,
+  "failures": [],
+  "profile": "shared-throughput",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        10000
+      ],
+      "redis": [
+        1,
+        10000
+      ],
+      "noise": [
+        3,
+        100
+      ],
+      "batch": [
+        2,
+        1500
+      ]
+    },
+    "fairness": null,
+    "description": "common static policies; each binary retains compiled fairness defaults"
+  },
+  "command": [
+    "wrk",
+    "-t2",
+    "-c64",
+    "-d10s",
+    "--latency",
+    "http://127.0.0.1:36009/"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 10.01447381399339,
+  "background_cpu_ticks": 1799,
+  "background_cpu_seconds_per_wall_second": 1.7963999241639907,
+  "metrics": {
+    "requests_completed": 863539,
+    "elapsed_seconds": 10.01,
+    "socket_errors": {
+      "connect": 0,
+      "read": 0,
+      "write": 0,
+      "timeout": 0
+    },
+    "non_success_responses": 0,
+    "latency_avg_ms": 0.7508,
+    "latency_stdev_ms": 0.313,
+    "latency_max_ms": 12.11,
+    "req_per_sec_avg": 43390.0,
+    "req_per_sec_stdev": 3300.0,
+    "requests_per_sec": 86267.63236763237,
+    "qps": 86262.79,
+    "transfer_sec": "13.82MB",
+    "p50_ms": 0.718,
+    "p50_latency_ms": 0.718,
+    "p75_ms": 0.768,
+    "p75_latency_ms": 0.768,
+    "p90_ms": 0.85,
+    "p90_latency_ms": 0.85,
+    "p99_ms": 2.26,
+    "p99_latency_ms": 2.26,
+    "avg_latency_ms": 0.7508,
+    "successful_requests_per_sec": 86267.63236763237,
+    "response_error_rate": 0.0,
+    "socket_errors_per_second": 0.0,
+    "raw_requests_per_sec": 86262.79
+  },
+  "final_scheduler_state": "disabled"
+}

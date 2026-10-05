@@ -1,0 +1,86 @@
+{
+  "run_id": "tool-10bd0109621347eaba322cac969dbee7",
+  "agent_id": "verification",
+  "intent": "test",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import json,os; from pathlib import Path; from schedx.scx_daemon import ScxDaemonClient; g=Path('/sys/fs/cgroup')/Path('/proc/self/cgroup').read_text().split('0::')[1].strip().lstrip('/'); p=ScxDaemonClient().request('policies')['cgroup_policies']; print(json.dumps({'registered_before_exec':str(g.stat().st_ino) in p}))"
+  ],
+  "profile": {
+    "intent": "test",
+    "scx_class": 1,
+    "scx_weight": 5000,
+    "cpu_weight": 500,
+    "cpu_max": "max",
+    "memory_high": "2G",
+    "memory_max": "3G",
+    "pids_max": "1024"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/verification/tool-10bd0109621347eaba322cac969dbee7",
+  "cgroup_id": 54903,
+  "pid": 54331,
+  "native_scx": true,
+  "scx_mode": "daemon",
+  "scx_policy_scope": "cgroup",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 0.077529311995022,
+  "metrics": {
+    "memory_current_bytes": 73728,
+    "memory_peak_bytes": 9093120,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 32514,
+      "user_usec": 27283,
+      "system_usec": 5230,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {
+    "enqueues": 4,
+    "runs": 4,
+    "runtime_ns": 36390622,
+    "wait_ns": 49521
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "{\"registered_before_exec\": true}\n",
+  "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/tools/tool-10bd0109621347eaba322cac969dbee7.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-30min/tools/tool-10bd0109621347eaba322cac969dbee7.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

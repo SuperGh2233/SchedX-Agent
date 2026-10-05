@@ -1,0 +1,24 @@
+{
+  "case": "batch",
+  "version": "reference",
+  "repeat": 3,
+  "failures": [],
+  "command": [
+    "sysbench",
+    "cpu",
+    "--threads=3",
+    "--time=10",
+    "run"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 10.056234545001644,
+  "background_cpu_ticks": 1367,
+  "background_cpu_seconds_per_wall_second": 1.3593557249313108,
+  "metrics": {
+    "elapsed_seconds": 10.0032,
+    "events": 70345.0,
+    "events_per_second": 7031.94,
+    "latency_p95_ms": 3.07
+  },
+  "final_scheduler_state": "disabled"
+}

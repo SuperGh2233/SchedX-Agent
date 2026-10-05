@@ -1,0 +1,154 @@
+SchedX native sched_ext scheduler attached.
+schedx>
+fairness updated background_interval=40 default_interval=32
+schedx>
+policy updated cgroup_id=53603 class=latency weight=5000
+schedx>
+policy updated cgroup_id=53617 class=latency weight=5000
+schedx>
+policy updated cgroup_id=53631 class=background weight=300
+schedx>
+policy updated cgroup_id=53645 class=batch weight=2000
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=9 runs=9 runtime_ns=319571 wait_ns=56695755
+cgroup_id=53645 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=52 runs=55 runtime_ns=2649157183 wait_ns=3701472
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=19 runs=19 runtime_ns=658618 wait_ns=126083845
+cgroup_id=53645 enqueues=66 runs=66 runtime_ns=2664899052 wait_ns=293156809
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=90 runs=90 runtime_ns=3233243873 wait_ns=2670387875
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=28 runs=28 runtime_ns=968230 wait_ns=190074076
+cgroup_id=53645 enqueues=127 runs=127 runtime_ns=5411235821 wait_ns=579376776
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=130 runs=130 runtime_ns=3518427902 wait_ns=5372445289
+schedx>
+fairness updated background_interval=20 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=37 runs=37 runtime_ns=1306519 wait_ns=300699243
+cgroup_id=53645 enqueues=189 runs=188 runtime_ns=8207937985 wait_ns=798723002
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=160 runs=161 runtime_ns=3730212055 wait_ns=8222111191
+schedx>
+fairness updated background_interval=10 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=46 runs=46 runtime_ns=1618515 wait_ns=386182073
+cgroup_id=53645 enqueues=250 runs=253 runtime_ns=10960691265 wait_ns=1035686557
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=193 runs=193 runtime_ns=3966126198 wait_ns=10975945219
+schedx>
+fairness updated background_interval=5 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=55 runs=55 runtime_ns=1913948 wait_ns=491377467
+cgroup_id=53645 enqueues=311 runs=314 runtime_ns=13714438637 wait_ns=1300097674
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=230 runs=230 runtime_ns=4228910356 wait_ns=13647547781
+schedx>
+fairness updated background_interval=2 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=64 runs=64 runtime_ns=2207845 wait_ns=584904409
+cgroup_id=53645 enqueues=370 runs=373 runtime_ns=16375068207 wait_ns=1683533200
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=284 runs=284 runtime_ns=4611242461 wait_ns=16302257340
+schedx>
+fairness updated background_interval=1 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=73 runs=73 runtime_ns=2537611 wait_ns=660109338
+cgroup_id=53645 enqueues=421 runs=423 runtime_ns=18672377596 wait_ns=2353477214
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=381 runs=382 runtime_ns=5301012073 wait_ns=18712047030
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=83 runs=82 runtime_ns=2842686 wait_ns=738718789
+cgroup_id=53645 enqueues=470 runs=474 runtime_ns=20884532909 wait_ns=3095336709
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=489 runs=491 runtime_ns=6057793556 wait_ns=20952593542
+schedx>
+fairness updated background_interval=2 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=92 runs=92 runtime_ns=3189965 wait_ns=818668842
+cgroup_id=53645 enqueues=528 runs=533 runtime_ns=23501484961 wait_ns=3537987366
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=546 runs=547 runtime_ns=6460883286 wait_ns=23524216616
+schedx>
+fairness updated background_interval=1 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=101 runs=101 runtime_ns=3484608 wait_ns=903801172
+cgroup_id=53645 enqueues=579 runs=584 runtime_ns=25801998048 wait_ns=4225540946
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=643 runs=644 runtime_ns=7146944393 wait_ns=25826189098
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=110 runs=110 runtime_ns=3794048 wait_ns=996535173
+cgroup_id=53645 enqueues=630 runs=634 runtime_ns=28101496714 wait_ns=4919631001
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=744 runs=746 runtime_ns=7864569019 wait_ns=28170713495
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=119 runs=119 runtime_ns=4107563 wait_ns=1065697360
+cgroup_id=53645 enqueues=680 runs=687 runtime_ns=30353105231 wait_ns=5713449129
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=852 runs=854 runtime_ns=8631505621 wait_ns=30418465455
+schedx>
+fairness updated background_interval=2 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=129 runs=129 runtime_ns=4446329 wait_ns=1108446020
+cgroup_id=53645 enqueues=737 runs=744 runtime_ns=32923923623 wait_ns=6126633600
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=910 runs=912 runtime_ns=9043133546 wait_ns=32907828567
+schedx>
+fairness updated background_interval=1 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=138 runs=138 runtime_ns=4763994 wait_ns=1189445963
+cgroup_id=53645 enqueues=788 runs=795 runtime_ns=35222920028 wait_ns=6826575980
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1008 runs=1010 runtime_ns=9741723451 wait_ns=35254344010
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=147 runs=147 runtime_ns=5075514 wait_ns=1275695133
+cgroup_id=53645 enqueues=841 runs=847 runtime_ns=37610174980 wait_ns=7495870651
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1102 runs=1105 runtime_ns=10409285017 wait_ns=37642181477
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=156 runs=156 runtime_ns=5383793 wait_ns=1330887109
+cgroup_id=53645 enqueues=889 runs=898 runtime_ns=39774240862 wait_ns=8272535197
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1211 runs=1214 runtime_ns=11184343102 wait_ns=39827040004
+schedx>
+fairness updated background_interval=2 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=166 runs=166 runtime_ns=5714273 wait_ns=1371442803
+cgroup_id=53645 enqueues=947 runs=955 runtime_ns=42387950473 wait_ns=8715142754
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1273 runs=1277 runtime_ns=11625387206 wait_ns=42423083044
+schedx>
+fairness updated background_interval=1 default_interval=32
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=175 runs=175 runtime_ns=6021448 wait_ns=1434164555
+cgroup_id=53645 enqueues=998 runs=1007 runtime_ns=44689737839 wait_ns=9426937583
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1373 runs=1376 runtime_ns=12335762739 wait_ns=44750094628
+schedx>
+Cgroup Metrics:
+cgroup_id=53617 enqueues=184 runs=184 runtime_ns=6324301 wait_ns=1533739954
+cgroup_id=53645 enqueues=1049 runs=1058 runtime_ns=46989332469 wait_ns=10138747620
+cgroup_id=53603 enqueues=0 runs=0 runtime_ns=0 wait_ns=0
+cgroup_id=53631 enqueues=1473 runs=1476 runtime_ns=13045693554 wait_ns=47051068080
+schedx>

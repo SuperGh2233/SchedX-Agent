@@ -1,0 +1,3326 @@
+{
+  "session_id": "session-303fe1073355449fbfa515cbcefc62b1",
+  "start_time": "2026-10-05T05:21:18.408957",
+  "iteration_count": 0,
+  "decisions": [],
+  "metrics": {
+    "continuous": {
+      "round_count": 31,
+      "completed_round_count": 31,
+      "history_limit": 128,
+      "log_limit": 1000,
+      "round_history": [
+        {
+          "round": 1,
+          "status": "failed_rolled_back",
+          "trial_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 2,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 899195,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3608,
+            "latency_stdev_ms": 0.199,
+            "latency_max_ms": 5.41,
+            "req_per_sec_avg": 44960.0,
+            "req_per_sec_stdev": 3250.0,
+            "requests_per_sec": 89024.4,
+            "qps": 89024.4,
+            "transfer_sec": "14.26MB",
+            "p50_ms": 0.334,
+            "p50_latency_ms": 0.334,
+            "p75_ms": 0.401,
+            "p75_latency_ms": 0.401,
+            "p90_ms": 0.454,
+            "p90_latency_ms": 0.454,
+            "p99_ms": 0.96,
+            "p99_latency_ms": 0.96,
+            "avg_latency_ms": 0.3608,
+            "successful_requests_per_sec": 89029.20792079208,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3684,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   360.78us  199.04us   5.41ms   93.94%\n    Req/Sec    44.96k     3.25k   86.25k    95.52%\n  Latency Distribution\n     50%  334.00us\n     75%  401.00us\n     90%  454.00us\n     99%    0.96ms\n  899195 requests in 10.10s, 144.06MB read\nRequests/sec:  89024.40\nTransfer/sec:     14.26MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 3,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 896685,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3602,
+            "latency_stdev_ms": 0.1888,
+            "latency_max_ms": 4.66,
+            "req_per_sec_avg": 44830.0,
+            "req_per_sec_stdev": 3400.0,
+            "requests_per_sec": 88788.67,
+            "qps": 88788.67,
+            "transfer_sec": "14.23MB",
+            "p50_ms": 0.335,
+            "p50_latency_ms": 0.335,
+            "p75_ms": 0.403,
+            "p75_latency_ms": 0.403,
+            "p90_ms": 0.458,
+            "p90_latency_ms": 0.458,
+            "p99_ms": 0.843,
+            "p99_latency_ms": 0.843,
+            "avg_latency_ms": 0.3602,
+            "successful_requests_per_sec": 88780.69306930693,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3688,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   360.22us  188.77us   4.66ms   93.74%\n    Req/Sec    44.83k     3.40k   89.14k    99.00%\n  Latency Distribution\n     50%  335.00us\n     75%  403.00us\n     90%  458.00us\n     99%  843.00us\n  896685 requests in 10.10s, 143.66MB read\nRequests/sec:  88788.67\nTransfer/sec:     14.23MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 4,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 897332,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3636,
+            "latency_stdev_ms": 0.2121,
+            "latency_max_ms": 4.89,
+            "req_per_sec_avg": 44870.0,
+            "req_per_sec_stdev": 3420.0,
+            "requests_per_sec": 88847.86,
+            "qps": 88847.86,
+            "transfer_sec": "14.23MB",
+            "p50_ms": 0.335,
+            "p50_latency_ms": 0.335,
+            "p75_ms": 0.403,
+            "p75_latency_ms": 0.403,
+            "p90_ms": 0.459,
+            "p90_latency_ms": 0.459,
+            "p99_ms": 1.14,
+            "p99_latency_ms": 1.14,
+            "avg_latency_ms": 0.3636,
+            "successful_requests_per_sec": 88844.75247524753,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3692,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   363.59us  212.14us   4.89ms   93.54%\n    Req/Sec    44.87k     3.42k   88.50k    96.52%\n  Latency Distribution\n     50%  335.00us\n     75%  403.00us\n     90%  459.00us\n     99%    1.14ms\n  897332 requests in 10.10s, 143.76MB read\nRequests/sec:  88847.86\nTransfer/sec:     14.23MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 5,
+          "status": "failed_rolled_back",
+          "trial_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 6,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 885546,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3659,
+            "latency_stdev_ms": 0.2117,
+            "latency_max_ms": 4.75,
+            "req_per_sec_avg": 44510.0,
+            "req_per_sec_stdev": 1470.0,
+            "requests_per_sec": 88529.62,
+            "qps": 88529.62,
+            "transfer_sec": "14.18MB",
+            "p50_ms": 0.338,
+            "p50_latency_ms": 0.338,
+            "p75_ms": 0.404,
+            "p75_latency_ms": 0.404,
+            "p90_ms": 0.458,
+            "p90_latency_ms": 0.458,
+            "p99_ms": 1.03,
+            "p99_latency_ms": 1.03,
+            "avg_latency_ms": 0.3659,
+            "successful_requests_per_sec": 88554.6,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3654,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   365.92us  211.68us   4.75ms   94.74%\n    Req/Sec    44.51k     1.47k   48.58k    74.50%\n  Latency Distribution\n     50%  338.00us\n     75%  404.00us\n     90%  458.00us\n     99%    1.03ms\n  885546 requests in 10.00s, 141.88MB read\nRequests/sec:  88529.62\nTransfer/sec:     14.18MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 7,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 902697,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3599,
+            "latency_stdev_ms": 0.198,
+            "latency_max_ms": 4.7,
+            "req_per_sec_avg": 45120.0,
+            "req_per_sec_stdev": 3350.0,
+            "requests_per_sec": 89385.46,
+            "qps": 89385.46,
+            "transfer_sec": "14.32MB",
+            "p50_ms": 0.334,
+            "p50_latency_ms": 0.334,
+            "p75_ms": 0.402,
+            "p75_latency_ms": 0.402,
+            "p90_ms": 0.455,
+            "p90_latency_ms": 0.455,
+            "p99_ms": 1.01,
+            "p99_latency_ms": 1.01,
+            "avg_latency_ms": 0.3599,
+            "successful_requests_per_sec": 89375.94059405942,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3688,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   359.95us  197.97us   4.70ms   93.87%\n    Req/Sec    45.12k     3.35k   88.34k    98.01%\n  Latency Distribution\n     50%  334.00us\n     75%  402.00us\n     90%  455.00us\n     99%    1.01ms\n  902697 requests in 10.10s, 144.62MB read\nRequests/sec:  89385.46\nTransfer/sec:     14.32MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 8,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 893840,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3641,
+            "latency_stdev_ms": 0.1906,
+            "latency_max_ms": 4.43,
+            "req_per_sec_avg": 44480.0,
+            "req_per_sec_stdev": 1310.0,
+            "requests_per_sec": 88499.36,
+            "qps": 88499.36,
+            "transfer_sec": "14.18MB",
+            "p50_ms": 0.337,
+            "p50_latency_ms": 0.337,
+            "p75_ms": 0.405,
+            "p75_latency_ms": 0.405,
+            "p90_ms": 0.461,
+            "p90_latency_ms": 0.461,
+            "p99_ms": 0.96,
+            "p99_latency_ms": 0.96,
+            "avg_latency_ms": 0.3641,
+            "successful_requests_per_sec": 88499.0099009901,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3691,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   364.14us  190.55us   4.43ms   93.91%\n    Req/Sec    44.48k     1.31k   48.27k    69.80%\n  Latency Distribution\n     50%  337.00us\n     75%  405.00us\n     90%  461.00us\n     99%    0.96ms\n  893840 requests in 10.10s, 143.20MB read\nRequests/sec:  88499.36\nTransfer/sec:     14.18MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 9,
+          "status": "failed_rolled_back",
+          "trial_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 10,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "parameters": {},
+            "expert_id": "current_system_controls",
+            "mode": "latency_first",
+            "target": "nginx",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 893841,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3645,
+            "latency_stdev_ms": 0.1955,
+            "latency_max_ms": 4.41,
+            "req_per_sec_avg": 44480.0,
+            "req_per_sec_stdev": 1450.0,
+            "requests_per_sec": 88508.25,
+            "qps": 88508.25,
+            "transfer_sec": "14.18MB",
+            "p50_ms": 0.337,
+            "p50_latency_ms": 0.337,
+            "p75_ms": 0.404,
+            "p75_latency_ms": 0.404,
+            "p90_ms": 0.46,
+            "p90_latency_ms": 0.46,
+            "p99_ms": 0.98,
+            "p99_latency_ms": 0.98,
+            "avg_latency_ms": 0.3645,
+            "successful_requests_per_sec": 88499.1089108911,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3681,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   364.50us  195.51us   4.41ms   94.12%\n    Req/Sec    44.48k     1.45k   48.48k    67.82%\n  Latency Distribution\n     50%  337.00us\n     75%  404.00us\n     90%  460.00us\n     99%    0.98ms\n  893841 requests in 10.10s, 143.20MB read\nRequests/sec:  88508.25\nTransfer/sec:     14.18MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 11,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.8014827339875994,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 842869,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3856,
+            "latency_stdev_ms": 0.235,
+            "latency_max_ms": 10.1,
+            "req_per_sec_avg": 42360.0,
+            "req_per_sec_stdev": 1420.0,
+            "requests_per_sec": 84278.6,
+            "qps": 84278.6,
+            "transfer_sec": "13.50MB",
+            "p50_ms": 0.357,
+            "p50_latency_ms": 0.357,
+            "p75_ms": 0.426,
+            "p75_latency_ms": 0.426,
+            "p90_ms": 0.483,
+            "p90_latency_ms": 0.483,
+            "p99_ms": 1.07,
+            "p99_latency_ms": 1.07,
+            "avg_latency_ms": 0.3856,
+            "successful_requests_per_sec": 84286.9,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1796,
+            "system_cpu_ticks": 3555,
+            "background_cpu_share": 0.5052039381153305,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   385.58us  235.00us  10.10ms   96.53%\n    Req/Sec    42.36k     1.42k   46.15k    71.50%\n  Latency Distribution\n     50%  357.00us\n     75%  426.00us\n     90%  483.00us\n     99%    1.07ms\n  842869 requests in 10.00s, 135.04MB read\nRequests/sec:  84278.60\nTransfer/sec:     13.50MB\n"
+          },
+          "improvement": 67.278287
+        },
+        {
+          "round": 12,
+          "status": "failed_rolled_back",
+          "trial_context": "8802c45f92088981e52c18343dd17f105e05cf045d3bc8b1584fa40ac64d6509",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 13,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "metrics": {
+            "requests_completed": 837331,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3892,
+            "latency_stdev_ms": 0.2617,
+            "latency_max_ms": 9.55,
+            "req_per_sec_avg": 42080.0,
+            "req_per_sec_stdev": 1340.0,
+            "requests_per_sec": 83705.28,
+            "qps": 83705.28,
+            "transfer_sec": "13.41MB",
+            "p50_ms": 0.36,
+            "p50_latency_ms": 0.36,
+            "p75_ms": 0.426,
+            "p75_latency_ms": 0.426,
+            "p90_ms": 0.483,
+            "p90_latency_ms": 0.483,
+            "p99_ms": 0.99,
+            "p99_latency_ms": 0.99,
+            "avg_latency_ms": 0.3892,
+            "successful_requests_per_sec": 83733.1,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1795,
+            "system_cpu_ticks": 3546,
+            "background_cpu_share": 0.5062041737168641,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   389.20us  261.75us   9.55ms   97.84%\n    Req/Sec    42.08k     1.34k   47.00k    78.50%\n  Latency Distribution\n     50%  360.00us\n     75%  426.00us\n     90%  483.00us\n     99%    0.99ms\n  837331 requests in 10.00s, 134.15MB read\nRequests/sec:  83705.28\nTransfer/sec:     13.41MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 14,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "metrics": {
+            "requests_completed": 832253,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.386,
+            "latency_stdev_ms": 0.1995,
+            "latency_max_ms": 9.49,
+            "req_per_sec_avg": 41820.0,
+            "req_per_sec_stdev": 1250.0,
+            "requests_per_sec": 83201.81,
+            "qps": 83201.81,
+            "transfer_sec": "13.33MB",
+            "p50_ms": 0.362,
+            "p50_latency_ms": 0.362,
+            "p75_ms": 0.427,
+            "p75_latency_ms": 0.427,
+            "p90_ms": 0.482,
+            "p90_latency_ms": 0.482,
+            "p99_ms": 0.784,
+            "p99_latency_ms": 0.784,
+            "avg_latency_ms": 0.386,
+            "successful_requests_per_sec": 83225.3,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1796,
+            "system_cpu_ticks": 3520,
+            "background_cpu_share": 0.5102272727272728,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   385.97us  199.48us   9.49ms   96.61%\n    Req/Sec    41.82k     1.25k   45.65k    70.00%\n  Latency Distribution\n     50%  362.00us\n     75%  427.00us\n     90%  482.00us\n     99%  784.00us\n  832253 requests in 10.00s, 133.34MB read\nRequests/sec:  83201.81\nTransfer/sec:     13.33MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 15,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "metrics": {
+            "requests_completed": 839111,
+            "elapsed_seconds": 10.01,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3851,
+            "latency_stdev_ms": 0.2249,
+            "latency_max_ms": 7.87,
+            "req_per_sec_avg": 42170.0,
+            "req_per_sec_stdev": 1300.0,
+            "requests_per_sec": 83816.55,
+            "qps": 83816.55,
+            "transfer_sec": "13.43MB",
+            "p50_ms": 0.36,
+            "p50_latency_ms": 0.36,
+            "p75_ms": 0.426,
+            "p75_latency_ms": 0.426,
+            "p90_ms": 0.481,
+            "p90_latency_ms": 0.481,
+            "p99_ms": 0.807,
+            "p99_latency_ms": 0.807,
+            "avg_latency_ms": 0.3851,
+            "successful_requests_per_sec": 83827.27272727274,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1797,
+            "system_cpu_ticks": 3556,
+            "background_cpu_share": 0.5053430821147357,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   385.06us  224.93us   7.87ms   96.85%\n    Req/Sec    42.17k     1.30k   45.83k    71.50%\n  Latency Distribution\n     50%  360.00us\n     75%  426.00us\n     90%  481.00us\n     99%  807.00us\n  839111 requests in 10.01s, 134.44MB read\nRequests/sec:  83816.55\nTransfer/sec:     13.43MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 16,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.6725784447476125,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 833771,
+            "elapsed_seconds": 10.01,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3877,
+            "latency_stdev_ms": 0.2313,
+            "latency_max_ms": 9.15,
+            "req_per_sec_avg": 41880.0,
+            "req_per_sec_stdev": 1350.0,
+            "requests_per_sec": 83330.39,
+            "qps": 83330.39,
+            "transfer_sec": "13.35MB",
+            "p50_ms": 0.362,
+            "p50_latency_ms": 0.362,
+            "p75_ms": 0.427,
+            "p75_latency_ms": 0.427,
+            "p90_ms": 0.481,
+            "p90_latency_ms": 0.481,
+            "p99_ms": 0.754,
+            "p99_latency_ms": 0.754,
+            "avg_latency_ms": 0.3877,
+            "successful_requests_per_sec": 83293.8061938062,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1794,
+            "system_cpu_ticks": 3542,
+            "background_cpu_share": 0.5064935064935064,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.68us  231.33us   9.15ms   97.23%\n    Req/Sec    41.88k     1.35k   46.61k    76.00%\n  Latency Distribution\n     50%  362.00us\n     75%  427.00us\n     90%  481.00us\n     99%  754.00us\n  833771 requests in 10.01s, 133.58MB read\nRequests/sec:  83330.39\nTransfer/sec:     13.35MB\n"
+          },
+          "improvement": 7.02836
+        },
+        {
+          "round": 17,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.6725784447476125,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 832376,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3885,
+            "latency_stdev_ms": 0.2605,
+            "latency_max_ms": 11.03,
+            "req_per_sec_avg": 41820.0,
+            "req_per_sec_stdev": 1430.0,
+            "requests_per_sec": 83204.92,
+            "qps": 83204.92,
+            "transfer_sec": "13.33MB",
+            "p50_ms": 0.363,
+            "p50_latency_ms": 0.363,
+            "p75_ms": 0.428,
+            "p75_latency_ms": 0.428,
+            "p90_ms": 0.482,
+            "p90_latency_ms": 0.482,
+            "p99_ms": 0.709,
+            "p99_latency_ms": 0.709,
+            "avg_latency_ms": 0.3885,
+            "successful_requests_per_sec": 83237.6,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1795,
+            "system_cpu_ticks": 3549,
+            "background_cpu_share": 0.5057762750070443,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   388.53us  260.45us  11.03ms   98.33%\n    Req/Sec    41.82k     1.43k   47.46k    80.50%\n  Latency Distribution\n     50%  363.00us\n     75%  428.00us\n     90%  482.00us\n     99%  709.00us\n  832376 requests in 10.00s, 133.36MB read\nRequests/sec:  83204.92\nTransfer/sec:     13.33MB\n"
+          },
+          "improvement": 10.025381
+        },
+        {
+          "round": 18,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.6725784447476125,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 832865,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3924,
+            "latency_stdev_ms": 0.3115,
+            "latency_max_ms": 14.01,
+            "req_per_sec_avg": 41850.0,
+            "req_per_sec_stdev": 1640.0,
+            "requests_per_sec": 83279.3,
+            "qps": 83279.3,
+            "transfer_sec": "13.34MB",
+            "p50_ms": 0.362,
+            "p50_latency_ms": 0.362,
+            "p75_ms": 0.428,
+            "p75_latency_ms": 0.428,
+            "p90_ms": 0.483,
+            "p90_latency_ms": 0.483,
+            "p99_ms": 0.88,
+            "p99_latency_ms": 0.88,
+            "avg_latency_ms": 0.3924,
+            "successful_requests_per_sec": 83286.5,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1794,
+            "system_cpu_ticks": 3547,
+            "background_cpu_share": 0.5057795319988723,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   392.36us  311.49us  14.01ms   98.64%\n    Req/Sec    41.85k     1.64k   50.30k    80.50%\n  Latency Distribution\n     50%  362.00us\n     75%  428.00us\n     90%  483.00us\n     99%    0.88ms\n  832865 requests in 10.00s, 133.44MB read\nRequests/sec:  83279.30\nTransfer/sec:     13.34MB\n"
+          },
+          "improvement": 2.222222
+        },
+        {
+          "round": 19,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.6725784447476125,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 828887,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3864,
+            "latency_stdev_ms": 0.1777,
+            "latency_max_ms": 6.77,
+            "req_per_sec_avg": 41670.0,
+            "req_per_sec_stdev": 1210.0,
+            "requests_per_sec": 82867.05,
+            "qps": 82867.05,
+            "transfer_sec": "13.28MB",
+            "p50_ms": 0.363,
+            "p50_latency_ms": 0.363,
+            "p75_ms": 0.429,
+            "p75_latency_ms": 0.429,
+            "p90_ms": 0.485,
+            "p90_latency_ms": 0.485,
+            "p99_ms": 0.776,
+            "p99_latency_ms": 0.776,
+            "avg_latency_ms": 0.3864,
+            "successful_requests_per_sec": 82888.7,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1797,
+            "system_cpu_ticks": 3529,
+            "background_cpu_share": 0.5092094077642392,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   386.39us  177.70us   6.77ms   95.61%\n    Req/Sec    41.67k     1.21k   45.75k    71.50%\n  Latency Distribution\n     50%  363.00us\n     75%  429.00us\n     90%  485.00us\n     99%  776.00us\n  828887 requests in 10.00s, 132.80MB read\nRequests/sec:  82867.05\nTransfer/sec:     13.28MB\n"
+          },
+          "improvement": 0.640205
+        },
+        {
+          "round": 20,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+            "confidence": 0.6725784447476125,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "75c37147bd32a81363733ff014cadf0366222eed19e6d36be83e647b637fd15f"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 837729,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3824,
+            "latency_stdev_ms": 0.1582,
+            "latency_max_ms": 6.31,
+            "req_per_sec_avg": 41890.0,
+            "req_per_sec_stdev": 3050.0,
+            "requests_per_sec": 82945.9,
+            "qps": 82945.9,
+            "transfer_sec": "13.29MB",
+            "p50_ms": 0.363,
+            "p50_latency_ms": 0.363,
+            "p75_ms": 0.428,
+            "p75_latency_ms": 0.428,
+            "p90_ms": 0.482,
+            "p90_latency_ms": 0.482,
+            "p99_ms": 0.723,
+            "p99_latency_ms": 0.723,
+            "avg_latency_ms": 0.3824,
+            "successful_requests_per_sec": 82943.46534653465,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 1813,
+            "system_cpu_ticks": 3576,
+            "background_cpu_share": 0.5069910514541387,
+            "background_pids": [
+              47902,
+              47903,
+              47904,
+              47905
+            ],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   382.36us  158.17us   6.31ms   94.24%\n    Req/Sec    41.89k     3.05k   81.89k    98.01%\n  Latency Distribution\n     50%  363.00us\n     75%  428.00us\n     90%  482.00us\n     99%  723.00us\n  837729 requests in 10.10s, 134.21MB read\nRequests/sec:  82945.90\nTransfer/sec:     13.29MB\n"
+          },
+          "improvement": 15.930233
+        },
+        {
+          "round": 21,
+          "status": "failed_rolled_back",
+          "trial_context": "ea242cc67f256f1bf66996c8f0c0505fe48d300231dc034ca95d458e0beb628b",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 22,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 850246,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3771,
+            "latency_stdev_ms": 0.1827,
+            "latency_max_ms": 4.92,
+            "req_per_sec_avg": 42720.0,
+            "req_per_sec_stdev": 1410.0,
+            "requests_per_sec": 85001.09,
+            "qps": 85001.09,
+            "transfer_sec": "13.62MB",
+            "p50_ms": 0.354,
+            "p50_latency_ms": 0.354,
+            "p75_ms": 0.415,
+            "p75_latency_ms": 0.415,
+            "p90_ms": 0.471,
+            "p90_latency_ms": 0.471,
+            "p99_ms": 0.92,
+            "p99_latency_ms": 0.92,
+            "avg_latency_ms": 0.3771,
+            "successful_requests_per_sec": 85024.6,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3610,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   377.14us  182.68us   4.92ms   93.92%\n    Req/Sec    42.72k     1.41k   47.71k    70.00%\n  Latency Distribution\n     50%  354.00us\n     75%  415.00us\n     90%  471.00us\n     99%    0.92ms\n  850246 requests in 10.00s, 136.22MB read\nRequests/sec:  85001.09\nTransfer/sec:     13.62MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 23,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 852906,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3789,
+            "latency_stdev_ms": 0.2054,
+            "latency_max_ms": 4.95,
+            "req_per_sec_avg": 42860.0,
+            "req_per_sec_stdev": 1380.0,
+            "requests_per_sec": 85277.58,
+            "qps": 85277.58,
+            "transfer_sec": "13.66MB",
+            "p50_ms": 0.352,
+            "p50_latency_ms": 0.352,
+            "p75_ms": 0.414,
+            "p75_latency_ms": 0.414,
+            "p90_ms": 0.47,
+            "p90_latency_ms": 0.47,
+            "p99_ms": 1.13,
+            "p99_latency_ms": 1.13,
+            "avg_latency_ms": 0.3789,
+            "successful_requests_per_sec": 85290.6,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3610,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   378.94us  205.38us   4.95ms   94.40%\n    Req/Sec    42.86k     1.38k   47.36k    67.50%\n  Latency Distribution\n     50%  352.00us\n     75%  414.00us\n     90%  470.00us\n     99%    1.13ms\n  852906 requests in 10.00s, 136.65MB read\nRequests/sec:  85277.58\nTransfer/sec:     13.66MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 24,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 10,
+              "cpu_max_bg": "10000 100000",
+              "nice_target": -5,
+              "nice_bg": 10,
+              "isolate_target": "stress-ng-cpu"
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 856264,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3817,
+            "latency_stdev_ms": 0.2503,
+            "latency_max_ms": 8.33,
+            "req_per_sec_avg": 43040.0,
+            "req_per_sec_stdev": 1580.0,
+            "requests_per_sec": 85606.39,
+            "qps": 85606.39,
+            "transfer_sec": "13.72MB",
+            "p50_ms": 0.35,
+            "p50_latency_ms": 0.35,
+            "p75_ms": 0.414,
+            "p75_latency_ms": 0.414,
+            "p90_ms": 0.471,
+            "p90_latency_ms": 0.471,
+            "p99_ms": 1.28,
+            "p99_latency_ms": 1.28,
+            "avg_latency_ms": 0.3817,
+            "successful_requests_per_sec": 85626.4,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3611,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   381.71us  250.28us   8.33ms   96.03%\n    Req/Sec    43.04k     1.58k   48.33k    74.50%\n  Latency Distribution\n     50%  350.00us\n     75%  414.00us\n     90%  471.00us\n     99%    1.28ms\n  856264 requests in 10.00s, 137.18MB read\nRequests/sec:  85606.39\nTransfer/sec:     13.72MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 25,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "pure latency workload (2 services), no interference; router=latency_guard (stable_selection)",
+            "confidence": 0.8444508304009284,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 25,
+              "cpu_max_bg": "50000 100000",
+              "nice_target": -5,
+              "nice_bg": 5
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 855495,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3791,
+            "latency_stdev_ms": 0.2215,
+            "latency_max_ms": 6.53,
+            "req_per_sec_avg": 42980.0,
+            "req_per_sec_stdev": 1610.0,
+            "requests_per_sec": 85517.95,
+            "qps": 85517.95,
+            "transfer_sec": "13.70MB",
+            "p50_ms": 0.351,
+            "p50_latency_ms": 0.351,
+            "p75_ms": 0.413,
+            "p75_latency_ms": 0.413,
+            "p90_ms": 0.469,
+            "p90_latency_ms": 0.469,
+            "p99_ms": 1.2,
+            "p99_latency_ms": 1.2,
+            "avg_latency_ms": 0.3791,
+            "successful_requests_per_sec": 85549.5,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3611,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   379.11us  221.49us   6.53ms   94.58%\n    Req/Sec    42.98k     1.61k   47.85k    72.50%\n  Latency Distribution\n     50%  351.00us\n     75%  413.00us\n     90%  469.00us\n     99%    1.20ms\n  855495 requests in 10.00s, 137.06MB read\nRequests/sec:  85517.95\nTransfer/sec:     13.70MB\n"
+          },
+          "improvement": 8.396947
+        },
+        {
+          "round": 26,
+          "status": "failed_rolled_back",
+          "trial_context": "d0c23e6217a0b5804752d2467ec8129b7996418fb2e6e285a47c313b11a251b5",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        },
+        {
+          "round": 27,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 25,
+              "cpu_max_bg": "50000 100000",
+              "nice_target": -5,
+              "nice_bg": 5
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 856904,
+            "elapsed_seconds": 10.1,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3795,
+            "latency_stdev_ms": 0.2221,
+            "latency_max_ms": 6.2,
+            "req_per_sec_avg": 42860.0,
+            "req_per_sec_stdev": 3260.0,
+            "requests_per_sec": 84837.74,
+            "qps": 84837.74,
+            "transfer_sec": "13.59MB",
+            "p50_ms": 0.352,
+            "p50_latency_ms": 0.352,
+            "p75_ms": 0.415,
+            "p75_latency_ms": 0.415,
+            "p90_ms": 0.473,
+            "p90_latency_ms": 0.473,
+            "p99_ms": 1.06,
+            "p99_latency_ms": 1.06,
+            "avg_latency_ms": 0.3795,
+            "successful_requests_per_sec": 84841.98019801981,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3657,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   379.54us  222.14us   6.20ms   94.32%\n    Req/Sec    42.86k     3.26k   83.37k    96.02%\n  Latency Distribution\n     50%  352.00us\n     75%  415.00us\n     90%  473.00us\n     99%    1.06ms\n  856904 requests in 10.10s, 137.29MB read\nRequests/sec:  84837.74\nTransfer/sec:     13.59MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 28,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 25,
+              "cpu_max_bg": "50000 100000",
+              "nice_target": -5,
+              "nice_bg": 5
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 858585,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3767,
+            "latency_stdev_ms": 0.2145,
+            "latency_max_ms": 5.93,
+            "req_per_sec_avg": 43160.0,
+            "req_per_sec_stdev": 1350.0,
+            "requests_per_sec": 85836.57,
+            "qps": 85836.57,
+            "transfer_sec": "13.75MB",
+            "p50_ms": 0.35,
+            "p50_latency_ms": 0.35,
+            "p75_ms": 0.411,
+            "p75_latency_ms": 0.411,
+            "p90_ms": 0.466,
+            "p90_latency_ms": 0.466,
+            "p99_ms": 1.11,
+            "p99_latency_ms": 1.11,
+            "avg_latency_ms": 0.3767,
+            "successful_requests_per_sec": 85858.5,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3615,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   376.67us  214.47us   5.93ms   94.93%\n    Req/Sec    43.16k     1.35k   47.51k    70.00%\n  Latency Distribution\n     50%  350.00us\n     75%  411.00us\n     90%  466.00us\n     99%    1.11ms\n  858585 requests in 10.00s, 137.56MB read\nRequests/sec:  85836.57\nTransfer/sec:     13.75MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 29,
+          "status": "ok",
+          "objective_status": "observed_healthy",
+          "observation_verified": true,
+          "noop": true,
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 25,
+              "cpu_max_bg": "50000 100000",
+              "nice_target": -5,
+              "nice_bg": 5
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "metrics": {
+            "requests_completed": 853194,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.377,
+            "latency_stdev_ms": 0.1935,
+            "latency_max_ms": 5.19,
+            "req_per_sec_avg": 42860.0,
+            "req_per_sec_stdev": 1200.0,
+            "requests_per_sec": 85301.31,
+            "qps": 85301.31,
+            "transfer_sec": "13.67MB",
+            "p50_ms": 0.352,
+            "p50_latency_ms": 0.352,
+            "p75_ms": 0.414,
+            "p75_latency_ms": 0.414,
+            "p90_ms": 0.47,
+            "p90_latency_ms": 0.47,
+            "p99_ms": 0.93,
+            "p99_latency_ms": 0.93,
+            "avg_latency_ms": 0.377,
+            "successful_requests_per_sec": 85319.4,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3614,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   376.97us  193.54us   5.19ms   94.34%\n    Req/Sec    42.86k     1.20k   45.66k    68.00%\n  Latency Distribution\n     50%  352.00us\n     75%  414.00us\n     90%  470.00us\n     99%    0.93ms\n  853194 requests in 10.00s, 136.69MB read\nRequests/sec:  85301.31\nTransfer/sec:     13.67MB\n"
+          },
+          "improvement": null
+        },
+        {
+          "round": 30,
+          "status": "ok",
+          "decision": {
+            "mode": "latency_first",
+            "target": "nginx",
+            "reason": "pure latency workload (2 services), no interference; router=latency_guard (stable_selection)",
+            "confidence": 0.8578199052132701,
+            "parameters": {
+              "cpu_weight": 8000,
+              "cpu_weight_bg": 25,
+              "cpu_max_bg": "50000 100000",
+              "nice_target": -5,
+              "nice_bg": 5
+            },
+            "expert_id": "latency_guard",
+            "workload_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509"
+          },
+          "policy_success": true,
+          "canary_baseline_success": true,
+          "ebpf_load_success": true,
+          "ebpf_attach_success": true,
+          "scx_success": true,
+          "act_success": true,
+          "scx_cgroups_success": true,
+          "ebpf_policy_success": true,
+          "canary_candidate_success": true,
+          "ebpf_stats_success": true,
+          "verify_success": true,
+          "canary_success": true,
+          "degraded_phases": [],
+          "objective_status": "accepted",
+          "metrics": {
+            "requests_completed": 858168,
+            "elapsed_seconds": 10.0,
+            "socket_errors": {
+              "connect": 0,
+              "read": 0,
+              "write": 0,
+              "timeout": 0
+            },
+            "non_success_responses": 0,
+            "latency_avg_ms": 0.3774,
+            "latency_stdev_ms": 0.2189,
+            "latency_max_ms": 6.19,
+            "req_per_sec_avg": 43120.0,
+            "req_per_sec_stdev": 1500.0,
+            "requests_per_sec": 85794.86,
+            "qps": 85794.86,
+            "transfer_sec": "13.75MB",
+            "p50_ms": 0.349,
+            "p50_latency_ms": 0.349,
+            "p75_ms": 0.412,
+            "p75_latency_ms": 0.412,
+            "p90_ms": 0.47,
+            "p90_latency_ms": 0.47,
+            "p99_ms": 1.13,
+            "p99_latency_ms": 1.13,
+            "avg_latency_ms": 0.3774,
+            "successful_requests_per_sec": 85816.8,
+            "response_error_rate": 0.0,
+            "socket_errors_per_second": 0.0,
+            "background_cpu_ticks": 0,
+            "system_cpu_ticks": 3620,
+            "background_cpu_share": 0.0,
+            "background_pids": [],
+            "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   377.43us  218.95us   6.19ms   94.35%\n    Req/Sec    43.12k     1.50k   47.57k    69.00%\n  Latency Distribution\n     50%  349.00us\n     75%  412.00us\n     90%  470.00us\n     99%    1.13ms\n  858168 requests in 10.00s, 137.49MB read\nRequests/sec:  85794.86\nTransfer/sec:     13.75MB\n"
+          },
+          "improvement": 4.237288
+        },
+        {
+          "round": 31,
+          "status": "failed_rolled_back",
+          "trial_context": "595699405fade572fdb7bd5291ade3bf5956505ec8b2a3a56a00446d8c4bb4ed",
+          "failed_phase": "verify",
+          "verify_success": false,
+          "rollback_success": true,
+          "canary_rejected": true
+        }
+      ],
+      "stability": {
+        "stable": false,
+        "window": 3,
+        "tolerance_percent": 10.0,
+        "reason": "unmeasured_or_failed_round"
+      },
+      "converged": false,
+      "stop_reason": "max_rounds",
+      "phase_log": [
+        {
+          "iteration": 101,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:21:18.693038"
+        },
+        {
+          "iteration": 102,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:21:18.693172"
+        },
+        {
+          "iteration": 103,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:21:18.693467"
+        },
+        {
+          "iteration": 104,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:21:28.700754"
+        },
+        {
+          "iteration": 105,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:21:28.830880"
+        },
+        {
+          "iteration": 106,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:21:28.893246"
+        },
+        {
+          "iteration": 107,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:21:28.999957"
+        },
+        {
+          "iteration": 108,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:21:29.017757"
+        },
+        {
+          "iteration": 109,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 1 cgroup policies",
+          "timestamp": "2026-10-05T05:21:29.018584"
+        },
+        {
+          "iteration": 110,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:21:29.041578"
+        },
+        {
+          "iteration": 111,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:21:39.145126"
+        },
+        {
+          "iteration": 112,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:21:39.317748"
+        },
+        {
+          "iteration": 113,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:21:39.464908"
+        },
+        {
+          "iteration": 120,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 2 settings restored, 2 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+          "timestamp": "2026-10-05T05:21:39.524375"
+        },
+        {
+          "iteration": 201,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:21:39.728618"
+        },
+        {
+          "iteration": 202,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:21:39.728743"
+        },
+        {
+          "iteration": 203,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:21:49.832954"
+        },
+        {
+          "iteration": 301,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:21:50.051534"
+        },
+        {
+          "iteration": 302,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:21:50.051660"
+        },
+        {
+          "iteration": 303,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:22:00.156143"
+        },
+        {
+          "iteration": 401,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:22:00.375375"
+        },
+        {
+          "iteration": 402,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:22:00.375501"
+        },
+        {
+          "iteration": 403,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:22:10.482079"
+        },
+        {
+          "iteration": 501,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:22:10.687311"
+        },
+        {
+          "iteration": 502,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:22:10.687552"
+        },
+        {
+          "iteration": 503,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:22:10.688017"
+        },
+        {
+          "iteration": 504,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:22:20.792935"
+        },
+        {
+          "iteration": 505,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:22:20.922282"
+        },
+        {
+          "iteration": 506,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:22:20.983118"
+        },
+        {
+          "iteration": 507,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:22:21.089371"
+        },
+        {
+          "iteration": 508,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:22:21.107844"
+        },
+        {
+          "iteration": 509,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 1 cgroup policies",
+          "timestamp": "2026-10-05T05:22:21.108592"
+        },
+        {
+          "iteration": 510,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:22:21.131192"
+        },
+        {
+          "iteration": 511,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:22:31.235055"
+        },
+        {
+          "iteration": 512,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:22:31.408061"
+        },
+        {
+          "iteration": 513,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:22:31.559601"
+        },
+        {
+          "iteration": 520,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 2 settings restored, 2 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+          "timestamp": "2026-10-05T05:22:31.613652"
+        },
+        {
+          "iteration": 601,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:22:31.818474"
+        },
+        {
+          "iteration": 602,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:22:31.818593"
+        },
+        {
+          "iteration": 603,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:22:41.825089"
+        },
+        {
+          "iteration": 701,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:22:42.043610"
+        },
+        {
+          "iteration": 702,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:22:42.043731"
+        },
+        {
+          "iteration": 703,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:22:52.149041"
+        },
+        {
+          "iteration": 801,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:22:52.368573"
+        },
+        {
+          "iteration": 802,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:22:52.368699"
+        },
+        {
+          "iteration": 803,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:23:02.474904"
+        },
+        {
+          "iteration": 901,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:23:02.682797"
+        },
+        {
+          "iteration": 902,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:23:02.682917"
+        },
+        {
+          "iteration": 903,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:23:02.683283"
+        },
+        {
+          "iteration": 904,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:23:12.690922"
+        },
+        {
+          "iteration": 905,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:23:12.821439"
+        },
+        {
+          "iteration": 906,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:23:12.886445"
+        },
+        {
+          "iteration": 907,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:23:12.993139"
+        },
+        {
+          "iteration": 908,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:23:13.010860"
+        },
+        {
+          "iteration": 909,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 1 cgroup policies",
+          "timestamp": "2026-10-05T05:23:13.011566"
+        },
+        {
+          "iteration": 910,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:23:13.034710"
+        },
+        {
+          "iteration": 911,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:23:23.142911"
+        },
+        {
+          "iteration": 912,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:23:23.320905"
+        },
+        {
+          "iteration": 913,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:23:23.464823"
+        },
+        {
+          "iteration": 920,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 2 settings restored, 2 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+          "timestamp": "2026-10-05T05:23:23.524442"
+        },
+        {
+          "iteration": 1001,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:23:23.729200"
+        },
+        {
+          "iteration": 1002,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:23:23.729324"
+        },
+        {
+          "iteration": 1003,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:23:33.834982"
+        },
+        {
+          "iteration": 1101,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:23:34.280881"
+        },
+        {
+          "iteration": 1102,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:23:34.281105"
+        },
+        {
+          "iteration": 1103,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:23:34.281658"
+        },
+        {
+          "iteration": 1104,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:23:44.387244"
+        },
+        {
+          "iteration": 1105,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "loaded 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:23:44.536853"
+        },
+        {
+          "iteration": 1106,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "attached 4 eBPF programs (0 failed)",
+          "timestamp": "2026-10-05T05:23:44.602402"
+        },
+        {
+          "iteration": 1107,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:23:44.709379"
+        },
+        {
+          "iteration": 1108,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:23:44.728637"
+        },
+        {
+          "iteration": 1109,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 5 cgroup policies",
+          "timestamp": "2026-10-05T05:23:44.729872"
+        },
+        {
+          "iteration": 1110,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:23:44.854571"
+        },
+        {
+          "iteration": 1111,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:23:54.859411"
+        },
+        {
+          "iteration": 1112,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:23:55.045850"
+        },
+        {
+          "iteration": 1113,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:23:55.195773"
+        },
+        {
+          "iteration": 1201,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:23:55.404083"
+        },
+        {
+          "iteration": 1202,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:23:55.404496"
+        },
+        {
+          "iteration": 1203,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:23:55.404910"
+        },
+        {
+          "iteration": 1204,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:24:05.509109"
+        },
+        {
+          "iteration": 1205,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:24:05.509200"
+        },
+        {
+          "iteration": 1206,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:24:05.509216"
+        },
+        {
+          "iteration": 1207,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:24:05.510431"
+        },
+        {
+          "iteration": 1208,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:24:05.519630"
+        },
+        {
+          "iteration": 1209,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:24:05.520315"
+        },
+        {
+          "iteration": 1210,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:24:05.638160"
+        },
+        {
+          "iteration": 1211,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:24:15.742245"
+        },
+        {
+          "iteration": 1212,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:24:15.920509"
+        },
+        {
+          "iteration": 1213,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:24:16.067096"
+        },
+        {
+          "iteration": 1220,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 0 settings restored, 0 groups removed, 1 skipped; restored live previously accepted eBPF policy",
+          "timestamp": "2026-10-05T05:24:16.176824"
+        },
+        {
+          "iteration": 1301,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:24:16.386645"
+        },
+        {
+          "iteration": 1302,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:24:16.386867"
+        },
+        {
+          "iteration": 1303,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:24:26.394035"
+        },
+        {
+          "iteration": 1401,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:24:26.601259"
+        },
+        {
+          "iteration": 1402,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:24:26.601493"
+        },
+        {
+          "iteration": 1403,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:24:36.607967"
+        },
+        {
+          "iteration": 1501,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:24:36.821010"
+        },
+        {
+          "iteration": 1502,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:24:36.821437"
+        },
+        {
+          "iteration": 1503,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:24:46.836992"
+        },
+        {
+          "iteration": 1601,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:24:47.043018"
+        },
+        {
+          "iteration": 1602,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:24:47.043248"
+        },
+        {
+          "iteration": 1603,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:24:47.043663"
+        },
+        {
+          "iteration": 1604,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:24:57.148326"
+        },
+        {
+          "iteration": 1605,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:24:57.148420"
+        },
+        {
+          "iteration": 1606,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:24:57.148435"
+        },
+        {
+          "iteration": 1607,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:24:57.149785"
+        },
+        {
+          "iteration": 1608,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:24:57.158895"
+        },
+        {
+          "iteration": 1609,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:24:57.159536"
+        },
+        {
+          "iteration": 1610,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:24:57.267661"
+        },
+        {
+          "iteration": 1611,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:25:07.276953"
+        },
+        {
+          "iteration": 1612,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:25:07.459921"
+        },
+        {
+          "iteration": 1613,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:25:07.606862"
+        },
+        {
+          "iteration": 1701,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:25:07.820890"
+        },
+        {
+          "iteration": 1702,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:25:07.821109"
+        },
+        {
+          "iteration": 1703,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:25:07.821608"
+        },
+        {
+          "iteration": 1704,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:25:17.925101"
+        },
+        {
+          "iteration": 1705,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:25:17.925191"
+        },
+        {
+          "iteration": 1706,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:25:17.925207"
+        },
+        {
+          "iteration": 1707,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:17.926495"
+        },
+        {
+          "iteration": 1708,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:25:17.935654"
+        },
+        {
+          "iteration": 1709,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:25:17.936331"
+        },
+        {
+          "iteration": 1710,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:18.045553"
+        },
+        {
+          "iteration": 1711,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:25:28.053193"
+        },
+        {
+          "iteration": 1712,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:25:28.232633"
+        },
+        {
+          "iteration": 1713,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:25:28.388132"
+        },
+        {
+          "iteration": 1801,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:25:28.597885"
+        },
+        {
+          "iteration": 1802,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:25:28.598104"
+        },
+        {
+          "iteration": 1803,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:25:28.598592"
+        },
+        {
+          "iteration": 1804,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:25:38.607400"
+        },
+        {
+          "iteration": 1805,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:25:38.607497"
+        },
+        {
+          "iteration": 1806,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:25:38.607515"
+        },
+        {
+          "iteration": 1807,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:38.608811"
+        },
+        {
+          "iteration": 1808,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:25:38.617491"
+        },
+        {
+          "iteration": 1809,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:25:38.618749"
+        },
+        {
+          "iteration": 1810,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:38.731345"
+        },
+        {
+          "iteration": 1811,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:25:48.736273"
+        },
+        {
+          "iteration": 1812,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:25:48.917487"
+        },
+        {
+          "iteration": 1813,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:25:49.061200"
+        },
+        {
+          "iteration": 1901,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:25:49.270864"
+        },
+        {
+          "iteration": 1902,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:25:49.271180"
+        },
+        {
+          "iteration": 1903,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:25:49.271599"
+        },
+        {
+          "iteration": 1904,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:25:59.375070"
+        },
+        {
+          "iteration": 1905,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:25:59.375244"
+        },
+        {
+          "iteration": 1906,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:25:59.375264"
+        },
+        {
+          "iteration": 1907,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:59.376593"
+        },
+        {
+          "iteration": 1908,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:25:59.385587"
+        },
+        {
+          "iteration": 1909,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:25:59.386253"
+        },
+        {
+          "iteration": 1910,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:25:59.494797"
+        },
+        {
+          "iteration": 1911,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:26:09.501014"
+        },
+        {
+          "iteration": 1912,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:26:09.681338"
+        },
+        {
+          "iteration": 1913,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:26:09.826690"
+        },
+        {
+          "iteration": 2001,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:26:10.039867"
+        },
+        {
+          "iteration": 2002,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:26:10.040087"
+        },
+        {
+          "iteration": 2003,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 9 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:26:10.040624"
+        },
+        {
+          "iteration": 2004,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:26:20.144197"
+        },
+        {
+          "iteration": 2005,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:26:20.144286"
+        },
+        {
+          "iteration": 2006,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:26:20.144301"
+        },
+        {
+          "iteration": 2007,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 5 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:26:20.145666"
+        },
+        {
+          "iteration": 2008,
+          "phase": "act",
+          "success": true,
+          "message": "executed 9 actions successfully",
+          "timestamp": "2026-10-05T05:26:20.154448"
+        },
+        {
+          "iteration": 2009,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:26:20.155051"
+        },
+        {
+          "iteration": 2010,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 6 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:26:20.269563"
+        },
+        {
+          "iteration": 2011,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:26:30.373083"
+        },
+        {
+          "iteration": 2012,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:26:30.550867"
+        },
+        {
+          "iteration": 2013,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:26:30.697230"
+        },
+        {
+          "iteration": 2101,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:26:30.931539"
+        },
+        {
+          "iteration": 2102,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:26:30.931661"
+        },
+        {
+          "iteration": 2103,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:26:30.931925"
+        },
+        {
+          "iteration": 2104,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:26:40.939916"
+        },
+        {
+          "iteration": 2105,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:26:40.940003"
+        },
+        {
+          "iteration": 2106,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:26:40.940020"
+        },
+        {
+          "iteration": 2107,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:26:40.941206"
+        },
+        {
+          "iteration": 2108,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:26:40.946814"
+        },
+        {
+          "iteration": 2109,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:26:40.947158"
+        },
+        {
+          "iteration": 2110,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:26:40.973618"
+        },
+        {
+          "iteration": 2111,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:26:50.980947"
+        },
+        {
+          "iteration": 2112,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:26:51.153811"
+        },
+        {
+          "iteration": 2113,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:26:51.296013"
+        },
+        {
+          "iteration": 2120,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 0 settings restored, 0 groups removed, 1 skipped; restored live previously accepted eBPF policy",
+          "timestamp": "2026-10-05T05:26:51.505925"
+        },
+        {
+          "iteration": 2201,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:26:51.718430"
+        },
+        {
+          "iteration": 2202,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:26:51.718558"
+        },
+        {
+          "iteration": 2203,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:27:01.724993"
+        },
+        {
+          "iteration": 2301,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:27:01.938430"
+        },
+        {
+          "iteration": 2302,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:27:01.938549"
+        },
+        {
+          "iteration": 2303,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:27:11.944146"
+        },
+        {
+          "iteration": 2401,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:27:12.156581"
+        },
+        {
+          "iteration": 2402,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:27:12.156703"
+        },
+        {
+          "iteration": 2403,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:27:22.162873"
+        },
+        {
+          "iteration": 2501,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:27:22.374553"
+        },
+        {
+          "iteration": 2502,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:27:22.374675"
+        },
+        {
+          "iteration": 2503,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:27:22.374943"
+        },
+        {
+          "iteration": 2504,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:27:32.479181"
+        },
+        {
+          "iteration": 2505,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:27:32.479269"
+        },
+        {
+          "iteration": 2506,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:27:32.479290"
+        },
+        {
+          "iteration": 2507,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:27:32.480463"
+        },
+        {
+          "iteration": 2508,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:27:32.486369"
+        },
+        {
+          "iteration": 2509,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:27:32.486660"
+        },
+        {
+          "iteration": 2510,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:27:32.511892"
+        },
+        {
+          "iteration": 2511,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:27:42.518915"
+        },
+        {
+          "iteration": 2512,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:27:42.694915"
+        },
+        {
+          "iteration": 2513,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:27:42.842944"
+        },
+        {
+          "iteration": 2601,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:27:43.048561"
+        },
+        {
+          "iteration": 2602,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:27:43.048681"
+        },
+        {
+          "iteration": 2603,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:27:43.048939"
+        },
+        {
+          "iteration": 2604,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:27:53.056939"
+        },
+        {
+          "iteration": 2605,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:27:53.057026"
+        },
+        {
+          "iteration": 2606,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:27:53.057042"
+        },
+        {
+          "iteration": 2607,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:27:53.058287"
+        },
+        {
+          "iteration": 2608,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:27:53.063776"
+        },
+        {
+          "iteration": 2609,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:27:53.064167"
+        },
+        {
+          "iteration": 2610,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:27:53.089419"
+        },
+        {
+          "iteration": 2611,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:28:03.098079"
+        },
+        {
+          "iteration": 2612,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:28:03.275755"
+        },
+        {
+          "iteration": 2613,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:28:03.422735"
+        },
+        {
+          "iteration": 2620,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 0 settings restored, 0 groups removed, 1 skipped; restored live previously accepted eBPF policy",
+          "timestamp": "2026-10-05T05:28:03.446828"
+        },
+        {
+          "iteration": 2701,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:28:03.654747"
+        },
+        {
+          "iteration": 2702,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:28:03.654867"
+        },
+        {
+          "iteration": 2703,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:28:13.759080"
+        },
+        {
+          "iteration": 2801,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:28:13.969161"
+        },
+        {
+          "iteration": 2802,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:28:13.969306"
+        },
+        {
+          "iteration": 2803,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:28:23.975914"
+        },
+        {
+          "iteration": 2901,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:28:24.186606"
+        },
+        {
+          "iteration": 2902,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:28:24.186729"
+        },
+        {
+          "iteration": 2903,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:28:34.193012"
+        },
+        {
+          "iteration": 3001,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:28:34.403554"
+        },
+        {
+          "iteration": 3002,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:28:34.403701"
+        },
+        {
+          "iteration": 3003,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:28:34.404056"
+        },
+        {
+          "iteration": 3004,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:28:44.412922"
+        },
+        {
+          "iteration": 3005,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:28:44.413009"
+        },
+        {
+          "iteration": 3006,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:28:44.413026"
+        },
+        {
+          "iteration": 3007,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:28:44.414311"
+        },
+        {
+          "iteration": 3008,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:28:44.420064"
+        },
+        {
+          "iteration": 3009,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 0 cgroup policies",
+          "timestamp": "2026-10-05T05:28:44.420480"
+        },
+        {
+          "iteration": 3010,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:28:44.448021"
+        },
+        {
+          "iteration": 3011,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:28:54.453920"
+        },
+        {
+          "iteration": 3012,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:28:54.629049"
+        },
+        {
+          "iteration": 3013,
+          "phase": "verify",
+          "success": true,
+          "message": "verification completed: 100.0% success rate",
+          "timestamp": "2026-10-05T05:28:54.776748"
+        },
+        {
+          "iteration": 3101,
+          "phase": "probe",
+          "success": true,
+          "message": "probe completed",
+          "timestamp": "2026-10-05T05:28:55.085836"
+        },
+        {
+          "iteration": 3102,
+          "phase": "analyze",
+          "success": true,
+          "message": "classification completed",
+          "timestamp": "2026-10-05T05:28:55.085960"
+        },
+        {
+          "iteration": 3103,
+          "phase": "policy",
+          "success": true,
+          "message": "planned 1 actions for mode=latency_first",
+          "timestamp": "2026-10-05T05:28:55.086234"
+        },
+        {
+          "iteration": 3104,
+          "phase": "canary_baseline",
+          "success": true,
+          "message": "captured baseline SLO canary",
+          "timestamp": "2026-10-05T05:29:05.190132"
+        },
+        {
+          "iteration": 3105,
+          "phase": "ebpf_load",
+          "success": true,
+          "message": "reusing active eBPF programs",
+          "timestamp": "2026-10-05T05:29:05.190220"
+        },
+        {
+          "iteration": 3106,
+          "phase": "ebpf_attach",
+          "success": true,
+          "message": "eBPF programs not loaded; skipping attach",
+          "timestamp": "2026-10-05T05:29:05.190327"
+        },
+        {
+          "iteration": 3107,
+          "phase": "scx",
+          "success": true,
+          "message": "applied 1 scx policies (0 failed)",
+          "timestamp": "2026-10-05T05:29:05.191551"
+        },
+        {
+          "iteration": 3108,
+          "phase": "act",
+          "success": true,
+          "message": "executed 1 actions successfully",
+          "timestamp": "2026-10-05T05:29:05.206827"
+        },
+        {
+          "iteration": 3109,
+          "phase": "scx_cgroups",
+          "success": true,
+          "message": "mirrored 1 cgroup policies",
+          "timestamp": "2026-10-05T05:29:05.207729"
+        },
+        {
+          "iteration": 3110,
+          "phase": "ebpf_policy",
+          "success": true,
+          "message": "applied 2 eBPF policies (0 failed)",
+          "timestamp": "2026-10-05T05:29:05.233027"
+        },
+        {
+          "iteration": 3111,
+          "phase": "canary_candidate",
+          "success": true,
+          "message": "captured candidate SLO canary",
+          "timestamp": "2026-10-05T05:29:15.240170"
+        },
+        {
+          "iteration": 3112,
+          "phase": "ebpf_stats",
+          "success": true,
+          "message": "collected eBPF statistics",
+          "timestamp": "2026-10-05T05:29:15.416854"
+        },
+        {
+          "iteration": 3113,
+          "phase": "verify",
+          "success": false,
+          "message": "canary rejected; rollback required",
+          "timestamp": "2026-10-05T05:29:15.564730"
+        },
+        {
+          "iteration": 3120,
+          "phase": "rollback",
+          "success": true,
+          "message": "rollback completed: 2 settings restored, 1 groups removed, 1 skipped; restored live previously accepted eBPF policy",
+          "timestamp": "2026-10-05T05:29:15.672131"
+        }
+      ]
+    }
+  }
+}

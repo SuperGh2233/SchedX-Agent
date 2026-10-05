@@ -1,0 +1,169 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 1800,
+  "cases": {
+    "cpu_controls_default": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 0.201373099,
+      "quota_observed": true,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        0.24477262100000002,
+        2.437862875
+      ],
+      "weight_runtime_ratio": 9.959704092068367,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "disabled"
+    },
+    "cpu_controls_native": {
+      "quota": "10000 100000",
+      "quota_wall_seconds": 2,
+      "quota_cpu_seconds": 1.7921934449999999,
+      "quota_observed": false,
+      "weights": [
+        100,
+        1000
+      ],
+      "cpu_seconds": [
+        1.3542431970000002,
+        1.3512229690000002
+      ],
+      "weight_runtime_ratio": 0.9977698038235003,
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "sched_ext_state": "enabled"
+    },
+    "recovery": {
+      "status": "passed",
+      "journal_retry": true,
+      "original_cgroup_restored": true,
+      "nice_restored": true
+    },
+    "tools": {
+      "status": "passed",
+      "concurrent_tools": 4,
+      "registration_before_exec": true,
+      "timeout_tree_cleanup": {
+        "policy_removed": true,
+        "scheduler_stopped": true,
+        "cgroup_removed": true,
+        "errors": []
+      },
+      "bounded_output": true
+    },
+    "network": {
+      "status": "passed",
+      "same_cgroup_rate_switches": [
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 103000
+        },
+        {
+          "rate_bytes_per_second": 180000,
+          "delivered_bytes": 540000
+        },
+        {
+          "rate_bytes_per_second": 30000,
+          "delivered_bytes": 91000
+        }
+      ],
+      "latency_overlimit_is_allowed": true,
+      "stats": {
+        "total_packets": 3913,
+        "total_bytes": 4022564,
+        "dropped_packets": 2789,
+        "dropped_bytes": 2867092,
+        "overlimit_allowed_packets": 390
+      }
+    },
+    "fairness": {
+      "status": "passed",
+      "failures": [],
+      "duration": 1800,
+      "single_cpu_contenders": 6,
+      "samples": 360,
+      "max_wait_ms": {
+        "0": 1138.923688,
+        "1": 87.305903,
+        "2": 365.858898,
+        "3": 788.136275
+      },
+      "wait_budgets_ms": {
+        "0": 3000,
+        "1": 2000,
+        "2": 2000,
+        "3": 2000
+      },
+      "load_pattern": "fixed saturation",
+      "periodic_recoveries": 0,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 1800.0706742309994,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1243927500036,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1274639890034,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 1800.1223634319904,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 1800.1739666810026,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 1800.1267630509974,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}

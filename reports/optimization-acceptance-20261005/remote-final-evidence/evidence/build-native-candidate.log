@@ -1,0 +1,64 @@
+make: Entering directory '/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate'
+make: Warning: File 'scx_agent.c' has modification time 6228 s in the future
+mkdir -p /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include
+mkdir -p /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf
+mkdir -p /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool btf dump file /sys/kernel/btf/vmlinux format c > /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include/vmlinux.h
+mkdir -p /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin
+make  -C /tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/lib/bpf OUTPUT=/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/	\
+	    EXTRA_CFLAGS='-g -O0 -fPIC'					\
+	    DESTDIR=/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build prefix= all install_headers
+make[1]: Entering directory '/root/kernel-build/kernel/tools/lib/bpf'
+  HOSTCC  /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/fixdep.o
+  HOSTLD  /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/fixdep-in.o
+  LINK    /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/fixdep
+/root/kernel-build/kernel/scripts/bpf_doc.py --header \
+	--file /root/kernel-build/kernel/tools/include/uapi/linux/bpf.h > /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/bpf_helper_defs.h
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 bpf.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 libbpf.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 btf.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 libbpf_common.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 libbpf_legacy.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 bpf_helpers.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 bpf_tracing.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 bpf_endian.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 bpf_core_read.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 skel_internal.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 libbpf_version.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 usdt.bpf.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+\
+		if [ ! -d ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf' ]; then install -d -m 755 ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'; fi; install -m 644 /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/bpf_helper_defs.h ''/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build'/include/bpf'
+Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'
+Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h' differs from latest version at 'include/uapi/linux/if_xdp.h'
+  GEN     /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/libbpf.pc
+  LINK    /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/libbpf.a
+  LINK    /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/libbpf.so.1.3.0
+make[1]: Leaving directory '/root/kernel-build/kernel/tools/lib/bpf'
+clang -g -D__TARGET_ARCH_x86 -mlittle-endian -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate/include -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate/include/bpf-compat -I/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/include/uapi -I../../include -idirafter /usr/bin/../lib64/clang/17/include -idirafter /usr/local/include -idirafter /usr/include  -Wall -Wno-compare-distinct-pointer-types -O2 -mcpu=v3 -target bpf -c scx_agent.bpf.c -o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.o
+In file included from scx_agent.bpf.c:10:
+/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate/include/scx/common.bpf.h:87:28: warning: declaration of 'struct scx_event_stats' will not be visible outside of this function [-Wvisibility]
+   87 | void scx_bpf_events(struct scx_event_stats *events, size_t events__sz) __ksym __weak;
+      |                            ^
+1 warning generated.
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool gen object /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked1.o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.o
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool gen object /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked2.o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked1.o
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool gen object /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked3.o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked2.o
+diff /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked2.o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked3.o
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool gen skeleton /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked3.o name scx_agent > /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include/scx_agent.bpf.skel.h
+/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool gen subskeleton /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.bpf.linked3.o name scx_agent > /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include/scx_agent.bpf.subskel.h
+gcc -g -O2 -rdynamic -pthread -Wall -Werror -DHAVE_GENHDR -I/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/include -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/include/generated -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/lib -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/include -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/include/uapi -I/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate/include -c scx_agent.c -o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.o
+gcc -o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/sched_ext/scx_agent.o /tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/obj/libbpf/libbpf.a -lelf -lz -lpthread
+make: warning:  Clock skew detected.  Your build may be incomplete.
+make: Leaving directory '/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate'

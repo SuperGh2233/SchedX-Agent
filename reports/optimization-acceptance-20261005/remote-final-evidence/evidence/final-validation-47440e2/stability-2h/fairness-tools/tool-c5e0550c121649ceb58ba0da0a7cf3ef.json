@@ -1,0 +1,89 @@
+{
+  "run_id": "tool-c5e0550c121649ceb58ba0da0a7cf3ef",
+  "agent_id": "recovery-monitor",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time; time.sleep(10)"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "max",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/recovery-monitor/tool-c5e0550c121649ceb58ba0da0a7cf3ef",
+  "cgroup_id": 56880,
+  "pid": 56047,
+  "native_scx": true,
+  "scx_mode": "daemon",
+  "scx_policy_scope": "cgroup",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "schedx_policy_map",
+    "cpu_max": "not_enforced"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 124,
+  "timed_out": true,
+  "cpu_contract_breached": false,
+  "duration_seconds": 0.3067132730066078,
+  "metrics": {
+    "memory_current_bytes": 188416,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 6251,
+      "user_usec": 3567,
+      "system_usec": 2684,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {
+    "enqueues": 2,
+    "runs": 2,
+    "runtime_ns": 6968244,
+    "wait_ns": 57655
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "",
+  "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-2h/fairness-tools/tool-c5e0550c121649ceb58ba0da0a7cf3ef.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/stability-2h/fairness-tools/tool-c5e0550c121649ceb58ba0da0a7cf3ef.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [
+    "tool failed; use collected pressure metrics when planning the retry",
+    "tool exceeded its time limit; process tree stopped"
+  ],
+  "next_resource_hint": "intent:interactive",
+  "retry_recommended": true
+}

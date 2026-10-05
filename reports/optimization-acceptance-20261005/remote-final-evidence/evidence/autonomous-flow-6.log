@@ -1,0 +1,556 @@
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (initial_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent: measured objectives stable; continuing observation.
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent: objective or policy changed; reassessing stability.
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 80%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 76%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 73%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 70%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 69%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 67%
+Agent: measured objectives stable; continuing observation.
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 67%
+Agent: objective or policy changed; reassessing stability.
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 67%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 67%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 67%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 73%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 77%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 80%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 83%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 84%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+{
+  "status": "failed",
+  "version_identity": {
+    "commit": "7162f92fa7c3c38eb5eaa6b7c974eda5176cfccb",
+    "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-7162f92",
+    "source_sha256": "01e7c4ae6d6f82974b19b131107b8eaf7260b24d24b7c939d1b12d5222876411",
+    "source_verified_against_git": true,
+    "source_file_count": 78,
+    "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "7162f92fa7c3c38eb5eaa6b7c974eda5176cfccb",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-7162f92",
+      "source_sha256": "01e7c4ae6d6f82974b19b131107b8eaf7260b24d24b7c939d1b12d5222876411",
+      "source_verified_against_git": true,
+      "source_file_count": 78,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log",
+      "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "native_source_byte_identity_verified": true,
+      "ebpf_objects_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "ebpf_source_byte_identity_verified": true
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "scope": "owned services and PIDs",
+  "stability_tolerance_percent": 10.0,
+  "work_cpus": [
+    0,
+    1,
+    2
+  ],
+  "housekeeping_cpu": 3,
+  "measurement_control": "Agent and wrk on reserved CPU; private service and interference share work CPUs",
+  "rejection_observation_rounds": 3,
+  "fault_control": "restart only the owned service before the candidate fault, creating a fresh process identity",
+  "stop_reason": "max_rounds",
+  "assessment": {
+    "status": "failed",
+    "failures": [
+      "recovery_plateau_not_observed"
+    ],
+    "completed_rounds": 31,
+    "fault_response_errors": 946821,
+    "observed_without_mutation": 16,
+    "claim_scope": "real Agent trials, measured no-action observations after rejection, changing load and controlled candidate HTTP fault recovery; no performance gain is implied"
+  },
+  "rollback": {
+    "ok": true,
+    "message": "rollback completed: 9 settings restored, 6 groups removed, 5 skipped; eBPF cleanup completed: 4/4 removed",
+    "data": {
+      "restored": 9,
+      "groups_removed": 6,
+      "skipped": 5,
+      "entries": [
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47902",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47902",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47903",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47903",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47905",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47905",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47904",
+          "file": "cpu.max",
+          "previous": "max 100000",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47904",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/noise/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47571",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+          "pid_start": null,
+          "transaction": "6b524e92c66e4183a833d04ac9981420"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service/cgroup.procs",
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47905",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47904",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47903",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47902",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-47571",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx",
+          "status": "removed"
+        }
+      ],
+      "scx_entries": [
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 52648,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 52629,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 52610,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 52591,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 52572,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47902,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47903,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47905,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47904,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 47571,
+          "status": "skipped",
+          "reason": "target_process_exited_or_reused"
+        }
+      ],
+      "process_entries": [],
+      "ebpf_cleanup": {
+        "security-policy": true,
+        "resource-control": true,
+        "network-policy": true,
+        "scheduler-trace": true
+      }
+    }
+  },
+  "task_restoration": {
+    "47570": "exited",
+    "47571": "exited",
+    "47902": "exited",
+    "47903": "exited",
+    "47904": "exited",
+    "47905": "exited",
+    "48545": true,
+    "48546": true
+  },
+  "workload_cleanup": {
+    "status": "passed",
+    "errors": [],
+    "cgroup_removed": true,
+    "leaders_reaped": true
+  },
+  "final_scheduler_state": "disabled",
+  "remaining_journals": [],
+  "pinned_hooks_remaining": false
+}

@@ -1,0 +1,275 @@
+{
+  "prog": [
+    {
+      "id": 39,
+      "type": "cgroup_device",
+      "name": "sd_devices",
+      "tag": "c2c0d3eb960f5beb",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 560,
+      "jited": true,
+      "bytes_jited": 355,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "type": "cgroup_device",
+      "name": "sd_devices",
+      "tag": "73b2638ce8fb8216",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 184,
+      "jited": true,
+      "bytes_jited": 105,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "type": "cgroup_skb",
+      "name": "sd_fw_egress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "type": "cgroup_skb",
+      "name": "sd_fw_ingress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "type": "cgroup_device",
+      "name": "sd_devices",
+      "tag": "3650d9673c54ce30",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 504,
+      "jited": true,
+      "bytes_jited": 313,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "type": "cgroup_skb",
+      "name": "sd_fw_egress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "type": "cgroup_skb",
+      "name": "sd_fw_ingress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "type": "cgroup_skb",
+      "name": "sd_fw_egress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "type": "cgroup_skb",
+      "name": "sd_fw_ingress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "type": "cgroup_device",
+      "name": "sd_devices",
+      "tag": "8470ed2b25b99116",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 744,
+      "jited": true,
+      "bytes_jited": 451,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "type": "cgroup_skb",
+      "name": "sd_fw_egress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "type": "cgroup_skb",
+      "name": "sd_fw_ingress",
+      "tag": "6deef7357e7b4530",
+      "gpl_compatible": true,
+      "loaded_at": 1791033318,
+      "uid": 0,
+      "bytes_xlated": 64,
+      "jited": true,
+      "bytes_jited": 58,
+      "bytes_memlock": 4096,
+      "pids": [
+        {
+          "pid": 1,
+          "comm": "systemd"
+        }
+      ]
+    }
+  ],
+  "link": [],
+  "map": [
+    {
+      "id": 6924,
+      "type": "array",
+      "name": "libbpf_global",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 32,
+      "max_entries": 1,
+      "bytes_memlock": 416,
+      "frozen": 0
+    },
+    {
+      "id": 6925,
+      "type": "array",
+      "name": "pid_iter.rodata",
+      "flags": 1152,
+      "bytes_key": 4,
+      "bytes_value": 4,
+      "max_entries": 1,
+      "bytes_memlock": 8192,
+      "frozen": 1,
+      "btf_id": 9727,
+      "pids": [
+        {
+          "pid": 59625,
+          "comm": "bpftool"
+        }
+      ]
+    },
+    {
+      "id": 6926,
+      "type": "array",
+      "name": "libbpf_det_bind",
+      "flags": 0,
+      "bytes_key": 4,
+      "bytes_value": 32,
+      "max_entries": 1,
+      "bytes_memlock": 416,
+      "frozen": 0
+    }
+  ]
+}

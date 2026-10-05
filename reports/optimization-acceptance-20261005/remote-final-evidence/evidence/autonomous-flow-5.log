@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/tmp/schedx-acceptance-20261005-79905fb/candidate-4e95368/scripts/verify_autonomous_flow.py", line 334, in <module>
+    main()
+  File "/tmp/schedx-acceptance-20261005-79905fb/candidate-4e95368/scripts/verify_autonomous_flow.py", line 285, in main
+    summary["rejection_observation_rounds"] = loop.rejection_observation_rounds if loop else 3
+                                                                                   ^^^^
+UnboundLocalError: cannot access local variable 'loop' where it is not associated with a value

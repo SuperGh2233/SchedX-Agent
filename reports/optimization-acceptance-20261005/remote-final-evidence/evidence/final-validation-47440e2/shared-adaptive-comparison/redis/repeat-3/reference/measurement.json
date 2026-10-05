@@ -1,0 +1,66 @@
+{
+  "case": "redis",
+  "version": "reference",
+  "repeat": 3,
+  "failures": [],
+  "profile": "shared-adaptive",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        10000
+      ],
+      "redis": [
+        1,
+        10000
+      ],
+      "noise": [
+        3,
+        100
+      ],
+      "batch": [
+        2,
+        1500
+      ]
+    },
+    "fairness": null,
+    "description": "common static policies; each binary retains compiled fairness defaults"
+  },
+  "command": [
+    "redis-benchmark",
+    "-h",
+    "127.0.0.1",
+    "-p",
+    "53001",
+    "-n",
+    "1000000",
+    "-c",
+    "64",
+    "--threads",
+    "2",
+    "--precision",
+    "3",
+    "-t",
+    "get"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 26.091309940995416,
+  "background_cpu_ticks": 6278,
+  "background_cpu_seconds_per_wall_second": 2.4061651232527144,
+  "metrics": {
+    "requests_per_sec": 38336.21,
+    "qps": 38336.21,
+    "requests": 1000000.0,
+    "elapsed_seconds": 26.08,
+    "latency_avg_ms": 1.523,
+    "latency_min_ms": 0.048,
+    "p50_ms": 1.119,
+    "p95_ms": 3.647,
+    "p99_ms": 4.223,
+    "latency_max_ms": 7.959,
+    "p50_latency_ms": 1.119,
+    "p95_latency_ms": 3.647,
+    "p99_latency_ms": 4.223
+  },
+  "final_scheduler_state": "disabled"
+}

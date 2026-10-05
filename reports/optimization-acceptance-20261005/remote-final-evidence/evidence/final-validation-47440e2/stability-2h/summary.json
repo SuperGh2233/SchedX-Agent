@@ -1,0 +1,92 @@
+{
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "cpus": 4,
+  "duration": 7200,
+  "cases": {
+    "fairness": {
+      "status": "passed",
+      "failures": [],
+      "duration": 7200,
+      "single_cpu_contenders": 6,
+      "samples": 1428,
+      "max_wait_ms": {
+        "0": 741.974852,
+        "1": 80.848426,
+        "2": 218.159642,
+        "3": 435.233177
+      },
+      "wait_budgets_ms": {
+        "0": 3000,
+        "1": 2000,
+        "2": 2000,
+        "3": 2000
+      },
+      "load_pattern": "rotating busy/sleep every 60 seconds",
+      "periodic_recoveries": 59,
+      "tool_results": [
+        {
+          "intent": "interactive",
+          "duration": 7200.081326144005,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.132504769004,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.144981548001,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "interactive",
+          "duration": 7200.153115789013,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "compile",
+          "duration": 7200.050945929979,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        },
+        {
+          "intent": "background",
+          "duration": 7200.13062929899,
+          "cleanup": {
+            "policy_removed": true,
+            "scheduler_stopped": true,
+            "cgroup_removed": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  "status": "passed",
+  "final_sched_ext_state": "disabled"
+}
