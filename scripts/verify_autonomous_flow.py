@@ -282,7 +282,7 @@ def main():
                "scope": "owned services and PIDs", "stability_tolerance_percent": 10.0,
                "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
                "measurement_control": "Agent and wrk on reserved CPU; private service and interference share work CPUs"}
-    summary["rejection_observation_rounds"] = loop.rejection_observation_rounds if loop else 3
+    summary["rejection_observation_rounds"] = context.data.get("rejection_observation_rounds", 3)
     summary["fault_control"] = "restart only the owned service before the candidate fault, creating a fresh process identity"
     loop = None
     try:
