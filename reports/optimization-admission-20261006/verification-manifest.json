@@ -1,0 +1,101 @@
+{
+  "recorded_client_utc": "2026-10-05T16:37:06.485031+00:00",
+  "implementation_commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
+  "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
+  "production_source_sha256": "661694471fc3a52a61e524a821b90784c8354e06e90f9af47e3c0a5912e549c5",
+  "production_source_matches_git": true,
+  "production_source_file_count": 79,
+  "native_and_ebpf_source_unchanged": true,
+  "default_admission": "off",
+  "implementation_status": "local_verified",
+  "local_tests": {
+    "tests": 446,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "initial_local_test_attempt": {
+    "tests": 446,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "initial_failure_cause": "macOS AF_UNIX path too long; original output retained, rerun with dedicated short basetemp",
+  "compile_checks": "passed",
+  "changed_files_static_checks": "F821/F822/F823/F401 passed",
+  "whole_repository_static_checks": "F821/F822/F823 passed; seven existing F401 unused imports in untouched files",
+  "remote_availability": {
+    "recorded_client_utc": "2026-10-05T16:33:59.861064+00:00",
+    "ports": [
+      {
+        "ip": "100.121.207.17",
+        "port": 22,
+        "state": "TimeoutError"
+      },
+      {
+        "ip": "100.105.181.122",
+        "port": 445,
+        "state": "TimeoutError"
+      },
+      {
+        "ip": "100.105.181.122",
+        "port": 3389,
+        "state": "TimeoutError"
+      }
+    ],
+    "local_tailscale": {
+      "state": "Running",
+      "online": true,
+      "health": []
+    },
+    "peers": {
+      "100.121.207.17": {
+        "online": false,
+        "last_seen": "2026-10-05T14:10:00.1Z"
+      },
+      "100.105.181.122": {
+        "online": false,
+        "last_seen": "2026-10-05T14:10:00.1Z"
+      }
+    }
+  },
+  "linux_validation": {
+    "status": "not_run_remote_unavailable",
+    "unit_tests": null,
+    "paired_performance": null,
+    "30min": null,
+    "2h": null
+  },
+  "performance_improvement_claim": null,
+  "requires_real_validation_before_default_adoption": true,
+  "source_scope": "process-shared admission and current tool runner; does not claim raw initial whole-Agent performance",
+  "automation_created": false,
+  "shutdown_requested_this_iteration": false,
+  "pushed_this_iteration": false,
+  "goal_complete": false,
+  "remaining_work": [
+    "Linux pressure and concurrent CLI validation",
+    "five valid paired performance samples",
+    "long-running changing-load and crash/descendant recovery",
+    "30-minute and two-hour validation and final cleanup"
+  ],
+  "file_sha256": {
+    "reports/optimization-admission-20261006/local-tests.log": "984ef197e18348b773636e1eab46006e5aa6e0c477324f7360a05d7d328fd4ae",
+    "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "reports/optimization-admission-20261006/report.md": "69bb9f44b3487367611e3e9d5c9bc8ea758a524661e605aba3b720b471ccd405",
+    "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
+    "reports/optimization-admission-20261006/local-tests-first.log": "ac2603e17b35081d65902c8c7c50045661ef7af4c11f0832e9d33e3ec7dd1311",
+    "reports/optimization-admission-20261006/remote-availability.json": "c7d98ae031426bdc432becdb0098aa2b0c33be208f283583078c3fbc4bb353de",
+    "reports/optimization-admission-20261006/local-tests-first.xml": "b341fa14890cf0e3c0ec111043479c29a621cff0ff9aee450f7b6af12350171c",
+    "reports/optimization-admission-20261006/cli-help.txt": "85b7cf1aae79c35aab4bf7048446481261e5784e8ee7e7abb8f3f7f4912e95fe",
+    "reports/optimization-admission-20261006/local-tests.xml": "129881cbe2b496279e5200e073b649e3838da181cf84de42e1732b7fd93d1ac7",
+    "schedx/admission.py": "cf51da6ec1a1a5224ac0b70d2d53fa1d93222a3e5749772c5a255d674a144617",
+    "schedx/tool_runner.py": "2e6b9daf87124f986760609221bc4796c951cb28e56de9f40f13dff6d781fadf",
+    "schedx/main.py": "413ec85de011a62166eeb3a49541c8c24b4184f0a8dc7e577598c8994df66e49",
+    "scripts/verify_tool_admission.py": "0535afbedaabfa5b1d191eda0dcf4d26f7ee2a96d5ff85c8c4c74667e3e620c7",
+    "tests/test_admission.py": "34d06480fb866a91d5d9f3f4cf58eca31da913e4e85686f73d17dc6e27a2f40c",
+    "tests/test_admission_evidence.py": "56402b2addf3c9157ecc49fec212dcaeb78824d2e62c47224592feca9a966f17",
+    "docs/tool-admission.md": "a1f475e795cc90336034278df2bbab3c90e5be11a49bc9fb9ede4acd6f340804",
+    "docs/optimization-plan.md": "73fd2e5b843446dd702120b7ae668a678a3e43e844b8f7cdce491019ab8b32f6"
+  }
+}

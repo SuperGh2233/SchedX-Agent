@@ -1,0 +1,22 @@
+usage: verify_tool_admission.py [-h] --output OUTPUT [--repeats REPEATS]
+                                [--jobs JOBS] [--cpu-seconds CPU_SECONDS]
+                                [--foreground-cpu-seconds FOREGROUND_CPU_SECONDS]
+                                [--timeout TIMEOUT] [--limit LIMIT]
+                                [--maximum MAXIMUM] [--reserve RESERVE]
+
+Real Linux tool bursts: off/fixed/adaptive, full submitted-to-completed times.
+This compares admission on the current ToolCallRunner, not an unmodified
+initial Agent or native scheduler algorithms. Raw rejected samples are always
+retained.
+
+options:
+  -h, --help            show this help message and exit
+  --output OUTPUT
+  --repeats REPEATS
+  --jobs JOBS
+  --cpu-seconds CPU_SECONDS
+  --foreground-cpu-seconds FOREGROUND_CPU_SECONDS
+  --timeout TIMEOUT
+  --limit LIMIT
+  --maximum MAXIMUM
+  --reserve RESERVE

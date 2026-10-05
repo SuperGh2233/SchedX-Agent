@@ -1,0 +1,46 @@
+usage: schedx tool-run [-h] [--agent-id AGENT_ID]
+                       [--intent {auto,background,compile,interactive,package,test}]
+                       [--memory-high MEMORY_HIGH] [--memory-max MEMORY_MAX]
+                       [--cpu-weight CPU_WEIGHT] [--cpu-max CPU_MAX]
+                       [--cpu-limit-mode {hard,soft}] [--pids-max PIDS_MAX]
+                       [--no-scx] [--resource-hint RESOURCE_HINT]
+                       [--timeout TIMEOUT] [--output-limit OUTPUT_LIMIT]
+                       [--admission {off,fixed,adaptive}]
+                       [--admission-state ADMISSION_STATE]
+                       [--admission-limit ADMISSION_LIMIT]
+                       [--admission-min ADMISSION_MIN]
+                       [--admission-max ADMISSION_MAX]
+                       [--interactive-reserve INTERACTIVE_RESERVE]
+                       [--state-dir STATE_DIR]
+                       ...
+
+positional arguments:
+  tool_command
+
+options:
+  -h, --help            show this help message and exit
+  --agent-id AGENT_ID
+  --intent {auto,background,compile,interactive,package,test}
+  --memory-high MEMORY_HIGH
+  --memory-max MEMORY_MAX
+  --cpu-weight CPU_WEIGHT
+  --cpu-max CPU_MAX
+  --cpu-limit-mode {hard,soft}
+                        Finite cpu.max requires a hard quota by default; soft
+                        explicitly allows priority-only native control
+  --pids-max PIDS_MAX
+  --no-scx
+  --resource-hint RESOURCE_HINT
+  --timeout TIMEOUT
+  --output-limit OUTPUT_LIMIT
+  --admission {off,fixed,adaptive}
+                        Opt into process-shared admission before creating the
+                        tool workload
+  --admission-state ADMISSION_STATE
+                        All cooperating callers must use the same admission
+                        directory
+  --admission-limit ADMISSION_LIMIT
+  --admission-min ADMISSION_MIN
+  --admission-max ADMISSION_MAX
+  --interactive-reserve INTERACTIVE_RESERVE
+  --state-dir STATE_DIR

@@ -1,0 +1,35 @@
+{
+  "recorded_client_utc": "2026-10-05T16:33:59.861064+00:00",
+  "ports": [
+    {
+      "ip": "100.121.207.17",
+      "port": 22,
+      "state": "TimeoutError"
+    },
+    {
+      "ip": "100.105.181.122",
+      "port": 445,
+      "state": "TimeoutError"
+    },
+    {
+      "ip": "100.105.181.122",
+      "port": 3389,
+      "state": "TimeoutError"
+    }
+  ],
+  "local_tailscale": {
+    "state": "Running",
+    "online": true,
+    "health": []
+  },
+  "peers": {
+    "100.121.207.17": {
+      "online": false,
+      "last_seen": "2026-10-05T14:10:00.1Z"
+    },
+    "100.105.181.122": {
+      "online": false,
+      "last_seen": "2026-10-05T14:10:00.1Z"
+    }
+  }
+}

@@ -1,0 +1,134 @@
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 64%]
+........................................................................ [ 80%]
+..............................................................F...FF.... [ 96%]
+..............                                                           [100%]
+=================================== FAILURES ===================================
+__________________ test_daemon_supports_shared_policy_updates __________________
+
+tmp_path = PosixPath('/private/var/folders/w8/c6k2t5ds0777z1hf4hrn4lbr0000gn/T/pytest-of-a123/pytest-17/test_daemon_supports_shared_po0')
+
+    def test_daemon_supports_shared_policy_updates(tmp_path: Path):
+        socket_path = tmp_path / "scx.sock"
+        controller = FakeController()
+>       server = _ScxDaemonServer(socket_path, controller)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_scx_daemon.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+schedx/scx_daemon.py:97: in __init__
+    super().__init__(str(socket_path), _ScxRequestHandler)
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <schedx.scx_daemon._ScxDaemonServer object at 0x107fa6fc0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       OSError: AF_UNIX path too long
+
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:478: OSError
+___________________ test_daemon_cleanup_orphan_zero_metrics ____________________
+
+tmp_path = PosixPath('/private/var/folders/w8/c6k2t5ds0777z1hf4hrn4lbr0000gn/T/pytest-of-a123/pytest-17/test_daemon_cleanup_orphan_zer0')
+
+    def test_daemon_cleanup_orphan_zero_metrics(tmp_path: Path):
+        socket_path = tmp_path / "scx.sock"
+        controller = FakeController()
+        controller.cgroup_metrics = {
+            11: {"enqueues": 0, "runs": 0, "runtime_ns": 0, "wait_ns": 0},
+            12: {"enqueues": 1, "runs": 1, "runtime_ns": 2, "wait_ns": 3},
+        }
+>       server = _ScxDaemonServer(socket_path, controller)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_scx_daemon.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+schedx/scx_daemon.py:97: in __init__
+    super().__init__(str(socket_path), _ScxRequestHandler)
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <schedx.scx_daemon._ScxDaemonServer object at 0x107fa5af0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       OSError: AF_UNIX path too long
+
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:478: OSError
+__________________ test_daemon_set_target_refreshes_telemetry __________________
+
+tmp_path = PosixPath('/private/var/folders/w8/c6k2t5ds0777z1hf4hrn4lbr0000gn/T/pytest-of-a123/pytest-17/test_daemon_set_target_refresh0')
+
+    def test_daemon_set_target_refreshes_telemetry(tmp_path: Path):
+        socket_path = tmp_path / "scx.sock"
+        controller = FakeController()
+>       server = _ScxDaemonServer(socket_path, controller)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_scx_daemon.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+schedx/scx_daemon.py:97: in __init__
+    super().__init__(str(socket_path), _ScxRequestHandler)
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:457: in __init__
+    self.server_bind()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <schedx.scx_daemon._ScxDaemonServer object at 0x107fc51f0>
+
+    def server_bind(self):
+        """Called by constructor to bind the socket.
+    
+        May be overridden.
+    
+        """
+        if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # Since Linux 6.12.9, SO_REUSEPORT is not allowed
+        # on other address families than AF_INET/AF_INET6.
+        if (
+            self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT")
+            and self.address_family in (socket.AF_INET, socket.AF_INET6)
+        ):
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>       self.socket.bind(self.server_address)
+E       OSError: AF_UNIX path too long
+
+../../.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socketserver.py:478: OSError
+=========================== short test summary info ============================
+FAILED tests/test_scx_daemon.py::test_daemon_supports_shared_policy_updates
+FAILED tests/test_scx_daemon.py::test_daemon_cleanup_orphan_zero_metrics - OS...
+FAILED tests/test_scx_daemon.py::test_daemon_set_target_refreshes_telemetry
+3 failed, 443 passed in 7.04s
