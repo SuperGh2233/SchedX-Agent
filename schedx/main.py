@@ -24,6 +24,7 @@ from schedx.skills.analyze_skill import AnalyzeSkill
 from schedx.skills.probe_skill import ProbeSkill
 from schedx.skills.rollback_skill import RollbackSkill
 from schedx.tool_runner import PROFILES, CpuQuotaUnavailable, ToolCallRunner, emit_tool_result
+from schedx.admission import AdmissionConfig, AdmissionError, ToolAdmission
 from schedx.scx_daemon import DEFAULT_SOCKET, ScxDaemonClient, serve_scx_daemon
 
 
@@ -360,8 +361,19 @@ def cmd_tool_run(args: argparse.Namespace) -> int:
         }.items()
         if value is not None
     }
+    admission = None
     try:
-        result = ToolCallRunner(native_scx=not args.no_scx, state_dir=Path(args.state_dir) / "tool-runs").run(
+        if args.admission != "off":
+            admission = ToolAdmission(Path(args.admission_state), AdmissionConfig(
+                mode=args.admission, initial_limit=args.admission_limit,
+                min_limit=args.admission_min, max_limit=args.admission_max,
+                interactive_reserve=args.interactive_reserve,
+            ))
+    except ValueError as exc:
+        print_json({"status": "tool_request_rejected", "command_started": False, "error": str(exc)})
+        return 2
+    try:
+        result = ToolCallRunner(native_scx=not args.no_scx, state_dir=Path(args.state_dir) / "tool-runs", admission=admission).run(
             command,
             agent_id=args.agent_id,
             intent=args.intent,
@@ -373,6 +385,9 @@ def cmd_tool_run(args: argparse.Namespace) -> int:
         )
     except CpuQuotaUnavailable as exc:
         print_json({"status": "unsupported_cpu_quota", "command_started": False, "error": str(exc)})
+        return 2
+    except AdmissionError as exc:
+        print_json({"status": "admission_failed", "command_started": getattr(exc, "command_started", None), "error": str(exc)})
         return 2
     emit_tool_result(result)
     return int(result["returncode"])
@@ -531,6 +546,14 @@ def build_parser() -> argparse.ArgumentParser:
     tool_run.add_argument("--resource-hint", default="")
     tool_run.add_argument("--timeout", type=float, default=300.0)
     tool_run.add_argument("--output-limit", type=int, default=1048576)
+    tool_run.add_argument("--admission", choices=["off", "fixed", "adaptive"], default="off",
+                          help="Opt into process-shared admission before creating the tool workload")
+    tool_run.add_argument("--admission-state", default="/run/schedx/tool-admission",
+                          help="All cooperating callers must use the same admission directory")
+    tool_run.add_argument("--admission-limit", type=int, default=4)
+    tool_run.add_argument("--admission-min", type=int, default=1)
+    tool_run.add_argument("--admission-max", type=int, default=8)
+    tool_run.add_argument("--interactive-reserve", type=int, default=1)
     tool_run.add_argument("tool_command", nargs=argparse.REMAINDER)
     tool_run.set_defaults(func=cmd_tool_run)
 

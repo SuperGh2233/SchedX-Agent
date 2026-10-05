@@ -23,6 +23,7 @@ from schedx.controllers.scx_controller import (
 )
 from schedx.scx_daemon import ScxDaemonClient
 from schedx.cpu_backend import CpuBackendBusy, CpuBackendLease, backend_lock_path
+from schedx.admission import AdmissionError, AdmissionTimeout, ToolAdmission
 
 
 @dataclass(frozen=True)
@@ -108,10 +109,12 @@ class ToolCallRunner:
         root: Path = Path("/sys/fs/cgroup"),
         state_dir: Path = Path(".schedx/tool-runs"),
         native_scx: bool = True,
+        admission: ToolAdmission | None = None,
     ) -> None:
         self.root = root
         self.state_dir = state_dir
         self.native_scx = native_scx
+        self.admission = admission
 
     def run(
         self, command: Sequence[str], *, agent_id: str = "default", intent: str = "auto",
@@ -119,6 +122,7 @@ class ToolCallRunner:
         timeout: float = 300.0, output_limit: int = 1024 * 1024,
         cpu_limit_mode: str = "hard",
     ) -> dict:
+        submitted = time.monotonic()
         if not command:
             raise ValueError("tool command is required")
         if not math.isfinite(timeout) or timeout <= 0 or output_limit < 1:
@@ -136,6 +140,60 @@ class ToolCallRunner:
         hard_quota = cpu_limit_mode == "hard" and quota[0] != "max"
         run_id = f"tool-{uuid.uuid4().hex}"
         agent = self._safe_name(agent_id)
+        lease = None
+        result = None
+        admitted = submitted
+        try:
+            if self.admission:
+                try:
+                    lease = self.admission.acquire(agent, selected_intent, submitted_at=submitted,
+                                                   deadline=submitted + timeout)
+                    admitted = lease.admitted_at
+                except AdmissionTimeout as exc:
+                    result = {
+                        "run_id": run_id, "agent_id": agent, "intent": selected_intent,
+                        "command": list(command), "profile": profile, "resource_hint": resource_hint,
+                        "returncode": 124, "timed_out": True, "timeout_phase": "queue", "command_started": False,
+                        "duration_seconds": time.monotonic() - submitted, "queue_wait_seconds": exc.waited,
+                        "startup_seconds": 0.0, "execution_seconds": 0.0,
+                        "admission": {"enabled": True, "admitted": False, **exc.telemetry},
+                        "native_scx": False, "scx_mode": "none", "cpu_control_support": {},
+                        "cpu_limit_mode": cpu_limit_mode, "hard_cpu_quota_requested": hard_quota,
+                        "metrics": {"memory_peak_bytes": None}, "stdout": "", "stderr": "",
+                        "cleanup": {"policy_removed": True, "scheduler_stopped": True, "cgroup_removed": True,
+                                    "admission_released": True, "errors": []},
+                        "feedback": ["tool deadline expired in the admission queue; command was not started"],
+                        "next_resource_hint": "", "retry_recommended": False,
+                    }
+                    self._save(result)
+                    return result
+                except AdmissionError as exc:
+                    exc.command_started = False
+                    raise
+            result = self._run_admitted(command, run_id=run_id, agent=agent, selected_intent=selected_intent,
+                profile=profile, quota=quota, hard_quota=hard_quota, cpu_limit_mode=cpu_limit_mode,
+                resource_hint=resource_hint, timeout=timeout, output_limit=output_limit,
+                submitted=submitted, admitted=admitted, admission_lease=lease)
+        finally:
+            if lease is not None:
+                try:
+                    released = self.admission.release(lease, result)
+                except AdmissionError as exc:
+                    if result is None:
+                        exc.command_started = None
+                        raise
+                    released = False
+                    result["cleanup"]["errors"].append(str(exc))
+                if result is not None:
+                    result["cleanup"]["admission_released"] = released
+                    if not released and result["returncode"] == 0:
+                        result["returncode"] = 125
+        result["duration_seconds"] = time.monotonic() - submitted
+        self._save(result)
+        return result
+
+    def _run_admitted(self, command, *, run_id, agent, selected_intent, profile, quota, hard_quota,
+                      cpu_limit_mode, resource_hint, timeout, output_limit, submitted, admitted, admission_lease):
         parent = self.root / "schedx-agents" / agent
         tool = parent / run_id
         self.state_dir.mkdir(parents=True, exist_ok=True)
@@ -148,7 +206,10 @@ class ToolCallRunner:
             )
         process = None
         cgroup_id = None
-        started = time.monotonic()
+        started = submitted
+        command_started = False
+        launch_at = None
+        timeout_phase = None
         scx_started = scx_used = timed_out = contract_breached = False
         scx_error = ""
         descriptors = []
@@ -162,6 +223,8 @@ class ToolCallRunner:
                 except CpuBackendBusy as exc:
                     raise CpuQuotaUnavailable(str(exc)) from exc
             self._prepare_group(parent, tool, profile)
+            if admission_lease is not None:
+                self.admission.bind_cgroup(admission_lease, tool)
             if hard_quota:
                 self._require_cgroup_quota(scx, tool, quota)
             cgroup_id = tool.stat().st_ino
@@ -171,7 +234,8 @@ class ToolCallRunner:
             process = subprocess.Popen(
                 [sys.executable, str(Path(__file__).with_name("tool_child.py")), str(ready_w), str(gate_r), str(tool), *command],
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                pass_fds=(ready_w, gate_r, *((quota_lease.fd,) if quota_lease else ())), start_new_session=True,
+                pass_fds=(ready_w, gate_r, *((quota_lease.fd,) if quota_lease else ()),
+                          *((admission_lease.fd,) if admission_lease else ())), start_new_session=True,
             )
             for descriptor in (ready_w, gate_r):
                 os.close(descriptor)
@@ -182,9 +246,17 @@ class ToolCallRunner:
                 reader = threading.Thread(target=self._capture_output, args=(stream, capture, output_limit), daemon=True)
                 reader.start()
                 readers.append(reader)
-            if not select.select([ready_r], [], [], min(timeout, 5.0))[0] or os.read(ready_r, 1) != b"R":
+            remaining = max(0, timeout - (time.monotonic() - started))
+            if not remaining or not select.select([ready_r], [], [], min(remaining, 5.0))[0]:
+                if time.monotonic() - started >= timeout:
+                    timed_out = True
+                    timeout_phase = "startup"
+                    self._stop_tree(process, tool)
+                else:
+                    raise RuntimeError("tool failed to enter its cgroup before startup deadline")
+            elif os.read(ready_r, 1) != b"R":
                 raise RuntimeError("tool failed to enter its cgroup before startup deadline")
-            if self.native_scx and not hard_quota and scx.is_available():
+            if not timed_out and self.native_scx and not hard_quota and scx.is_available():
                 try:
                     if daemon.is_available():
                         scx_used = daemon.set_cgroup_policy(cgroup_id, int(profile["scx_class"]), int(profile["scx_weight"]), str(tool))
@@ -200,12 +272,19 @@ class ToolCallRunner:
                     if not scx.stop_scheduler():
                         raise RuntimeError("failed to stop the attempted native scheduler before tool execution") from exc
                     scx_started = False
-            if hard_quota:
+            if not timed_out and hard_quota:
                 self._require_cgroup_quota(scx, tool, quota)
             support_at_launch = scx.cpu_control_support()
-            os.write(gate_w, b"G")
-            os.close(gate_w)
-            descriptors.remove(gate_w)
+            if not timed_out and time.monotonic() - started >= timeout:
+                timed_out = True
+                timeout_phase = "startup"
+                self._stop_tree(process, tool)
+            if not timed_out:
+                launch_at = time.monotonic()
+                os.write(gate_w, b"G")
+                command_started = True
+                os.close(gate_w)
+                descriptors.remove(gate_w)
             while process.poll() is None:
                 if hard_quota and scx.state() == "enabled":
                     contract_breached = True
@@ -214,6 +293,7 @@ class ToolCallRunner:
                 remaining = timeout - (time.monotonic() - started)
                 if remaining <= 0:
                     timed_out = True
+                    timeout_phase = "execution"
                     self._stop_tree(process, tool)
                     break
                 try:
@@ -239,6 +319,12 @@ class ToolCallRunner:
                 "returncode": 125 if contract_breached else 124 if timed_out else process.returncode,
                 "timed_out": timed_out, "cpu_contract_breached": contract_breached,
                 "duration_seconds": time.monotonic() - started, "metrics": metrics, "scx_cgroup_metrics": scx_metrics,
+                "command_started": command_started, "timeout_phase": timeout_phase,
+                "queue_wait_seconds": admitted - submitted,
+                "startup_seconds": (launch_at or time.monotonic()) - admitted,
+                "execution_seconds": time.monotonic() - launch_at if launch_at is not None else 0.0,
+                "admission": {"enabled": admission_lease is not None, "admitted": True,
+                              **(admission_lease.telemetry if admission_lease is not None else {})},
             }
         finally:
             for descriptor in descriptors:
@@ -282,12 +368,12 @@ class ToolCallRunner:
                 else "hard CPU quota enforcement is unverified for the active scheduler; this run explicitly requested soft priority"
             )
         if timed_out:
-            result["feedback"].append("tool exceeded its time limit; process tree stopped")
+            result["feedback"].append("tool exceeded its submission-to-completion time limit; process tree stopped")
         if contract_breached:
             result["feedback"].append("CPU backend changed during a hard-quota run; process tree stopped")
         result["next_resource_hint"] = recommend_next_hint(selected_intent, result["metrics"], result["returncode"], hard_cpu_limit=hard_cpu_limit)
         result["retry_recommended"] = bool(result["next_resource_hint"])
-        self._save(result)
+        result["duration_seconds"] = time.monotonic() - started
         return result
 
     @staticmethod
@@ -469,6 +555,10 @@ def emit_tool_result(result: dict) -> None:
             {
                 "intent": result["intent"],
                 "duration_seconds": round(result["duration_seconds"], 4),
+                "queue_wait_seconds": round(result["queue_wait_seconds"], 4),
+                "execution_seconds": round(result["execution_seconds"], 4),
+                "command_started": result["command_started"],
+                "admission": result["admission"],
                 "memory_peak_bytes": result["metrics"]["memory_peak_bytes"],
                 "native_scx": result["native_scx"],
                 "scx_mode": result["scx_mode"],
