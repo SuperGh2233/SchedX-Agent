@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Common external measurements for preliminary/final native scheduler binaries.
 
-Both binaries use their compiled fairness defaults and identical cgroup policy
-commands. This measures the native component, not the entire autonomous Agent.
+Both binaries use identical, explicitly recorded policy commands. The default
+profile preserves compiled fairness defaults. An optional shared throughput
+profile uses the current Agent's existing batch settings on both binaries.
+This measures the native component, not the entire autonomous Agent.
 Unsupported historical Python benchmark APIs are never invoked.
 """
 
@@ -28,7 +30,11 @@ from schedx.benchmark.scoped_workloads import OwnedWorkloads, process_ticks
 from schedx.benchmark.sysbench_parser import parse_sysbench_output
 from schedx.benchmark.versioning import version_identity
 from schedx.benchmark.wrk_parser import parse_wrk_output
-from schedx.controllers.scx_controller import ScxController
+from schedx.controllers.scx_controller import (
+    ScxController, SCX_FAIRNESS_THROUGHPUT_BACKGROUND, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL,
+    SCX_WEIGHT_DEFAULTS, SCX_CLASS_LATENCY, SCX_CLASS_BACKGROUND, SCX_CLASS_BATCH,
+)
+from schedx.policies.scx_mapper import ScxPolicyMapper
 from schedx.cpu_backend import CpuBackendLease, backend_lock_path
 from schedx.policies.verifier import CanaryVerifier
 from schedx.scx_daemon import ScxDaemonClient
@@ -41,6 +47,27 @@ METRICS = {"nginx": {"requests_per_sec": "higher", "p99_ms": "lower"},
 POLICIES = {"service": (1, 10000), "redis": (1, 10000), "noise": (3, 100), "batch": (2, 1500)}
 
 
+def profile_settings(profile: str, case: str) -> dict:
+    if profile not in {"compiled-defaults", "shared-throughput"}:
+        raise ValueError("unsupported native comparison profile")
+    if profile == "compiled-defaults" or case != "batch":
+        return {"policies": POLICIES, "fairness": None,
+                "description": "common static policies; each binary retains compiled fairness defaults"}
+    mapper = ScxPolicyMapper(ScxController(dry_run=True))
+    # Existing production parameters, not values searched against this dataset.
+    policies = {
+        role: (class_id, mapper._adjust_weight(SCX_WEIGHT_DEFAULTS[class_id], group, "throughput_first"))
+        for role, class_id, group in (
+            ("service", SCX_CLASS_LATENCY, "latency_sensitive"),
+            ("redis", SCX_CLASS_LATENCY, "latency_sensitive"),
+            ("noise", SCX_CLASS_BACKGROUND, "background_noise"),
+            ("batch", SCX_CLASS_BATCH, "batch_compute"))
+    }
+    return {"policies": policies,
+            "fairness": [SCX_FAIRNESS_THROUGHPUT_BACKGROUND, SCX_FAIRNESS_DEFAULT_CLASS_INTERVAL],
+            "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"}
+
+
 def execution_order(repeat: int) -> list[str]:
     order = ["baseline", "candidate"] if repeat % 2 else ["candidate", "baseline"]
     order.insert((repeat - 1) % 3, "reference")
@@ -50,13 +77,16 @@ def execution_order(repeat: int) -> list[str]:
 class NativeSession:
     """Bounded IPC without changing either binary's compiled fairness defaults."""
 
-    def __init__(self, binary: Path, groups: dict[str, Path], output: Path):
+    def __init__(self, binary: Path, groups: dict[str, Path], output: Path,
+                 *, profile: str = "compiled-defaults", case: str = "nginx"):
         self.binary, self.groups, self.output = binary, groups, output
         self.controller = ScxController(dry_run=False)
         self.threads = []
         self.logs = []
         self.lease = None
+        self.settings = profile_settings(profile, case)
         self.evidence = {"binary": str(binary), "fairness_configuration": "compiled defaults; no set fairness command"}
+        self.evidence.update(profile=profile, settings=self.settings)
 
     def __enter__(self):
         if self.controller.state() != "disabled":
@@ -77,8 +107,14 @@ class NativeSession:
             if self.controller.state() != "enabled" or self.controller.current_scheduler() != "schedx_agent":
                 raise RuntimeError("requested native binary did not attach")
             self.evidence["policies"] = {}
+            if self.settings["fairness"] is not None:
+                acknowledged = self.controller.set_fairness(*self.settings["fairness"])
+                self.evidence["fairness_configuration"] = self.settings["description"]
+                self.evidence["fairness_acknowledged"] = acknowledged
+                if not acknowledged:
+                    raise RuntimeError("shared fairness configuration was not acknowledged")
             for role, group in self.groups.items():
-                class_id, weight = POLICIES[role]
+                class_id, weight = self.settings["policies"][role]
                 inode = group.stat().st_ino
                 accepted = self.controller.set_cgroup_policy(inode, class_id, weight)
                 self.evidence["policies"][role] = {"cgroup_id": inode, "class_id": class_id,
@@ -202,14 +238,16 @@ def compare(rows: list[dict], minimum_pairs: int = 5) -> dict:
     return {"status": "passed" if not failures else "not_accepted", "failures": failures, "comparisons": results}
 
 
-def measure(case, version, binary, workloads, output, duration, warmup, repeat, threads):
+def measure(case, version, binary, workloads, output, duration, warmup, repeat, threads,
+            *, profile="compiled-defaults"):
     output.mkdir(parents=True, exist_ok=False)
-    row = {"case": case, "version": version, "repeat": repeat, "failures": []}
+    row = {"case": case, "version": version, "repeat": repeat, "failures": [],
+           "profile": profile, "settings": profile_settings(profile, case)}
     native = None
     try:
         workloads.noise(True)
         if version != "reference":
-            native = NativeSession(binary, workloads.groups, output)
+            native = NativeSession(binary, workloads.groups, output, profile=profile, case=case)
             native.__enter__()
         time.sleep(warmup)
         background_before = workloads.pids("noise")
@@ -288,6 +326,8 @@ def main():
     parser.add_argument("--warmup", type=float, default=1.0)
     parser.add_argument("--workers", type=int, default=3)
     parser.add_argument("--batch-threads", type=int, default=3)
+    parser.add_argument("--profile", choices=("compiled-defaults", "shared-throughput"),
+                        default="compiled-defaults", help="explicit common batch configuration; never patches either algorithm")
     args = parser.parse_args()
     if not sys.platform.startswith("linux") or os.geteuid() != 0:
         parser.error("native comparison requires Linux root")
@@ -312,7 +352,11 @@ def main():
     work_cpus, housekeeping_cpu = set(allowed[:-1]), allowed[-1]
     args.output.mkdir(parents=True, exist_ok=False)
     report = {"status": "running", "comparison_scope": "native sched_ext component with common static class policies",
-              "fairness_parameters": "each binary's compiled defaults; preliminary algorithm and settings are not patched",
+              "profile": args.profile,
+              "fairness_parameters": ("each binary's compiled defaults; preliminary algorithm and settings are not patched"
+                                      if args.profile == "compiled-defaults" else
+                                      "existing Agent throughput settings applied equally for batch; service cases retain compiled fairness defaults"),
+              "settings_by_case": {case: profile_settings(args.profile, case) for case in METRICS},
               "version_identity": identities, "kernel": os.uname().release,
               "work_cpus": sorted(work_cpus), "housekeeping_cpu": housekeeping_cpu,
               "background_progress_definition": "owned noise CPU seconds / wall second; minimum 25% of paired default-scheduler reference",
@@ -339,7 +383,7 @@ def main():
                 for version in order:
                     binary = None if version == "reference" else getattr(args, version + "_binary")
                     row = measure(case, version, binary, workloads, args.output / case / f"repeat-{repeat}" / version,
-                                  args.duration, args.warmup, repeat, args.batch_threads)
+                                  args.duration, args.warmup, repeat, args.batch_threads, profile=args.profile)
                     report["runs"].append(row)
                     report["assessment"] = compare(report["runs"])
                     atomic_json(args.output / "summary.json", report)

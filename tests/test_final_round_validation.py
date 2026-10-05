@@ -91,7 +91,21 @@ def test_execution_rotates_reference_and_old_new_order(comparison):
     assert len({order.index("reference") for order in orders}) == 3
 
 
-def test_real_ipc_lifecycle_is_reaped_with_a_protocol_fixture(comparison, monkeypatch, tmp_path):
+def test_shared_throughput_profile_is_explicit_and_uses_existing_production_settings(comparison):
+    defaults = comparison.profile_settings("compiled-defaults", "batch")
+    assert defaults["fairness"] is None
+    assert defaults["policies"] == comparison.POLICIES
+    shared = comparison.profile_settings("shared-throughput", "batch")
+    assert shared["fairness"] == [40, 32]
+    assert shared["policies"]["noise"] == (3, 300)
+    assert shared["policies"]["batch"] == (2, 2000)
+    assert comparison.profile_settings("shared-throughput", "nginx") == defaults
+    with pytest.raises(ValueError):
+        comparison.profile_settings("hidden-tuning", "batch")
+
+
+@pytest.mark.parametrize("profile", ["compiled-defaults", "shared-throughput"])
+def test_real_ipc_lifecycle_is_reaped_with_a_protocol_fixture(comparison, monkeypatch, tmp_path, profile):
     # Exercises actual subprocess IPC and logs, not kernel attachment.
     kernel = tmp_path / "mock-kernel"
     kernel.mkdir()
@@ -109,7 +123,7 @@ print('schedx>', flush=True)
 try:
  for line in sys.stdin:
   if line.strip() == 'quit': break
-  print('policy updated', flush=True)
+  print('fairness updated background_interval=40 default_interval=32' if line.startswith('set fairness') else 'policy updated', flush=True)
   print('schedx>', flush=True)
 finally:
  state.write_text('disabled')
@@ -121,10 +135,12 @@ finally:
     output = tmp_path / "logs"
     output.mkdir()
     monkeypatch.setattr(comparison, "ScxController", lambda **kw: ScxController(sys_root=kernel, **kw))
-    session = comparison.NativeSession(binary, groups, output)
+    session = comparison.NativeSession(binary, groups, output, profile=profile, case="batch")
     session.__enter__()
     assert session.alive()
     assert all(row["acknowledged"] for row in session.evidence["policies"].values())
+    if profile == "shared-throughput":
+        assert session.evidence["fairness_acknowledged"] is True
     session.close()
     assert session.evidence["output_readers_stopped"]
     assert state.read_text() == "disabled"

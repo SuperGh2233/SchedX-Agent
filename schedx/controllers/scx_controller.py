@@ -44,9 +44,10 @@ SCX_WEIGHT_DEFAULTS = {
     SCX_CLASS_BACKGROUND: 100,
 }
 
-# A service interval of 64 preserved at least 25% of baseline background
-# progress in the formal SP4 benchmark. Keep runtime and benchmark defaults in
-# one place so normal Agent execution is tested with the same safety setting.
+# An interval of 64 passed the earlier SP4 benchmark's progress gate. That
+# result belongs to its workload/weight profile; an interval alone does not
+# guarantee runtime shares for saturated workloads with different weights.
+# Keep defaults shared, and verify progress for every measured configuration.
 SCX_FAIRNESS_BACKGROUND_DEFAULT = 64
 SCX_FAIRNESS_BACKGROUND_MIN = 1
 SCX_FAIRNESS_BACKGROUND_MAX = 4096
