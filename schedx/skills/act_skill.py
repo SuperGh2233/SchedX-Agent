@@ -24,7 +24,7 @@ class ActSkill:
                                   owner=context.session.session_id if context.session else None,
                                   transaction=context.data.get("transaction_id"))
         context.data["transaction_owner"] = cgroup.owner
-        executor = SafeActionExecutor(cgroup)
+        executor = SafeActionExecutor(cgroup, scope_pids=context.data.get("scope_pids"))
         results = executor.execute(actions, dry_run=context.dry_run)
 
         context.data["execution_results"] = results

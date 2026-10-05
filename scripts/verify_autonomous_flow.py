@@ -165,6 +165,9 @@ def assess(evidence: dict[int, dict], rounds_per_stage: int) -> dict:
             planned = {int(action["target"]) for action in row.get("actions", []) if action.get("target_type") == "pid"}
             if not planned.issubset(scoped):
                 failures.append(f"out_of_scope_action_round_{result['round']}")
+            executed = {int(action["pid"]) for action in row.get("execution_results", []) if action.get("pid") is not None}
+            if not executed.issubset(scoped):
+                failures.append(f"out_of_scope_execution_round_{result['round']}")
     for stage in ("stable", "recovery"):
         if not any(row.get("converged") for row in stages[stage]):
             failures.append(f"{stage}_plateau_not_observed")

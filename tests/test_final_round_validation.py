@@ -166,7 +166,7 @@ def test_full_flow_assessment_requires_actual_failure_and_coverage():
     assert "http_error_not_measured_rejected_and_recovered" in module.assess(evidence, 3)["failures"]
 
 
-@pytest.mark.parametrize("fault", ["missing_phase", "outside_scope", "partial_hooks", "missing_quality", "no_actuation", "false_convergence"])
+@pytest.mark.parametrize("fault", ["missing_phase", "outside_scope", "outside_execution_scope", "partial_hooks", "missing_quality", "no_actuation", "false_convergence"])
 def test_narrow_or_false_evidence_cannot_pass_full_flow_gate(fault):
     module = load_script("verify_autonomous_flow")
     evidence = flow_evidence()
@@ -175,6 +175,8 @@ def test_narrow_or_false_evidence_cannot_pass_full_flow_gate(fault):
         row["phase_results"].pop("act")
     elif fault == "outside_scope":
         row["actions"][0]["target"] = "999"
+    elif fault == "outside_execution_scope":
+        row["execution_results"][0]["pid"] = 999
     elif fault == "partial_hooks":
         row["phase_results"]["ebpf_attach"]["data"]["failed"] = 1
     elif fault == "missing_quality":

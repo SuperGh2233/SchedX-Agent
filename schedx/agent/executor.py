@@ -15,9 +15,15 @@ from schedx.state import restoration_failed
 
 
 class SafeActionExecutor:
-    def __init__(self, cgroup: CgroupController, processes: ProcessController | None = None) -> None:
+    def __init__(self, cgroup: CgroupController, processes: ProcessController | None = None,
+                 *, scope_pids: list[int] | None = None) -> None:
         self.cgroup = cgroup
         self.processes = processes or ProcessController()
+        if scope_pids is not None and (not isinstance(scope_pids, list) or any(
+            isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0 for pid in scope_pids
+        )):
+            raise ValueError("execution scope must contain positive integer PIDs")
+        self.scope_pids = set(scope_pids) if scope_pids is not None else None
         self.process_state = ProcessState(
             getattr(cgroup, "rollback_file", Path(".schedx/rollback.json")).with_name("process_rollback.json"),
             getattr(cgroup, "owner", None),
@@ -43,6 +49,7 @@ class SafeActionExecutor:
                 elif action.action == "set_affinity":
                     results.extend(self._set_affinity(action, dry_run))
                 elif action.action == "move_pid_to_cgroup":
+                    self._check_scope(int(action.value or 0))
                     if dry_run:
                         results.append({"action": asdict(action), "status": "dry_run", "target": action.target})
                         continue
@@ -75,10 +82,17 @@ class SafeActionExecutor:
 
     def _target_pids(self, action: Action) -> list[int]:
         if action.target_type == "pid":
-            return [int(action.target)]
+            pid = int(action.target)
+            self._check_scope(pid)
+            return [pid]
         if action.target_type == "process_name":
-            return self.processes.find_by_name(action.target)
+            matched = self.processes.find_by_name(action.target)
+            return [pid for pid in matched if self.scope_pids is None or pid in self.scope_pids]
         return []
+
+    def _check_scope(self, pid: int) -> None:
+        if self.scope_pids is not None and pid not in self.scope_pids:
+            raise ValueError(f"PID {pid} is outside the declared execution scope")
 
     def _is_protected(self, action: Action, pid: int) -> bool:
         comm = str(action.metadata.get("comm", "")).lower()
