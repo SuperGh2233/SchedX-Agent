@@ -13,6 +13,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
 
@@ -285,6 +286,7 @@ def main():
     summary["rejection_observation_rounds"] = context.data.get("rejection_observation_rounds", 3)
     summary["fault_control"] = "restart only the owned service before the candidate fault, creating a fresh process identity"
     loop = None
+    started = time.monotonic()
     try:
         os.sched_setaffinity(0, {housekeeping_cpu})
         workloads.__enter__()
@@ -324,6 +326,7 @@ def main():
             summary["status"] = "failed"
         os.environ["PATH"] = old_path
         os.sched_setaffinity(0, allowed_cpus)
+        summary["elapsed_seconds"] = time.monotonic() - started
         atomic_json(args.output / "summary.json", summary)
         print(json.dumps(summary, indent=2), flush=True)
     if summary["status"] != "passed":

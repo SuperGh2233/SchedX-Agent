@@ -293,9 +293,14 @@ class AgentLoop:
                             and verdict.get("reasons") and not set(verdict["reasons"]) & {
                                 "invalid_metric_payload", "invalid_metric_value", "invalid_metric_delta",
                                 "invalid_request_quality", "missing_background_progress"}):
+                        previous = self._rejected_trial
+                        attempts = (previous["attempts"] + 1
+                                    if previous and previous["key"] == trial_key else 1)
+                        pause = min(128, self.rejection_observation_rounds * 2 ** min(attempts - 1, 3))
                         self._rejected_trial = {
                             "key": trial_key, "round": round_num,
-                            "until_round": round_num + self.rejection_observation_rounds,
+                            "attempts": attempts, "observation_rounds": pause,
+                            "until_round": round_num + pause,
                             "scheduler_state": ScxController().state(),
                             "reasons": copy.deepcopy(verdict["reasons"]),
                         }
@@ -377,6 +382,7 @@ class AgentLoop:
             "reason": "rejected_candidate_cooldown", "rejected_round": rejected["round"],
             "context_key": rejected["key"], "retry_after_round": rejected["until_round"],
             "rejection_reasons": rejected["reasons"], "verdict": verdict.to_dict(),
+            "rejected_attempts": rejected["attempts"], "observation_rounds": rejected["observation_rounds"],
             "policy_generation": self._policy_generation, "decision": identity,
             "metrics": metrics, "background_expected": expected,
             "nr_rejected": sched_ext_rejected(), "scheduler_state": ScxController().state(),

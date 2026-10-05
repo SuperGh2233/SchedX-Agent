@@ -91,6 +91,19 @@ def test_safe_rejection_pauses_identical_mutations_but_keeps_real_measurement(lo
     calls.clear()
     assert loop._run_one_round(5)["status"] == "failed_rolled_back"
     assert "act" in calls
+    assert loop._rejected_trial["observation_rounds"] == 6
+    assert loop._rejected_trial["until_round"] == 11
+
+
+def test_repeated_rejections_have_bounded_backoff_and_new_context_starts_fresh(loop_fixture):
+    loop, _, _ = loop_fixture
+    for index, pause in ((1, 3), (5, 6), (12, 12), (25, 24), (50, 24)):
+        assert loop._run_one_round(index)["status"] == "failed_rolled_back"
+        assert loop._rejected_trial["observation_rounds"] == pause
+    loop.context.data["classification"]["groups"]["latency_sensitive"][0]["start_time"] += 1
+    loop._run_one_round(51)
+    assert loop._rejected_trial["attempts"] == 1
+    assert loop._rejected_trial["observation_rounds"] == 3
 
 
 @pytest.mark.parametrize("change", ["pid_identity", "pressure", "scheduler"])
