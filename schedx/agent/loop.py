@@ -164,7 +164,11 @@ class AgentLoop:
                 was_stable = self.context.data["converged"]
                 self.context.data["stability"] = self.engine.assess_stability(self.round_history)
                 self.context.data["converged"] = self.context.data["stability"]["stable"]
-                failures = 0 if result["status"] == "ok" else failures + 1
+                safe_rejection = (result.get("status") == "failed_rolled_back"
+                                  and result.get("failed_phase") == "verify"
+                                  and result.get("rollback_success") is True
+                                  and result.get("canary_rejected") is True)
+                failures = 0 if result["status"] == "ok" or safe_rejection else failures + 1
                 if result["status"] == "rollback_failed":
                     return self._finish_continuous("rollback_failed", round_num)
                 if failures >= failure_limit:
@@ -266,7 +270,8 @@ class AgentLoop:
                         self.context.data.pop("mutation_started", None)
                     return {"round": round_num, "status": "failed_rolled_back" if rollback.ok else "rollback_failed",
                             "failed_phase": phase, "verify_success": results.get("verify", SkillResult(False, "not run")).ok,
-                            "rollback_success": rollback.ok}
+                            "rollback_success": rollback.ok,
+                            "canary_rejected": phase == "verify" and self.context.data.get("canary_verdict", {}).get("status") == "rejected"}
                 return {"round": round_num, "status": f"{phase}_failed", "failed_phase": phase}
         verdict = self.context.data.get("canary_verdict", {})
         self.context.data.pop("mutation_started", None)

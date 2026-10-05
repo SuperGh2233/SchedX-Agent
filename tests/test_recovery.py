@@ -322,6 +322,23 @@ def fake_round(loop, failing_phase=None, rollback_ok=True):
     return phases
 
 
+def test_safe_canary_rejections_do_not_stop_continuous_observation(tmp_path):
+    loop = AgentLoop(AgentContext(state_dir=tmp_path))
+    loop._run_one_round = lambda number: {"round": number, "status": "failed_rolled_back", "failed_phase": "verify",
+                                          "rollback_success": True, "canary_rejected": True}
+    assert loop.run_continuous(interval=0, max_rounds=5) == "max_rounds"
+    assert len(loop.round_history) == 5
+    assert not loop.context.data["converged"]
+
+
+def test_verification_errors_still_count_as_operational_failures(tmp_path):
+    loop = AgentLoop(AgentContext(state_dir=tmp_path))
+    loop._run_one_round = lambda number: {"round": number, "status": "failed_rolled_back", "failed_phase": "verify",
+                                          "rollback_success": True, "canary_rejected": False}
+    assert loop.run_continuous(interval=0, max_rounds=5) == "consecutive_failures"
+    assert len(loop.round_history) == 3
+
+
 def test_failed_plan_never_executes_stale_actions(tmp_path):
     loop = AgentLoop(AgentContext(state_dir=tmp_path, data={"actions": ["stale"]}))
     phases = fake_round(loop, "policy")
