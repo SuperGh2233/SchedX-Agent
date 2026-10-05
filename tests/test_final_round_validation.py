@@ -184,3 +184,18 @@ def test_narrow_or_false_evidence_cannot_pass_full_flow_gate(fault):
     else:
         row["converged"] = True
     assert module.assess(evidence, 3)["status"] == "failed"
+
+
+def test_rejected_candidate_uses_pre_rollback_backend_evidence():
+    module = load_script("verify_autonomous_flow")
+    evidence = flow_evidence()
+    row = evidence[1]
+    row["result"].update(status="failed_rolled_back", failed_phase="verify", rollback_success=True)
+    row["canary"]["candidate"]["p99_ms"] = 11
+    row["canary_verdict"]["status"] = "rejected"
+    row["pre_verification_state"] = {"scheduler_state": "enabled", "ebpf_status": "attached"}
+    row["scheduler_state"] = "disabled"
+    row["ebpf_status"] = "cleaned"
+    assessment = module.assess(evidence, 3)
+    assert "scheduler_inactive_round_1" not in assessment["failures"]
+    assert "incomplete_ebpf_chain_round_1" not in assessment["failures"]

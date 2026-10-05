@@ -71,6 +71,7 @@ class ScenarioLoop(AgentLoop):
         self.original_tasks = {}
         self.evidence = {}
         self.phase_results = {}
+        self.pre_verification_states = {}
 
     def _execute_skill(self, phase, iteration):
         index = self.context.data["round"]
@@ -88,6 +89,11 @@ class ScenarioLoop(AgentLoop):
         try:
             result = super()._execute_skill(phase, iteration)
             self.phase_results.setdefault(index, {})[phase] = safe_json(result)
+            if phase == "canary_candidate":
+                self.pre_verification_states[index] = {
+                    "scheduler_state": ScxController().state(),
+                    "ebpf_status": self.context.data.get("ebpf_status"),
+                }
             return result
         finally:
             if fault:
@@ -106,6 +112,7 @@ class ScenarioLoop(AgentLoop):
                 evidence[key] = safe_json(self.context.data[key])
         evidence["scheduler_state"] = ScxController().state()
         evidence["phase_results"] = self.phase_results.get(row["round"], {})
+        evidence["pre_verification_state"] = self.pre_verification_states.get(row["round"], {})
         self.evidence[row["round"]] = evidence
         atomic_json(self.output / f"round-{row['round']:03d}.json", evidence)
 
@@ -136,7 +143,9 @@ def assess(evidence: dict[int, dict], rounds_per_stage: int) -> dict:
             )
             if measured.status != row.get("canary_verdict", {}).get("status") or measured.status == "inconclusive":
                 failures.append(f"missing_or_inconsistent_measurement_round_{result['round']}")
-            if row.get("degraded_phases") or row.get("ebpf_status") != "attached":
+            before_verify = row.get("pre_verification_state") or {
+                "scheduler_state": row.get("scheduler_state"), "ebpf_status": row.get("ebpf_status")}
+            if row.get("degraded_phases") or before_verify.get("ebpf_status") != "attached":
                 failures.append(f"incomplete_ebpf_chain_round_{result['round']}")
             phases = row.get("phase_results", {})
             required = set(AgentLoop.PHASES) - {"decide"}
@@ -144,7 +153,7 @@ def assess(evidence: dict[int, dict], rounds_per_stage: int) -> dict:
                 failures.append(f"missing_production_phase_round_{result['round']}")
             if any(phases.get(phase, {}).get("data", {}).get("failed", 0) for phase in ("ebpf_load", "ebpf_attach")):
                 failures.append(f"partial_ebpf_backend_round_{result['round']}")
-            if row.get("scheduler_state") != "enabled":
+            if before_verify.get("scheduler_state") != "enabled":
                 failures.append(f"scheduler_inactive_round_{result['round']}")
             if not any(action.get("status") == "ok" for action in row.get("execution_results", [])):
                 failures.append(f"no_successful_actuation_round_{result['round']}")

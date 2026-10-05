@@ -65,7 +65,7 @@ class CanaryCandidateSkill:
             canary.update(
                 {
                     "candidate": candidate,
-                    "background_share": candidate.get("background_cpu_share"),
+                    "background_share": candidate.get("background_cpu_share") if pids else None,
                     "background_retention": retention,
                     "nr_rejected": sched_ext_rejected(),
                 }

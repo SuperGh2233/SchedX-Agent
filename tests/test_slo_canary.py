@@ -107,3 +107,20 @@ def test_canary_rejects_background_progress_below_floor(monkeypatch):
     assert not verified.ok
     assert context.data["rollback_required"] is True
     assert "background_progress_regression" in context.data["canary_verdict"]["reasons"]
+
+
+def test_foreground_only_canary_does_not_report_missing_background_as_starvation(monkeypatch, tmp_path):
+    probe = SequenceProbe([wrk_output(1000, 5), wrk_output(1050, 4)],
+                          [0, 0, 0, 0], [1000, 1200, 1200, 1400])
+    context = AgentContext(state_dir=tmp_path, data={
+        "canary_config": {"url": "http://127.0.0.1/", "duration": 1},
+        "classification": {"groups": {"background_noise": []}},
+        "execution_results": [{"status": "ok"}], "mode": "latency_first", "_slo_probe": probe,
+    })
+    monkeypatch.setattr(VerifySkill, "_check_system_state", lambda self: {})
+    assert CanaryBaselineSkill().run(context).ok
+    assert CanaryCandidateSkill().run(context).ok
+    assert context.data["canary"]["background_expected"] is False
+    assert context.data["canary"]["background_share"] is None
+    assert VerifySkill().run(context).ok
+    assert context.data["canary_verdict"]["status"] == "accepted"
