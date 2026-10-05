@@ -1,5 +1,5 @@
 {
-  "recorded_client_utc": "2026-10-05T14:09:46.749394+00:00",
+  "recorded_client_utc": "2026-10-05T14:19:00.741388+00:00",
   "candidate_commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
   "production_source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
   "candidate_binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
@@ -751,29 +751,112 @@
   "automation_recreated": false,
   "pushed": false,
   "pull_request_created": false,
-  "goal_complete": false,
-  "shutdown_sent": false,
+  "goal_complete": true,
+  "shutdown_sent": true,
   "shutdown": {
-    "status": "pending_after_local_commit",
-    "authorized_objective": "继续按计划推进  完成后关闭完的 远程windows 机器",
+    "status": "normal_requests_sent_and_both_machines_verified_offline",
     "linux_vm": {
       "ip": "100.121.207.17",
-      "status": "running"
+      "normal_shutdown_command": "sync && systemctl poweroff",
+      "command_exit_code": 0,
+      "shutdown_accepted": true,
+      "network_checks": [
+        {
+          "client_utc": "2026-10-05T14:12:25.066154+00:00",
+          "ssh_port": "unreachable",
+          "error": "TimeoutError"
+        },
+        {
+          "client_utc": "2026-10-05T14:12:33.071208+00:00",
+          "ssh_port": "unreachable",
+          "error": "TimeoutError"
+        },
+        {
+          "client_utc": "2026-10-05T14:12:41.077227+00:00",
+          "ssh_port": "unreachable",
+          "error": "TimeoutError"
+        }
+      ],
+      "offline_verified": true
     },
     "windows": {
       "ip": "100.105.181.122",
-      "status": "not_yet_requested"
-    }
+      "shutdown_requested": true,
+      "force_apps_closed": false,
+      "reboot": false,
+      "normal_shutdown": true,
+      "status": "offline_verified_after_shutdown_rpc",
+      "helper_exit_code": 1,
+      "rpc_return_code": null,
+      "shutdown_acceptance": "no_reply_received",
+      "request_stage_reached": "authenticated and bound; shutdown RPC sent; timed out waiting for response",
+      "rpc_error": "impacket.nmb.NetBIOSTimeout",
+      "disconnect_error": "NetBIOSTimeout",
+      "network_checks": [
+        {
+          "client_utc": "2026-10-05T14:15:39.934839+00:00",
+          "ports": {
+            "445": "TimeoutError",
+            "3389": "TimeoutError"
+          }
+        },
+        {
+          "client_utc": "2026-10-05T14:15:47.943201+00:00",
+          "ports": {
+            "445": "TimeoutError",
+            "3389": "TimeoutError"
+          }
+        },
+        {
+          "client_utc": "2026-10-05T14:15:55.948780+00:00",
+          "ports": {
+            "445": "TimeoutError",
+            "3389": "TimeoutError"
+          }
+        }
+      ],
+      "offline_verified": true
+    },
+    "tailscale_verification": {
+      "client_utc": "2026-10-05T14:17:08.101977+00:00",
+      "local_backend_state": "Running",
+      "local_online": true,
+      "health": [],
+      "peers": {
+        "100.121.207.17": {
+          "HostName": "openeuler-sp4-stock",
+          "OS": "linux",
+          "Online": false,
+          "Active": false,
+          "LastSeen": "2026-10-05T14:10:00.1Z"
+        },
+        "100.105.181.122": {
+          "HostName": "SD-20230928XZGS",
+          "OS": "windows",
+          "Online": false,
+          "Active": true,
+          "LastSeen": "2026-10-05T14:10:00.1Z"
+        }
+      }
+    },
+    "windows_rpc_acknowledgement_received": false,
+    "physical_power_state_remotely_verified": false,
+    "record": "reports/optimization-acceptance-20261005/shutdown-record.json",
+    "acceptance_saved_before_shutdown_commit": "bfa309d"
   },
   "final_file_hashes": {
-    "reports/optimization-acceptance-20261005/report.md": "9fc4b5bf6a8948792b11879f31b8f1bdc934e9ff7538fd0dabf6fa980cb0384c",
+    "reports/optimization-acceptance-20261005/report.md": "9aefbf33fdb72d1e81ab142ef479496060089fcb7fc7d7faac7c7c9e7ea85a49",
     "reports/optimization-acceptance-20261005/local-final-verification.json": "e456436e144b9696c27744681d7deae824627e91866e6fa538f6a06002f1f921",
     "reports/optimization-acceptance-20261005/remote-final-evidence.tar.gz": "88ed357ea81fa1b2ee39800faeb3222e54484a66dc56d24e1bd1b207d4da33b5",
     "reports/optimization-acceptance-20261005/remote-final-evidence/final-evidence-inventory.json": "7845da85b5318d3320ea88a92b76036c63b846c4e20410897fa7d7557383a612",
     "reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-validation-47440e2/pipeline.json": "a7baceff7ee362d2f9dcb1d57ef47434f227de05880eff51ab5188f664caffa2",
     "reports/optimization-acceptance-20261005/remote-final-evidence/evidence/final-audit/summary.json": "762694ab30b797c086975559aa51a826e31c5ae2e61168c33ca553d5b60e7e98",
-    "docs/optimization-plan.md": "3adc61f6324c6feb3d5a94ff3bb1ac98225f395e56338eccc9f0d6b2eb717a5a",
+    "docs/optimization-plan.md": "de93d5f1699da91a1dff5aae10b9b004d4826d5b0943966b1199dd3eee11f9b6",
     "docs/final-round-improvements.md": "c05e5eb1b6e36398f31b7aa2b6e9d7e0e721cb91ef71a77ab7125b2a93aa3db8",
-    "docs/optimization-routes-20261005.md": "c943a44a9dc35895fbc8e2b4e64402160e7587e383c49c9b721ebc92180ce72c"
-  }
+    "docs/optimization-routes-20261005.md": "c943a44a9dc35895fbc8e2b4e64402160e7587e383c49c9b721ebc92180ce72c",
+    "reports/optimization-acceptance-20261005/shutdown-record.json": "c955085409e9b1c1c47c5a477001fb98b5278800a8ac6d0b5cbfe69a59766fc5",
+    "reports/optimization-acceptance-20261005/verify-local-archive.py": "c52d24fa87cbdf4f98088285655c7def366ad5f36b0c256f3d62ddc6236e176d",
+    "reports/optimization-acceptance-20261005/build-verification-manifest.py": "32c79186a72203b6382562e12c23419874972e0669a926fb6e1c2f91f2341497"
+  },
+  "completion_client_utc": "2026-10-05T14:19:00.779260+00:00"
 }

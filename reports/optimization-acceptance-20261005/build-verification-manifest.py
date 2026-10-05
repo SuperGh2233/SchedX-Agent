@@ -78,5 +78,13 @@ paths = [output / 'report.md', output / 'local-final-verification.json', output 
          evidence / 'final-audit/summary.json', repo / 'docs/optimization-plan.md', repo / 'docs/final-round-improvements.md',
          repo / 'docs/optimization-routes-20261005.md']
 manifest['final_file_hashes'] = {str(path.relative_to(repo)): sha(path) for path in paths}
+existing_path = output / 'verification-manifest.json'
+if existing_path.exists():
+    previous = read(existing_path)
+    for key in ('goal_complete', 'shutdown_sent', 'shutdown', 'completion_client_utc'):
+        if key in previous:
+            manifest[key] = previous[key]
+if (output / 'shutdown-record.json').exists():
+    manifest['final_file_hashes'][str((output / 'shutdown-record.json').relative_to(repo))] = sha(output / 'shutdown-record.json')
 (output / 'verification-manifest.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
 print(json.dumps({'acceptance': 'passed', 'evidence_files_verified': verification['ordinary_evidence_files_verified'], 'batch_background_retention': retention}))

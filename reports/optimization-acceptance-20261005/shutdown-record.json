@@ -1,0 +1,88 @@
+{
+  "recorded_client_utc": "2026-10-05T14:15:55.949289+00:00",
+  "acceptance_commit": "bfa309d",
+  "linux_vm": {
+    "ip": "100.121.207.17",
+    "normal_shutdown_command": "sync && systemctl poweroff",
+    "command_exit_code": 0,
+    "shutdown_accepted": true,
+    "network_checks": [
+      {
+        "client_utc": "2026-10-05T14:12:25.066154+00:00",
+        "ssh_port": "unreachable",
+        "error": "TimeoutError"
+      },
+      {
+        "client_utc": "2026-10-05T14:12:33.071208+00:00",
+        "ssh_port": "unreachable",
+        "error": "TimeoutError"
+      },
+      {
+        "client_utc": "2026-10-05T14:12:41.077227+00:00",
+        "ssh_port": "unreachable",
+        "error": "TimeoutError"
+      }
+    ],
+    "offline_verified": true
+  },
+  "windows": {
+    "ip": "100.105.181.122",
+    "shutdown_requested": true,
+    "force_apps_closed": false,
+    "reboot": false,
+    "normal_shutdown": true,
+    "status": "offline_verified_after_shutdown_rpc",
+    "helper_exit_code": 1,
+    "rpc_return_code": null,
+    "shutdown_acceptance": "no_reply_received",
+    "request_stage_reached": "authenticated and bound; shutdown RPC sent; timed out waiting for response",
+    "rpc_error": "impacket.nmb.NetBIOSTimeout",
+    "disconnect_error": "NetBIOSTimeout",
+    "network_checks": [
+      {
+        "client_utc": "2026-10-05T14:15:39.934839+00:00",
+        "ports": {
+          "445": "TimeoutError",
+          "3389": "TimeoutError"
+        }
+      },
+      {
+        "client_utc": "2026-10-05T14:15:47.943201+00:00",
+        "ports": {
+          "445": "TimeoutError",
+          "3389": "TimeoutError"
+        }
+      },
+      {
+        "client_utc": "2026-10-05T14:15:55.948780+00:00",
+        "ports": {
+          "445": "TimeoutError",
+          "3389": "TimeoutError"
+        }
+      }
+    ],
+    "offline_verified": true
+  },
+  "tailscale_verification": {
+    "client_utc": "2026-10-05T14:17:08.101977+00:00",
+    "local_backend_state": "Running",
+    "local_online": true,
+    "health": [],
+    "peers": {
+      "100.121.207.17": {
+        "HostName": "openeuler-sp4-stock",
+        "OS": "linux",
+        "Online": false,
+        "Active": false,
+        "LastSeen": "2026-10-05T14:10:00.1Z"
+      },
+      "100.105.181.122": {
+        "HostName": "SD-20230928XZGS",
+        "OS": "windows",
+        "Online": false,
+        "Active": true,
+        "LastSeen": "2026-10-05T14:10:00.1Z"
+      }
+    }
+  }
+}
