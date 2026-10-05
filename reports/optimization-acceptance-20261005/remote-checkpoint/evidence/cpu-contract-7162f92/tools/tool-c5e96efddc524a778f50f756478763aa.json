@@ -1,0 +1,83 @@
+{
+  "run_id": "tool-c5e96efddc524a778f50f756478763aa",
+  "agent_id": "default",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time; a=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-a)"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "10000 100000",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-c5e96efddc524a778f50f756478763aa",
+  "cgroup_id": 52810,
+  "pid": 48799,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": true,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 2.0788463649951154,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 211782,
+      "user_usec": 210900,
+      "system_usec": 881,
+      "nr_periods": 21,
+      "nr_throttled": 21,
+      "throttled_usec": 1657964,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "0.204429973\n",
+  "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract-7162f92/tools/tool-c5e96efddc524a778f50f756478763aa.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract-7162f92/tools/tool-c5e96efddc524a778f50f756478763aa.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [
+    "CPU throttling reflects the requested hard limit; preserve the limit and reduce parallel workers if needed"
+  ],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

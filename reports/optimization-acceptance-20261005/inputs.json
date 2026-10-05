@@ -1,0 +1,14 @@
+{
+  "candidate_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+  "preliminary_commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+  "proof_repository_scope": "original commit objects, all trees and production blobs; not full history; local complete repository retains ancestry",
+  "input_hashes": {
+    "schedx-source-proof-20261005.pack": "8125f0f1899bc3a9dfa7783a7dd6917a3c44ebf6503530c2830f3d7af073a07d",
+    "schedx-candidate-core-79905fb.tar.gz": "2f39c7415b82c1d6c08e90675ad098bc13193c9cd123430243a59178b1e5e88f",
+    "schedx-preliminary-core-b0591a1.tar.gz": "e90f3a8b89ecb2357c6f5584208b186996f99d82b3dba3be7dc4cc7b7e60c6b3"
+  },
+  "initial_native_state": "disabled",
+  "initial_global_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+  "remote_path": "/tmp/schedx-acceptance-20261005-79905fb",
+  "guest_clock_skew": "Guest wall clock behind client by approximately 12 hours; record guest and client timestamps separately; timing metrics use monotonic/CPU deltas."
+}

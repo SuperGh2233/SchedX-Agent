@@ -1,0 +1,111 @@
+{
+  "case": "batch",
+  "version": "baseline",
+  "repeat": 4,
+  "failures": [],
+  "profile": "shared-throughput",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        5000
+      ],
+      "redis": [
+        1,
+        5000
+      ],
+      "noise": [
+        3,
+        300
+      ],
+      "batch": [
+        2,
+        2000
+      ]
+    },
+    "fairness": [
+      20,
+      32
+    ],
+    "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+  },
+  "command": [
+    "sysbench",
+    "cpu",
+    "--threads=3",
+    "--time=10",
+    "run"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 10.064818033992196,
+  "background_cpu_ticks": 238,
+  "background_cpu_seconds_per_wall_second": 0.23646726567355297,
+  "metrics": {
+    "elapsed_seconds": 10.0003,
+    "events": 128131.0,
+    "events_per_second": 12812.18,
+    "latency_p95_ms": 0.28
+  },
+  "native_evidence": {
+    "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+    "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+    "profile": "shared-throughput",
+    "settings": {
+      "policies": {
+        "service": [
+          1,
+          5000
+        ],
+        "redis": [
+          1,
+          5000
+        ],
+        "noise": [
+          3,
+          300
+        ],
+        "batch": [
+          2,
+          2000
+        ]
+      },
+      "fairness": [
+        20,
+        32
+      ],
+      "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+    },
+    "startup": "SchedX native sched_ext scheduler attached.\n",
+    "policies": {
+      "service": {
+        "cgroup_id": 53291,
+        "class_id": 1,
+        "weight": 5000,
+        "acknowledged": true
+      },
+      "redis": {
+        "cgroup_id": 53305,
+        "class_id": 1,
+        "weight": 5000,
+        "acknowledged": true
+      },
+      "noise": {
+        "cgroup_id": 53319,
+        "class_id": 3,
+        "weight": 300,
+        "acknowledged": true
+      },
+      "batch": {
+        "cgroup_id": 53333,
+        "class_id": 2,
+        "weight": 2000,
+        "acknowledged": true
+      }
+    },
+    "fairness_acknowledged": true,
+    "scheduler_stopped": true,
+    "output_readers_stopped": true,
+    "final_scheduler_state": "disabled"
+  },
+  "final_scheduler_state": "disabled"
+}

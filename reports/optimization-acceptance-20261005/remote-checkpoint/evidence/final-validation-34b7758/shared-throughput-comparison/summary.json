@@ -1,0 +1,5322 @@
+{
+  "status": "not_accepted",
+  "comparison_scope": "native sched_ext component with common static class policies",
+  "profile": "shared-throughput",
+  "fairness_parameters": "existing Agent throughput settings applied equally for batch; service cases retain compiled fairness defaults",
+  "settings_by_case": {
+    "nginx": {
+      "policies": {
+        "service": [
+          1,
+          10000
+        ],
+        "redis": [
+          1,
+          10000
+        ],
+        "noise": [
+          3,
+          100
+        ],
+        "batch": [
+          2,
+          1500
+        ]
+      },
+      "fairness": null,
+      "description": "common static policies; each binary retains compiled fairness defaults"
+    },
+    "redis": {
+      "policies": {
+        "service": [
+          1,
+          10000
+        ],
+        "redis": [
+          1,
+          10000
+        ],
+        "noise": [
+          3,
+          100
+        ],
+        "batch": [
+          2,
+          1500
+        ]
+      },
+      "fairness": null,
+      "description": "common static policies; each binary retains compiled fairness defaults"
+    },
+    "batch": {
+      "policies": {
+        "service": [
+          1,
+          5000
+        ],
+        "redis": [
+          1,
+          5000
+        ],
+        "noise": [
+          3,
+          300
+        ],
+        "batch": [
+          2,
+          2000
+        ]
+      },
+      "fairness": [
+        40,
+        32
+      ],
+      "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+    }
+  },
+  "version_identity": {
+    "baseline": {
+      "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/baseline",
+      "source_sha256": "4f40c854b2d48863d2b621d73c69b46dbd4837fdd60535882b137086d35c1c05",
+      "source_verified_against_git": true,
+      "source_file_count": 69,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+      "binary_sha256": "1d0a7aeacf1341581ac14ca09daafa2bd7c19912745af8111e4bc0e121164eb8",
+      "build_manifest_matches": true,
+      "build_manifest": {
+        "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+        "source_path": "/tmp/schedx-acceptance-20261005-79905fb/baseline",
+        "source_sha256": "4f40c854b2d48863d2b621d73c69b46dbd4837fdd60535882b137086d35c1c05",
+        "source_verified_against_git": true,
+        "source_file_count": 69,
+        "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "binary_sha256": "1d0a7aeacf1341581ac14ca09daafa2bd7c19912745af8111e4bc0e121164eb8",
+        "build_manifest_matches": false,
+        "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+        "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+        "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+        "build_command": [
+          "make",
+          "-C",
+          "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-baseline",
+          "O=/tmp/schedx-acceptance-20261005-79905fb/native/baseline",
+          "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+          "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+          "-j2",
+          "scx_agent"
+        ],
+        "build_log": "build-native-baseline.log"
+      }
+    },
+    "candidate": {
+      "commit": "34b7758ece576b159342910aa5df4c00fbdc5371",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-34b7758",
+      "source_sha256": "9d3ba1673ed91cfb4e3afcf9fee63581e4510608fb560794eab92d84f2cf6862",
+      "source_verified_against_git": true,
+      "source_file_count": 78,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": true,
+      "build_manifest": {
+        "commit": "34b7758ece576b159342910aa5df4c00fbdc5371",
+        "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-34b7758",
+        "source_sha256": "9d3ba1673ed91cfb4e3afcf9fee63581e4510608fb560794eab92d84f2cf6862",
+        "source_verified_against_git": true,
+        "source_file_count": 78,
+        "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+        "build_manifest_matches": false,
+        "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+        "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+        "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+        "build_command": [
+          "make",
+          "-C",
+          "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+          "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+          "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+          "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+          "-j2",
+          "scx_agent"
+        ],
+        "build_log": "build-native-candidate.log",
+        "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+        "native_source_byte_identity_verified": true,
+        "ebpf_objects_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+        "ebpf_source_byte_identity_verified": true
+      }
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "work_cpus": [
+    0,
+    1,
+    2
+  ],
+  "housekeeping_cpu": 3,
+  "background_progress_definition": "owned noise CPU seconds / wall second; minimum 25% of paired default-scheduler reference",
+  "duration": 10,
+  "repeats": 5,
+  "runs": [
+    {
+      "case": "nginx",
+      "version": "reference",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.01447381399339,
+      "background_cpu_ticks": 1799,
+      "background_cpu_seconds_per_wall_second": 1.7963999241639907,
+      "metrics": {
+        "requests_completed": 863539,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7508,
+        "latency_stdev_ms": 0.313,
+        "latency_max_ms": 12.11,
+        "req_per_sec_avg": 43390.0,
+        "req_per_sec_stdev": 3300.0,
+        "requests_per_sec": 86267.63236763237,
+        "qps": 86262.79,
+        "transfer_sec": "13.82MB",
+        "p50_ms": 0.718,
+        "p50_latency_ms": 0.718,
+        "p75_ms": 0.768,
+        "p75_latency_ms": 0.768,
+        "p90_ms": 0.85,
+        "p90_latency_ms": 0.85,
+        "p99_ms": 2.26,
+        "p99_latency_ms": 2.26,
+        "avg_latency_ms": 0.7508,
+        "successful_requests_per_sec": 86267.63236763237,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 86262.79
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "baseline",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.013221852001152,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7916311318334244,
+      "metrics": {
+        "requests_completed": 857026,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7447,
+        "latency_stdev_ms": 0.2591,
+        "latency_max_ms": 17.49,
+        "req_per_sec_avg": 43060.0,
+        "req_per_sec_stdev": 1280.0,
+        "requests_per_sec": 85616.98301698302,
+        "qps": 85621.27,
+        "transfer_sec": "13.72MB",
+        "p50_ms": 0.73,
+        "p50_latency_ms": 0.73,
+        "p75_ms": 0.78,
+        "p75_latency_ms": 0.78,
+        "p90_ms": 0.86,
+        "p90_latency_ms": 0.86,
+        "p99_ms": 1.23,
+        "p99_latency_ms": 1.23,
+        "avg_latency_ms": 0.7447,
+        "successful_requests_per_sec": 85616.98301698302,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85621.27
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "candidate",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.103912556995056,
+      "background_cpu_ticks": 1811,
+      "background_cpu_seconds_per_wall_second": 1.7923749733426024,
+      "metrics": {
+        "requests_completed": 863887,
+        "elapsed_seconds": 10.1,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7554,
+        "latency_stdev_ms": 0.5029,
+        "latency_max_ms": 29.36,
+        "req_per_sec_avg": 43190.0,
+        "req_per_sec_stdev": 3160.0,
+        "requests_per_sec": 85533.36633663367,
+        "qps": 85531.77,
+        "transfer_sec": "13.70MB",
+        "p50_ms": 0.729,
+        "p50_latency_ms": 0.729,
+        "p75_ms": 0.78,
+        "p75_latency_ms": 0.78,
+        "p90_ms": 0.86,
+        "p90_latency_ms": 0.86,
+        "p99_ms": 1.22,
+        "p99_latency_ms": 1.22,
+        "avg_latency_ms": 0.7554,
+        "successful_requests_per_sec": 85533.36633663367,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85531.77
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "reference",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 13.300343587005045,
+      "background_cpu_ticks": 3206,
+      "background_cpu_seconds_per_wall_second": 2.410464044802863,
+      "metrics": {
+        "requests_per_sec": 37616.61,
+        "qps": 37616.61,
+        "requests": 500000.0,
+        "elapsed_seconds": 13.29,
+        "latency_avg_ms": 1.54,
+        "latency_min_ms": 0.048,
+        "p50_ms": 1.127,
+        "p95_ms": 3.727,
+        "p99_ms": 4.303,
+        "latency_max_ms": 8.935,
+        "p50_latency_ms": 1.127,
+        "p95_latency_ms": 3.727,
+        "p99_latency_ms": 4.303
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "baseline",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.555742835000274,
+      "background_cpu_ticks": 2202,
+      "background_cpu_seconds_per_wall_second": 2.3043734412092274,
+      "metrics": {
+        "requests_per_sec": 52460.39,
+        "qps": 52460.39,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.53,
+        "latency_avg_ms": 1.064,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.895,
+        "p95_ms": 3.087,
+        "p99_ms": 3.855,
+        "latency_max_ms": 23.855,
+        "p50_latency_ms": 0.895,
+        "p95_latency_ms": 3.087,
+        "p99_latency_ms": 3.855
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "candidate",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.549271919997409,
+      "background_cpu_ticks": 2200,
+      "background_cpu_seconds_per_wall_second": 2.303840563376267,
+      "metrics": {
+        "requests_per_sec": 52498.95,
+        "qps": 52498.95,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.52,
+        "latency_avg_ms": 1.054,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.895,
+        "p95_ms": 3.055,
+        "p99_ms": 3.727,
+        "latency_max_ms": 23.743,
+        "p50_latency_ms": 0.895,
+        "p95_latency_ms": 3.055,
+        "p99_latency_ms": 3.727
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "reference",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.077861411991762,
+      "background_cpu_ticks": 1374,
+      "background_cpu_seconds_per_wall_second": 1.36338449580688,
+      "metrics": {
+        "elapsed_seconds": 10.0021,
+        "events": 70662.0,
+        "events_per_second": 7064.39,
+        "latency_p95_ms": 3.07
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "baseline",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.066141488001449,
+      "background_cpu_ticks": 239,
+      "background_cpu_seconds_per_wall_second": 0.2374296052612425,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 130070.0,
+        "events_per_second": 13006.06,
+        "latency_p95_ms": 0.27
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "candidate",
+      "repeat": 1,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.069660053995904,
+      "background_cpu_ticks": 241,
+      "background_cpu_seconds_per_wall_second": 0.2393328063784685,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 128989.0,
+        "events_per_second": 12897.95,
+        "latency_p95_ms": 0.27
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "candidate",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.541532084011124,
+      "background_cpu_ticks": 2199,
+      "background_cpu_seconds_per_wall_second": 2.304661327592132,
+      "metrics": {
+        "requests_per_sec": 52482.42,
+        "qps": 52482.42,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.53,
+        "latency_avg_ms": 1.067,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.919,
+        "p95_ms": 3.087,
+        "p99_ms": 3.775,
+        "latency_max_ms": 23.615,
+        "p50_latency_ms": 0.919,
+        "p95_latency_ms": 3.087,
+        "p99_latency_ms": 3.775
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "reference",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 13.042636459998903,
+      "background_cpu_ticks": 3138,
+      "background_cpu_seconds_per_wall_second": 2.4059552757021825,
+      "metrics": {
+        "requests_per_sec": 38355.32,
+        "qps": 38355.32,
+        "requests": 500000.0,
+        "elapsed_seconds": 13.04,
+        "latency_avg_ms": 1.527,
+        "latency_min_ms": 0.048,
+        "p50_ms": 1.119,
+        "p95_ms": 3.647,
+        "p99_ms": 4.215,
+        "latency_max_ms": 10.335,
+        "p50_latency_ms": 1.119,
+        "p95_latency_ms": 3.647,
+        "p99_latency_ms": 4.215
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "baseline",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.286257522995584,
+      "background_cpu_ticks": 2131,
+      "background_cpu_seconds_per_wall_second": 2.2947888260938263,
+      "metrics": {
+        "requests_per_sec": 53890.93,
+        "qps": 53890.93,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.28,
+        "latency_avg_ms": 1.041,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.871,
+        "p95_ms": 3.031,
+        "p99_ms": 3.639,
+        "latency_max_ms": 22.927,
+        "p50_latency_ms": 0.871,
+        "p95_latency_ms": 3.031,
+        "p99_latency_ms": 3.639
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "candidate",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.057200630995794,
+      "background_cpu_ticks": 236,
+      "background_cpu_seconds_per_wall_second": 0.23465774290378544,
+      "metrics": {
+        "elapsed_seconds": 10.0003,
+        "events": 128722.0,
+        "events_per_second": 12871.2,
+        "latency_p95_ms": 0.27
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "reference",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.076625524001429,
+      "background_cpu_ticks": 1387,
+      "background_cpu_seconds_per_wall_second": 1.376452857850395,
+      "metrics": {
+        "elapsed_seconds": 10.0027,
+        "events": 68386.0,
+        "events_per_second": 6836.48,
+        "latency_p95_ms": 3.07
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "baseline",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.05947429400112,
+      "background_cpu_ticks": 231,
+      "background_cpu_seconds_per_wall_second": 0.22963426641266418,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 129260.0,
+        "events_per_second": 12925.14,
+        "latency_p95_ms": 0.27
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "candidate",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.00788343999011,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7925868249338575,
+      "metrics": {
+        "requests_completed": 852729,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7605,
+        "latency_stdev_ms": 0.4393,
+        "latency_max_ms": 26.87,
+        "req_per_sec_avg": 42860.0,
+        "req_per_sec_stdev": 1450.0,
+        "requests_per_sec": 85272.9,
+        "qps": 85236.29,
+        "transfer_sec": "13.66MB",
+        "p50_ms": 0.736,
+        "p50_latency_ms": 0.736,
+        "p75_ms": 0.785,
+        "p75_latency_ms": 0.785,
+        "p90_ms": 0.86,
+        "p90_latency_ms": 0.86,
+        "p99_ms": 1.21,
+        "p99_latency_ms": 1.21,
+        "avg_latency_ms": 0.7605,
+        "successful_requests_per_sec": 85272.9,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85236.29
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "reference",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.013290426999447,
+      "background_cpu_ticks": 1813,
+      "background_cpu_seconds_per_wall_second": 1.8105936437352272,
+      "metrics": {
+        "requests_completed": 848767,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7821,
+        "latency_stdev_ms": 0.4124,
+        "latency_max_ms": 15.92,
+        "req_per_sec_avg": 42660.0,
+        "req_per_sec_stdev": 4350.0,
+        "requests_per_sec": 84791.90809190809,
+        "qps": 84796.91,
+        "transfer_sec": "13.59MB",
+        "p50_ms": 0.722,
+        "p50_latency_ms": 0.722,
+        "p75_ms": 0.774,
+        "p75_latency_ms": 0.774,
+        "p90_ms": 0.88,
+        "p90_latency_ms": 0.88,
+        "p99_ms": 2.99,
+        "p99_latency_ms": 2.99,
+        "avg_latency_ms": 0.7821,
+        "successful_requests_per_sec": 84791.90809190809,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 84796.91
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "baseline",
+      "repeat": 2,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.011703307987773,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7919028808701,
+      "metrics": {
+        "requests_completed": 856166,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7431,
+        "latency_stdev_ms": 0.1885,
+        "latency_max_ms": 9.44,
+        "req_per_sec_avg": 43020.0,
+        "req_per_sec_stdev": 1190.0,
+        "requests_per_sec": 85531.06893106893,
+        "qps": 85547.24,
+        "transfer_sec": "13.71MB",
+        "p50_ms": 0.733,
+        "p50_latency_ms": 0.733,
+        "p75_ms": 0.782,
+        "p75_latency_ms": 0.782,
+        "p90_ms": 0.86,
+        "p90_latency_ms": 0.86,
+        "p99_ms": 1.17,
+        "p99_latency_ms": 1.17,
+        "avg_latency_ms": 0.7431,
+        "successful_requests_per_sec": 85531.06893106893,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85547.24
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "baseline",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.055218542998773,
+      "background_cpu_ticks": 230,
+      "background_cpu_seconds_per_wall_second": 0.22873694790069374,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 128779.0,
+        "events_per_second": 12876.93,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "candidate",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.06764599798771,
+      "background_cpu_ticks": 214,
+      "background_cpu_seconds_per_wall_second": 0.21256210244457707,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 129908.0,
+        "events_per_second": 12989.83,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "reference",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.079779045001487,
+      "background_cpu_ticks": 1367,
+      "background_cpu_seconds_per_wall_second": 1.3561805213159792,
+      "metrics": {
+        "elapsed_seconds": 10.0028,
+        "events": 70020.0,
+        "events_per_second": 6999.71,
+        "latency_p95_ms": 3.07
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "baseline",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.008121658000164,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7925441569407137,
+      "metrics": {
+        "requests_completed": 858041,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.743,
+        "latency_stdev_ms": 0.2069,
+        "latency_max_ms": 12.52,
+        "req_per_sec_avg": 43100.0,
+        "req_per_sec_stdev": 1150.0,
+        "requests_per_sec": 85804.1,
+        "qps": 85766.22,
+        "transfer_sec": "13.74MB",
+        "p50_ms": 0.731,
+        "p50_latency_ms": 0.731,
+        "p75_ms": 0.78,
+        "p75_latency_ms": 0.78,
+        "p90_ms": 0.85,
+        "p90_latency_ms": 0.85,
+        "p99_ms": 1.18,
+        "p99_latency_ms": 1.18,
+        "avg_latency_ms": 0.743,
+        "successful_requests_per_sec": 85804.1,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85766.22
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "candidate",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.00915096901008,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7923598170858936,
+      "metrics": {
+        "requests_completed": 856003,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.747,
+        "latency_stdev_ms": 0.232,
+        "latency_max_ms": 13.94,
+        "req_per_sec_avg": 43010.0,
+        "req_per_sec_stdev": 1210.0,
+        "requests_per_sec": 85514.78521478521,
+        "qps": 85553.8,
+        "transfer_sec": "13.71MB",
+        "p50_ms": 0.735,
+        "p50_latency_ms": 0.735,
+        "p75_ms": 0.782,
+        "p75_latency_ms": 0.782,
+        "p90_ms": 0.85,
+        "p90_latency_ms": 0.85,
+        "p99_ms": 1.19,
+        "p99_latency_ms": 1.19,
+        "avg_latency_ms": 0.747,
+        "successful_requests_per_sec": 85514.78521478521,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85553.8
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "reference",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.105432680997183,
+      "background_cpu_ticks": 1837,
+      "background_cpu_seconds_per_wall_second": 1.8178340878509804,
+      "metrics": {
+        "requests_completed": 846112,
+        "elapsed_seconds": 10.1,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7898,
+        "latency_stdev_ms": 0.3991,
+        "latency_max_ms": 9.92,
+        "req_per_sec_avg": 42290.0,
+        "req_per_sec_stdev": 5500.0,
+        "requests_per_sec": 83773.46534653465,
+        "qps": 83781.92,
+        "transfer_sec": "13.42MB",
+        "p50_ms": 0.726,
+        "p50_latency_ms": 0.726,
+        "p75_ms": 0.778,
+        "p75_latency_ms": 0.778,
+        "p90_ms": 0.89,
+        "p90_latency_ms": 0.89,
+        "p99_ms": 3.0,
+        "p99_latency_ms": 3.0,
+        "avg_latency_ms": 0.7898,
+        "successful_requests_per_sec": 83773.46534653465,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 83781.92
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "baseline",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.54926480499853,
+      "background_cpu_ticks": 2203,
+      "background_cpu_seconds_per_wall_second": 2.3069838830386686,
+      "metrics": {
+        "requests_per_sec": 52476.91,
+        "qps": 52476.91,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.53,
+        "latency_avg_ms": 1.06,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.943,
+        "p95_ms": 3.055,
+        "p99_ms": 3.719,
+        "latency_max_ms": 23.487,
+        "p50_latency_ms": 0.943,
+        "p95_latency_ms": 3.055,
+        "p99_latency_ms": 3.719
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "candidate",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.530762401001994,
+      "background_cpu_ticks": 2194,
+      "background_cpu_seconds_per_wall_second": 2.3020194058865,
+      "metrics": {
+        "requests_per_sec": 52504.46,
+        "qps": 52504.46,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.52,
+        "latency_avg_ms": 1.048,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.911,
+        "p95_ms": 3.023,
+        "p99_ms": 3.687,
+        "latency_max_ms": 23.039,
+        "p50_latency_ms": 0.911,
+        "p95_latency_ms": 3.023,
+        "p99_latency_ms": 3.687
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "reference",
+      "repeat": 3,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 13.044000724010402,
+      "background_cpu_ticks": 3138,
+      "background_cpu_seconds_per_wall_second": 2.4057036383199586,
+      "metrics": {
+        "requests_per_sec": 38352.38,
+        "qps": 38352.38,
+        "requests": 500000.0,
+        "elapsed_seconds": 13.04,
+        "latency_avg_ms": 1.526,
+        "latency_min_ms": 0.048,
+        "p50_ms": 1.119,
+        "p95_ms": 3.631,
+        "p99_ms": 4.183,
+        "latency_max_ms": 6.879,
+        "p50_latency_ms": 1.119,
+        "p95_latency_ms": 3.631,
+        "p99_latency_ms": 4.183
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "reference",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.015305449996958,
+      "background_cpu_ticks": 1854,
+      "background_cpu_seconds_per_wall_second": 1.8511667060544448,
+      "metrics": {
+        "requests_completed": 801814,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.86,
+        "latency_stdev_ms": 0.5659,
+        "latency_max_ms": 18.73,
+        "req_per_sec_avg": 40290.0,
+        "req_per_sec_stdev": 6480.0,
+        "requests_per_sec": 80101.2987012987,
+        "qps": 80105.5,
+        "transfer_sec": "12.83MB",
+        "p50_ms": 0.735,
+        "p50_latency_ms": 0.735,
+        "p75_ms": 0.792,
+        "p75_latency_ms": 0.792,
+        "p90_ms": 1.01,
+        "p90_latency_ms": 1.01,
+        "p99_ms": 3.64,
+        "p99_latency_ms": 3.64,
+        "avg_latency_ms": 0.86,
+        "successful_requests_per_sec": 80101.2987012987,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 80105.5
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "candidate",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.01034831200377,
+      "background_cpu_ticks": 1796,
+      "background_cpu_seconds_per_wall_second": 1.7941433644684985,
+      "metrics": {
+        "requests_completed": 852766,
+        "elapsed_seconds": 10.01,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7507,
+        "latency_stdev_ms": 0.2395,
+        "latency_max_ms": 9.94,
+        "req_per_sec_avg": 42860.0,
+        "req_per_sec_stdev": 1200.0,
+        "requests_per_sec": 85191.40859140859,
+        "qps": 85219.45,
+        "transfer_sec": "13.65MB",
+        "p50_ms": 0.737,
+        "p50_latency_ms": 0.737,
+        "p75_ms": 0.784,
+        "p75_latency_ms": 0.784,
+        "p90_ms": 0.85,
+        "p90_latency_ms": 0.85,
+        "p99_ms": 1.24,
+        "p99_latency_ms": 1.24,
+        "avg_latency_ms": 0.7507,
+        "successful_requests_per_sec": 85191.40859140859,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85219.45
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "baseline",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.007478226994863,
+      "background_cpu_ticks": 1792,
+      "background_cpu_seconds_per_wall_second": 1.7906609031295573,
+      "metrics": {
+        "requests_completed": 854138,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7505,
+        "latency_stdev_ms": 0.2716,
+        "latency_max_ms": 15.29,
+        "req_per_sec_avg": 42920.0,
+        "req_per_sec_stdev": 1360.0,
+        "requests_per_sec": 85413.8,
+        "qps": 85379.38,
+        "transfer_sec": "13.68MB",
+        "p50_ms": 0.734,
+        "p50_latency_ms": 0.734,
+        "p75_ms": 0.783,
+        "p75_latency_ms": 0.783,
+        "p90_ms": 0.86,
+        "p90_latency_ms": 0.86,
+        "p99_ms": 1.22,
+        "p99_latency_ms": 1.22,
+        "avg_latency_ms": 0.7505,
+        "successful_requests_per_sec": 85413.8,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85379.38
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "reference",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 13.28845968900714,
+      "background_cpu_ticks": 3204,
+      "background_cpu_seconds_per_wall_second": 2.4111146626350566,
+      "metrics": {
+        "requests_per_sec": 37647.77,
+        "qps": 37647.77,
+        "requests": 500000.0,
+        "elapsed_seconds": 13.28,
+        "latency_avg_ms": 1.53,
+        "latency_min_ms": 0.04,
+        "p50_ms": 1.119,
+        "p95_ms": 3.639,
+        "p99_ms": 4.175,
+        "latency_max_ms": 6.191,
+        "p50_latency_ms": 1.119,
+        "p95_latency_ms": 3.639,
+        "p99_latency_ms": 4.175
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "candidate",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.536354487994686,
+      "background_cpu_ticks": 2180,
+      "background_cpu_seconds_per_wall_second": 2.2859888469376863,
+      "metrics": {
+        "requests_per_sec": 52471.4,
+        "qps": 52471.4,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.53,
+        "latency_avg_ms": 1.064,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.895,
+        "p95_ms": 3.071,
+        "p99_ms": 3.775,
+        "latency_max_ms": 25.263,
+        "p50_latency_ms": 0.895,
+        "p95_latency_ms": 3.071,
+        "p99_latency_ms": 3.775
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "baseline",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.536891575000482,
+      "background_cpu_ticks": 2197,
+      "background_cpu_seconds_per_wall_second": 2.3036856220103235,
+      "metrics": {
+        "requests_per_sec": 52526.53,
+        "qps": 52526.53,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.52,
+        "latency_avg_ms": 1.053,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.903,
+        "p95_ms": 3.071,
+        "p99_ms": 3.671,
+        "latency_max_ms": 22.879,
+        "p50_latency_ms": 0.903,
+        "p95_latency_ms": 3.071,
+        "p99_latency_ms": 3.671
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "reference",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.04889420401014,
+      "background_cpu_ticks": 1361,
+      "background_cpu_seconds_per_wall_second": 1.3543778771766506,
+      "metrics": {
+        "elapsed_seconds": 10.0025,
+        "events": 69534.0,
+        "events_per_second": 6951.37,
+        "latency_p95_ms": 3.07
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "candidate",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.071715530997608,
+      "background_cpu_ticks": 238,
+      "background_cpu_seconds_per_wall_second": 0.23630532382245112,
+      "metrics": {
+        "elapsed_seconds": 10.0003,
+        "events": 127755.0,
+        "events_per_second": 12774.62,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "baseline",
+      "repeat": 4,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.075256497002556,
+      "background_cpu_ticks": 222,
+      "background_cpu_seconds_per_wall_second": 0.22034178491242007,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 129354.0,
+        "events_per_second": 12934.49,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "baseline",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.287890824009082,
+      "background_cpu_ticks": 2131,
+      "background_cpu_seconds_per_wall_second": 2.29438528120011,
+      "metrics": {
+        "requests_per_sec": 53902.54,
+        "qps": 53902.54,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.28,
+        "latency_avg_ms": 1.033,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.871,
+        "p95_ms": 3.015,
+        "p99_ms": 3.663,
+        "latency_max_ms": 25.855,
+        "p50_latency_ms": 0.871,
+        "p95_latency_ms": 3.015,
+        "p99_latency_ms": 3.663
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "reference",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 13.287681355010136,
+      "background_cpu_ticks": 3203,
+      "background_cpu_seconds_per_wall_second": 2.410503318392945,
+      "metrics": {
+        "requests_per_sec": 37647.77,
+        "qps": 37647.77,
+        "requests": 500000.0,
+        "elapsed_seconds": 13.28,
+        "latency_avg_ms": 1.529,
+        "latency_min_ms": 0.048,
+        "p50_ms": 1.127,
+        "p95_ms": 3.623,
+        "p99_ms": 4.175,
+        "latency_max_ms": 5.303,
+        "p50_latency_ms": 1.127,
+        "p95_latency_ms": 3.623,
+        "p99_latency_ms": 4.175
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "redis",
+      "version": "candidate",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "redis-benchmark",
+        "-h",
+        "127.0.0.1",
+        "-p",
+        "57719",
+        "-n",
+        "500000",
+        "-c",
+        "64",
+        "--threads",
+        "2",
+        "--precision",
+        "3",
+        "-t",
+        "get"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 9.547510450007394,
+      "background_cpu_ticks": 2199,
+      "background_cpu_seconds_per_wall_second": 2.3032182174760507,
+      "metrics": {
+        "requests_per_sec": 52471.4,
+        "qps": 52471.4,
+        "requests": 500000.0,
+        "elapsed_seconds": 9.53,
+        "latency_avg_ms": 1.058,
+        "latency_min_ms": 0.04,
+        "p50_ms": 0.919,
+        "p95_ms": 3.079,
+        "p99_ms": 3.671,
+        "latency_max_ms": 24.271,
+        "p50_latency_ms": 0.919,
+        "p95_latency_ms": 3.079,
+        "p99_latency_ms": 3.671
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "baseline",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.051494365005055,
+      "background_cpu_ticks": 223,
+      "background_cpu_seconds_per_wall_second": 0.2218575585898842,
+      "metrics": {
+        "elapsed_seconds": 10.0002,
+        "events": 128396.0,
+        "events_per_second": 12838.71,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "reference",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.070310827999492,
+      "background_cpu_ticks": 1364,
+      "background_cpu_seconds_per_wall_second": 1.354476563134014,
+      "metrics": {
+        "elapsed_seconds": 10.0044,
+        "events": 69211.0,
+        "events_per_second": 6917.78,
+        "latency_p95_ms": 3.07
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "batch",
+      "version": "candidate",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            5000
+          ],
+          "redis": [
+            1,
+            5000
+          ],
+          "noise": [
+            3,
+            300
+          ],
+          "batch": [
+            2,
+            2000
+          ]
+        },
+        "fairness": [
+          40,
+          32
+        ],
+        "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+      },
+      "command": [
+        "sysbench",
+        "cpu",
+        "--threads=3",
+        "--time=10",
+        "run"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.056571150009404,
+      "background_cpu_ticks": 227,
+      "background_cpu_seconds_per_wall_second": 0.22572305869857812,
+      "metrics": {
+        "elapsed_seconds": 10.0001,
+        "events": 128550.0,
+        "events_per_second": 12854.17,
+        "latency_p95_ms": 0.28
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "same existing Agent throughput weights and fairness settings on both binaries; batch only",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              5000
+            ],
+            "redis": [
+              1,
+              5000
+            ],
+            "noise": [
+              3,
+              300
+            ],
+            "batch": [
+              2,
+              2000
+            ]
+          },
+          "fairness": [
+            40,
+            32
+          ],
+          "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 5000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 300,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 2000,
+            "acknowledged": true
+          }
+        },
+        "fairness_acknowledged": true,
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "baseline",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.006085360000725,
+      "background_cpu_ticks": 1791,
+      "background_cpu_seconds_per_wall_second": 1.7899107748565821,
+      "metrics": {
+        "requests_completed": 858295,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7438,
+        "latency_stdev_ms": 0.2432,
+        "latency_max_ms": 21.51,
+        "req_per_sec_avg": 43130.0,
+        "req_per_sec_stdev": 1100.0,
+        "requests_per_sec": 85829.5,
+        "qps": 85809.59,
+        "transfer_sec": "13.75MB",
+        "p50_ms": 0.735,
+        "p50_latency_ms": 0.735,
+        "p75_ms": 0.78,
+        "p75_latency_ms": 0.78,
+        "p90_ms": 0.843,
+        "p90_latency_ms": 0.843,
+        "p99_ms": 1.15,
+        "p99_latency_ms": 1.15,
+        "avg_latency_ms": 0.7438,
+        "successful_requests_per_sec": 85829.5,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85809.59
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "reference",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.105308678990696,
+      "background_cpu_ticks": 1846,
+      "background_cpu_seconds_per_wall_second": 1.8267626043308318,
+      "metrics": {
+        "requests_completed": 833649,
+        "elapsed_seconds": 10.1,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.8305,
+        "latency_stdev_ms": 0.6489,
+        "latency_max_ms": 38.19,
+        "req_per_sec_avg": 41480.0,
+        "req_per_sec_stdev": 5570.0,
+        "requests_per_sec": 82539.50495049506,
+        "qps": 82537.65,
+        "transfer_sec": "13.22MB",
+        "p50_ms": 0.73,
+        "p50_latency_ms": 0.73,
+        "p75_ms": 0.782,
+        "p75_latency_ms": 0.782,
+        "p90_ms": 0.92,
+        "p90_latency_ms": 0.92,
+        "p99_ms": 3.5,
+        "p99_latency_ms": 3.5,
+        "avg_latency_ms": 0.8305,
+        "successful_requests_per_sec": 82539.50495049506,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 82537.65
+      },
+      "final_scheduler_state": "disabled"
+    },
+    {
+      "case": "nginx",
+      "version": "candidate",
+      "repeat": 5,
+      "failures": [],
+      "profile": "shared-throughput",
+      "settings": {
+        "policies": {
+          "service": [
+            1,
+            10000
+          ],
+          "redis": [
+            1,
+            10000
+          ],
+          "noise": [
+            3,
+            100
+          ],
+          "batch": [
+            2,
+            1500
+          ]
+        },
+        "fairness": null,
+        "description": "common static policies; each binary retains compiled fairness defaults"
+      },
+      "command": [
+        "wrk",
+        "-t2",
+        "-c64",
+        "-d10s",
+        "--latency",
+        "http://127.0.0.1:36009/"
+      ],
+      "client_returncode": 0,
+      "wall_seconds": 10.005983855997329,
+      "background_cpu_ticks": 1794,
+      "background_cpu_seconds_per_wall_second": 1.7929271382191196,
+      "metrics": {
+        "requests_completed": 853479,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.7558,
+        "latency_stdev_ms": 0.434,
+        "latency_max_ms": 29.04,
+        "req_per_sec_avg": 42890.0,
+        "req_per_sec_stdev": 1180.0,
+        "requests_per_sec": 85347.9,
+        "qps": 85328.47,
+        "transfer_sec": "13.67MB",
+        "p50_ms": 0.736,
+        "p50_latency_ms": 0.736,
+        "p75_ms": 0.784,
+        "p75_latency_ms": 0.784,
+        "p90_ms": 0.85,
+        "p90_latency_ms": 0.85,
+        "p99_ms": 1.19,
+        "p99_latency_ms": 1.19,
+        "avg_latency_ms": 0.7558,
+        "successful_requests_per_sec": 85347.9,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "raw_requests_per_sec": 85328.47
+      },
+      "native_evidence": {
+        "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+        "fairness_configuration": "compiled defaults; no set fairness command",
+        "profile": "shared-throughput",
+        "settings": {
+          "policies": {
+            "service": [
+              1,
+              10000
+            ],
+            "redis": [
+              1,
+              10000
+            ],
+            "noise": [
+              3,
+              100
+            ],
+            "batch": [
+              2,
+              1500
+            ]
+          },
+          "fairness": null,
+          "description": "common static policies; each binary retains compiled fairness defaults"
+        },
+        "startup": "SchedX native sched_ext scheduler attached.\n",
+        "policies": {
+          "service": {
+            "cgroup_id": 53154,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "redis": {
+            "cgroup_id": 53168,
+            "class_id": 1,
+            "weight": 10000,
+            "acknowledged": true
+          },
+          "noise": {
+            "cgroup_id": 53182,
+            "class_id": 3,
+            "weight": 100,
+            "acknowledged": true
+          },
+          "batch": {
+            "cgroup_id": 53196,
+            "class_id": 2,
+            "weight": 1500,
+            "acknowledged": true
+          }
+        },
+        "scheduler_stopped": true,
+        "output_readers_stopped": true,
+        "final_scheduler_state": "disabled"
+      },
+      "final_scheduler_state": "disabled"
+    }
+  ],
+  "execution_order": [
+    {
+      "repeat": 1,
+      "case": "nginx",
+      "versions": [
+        "reference",
+        "baseline",
+        "candidate"
+      ]
+    },
+    {
+      "repeat": 1,
+      "case": "redis",
+      "versions": [
+        "reference",
+        "baseline",
+        "candidate"
+      ]
+    },
+    {
+      "repeat": 1,
+      "case": "batch",
+      "versions": [
+        "reference",
+        "baseline",
+        "candidate"
+      ]
+    },
+    {
+      "repeat": 2,
+      "case": "redis",
+      "versions": [
+        "candidate",
+        "reference",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 2,
+      "case": "batch",
+      "versions": [
+        "candidate",
+        "reference",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 2,
+      "case": "nginx",
+      "versions": [
+        "candidate",
+        "reference",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 3,
+      "case": "batch",
+      "versions": [
+        "baseline",
+        "candidate",
+        "reference"
+      ]
+    },
+    {
+      "repeat": 3,
+      "case": "nginx",
+      "versions": [
+        "baseline",
+        "candidate",
+        "reference"
+      ]
+    },
+    {
+      "repeat": 3,
+      "case": "redis",
+      "versions": [
+        "baseline",
+        "candidate",
+        "reference"
+      ]
+    },
+    {
+      "repeat": 4,
+      "case": "nginx",
+      "versions": [
+        "reference",
+        "candidate",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 4,
+      "case": "redis",
+      "versions": [
+        "reference",
+        "candidate",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 4,
+      "case": "batch",
+      "versions": [
+        "reference",
+        "candidate",
+        "baseline"
+      ]
+    },
+    {
+      "repeat": 5,
+      "case": "redis",
+      "versions": [
+        "baseline",
+        "reference",
+        "candidate"
+      ]
+    },
+    {
+      "repeat": 5,
+      "case": "batch",
+      "versions": [
+        "baseline",
+        "reference",
+        "candidate"
+      ]
+    },
+    {
+      "repeat": 5,
+      "case": "nginx",
+      "versions": [
+        "baseline",
+        "reference",
+        "candidate"
+      ]
+    }
+  ],
+  "redis_error_probe": {
+    "returncode": 1,
+    "fatal_server_error_observed": true
+  },
+  "assessment": {
+    "status": "not_accepted",
+    "failures": [
+      "batch:events_per_second:insufficient_valid_pairs"
+    ],
+    "comparisons": {
+      "nginx": {
+        "requests_per_sec": {
+          "direction": "higher",
+          "pairs": [
+            {
+              "repeat": 1,
+              "baseline": 85616.98301698302,
+              "candidate": 85533.36633663367,
+              "background_retention": {
+                "baseline": 0.9973453615386977,
+                "candidate": 0.9977594349859141
+              },
+              "change_percent": -0.0976636613471471,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 2,
+              "baseline": 85531.06893106893,
+              "candidate": 85272.9,
+              "background_retention": {
+                "baseline": 0.9896769974147438,
+                "candidate": 0.9900547431701892
+              },
+              "change_percent": -0.3018422829217826,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 3,
+              "baseline": 85804.1,
+              "candidate": 85514.78521478521,
+              "background_retention": {
+                "baseline": 0.9860878772824839,
+                "candidate": 0.9859864709682047
+              },
+              "change_percent": -0.3371806070045502,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 4,
+              "baseline": 85413.8,
+              "candidate": 85191.40859140859,
+              "background_retention": {
+                "baseline": 0.9673147735819813,
+                "candidate": 0.9691959987182974
+              },
+              "change_percent": -0.26036941172434824,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 5,
+              "baseline": 85829.5,
+              "candidate": 85347.9,
+              "background_retention": {
+                "baseline": 0.9798267003129566,
+                "candidate": 0.9814779074021462
+              },
+              "change_percent": -0.5611124380312194,
+              "valid": true,
+              "invalid_reasons": []
+            }
+          ],
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": -0.3116,
+            "median": -0.3018,
+            "stdev": 0.1669,
+            "ci95": [
+              -0.5188,
+              -0.1045
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        },
+        "p99_ms": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "baseline": 1.23,
+              "candidate": 1.22,
+              "background_retention": {
+                "baseline": 0.9973453615386977,
+                "candidate": 0.9977594349859141
+              },
+              "change_percent": -0.8130081300813052,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 2,
+              "baseline": 1.17,
+              "candidate": 1.21,
+              "background_retention": {
+                "baseline": 0.9896769974147438,
+                "candidate": 0.9900547431701892
+              },
+              "change_percent": 3.418803418803429,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 3,
+              "baseline": 1.18,
+              "candidate": 1.19,
+              "background_retention": {
+                "baseline": 0.9860878772824839,
+                "candidate": 0.9859864709682047
+              },
+              "change_percent": 0.8474576271186418,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 4,
+              "baseline": 1.22,
+              "candidate": 1.24,
+              "background_retention": {
+                "baseline": 0.9673147735819813,
+                "candidate": 0.9691959987182974
+              },
+              "change_percent": 1.6393442622950838,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 5,
+              "baseline": 1.15,
+              "candidate": 1.19,
+              "background_retention": {
+                "baseline": 0.9798267003129566,
+                "candidate": 0.9814779074021462
+              },
+              "change_percent": 3.4782608695652195,
+              "valid": true,
+              "invalid_reasons": []
+            }
+          ],
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": 1.7142,
+            "median": 1.6393,
+            "stdev": 1.8139,
+            "ci95": [
+              -0.5377,
+              3.9661
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        }
+      },
+      "redis": {
+        "requests_per_sec": {
+          "direction": "higher",
+          "pairs": [
+            {
+              "repeat": 1,
+              "baseline": 52460.39,
+              "candidate": 52498.95,
+              "background_retention": {
+                "baseline": 0.9559874772567653,
+                "candidate": 0.9557664086894455
+              },
+              "change_percent": 0.0735030753679089,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 2,
+              "baseline": 53890.93,
+              "candidate": 52482.42,
+              "background_retention": {
+                "baseline": 0.9537952967243283,
+                "candidate": 0.9578986570810267
+              },
+              "change_percent": -2.6136309022687154,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 3,
+              "baseline": 52476.91,
+              "candidate": 52504.46,
+              "background_retention": {
+                "baseline": 0.9589642906512659,
+                "candidate": 0.9569006627491875
+              },
+              "change_percent": 0.052499280159579165,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 4,
+              "baseline": 52526.53,
+              "candidate": 52471.4,
+              "background_retention": {
+                "baseline": 0.9554442423292611,
+                "candidate": 0.9481045768430512
+              },
+              "change_percent": -0.10495648579869066,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 5,
+              "baseline": 53902.54,
+              "candidate": 52471.4,
+              "background_retention": {
+                "baseline": 0.9518283022857443,
+                "candidate": 0.9554926557875804
+              },
+              "change_percent": -2.655051134881581,
+              "valid": true,
+              "invalid_reasons": []
+            }
+          ],
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": -1.0495,
+            "median": -0.105,
+            "stdev": 1.4484,
+            "ci95": [
+              -2.8477,
+              0.7487
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        },
+        "p99_ms": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "baseline": 3.855,
+              "candidate": 3.727,
+              "background_retention": {
+                "baseline": 0.9559874772567653,
+                "candidate": 0.9557664086894455
+              },
+              "change_percent": -3.3203631647211407,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 2,
+              "baseline": 3.639,
+              "candidate": 3.775,
+              "background_retention": {
+                "baseline": 0.9537952967243283,
+                "candidate": 0.9578986570810267
+              },
+              "change_percent": 3.737290464413312,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 3,
+              "baseline": 3.719,
+              "candidate": 3.687,
+              "background_retention": {
+                "baseline": 0.9589642906512659,
+                "candidate": 0.9569006627491875
+              },
+              "change_percent": -0.8604463565474618,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 4,
+              "baseline": 3.671,
+              "candidate": 3.775,
+              "background_retention": {
+                "baseline": 0.9554442423292611,
+                "candidate": 0.9481045768430512
+              },
+              "change_percent": 2.8330155271043322,
+              "valid": true,
+              "invalid_reasons": []
+            },
+            {
+              "repeat": 5,
+              "baseline": 3.663,
+              "candidate": 3.671,
+              "background_retention": {
+                "baseline": 0.9518283022857443,
+                "candidate": 0.9554926557875804
+              },
+              "change_percent": 0.2184002184002276,
+              "valid": true,
+              "invalid_reasons": []
+            }
+          ],
+          "valid_pair_count": 5,
+          "statistics": {
+            "count": 5,
+            "mean": 0.5216,
+            "median": 0.2184,
+            "stdev": 2.8481,
+            "ci95": [
+              -3.0142,
+              4.0574
+            ]
+          },
+          "stable_regression_over_5_percent": false
+        }
+      },
+      "batch": {
+        "events_per_second": {
+          "direction": "higher",
+          "pairs": [
+            {
+              "repeat": 1,
+              "baseline": 13006.06,
+              "candidate": 12897.95,
+              "background_retention": {
+                "baseline": 0.17414720938331238,
+                "candidate": 0.17554314803677318
+              },
+              "change_percent": null,
+              "valid": false,
+              "invalid_reasons": [
+                "baseline:background_retention_below_25_percent",
+                "candidate:background_retention_below_25_percent"
+              ]
+            },
+            {
+              "repeat": 2,
+              "baseline": 12925.14,
+              "candidate": 12871.2,
+              "background_retention": {
+                "baseline": 0.16683046215711578,
+                "candidate": 0.17048004337050104
+              },
+              "change_percent": null,
+              "valid": false,
+              "invalid_reasons": [
+                "baseline:background_retention_below_25_percent",
+                "candidate:background_retention_below_25_percent"
+              ]
+            },
+            {
+              "repeat": 3,
+              "baseline": 12876.93,
+              "candidate": 12989.83,
+              "background_retention": {
+                "baseline": 0.16866261113877173,
+                "candidate": 0.15673584681655503
+              },
+              "change_percent": null,
+              "valid": false,
+              "invalid_reasons": [
+                "baseline:background_retention_below_25_percent",
+                "candidate:background_retention_below_25_percent"
+              ]
+            },
+            {
+              "repeat": 4,
+              "baseline": 12934.49,
+              "candidate": 12774.62,
+              "background_retention": {
+                "baseline": 0.16268855880291452,
+                "candidate": 0.1744751799365296
+              },
+              "change_percent": null,
+              "valid": false,
+              "invalid_reasons": [
+                "baseline:background_retention_below_25_percent",
+                "candidate:background_retention_below_25_percent"
+              ]
+            },
+            {
+              "repeat": 5,
+              "baseline": 12838.71,
+              "candidate": 12854.17,
+              "background_retention": {
+                "baseline": 0.1637957899223785,
+                "candidate": 0.16664965998104517
+              },
+              "change_percent": null,
+              "valid": false,
+              "invalid_reasons": [
+                "baseline:background_retention_below_25_percent",
+                "candidate:background_retention_below_25_percent"
+              ]
+            }
+          ],
+          "valid_pair_count": 0,
+          "statistics": {
+            "count": 0,
+            "mean": null,
+            "median": null,
+            "stdev": null,
+            "ci95": null
+          },
+          "stable_regression_over_5_percent": false
+        }
+      }
+    }
+  },
+  "cleanup": {
+    "status": "passed",
+    "errors": [],
+    "cgroup_removed": true,
+    "leaders_reaped": true
+  },
+  "final_scheduler_state": "disabled"
+}

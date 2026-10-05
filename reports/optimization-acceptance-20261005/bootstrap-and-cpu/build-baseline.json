@@ -1,0 +1,24 @@
+{
+  "commit": "b0591a10785b74cf980c8f0b4ed703a9a95e1aa2",
+  "source_path": "/tmp/schedx-acceptance-20261005-79905fb/baseline",
+  "source_sha256": "4f40c854b2d48863d2b621d73c69b46dbd4837fdd60535882b137086d35c1c05",
+  "source_verified_against_git": true,
+  "source_file_count": 69,
+  "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+  "binary_sha256": "1d0a7aeacf1341581ac14ca09daafa2bd7c19912745af8111e4bc0e121164eb8",
+  "build_manifest_matches": false,
+  "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+  "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+  "build_command": [
+    "make",
+    "-C",
+    "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-baseline",
+    "O=/tmp/schedx-acceptance-20261005-79905fb/native/baseline",
+    "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+    "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+    "-j2",
+    "scx_agent"
+  ],
+  "build_log": "build-native-baseline.log"
+}

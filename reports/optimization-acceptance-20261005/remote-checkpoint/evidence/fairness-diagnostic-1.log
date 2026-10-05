@@ -1,0 +1,6 @@
+{"interval": 64, "background_retention": 0.16331119034090633}
+{"interval": 40, "background_retention": 0.16594001126137303}
+{"interval": 20, "background_retention": 0.17347785650041955}
+{"interval": 5, "background_retention": 0.19063462927333916}
+{"interval": 1, "background_retention": 0.44995225014792944}
+{"status": "passed", "final_state": "disabled", "cleanup": {"status": "passed", "errors": [], "cgroup_removed": true, "leaders_reaped": true}}

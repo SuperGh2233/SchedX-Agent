@@ -1,0 +1,1903 @@
+{
+  "stage": "interference",
+  "result": {
+    "round": 9,
+    "status": "ok",
+    "decision": {
+      "mode": "latency_first",
+      "target": "nginx",
+      "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+      "confidence": 0.7037729526430767,
+      "parameters": {
+        "cpu_weight": 8000,
+        "cpu_weight_bg": 10,
+        "cpu_max_bg": "10000 100000",
+        "nice_target": -5,
+        "nice_bg": 10,
+        "isolate_target": "stress-ng-cpu"
+      },
+      "expert_id": "latency_guard"
+    },
+    "policy_success": true,
+    "canary_baseline_success": true,
+    "ebpf_load_success": true,
+    "ebpf_attach_success": true,
+    "scx_success": true,
+    "act_success": true,
+    "scx_cgroups_success": true,
+    "ebpf_policy_success": true,
+    "canary_candidate_success": true,
+    "ebpf_stats_success": true,
+    "verify_success": true,
+    "canary_success": true,
+    "degraded_phases": [],
+    "objective_status": "accepted",
+    "metrics": {
+      "requests_completed": 1251651,
+      "elapsed_seconds": 15.1,
+      "socket_errors": {
+        "connect": 0,
+        "read": 0,
+        "write": 0,
+        "timeout": 0
+      },
+      "non_success_responses": 0,
+      "latency_avg_ms": 0.3876,
+      "latency_stdev_ms": 0.2071,
+      "latency_max_ms": 7.2,
+      "req_per_sec_avg": 41810.0,
+      "req_per_sec_stdev": 2810.0,
+      "requests_per_sec": 82892.53,
+      "qps": 82892.53,
+      "transfer_sec": "13.28MB",
+      "p50_ms": 0.363,
+      "p50_latency_ms": 0.363,
+      "p75_ms": 0.428,
+      "p75_latency_ms": 0.428,
+      "p90_ms": 0.483,
+      "p90_latency_ms": 0.483,
+      "p99_ms": 0.88,
+      "p99_latency_ms": 0.88,
+      "avg_latency_ms": 0.3876,
+      "successful_requests_per_sec": 82890.79470198676,
+      "response_error_rate": 0.0,
+      "socket_errors_per_second": 0.0,
+      "background_cpu_ticks": 2706,
+      "system_cpu_ticks": 5335,
+      "background_cpu_share": 0.5072164948453608,
+      "background_pids": [
+        45530,
+        45531,
+        45532,
+        45533
+      ],
+      "raw_output": "Running 15s test @ http://127.0.0.1:35361/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.61us  207.08us   7.20ms   96.21%\n    Req/Sec    41.81k     2.81k   80.07k    93.69%\n  Latency Distribution\n     50%  363.00us\n     75%  428.00us\n     90%  483.00us\n     99%    0.88ms\n  1251651 requests in 15.10s, 200.53MB read\nRequests/sec:  82892.53\nTransfer/sec:     13.28MB\n"
+    },
+    "improvement": -3.529412
+  },
+  "snapshot": {
+    "cpu_count": 4,
+    "pressure": {
+      "cpu": {},
+      "memory": {},
+      "io": {}
+    },
+    "cgroup": {
+      "v2": true,
+      "controllers": [
+        "cpuset",
+        "cpu",
+        "io",
+        "memory",
+        "dmem",
+        "xcu",
+        "hugetlb",
+        "pids",
+        "rdma",
+        "misc"
+      ],
+      "cpu_pressure": "",
+      "cpu_stat": {
+        "usage_usec": 33338554156,
+        "user_usec": 27631399538,
+        "system_usec": 5707154618,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      }
+    },
+    "processes": [
+      {
+        "pid": 45531,
+        "comm": "stress-ng-cpu",
+        "state": "R",
+        "ppid": 45530,
+        "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+        "utime": 5643,
+        "stime": 1,
+        "rss_bytes": 7987200,
+        "voluntary_ctxt_switches": 2,
+        "nonvoluntary_ctxt_switches": 9837,
+        "cpu_percent": 91.57,
+        "cgroup": "/schedx/pid-45531",
+        "sched": {
+          "se.sum_exec_runtime": 56454.130811,
+          "nr_switches": 9839.0
+        },
+        "start_time": 10975838
+      },
+      {
+        "pid": 45532,
+        "comm": "stress-ng-cpu",
+        "state": "R",
+        "ppid": 45530,
+        "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+        "utime": 5624,
+        "stime": 1,
+        "rss_bytes": 7987200,
+        "voluntary_ctxt_switches": 2,
+        "nonvoluntary_ctxt_switches": 9950,
+        "cpu_percent": 91.57,
+        "cgroup": "/schedx/pid-45532",
+        "sched": {
+          "se.sum_exec_runtime": 56259.973738,
+          "nr_switches": 9952.0
+        },
+        "start_time": 10975838
+      },
+      {
+        "pid": 45533,
+        "comm": "stress-ng-cpu",
+        "state": "R",
+        "ppid": 45530,
+        "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+        "utime": 5642,
+        "stime": 1,
+        "rss_bytes": 7987200,
+        "voluntary_ctxt_switches": 2,
+        "nonvoluntary_ctxt_switches": 9854,
+        "cpu_percent": 91.57,
+        "cgroup": "/schedx/pid-45533",
+        "sched": {
+          "se.sum_exec_runtime": 56438.085898,
+          "nr_switches": 9856.0
+        },
+        "start_time": 10975838
+      },
+      {
+        "pid": 45530,
+        "comm": "stress-ng",
+        "state": "S",
+        "ppid": 45290,
+        "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+        "utime": 1,
+        "stime": 25,
+        "rss_bytes": 106713088,
+        "voluntary_ctxt_switches": 3,
+        "nonvoluntary_ctxt_switches": 12,
+        "cpu_percent": 0.0,
+        "cgroup": "/schedx/pid-45530",
+        "sched": {
+          "se.sum_exec_runtime": 270.949048,
+          "nr_switches": 15.0
+        },
+        "start_time": 10975807
+      },
+      {
+        "pid": 45293,
+        "comm": "nginx",
+        "state": "S",
+        "ppid": 45290,
+        "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf",
+        "utime": 1,
+        "stime": 0,
+        "rss_bytes": 10342400,
+        "voluntary_ctxt_switches": 3,
+        "nonvoluntary_ctxt_switches": 2,
+        "cpu_percent": 0.0,
+        "cgroup": "/schedx-experiment-42604c22704848189bc8ecba4961dc1b/service",
+        "sched": {
+          "se.sum_exec_runtime": 17.025908,
+          "nr_switches": 5.0
+        },
+        "start_time": 10960407
+      },
+      {
+        "pid": 45294,
+        "comm": "nginx",
+        "state": "S",
+        "ppid": 45293,
+        "cmdline": "nginx: worker process",
+        "utime": 3220,
+        "stime": 11807,
+        "rss_bytes": 4923392,
+        "voluntary_ctxt_switches": 2033,
+        "nonvoluntary_ctxt_switches": 18210,
+        "cpu_percent": 0.0,
+        "cgroup": "/schedx/pid-45294",
+        "sched": {
+          "se.sum_exec_runtime": 150279.699467,
+          "nr_switches": 20243.0
+        },
+        "start_time": 10960410
+      }
+    ],
+    "process_scope": "explicit_pids",
+    "scope_pids": [
+      45293,
+      45294,
+      45530,
+      45531,
+      45532,
+      45533
+    ]
+  },
+  "classification": {
+    "overall": "mixed",
+    "groups": {
+      "latency_sensitive": [
+        {
+          "pid": 45293,
+          "comm": "nginx",
+          "state": "S",
+          "ppid": 45290,
+          "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf",
+          "utime": 1,
+          "stime": 0,
+          "rss_bytes": 10342400,
+          "voluntary_ctxt_switches": 3,
+          "nonvoluntary_ctxt_switches": 2,
+          "cpu_percent": 0.0,
+          "cgroup": "/schedx-experiment-42604c22704848189bc8ecba4961dc1b/service",
+          "sched": {
+            "se.sum_exec_runtime": 17.025908,
+            "nr_switches": 5.0
+          },
+          "start_time": 10960407,
+          "workload_type": "latency_sensitive",
+          "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf matches latency service rule"
+        },
+        {
+          "pid": 45294,
+          "comm": "nginx",
+          "state": "S",
+          "ppid": 45293,
+          "cmdline": "nginx: worker process",
+          "utime": 3220,
+          "stime": 11807,
+          "rss_bytes": 4923392,
+          "voluntary_ctxt_switches": 2033,
+          "nonvoluntary_ctxt_switches": 18210,
+          "cpu_percent": 0.0,
+          "cgroup": "/schedx/pid-45294",
+          "sched": {
+            "se.sum_exec_runtime": 150279.699467,
+            "nr_switches": 20243.0
+          },
+          "start_time": 10960410,
+          "workload_type": "latency_sensitive",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+        }
+      ],
+      "batch_compute": [],
+      "background_noise": [
+        {
+          "pid": 45531,
+          "comm": "stress-ng-cpu",
+          "state": "R",
+          "ppid": 45530,
+          "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+          "utime": 5643,
+          "stime": 1,
+          "rss_bytes": 7987200,
+          "voluntary_ctxt_switches": 2,
+          "nonvoluntary_ctxt_switches": 9837,
+          "cpu_percent": 91.57,
+          "cgroup": "/schedx/pid-45531",
+          "sched": {
+            "se.sum_exec_runtime": 56454.130811,
+            "nr_switches": 9839.0
+          },
+          "start_time": 10975838,
+          "workload_type": "background_noise",
+          "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+        },
+        {
+          "pid": 45532,
+          "comm": "stress-ng-cpu",
+          "state": "R",
+          "ppid": 45530,
+          "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+          "utime": 5624,
+          "stime": 1,
+          "rss_bytes": 7987200,
+          "voluntary_ctxt_switches": 2,
+          "nonvoluntary_ctxt_switches": 9950,
+          "cpu_percent": 91.57,
+          "cgroup": "/schedx/pid-45532",
+          "sched": {
+            "se.sum_exec_runtime": 56259.973738,
+            "nr_switches": 9952.0
+          },
+          "start_time": 10975838,
+          "workload_type": "background_noise",
+          "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+        },
+        {
+          "pid": 45533,
+          "comm": "stress-ng-cpu",
+          "state": "R",
+          "ppid": 45530,
+          "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+          "utime": 5642,
+          "stime": 1,
+          "rss_bytes": 7987200,
+          "voluntary_ctxt_switches": 2,
+          "nonvoluntary_ctxt_switches": 9854,
+          "cpu_percent": 91.57,
+          "cgroup": "/schedx/pid-45533",
+          "sched": {
+            "se.sum_exec_runtime": 56438.085898,
+            "nr_switches": 9856.0
+          },
+          "start_time": 10975838,
+          "workload_type": "background_noise",
+          "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+        },
+        {
+          "pid": 45530,
+          "comm": "stress-ng",
+          "state": "S",
+          "ppid": 45290,
+          "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+          "utime": 1,
+          "stime": 25,
+          "rss_bytes": 106713088,
+          "voluntary_ctxt_switches": 3,
+          "nonvoluntary_ctxt_switches": 12,
+          "cpu_percent": 0.0,
+          "cgroup": "/schedx/pid-45530",
+          "sched": {
+            "se.sum_exec_runtime": 270.949048,
+            "nr_switches": 15.0
+          },
+          "start_time": 10975807,
+          "workload_type": "background_noise",
+          "reason": "comm/cmdline=stress-ng stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+        }
+      ],
+      "unknown": []
+    },
+    "psi_insight": {}
+  },
+  "agent_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 8000,
+      "cpu_weight_bg": 10,
+      "cpu_max_bg": "10000 100000",
+      "nice_target": -5,
+      "nice_bg": 10,
+      "isolate_target": "stress-ng-cpu"
+    },
+    "reason": "mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)",
+    "confidence": 0.7037729526430767,
+    "source": "rule_engine",
+    "expert_id": "latency_guard"
+  },
+  "policy_route": {
+    "expert_id": "latency_guard",
+    "mode": "latency_first",
+    "confidence": 0.7037729526430767,
+    "scores": {
+      "background_isolation": 0.189504,
+      "balanced": 0.076052,
+      "latency_guard": 0.703773,
+      "throughput_boost": 0.030671
+    },
+    "switched": false,
+    "reason": "stable_selection",
+    "timestamp": 109850.680617675
+  },
+  "actions": [
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "nginx",
+      "target_type": "process_name",
+      "value": 8000,
+      "reason": "protect latency-sensitive workload",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {}
+    },
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "45531",
+      "target_type": "pid",
+      "value": 10,
+      "reason": "apply adaptive background weight",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_max",
+      "target": "45531",
+      "target_type": "pid",
+      "value": "10000 100000",
+      "reason": "apply adaptive background CPU quota",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "45532",
+      "target_type": "pid",
+      "value": 10,
+      "reason": "apply adaptive background weight",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_max",
+      "target": "45532",
+      "target_type": "pid",
+      "value": "10000 100000",
+      "reason": "apply adaptive background CPU quota",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "45533",
+      "target_type": "pid",
+      "value": 10,
+      "reason": "apply adaptive background weight",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_max",
+      "target": "45533",
+      "target_type": "pid",
+      "value": "10000 100000",
+      "reason": "apply adaptive background CPU quota",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng-cpu"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "45530",
+      "target_type": "pid",
+      "value": 10,
+      "reason": "apply adaptive background weight",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng"
+      }
+    },
+    {
+      "action": "set_cgroup_cpu_max",
+      "target": "45530",
+      "target_type": "pid",
+      "value": "10000 100000",
+      "reason": "apply adaptive background CPU quota",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {
+        "comm": "stress-ng"
+      }
+    }
+  ],
+  "execution_results": [
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "nginx",
+        "target_type": "process_name",
+        "value": 8000,
+        "reason": "protect latency-sensitive workload",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {}
+      },
+      "status": "ok",
+      "pid": 45294,
+      "group": "pid-45294"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "45531",
+        "target_type": "pid",
+        "value": 10,
+        "reason": "apply adaptive background weight",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45531,
+      "group": "pid-45531"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_max",
+        "target": "45531",
+        "target_type": "pid",
+        "value": "10000 100000",
+        "reason": "apply adaptive background CPU quota",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45531,
+      "group": "pid-45531"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "45532",
+        "target_type": "pid",
+        "value": 10,
+        "reason": "apply adaptive background weight",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45532,
+      "group": "pid-45532"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_max",
+        "target": "45532",
+        "target_type": "pid",
+        "value": "10000 100000",
+        "reason": "apply adaptive background CPU quota",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45532,
+      "group": "pid-45532"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "45533",
+        "target_type": "pid",
+        "value": 10,
+        "reason": "apply adaptive background weight",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45533,
+      "group": "pid-45533"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_max",
+        "target": "45533",
+        "target_type": "pid",
+        "value": "10000 100000",
+        "reason": "apply adaptive background CPU quota",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng-cpu"
+        }
+      },
+      "status": "ok",
+      "pid": 45533,
+      "group": "pid-45533"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "45530",
+        "target_type": "pid",
+        "value": 10,
+        "reason": "apply adaptive background weight",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng"
+        }
+      },
+      "status": "ok",
+      "pid": 45530,
+      "group": "pid-45530"
+    },
+    {
+      "action": {
+        "action": "set_cgroup_cpu_max",
+        "target": "45530",
+        "target_type": "pid",
+        "value": "10000 100000",
+        "reason": "apply adaptive background CPU quota",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {
+          "comm": "stress-ng"
+        }
+      },
+      "status": "ok",
+      "pid": 45530,
+      "group": "pid-45530"
+    }
+  ],
+  "scx_results": {
+    "mode": "latency_first",
+    "total_actions": 5,
+    "successful": 5,
+    "failed": 0,
+    "results": [
+      {
+        "type": "set_task_policy",
+        "pid": 45294,
+        "class_id": 1,
+        "weight": 10000,
+        "workload_type": "latency_sensitive",
+        "comm": "nginx",
+        "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+        "success": true
+      },
+      {
+        "type": "set_task_policy",
+        "pid": 45531,
+        "class_id": 3,
+        "weight": 50,
+        "workload_type": "background_noise",
+        "comm": "stress-ng-cpu",
+        "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+        "success": true
+      },
+      {
+        "type": "set_task_policy",
+        "pid": 45532,
+        "class_id": 3,
+        "weight": 50,
+        "workload_type": "background_noise",
+        "comm": "stress-ng-cpu",
+        "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+        "success": true
+      },
+      {
+        "type": "set_task_policy",
+        "pid": 45533,
+        "class_id": 3,
+        "weight": 50,
+        "workload_type": "background_noise",
+        "comm": "stress-ng-cpu",
+        "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+        "success": true
+      },
+      {
+        "type": "set_task_policy",
+        "pid": 45530,
+        "class_id": 3,
+        "weight": 50,
+        "workload_type": "background_noise",
+        "comm": "stress-ng",
+        "reason": "comm/cmdline=stress-ng stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+        "success": true
+      }
+    ]
+  },
+  "ebpf_status": "attached",
+  "ebpf_policy_results": [
+    {
+      "pid": 45293,
+      "workload_type": "latency_sensitive",
+      "class_id": 1,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": null,
+      "net_policy": "deferred",
+      "resource_policy": "deferred",
+      "security_policy": "deferred",
+      "status": "deferred",
+      "reason": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first",
+      "success": true
+    },
+    {
+      "pid": 45294,
+      "workload_type": "latency_sensitive",
+      "class_id": 1,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 51674,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    },
+    {
+      "pid": 45531,
+      "workload_type": "background_noise",
+      "class_id": 3,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 51788,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    },
+    {
+      "pid": 45532,
+      "workload_type": "background_noise",
+      "class_id": 3,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 51750,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    },
+    {
+      "pid": 45533,
+      "workload_type": "background_noise",
+      "class_id": 3,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 51769,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    },
+    {
+      "pid": 45530,
+      "workload_type": "background_noise",
+      "class_id": 3,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 51807,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    }
+  ],
+  "canary": {
+    "baseline": {
+      "requests_completed": 1257302,
+      "elapsed_seconds": 15.1,
+      "socket_errors": {
+        "connect": 0,
+        "read": 0,
+        "write": 0,
+        "timeout": 0
+      },
+      "non_success_responses": 0,
+      "latency_avg_ms": 0.3872,
+      "latency_stdev_ms": 0.2317,
+      "latency_max_ms": 10.19,
+      "req_per_sec_avg": 41980.0,
+      "req_per_sec_stdev": 2640.0,
+      "requests_per_sec": 83250.51,
+      "qps": 83250.51,
+      "transfer_sec": "13.34MB",
+      "p50_ms": 0.362,
+      "p50_latency_ms": 0.362,
+      "p75_ms": 0.427,
+      "p75_latency_ms": 0.427,
+      "p90_ms": 0.484,
+      "p90_latency_ms": 0.484,
+      "p99_ms": 0.85,
+      "p99_latency_ms": 0.85,
+      "avg_latency_ms": 0.3872,
+      "successful_requests_per_sec": 83265.03311258278,
+      "response_error_rate": 0.0,
+      "socket_errors_per_second": 0.0,
+      "background_cpu_ticks": 2711,
+      "system_cpu_ticks": 5346,
+      "background_cpu_share": 0.5071081182192293,
+      "background_pids": [
+        45530,
+        45531,
+        45532,
+        45533
+      ],
+      "raw_output": "Running 15s test @ http://127.0.0.1:35361/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.20us  231.71us  10.19ms   96.73%\n    Req/Sec    41.98k     2.64k   80.57k    92.69%\n  Latency Distribution\n     50%  362.00us\n     75%  427.00us\n     90%  484.00us\n     99%    0.85ms\n  1257302 requests in 15.10s, 201.44MB read\nRequests/sec:  83250.51\nTransfer/sec:     13.34MB\n"
+    },
+    "background_expected": true,
+    "candidate": {
+      "requests_completed": 1251651,
+      "elapsed_seconds": 15.1,
+      "socket_errors": {
+        "connect": 0,
+        "read": 0,
+        "write": 0,
+        "timeout": 0
+      },
+      "non_success_responses": 0,
+      "latency_avg_ms": 0.3876,
+      "latency_stdev_ms": 0.2071,
+      "latency_max_ms": 7.2,
+      "req_per_sec_avg": 41810.0,
+      "req_per_sec_stdev": 2810.0,
+      "requests_per_sec": 82892.53,
+      "qps": 82892.53,
+      "transfer_sec": "13.28MB",
+      "p50_ms": 0.363,
+      "p50_latency_ms": 0.363,
+      "p75_ms": 0.428,
+      "p75_latency_ms": 0.428,
+      "p90_ms": 0.483,
+      "p90_latency_ms": 0.483,
+      "p99_ms": 0.88,
+      "p99_latency_ms": 0.88,
+      "avg_latency_ms": 0.3876,
+      "successful_requests_per_sec": 82890.79470198676,
+      "response_error_rate": 0.0,
+      "socket_errors_per_second": 0.0,
+      "background_cpu_ticks": 2706,
+      "system_cpu_ticks": 5335,
+      "background_cpu_share": 0.5072164948453608,
+      "background_pids": [
+        45530,
+        45531,
+        45532,
+        45533
+      ],
+      "raw_output": "Running 15s test @ http://127.0.0.1:35361/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.61us  207.08us   7.20ms   96.21%\n    Req/Sec    41.81k     2.81k   80.07k    93.69%\n  Latency Distribution\n     50%  363.00us\n     75%  428.00us\n     90%  483.00us\n     99%    0.88ms\n  1251651 requests in 15.10s, 200.53MB read\nRequests/sec:  82892.53\nTransfer/sec:     13.28MB\n"
+    },
+    "background_share": 0.5072164948453608,
+    "background_retention": 0.9981556621172999,
+    "nr_rejected": 0
+  },
+  "canary_verdict": {
+    "accepted": true,
+    "status": "accepted",
+    "reasons": [],
+    "deltas": {
+      "response_error_rate_increase": 0.0,
+      "socket_errors_per_second_increase": 0.0,
+      "raw_requests_per_sec_percent": -0.430003,
+      "p99_percent": 3.529412,
+      "requests_per_sec_percent": -0.449454,
+      "successful_requests_per_sec_percent": -0.449454,
+      "background_retention_percent": 99.815566
+    }
+  },
+  "rollback": {
+    "restored": 3,
+    "groups_removed": 1,
+    "skipped": 1,
+    "entries": [
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-45530",
+        "file": "cpu.max",
+        "previous": "max 100000",
+        "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+        "pid_start": null,
+        "transaction": "914be8337b6c447aa420f0e44bbf2bcc"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-45530",
+        "file": "cpu.weight",
+        "previous": "100",
+        "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+        "pid_start": null,
+        "transaction": "914be8337b6c447aa420f0e44bbf2bcc"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx-experiment-42604c22704848189bc8ecba4961dc1b/noise",
+        "file": "cgroup.procs",
+        "previous": "45530",
+        "owner": "session-d09eaa98b7ec493a8f7ba12ed7d9c85a",
+        "pid_start": "10975807",
+        "transaction": "914be8337b6c447aa420f0e44bbf2bcc"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-45530",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx",
+        "status": "skipped",
+        "reason": "not_empty"
+      }
+    ],
+    "scx_entries": [
+      {
+        "source": "standalone_scx",
+        "cgroup_id": 51731,
+        "status": "removed"
+      },
+      {
+        "source": "standalone_scx",
+        "pid": 45530,
+        "status": "removed"
+      },
+      {
+        "source": "standalone_scx",
+        "pid": 45294,
+        "status": "restored"
+      }
+    ],
+    "process_entries": [],
+    "ebpf_cleanup": {
+      "previous_policy_restored": true,
+      "expired_pids": [],
+      "expired_cgroup_ids_removed": []
+    }
+  },
+  "stability": {
+    "stable": false,
+    "window": 3,
+    "tolerance_percent": 10.0,
+    "metric": "p99_ms",
+    "values": [
+      0.762,
+      0.76,
+      0.88
+    ],
+    "variation_percent": 14.98751,
+    "maximum_step_change_percent": 90.906921,
+    "reason": "objective_variation"
+  },
+  "converged": false,
+  "scheduler_state": "enabled",
+  "phase_results": {
+    "probe": {
+      "ok": true,
+      "message": "probe completed",
+      "data": {
+        "cpu_count": 4,
+        "pressure": {
+          "cpu": {},
+          "memory": {},
+          "io": {}
+        },
+        "cgroup": {
+          "v2": true,
+          "controllers": [
+            "cpuset",
+            "cpu",
+            "io",
+            "memory",
+            "dmem",
+            "xcu",
+            "hugetlb",
+            "pids",
+            "rdma",
+            "misc"
+          ],
+          "cpu_pressure": "",
+          "cpu_stat": {
+            "usage_usec": 33338554156,
+            "user_usec": 27631399538,
+            "system_usec": 5707154618,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          }
+        },
+        "processes": [
+          {
+            "pid": 45531,
+            "comm": "stress-ng-cpu",
+            "state": "R",
+            "ppid": 45530,
+            "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+            "utime": 5643,
+            "stime": 1,
+            "rss_bytes": 7987200,
+            "voluntary_ctxt_switches": 2,
+            "nonvoluntary_ctxt_switches": 9837,
+            "cpu_percent": 91.57,
+            "cgroup": "/schedx/pid-45531",
+            "sched": {
+              "se.sum_exec_runtime": 56454.130811,
+              "nr_switches": 9839.0
+            },
+            "start_time": 10975838
+          },
+          {
+            "pid": 45532,
+            "comm": "stress-ng-cpu",
+            "state": "R",
+            "ppid": 45530,
+            "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+            "utime": 5624,
+            "stime": 1,
+            "rss_bytes": 7987200,
+            "voluntary_ctxt_switches": 2,
+            "nonvoluntary_ctxt_switches": 9950,
+            "cpu_percent": 91.57,
+            "cgroup": "/schedx/pid-45532",
+            "sched": {
+              "se.sum_exec_runtime": 56259.973738,
+              "nr_switches": 9952.0
+            },
+            "start_time": 10975838
+          },
+          {
+            "pid": 45533,
+            "comm": "stress-ng-cpu",
+            "state": "R",
+            "ppid": 45530,
+            "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+            "utime": 5642,
+            "stime": 1,
+            "rss_bytes": 7987200,
+            "voluntary_ctxt_switches": 2,
+            "nonvoluntary_ctxt_switches": 9854,
+            "cpu_percent": 91.57,
+            "cgroup": "/schedx/pid-45533",
+            "sched": {
+              "se.sum_exec_runtime": 56438.085898,
+              "nr_switches": 9856.0
+            },
+            "start_time": 10975838
+          },
+          {
+            "pid": 45530,
+            "comm": "stress-ng",
+            "state": "S",
+            "ppid": 45290,
+            "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+            "utime": 1,
+            "stime": 25,
+            "rss_bytes": 106713088,
+            "voluntary_ctxt_switches": 3,
+            "nonvoluntary_ctxt_switches": 12,
+            "cpu_percent": 0.0,
+            "cgroup": "/schedx/pid-45530",
+            "sched": {
+              "se.sum_exec_runtime": 270.949048,
+              "nr_switches": 15.0
+            },
+            "start_time": 10975807
+          },
+          {
+            "pid": 45293,
+            "comm": "nginx",
+            "state": "S",
+            "ppid": 45290,
+            "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf",
+            "utime": 1,
+            "stime": 0,
+            "rss_bytes": 10342400,
+            "voluntary_ctxt_switches": 3,
+            "nonvoluntary_ctxt_switches": 2,
+            "cpu_percent": 0.0,
+            "cgroup": "/schedx-experiment-42604c22704848189bc8ecba4961dc1b/service",
+            "sched": {
+              "se.sum_exec_runtime": 17.025908,
+              "nr_switches": 5.0
+            },
+            "start_time": 10960407
+          },
+          {
+            "pid": 45294,
+            "comm": "nginx",
+            "state": "S",
+            "ppid": 45293,
+            "cmdline": "nginx: worker process",
+            "utime": 3220,
+            "stime": 11807,
+            "rss_bytes": 4923392,
+            "voluntary_ctxt_switches": 2033,
+            "nonvoluntary_ctxt_switches": 18210,
+            "cpu_percent": 0.0,
+            "cgroup": "/schedx/pid-45294",
+            "sched": {
+              "se.sum_exec_runtime": 150279.699467,
+              "nr_switches": 20243.0
+            },
+            "start_time": 10960410
+          }
+        ],
+        "process_scope": "explicit_pids",
+        "scope_pids": [
+          45293,
+          45294,
+          45530,
+          45531,
+          45532,
+          45533
+        ]
+      }
+    },
+    "analyze": {
+      "ok": true,
+      "message": "classification completed",
+      "data": {
+        "overall": "mixed",
+        "groups": {
+          "latency_sensitive": [
+            {
+              "pid": 45293,
+              "comm": "nginx",
+              "state": "S",
+              "ppid": 45290,
+              "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf",
+              "utime": 1,
+              "stime": 0,
+              "rss_bytes": 10342400,
+              "voluntary_ctxt_switches": 3,
+              "nonvoluntary_ctxt_switches": 2,
+              "cpu_percent": 0.0,
+              "cgroup": "/schedx-experiment-42604c22704848189bc8ecba4961dc1b/service",
+              "sched": {
+                "se.sum_exec_runtime": 17.025908,
+                "nr_switches": 5.0
+              },
+              "start_time": 10960407,
+              "workload_type": "latency_sensitive",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-4/workloads/nginx.conf matches latency service rule"
+            },
+            {
+              "pid": 45294,
+              "comm": "nginx",
+              "state": "S",
+              "ppid": 45293,
+              "cmdline": "nginx: worker process",
+              "utime": 3220,
+              "stime": 11807,
+              "rss_bytes": 4923392,
+              "voluntary_ctxt_switches": 2033,
+              "nonvoluntary_ctxt_switches": 18210,
+              "cpu_percent": 0.0,
+              "cgroup": "/schedx/pid-45294",
+              "sched": {
+                "se.sum_exec_runtime": 150279.699467,
+                "nr_switches": 20243.0
+              },
+              "start_time": 10960410,
+              "workload_type": "latency_sensitive",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+            }
+          ],
+          "batch_compute": [],
+          "background_noise": [
+            {
+              "pid": 45531,
+              "comm": "stress-ng-cpu",
+              "state": "R",
+              "ppid": 45530,
+              "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+              "utime": 5643,
+              "stime": 1,
+              "rss_bytes": 7987200,
+              "voluntary_ctxt_switches": 2,
+              "nonvoluntary_ctxt_switches": 9837,
+              "cpu_percent": 91.57,
+              "cgroup": "/schedx/pid-45531",
+              "sched": {
+                "se.sum_exec_runtime": 56454.130811,
+                "nr_switches": 9839.0
+              },
+              "start_time": 10975838,
+              "workload_type": "background_noise",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+            },
+            {
+              "pid": 45532,
+              "comm": "stress-ng-cpu",
+              "state": "R",
+              "ppid": 45530,
+              "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+              "utime": 5624,
+              "stime": 1,
+              "rss_bytes": 7987200,
+              "voluntary_ctxt_switches": 2,
+              "nonvoluntary_ctxt_switches": 9950,
+              "cpu_percent": 91.57,
+              "cgroup": "/schedx/pid-45532",
+              "sched": {
+                "se.sum_exec_runtime": 56259.973738,
+                "nr_switches": 9952.0
+              },
+              "start_time": 10975838,
+              "workload_type": "background_noise",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+            },
+            {
+              "pid": 45533,
+              "comm": "stress-ng-cpu",
+              "state": "R",
+              "ppid": 45530,
+              "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+              "utime": 5642,
+              "stime": 1,
+              "rss_bytes": 7987200,
+              "voluntary_ctxt_switches": 2,
+              "nonvoluntary_ctxt_switches": 9854,
+              "cpu_percent": 91.57,
+              "cgroup": "/schedx/pid-45533",
+              "sched": {
+                "se.sum_exec_runtime": 56438.085898,
+                "nr_switches": 9856.0
+              },
+              "start_time": 10975838,
+              "workload_type": "background_noise",
+              "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+            },
+            {
+              "pid": 45530,
+              "comm": "stress-ng",
+              "state": "S",
+              "ppid": 45290,
+              "cmdline": "stress-ng --cpu 3 --timeout 600s --metrics-brief",
+              "utime": 1,
+              "stime": 25,
+              "rss_bytes": 106713088,
+              "voluntary_ctxt_switches": 3,
+              "nonvoluntary_ctxt_switches": 12,
+              "cpu_percent": 0.0,
+              "cgroup": "/schedx/pid-45530",
+              "sched": {
+                "se.sum_exec_runtime": 270.949048,
+                "nr_switches": 15.0
+              },
+              "start_time": 10975807,
+              "workload_type": "background_noise",
+              "reason": "comm/cmdline=stress-ng stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule"
+            }
+          ],
+          "unknown": []
+        },
+        "psi_insight": {}
+      }
+    },
+    "policy": {
+      "ok": true,
+      "message": "planned 9 actions for mode=latency_first",
+      "data": {
+        "actions": [
+          "Action(action='set_cgroup_cpu_weight', target='nginx', target_type='process_name', value=8000, reason='protect latency-sensitive workload', risk_level='medium', rollback_enabled=True, metadata={})",
+          "Action(action='set_cgroup_cpu_weight', target='45531', target_type='pid', value=10, reason='apply adaptive background weight', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_max', target='45531', target_type='pid', value='10000 100000', reason='apply adaptive background CPU quota', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_weight', target='45532', target_type='pid', value=10, reason='apply adaptive background weight', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_max', target='45532', target_type='pid', value='10000 100000', reason='apply adaptive background CPU quota', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_weight', target='45533', target_type='pid', value=10, reason='apply adaptive background weight', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_max', target='45533', target_type='pid', value='10000 100000', reason='apply adaptive background CPU quota', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng-cpu'})",
+          "Action(action='set_cgroup_cpu_weight', target='45530', target_type='pid', value=10, reason='apply adaptive background weight', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng'})",
+          "Action(action='set_cgroup_cpu_max', target='45530', target_type='pid', value='10000 100000', reason='apply adaptive background CPU quota', risk_level='medium', rollback_enabled=True, metadata={'comm': 'stress-ng'})"
+        ],
+        "count": 9
+      }
+    },
+    "canary_baseline": {
+      "ok": true,
+      "message": "captured baseline SLO canary",
+      "data": {
+        "requests_completed": 1257302,
+        "elapsed_seconds": 15.1,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.3872,
+        "latency_stdev_ms": 0.2317,
+        "latency_max_ms": 10.19,
+        "req_per_sec_avg": 41980.0,
+        "req_per_sec_stdev": 2640.0,
+        "requests_per_sec": 83250.51,
+        "qps": 83250.51,
+        "transfer_sec": "13.34MB",
+        "p50_ms": 0.362,
+        "p50_latency_ms": 0.362,
+        "p75_ms": 0.427,
+        "p75_latency_ms": 0.427,
+        "p90_ms": 0.484,
+        "p90_latency_ms": 0.484,
+        "p99_ms": 0.85,
+        "p99_latency_ms": 0.85,
+        "avg_latency_ms": 0.3872,
+        "successful_requests_per_sec": 83265.03311258278,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "background_cpu_ticks": 2711,
+        "system_cpu_ticks": 5346,
+        "background_cpu_share": 0.5071081182192293,
+        "background_pids": [
+          45530,
+          45531,
+          45532,
+          45533
+        ],
+        "raw_output": "Running 15s test @ http://127.0.0.1:35361/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.20us  231.71us  10.19ms   96.73%\n    Req/Sec    41.98k     2.64k   80.57k    92.69%\n  Latency Distribution\n     50%  362.00us\n     75%  427.00us\n     90%  484.00us\n     99%    0.85ms\n  1257302 requests in 15.10s, 201.44MB read\nRequests/sec:  83250.51\nTransfer/sec:     13.34MB\n"
+      }
+    },
+    "ebpf_load": {
+      "ok": true,
+      "message": "reusing active eBPF programs",
+      "data": {
+        "status": "reused"
+      }
+    },
+    "ebpf_attach": {
+      "ok": true,
+      "message": "eBPF programs not loaded; skipping attach",
+      "data": {
+        "status": "skipped"
+      }
+    },
+    "scx": {
+      "ok": true,
+      "message": "applied 5 scx policies (0 failed)",
+      "data": {
+        "mode": "latency_first",
+        "total_actions": 5,
+        "successful": 5,
+        "failed": 0,
+        "results": [
+          {
+            "type": "set_task_policy",
+            "pid": 45294,
+            "class_id": 1,
+            "weight": 10000,
+            "workload_type": "latency_sensitive",
+            "comm": "nginx",
+            "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+            "success": true
+          },
+          {
+            "type": "set_task_policy",
+            "pid": 45531,
+            "class_id": 3,
+            "weight": 50,
+            "workload_type": "background_noise",
+            "comm": "stress-ng-cpu",
+            "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+            "success": true
+          },
+          {
+            "type": "set_task_policy",
+            "pid": 45532,
+            "class_id": 3,
+            "weight": 50,
+            "workload_type": "background_noise",
+            "comm": "stress-ng-cpu",
+            "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+            "success": true
+          },
+          {
+            "type": "set_task_policy",
+            "pid": 45533,
+            "class_id": 3,
+            "weight": 50,
+            "workload_type": "background_noise",
+            "comm": "stress-ng-cpu",
+            "reason": "comm/cmdline=stress-ng-cpu stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+            "success": true
+          },
+          {
+            "type": "set_task_policy",
+            "pid": 45530,
+            "class_id": 3,
+            "weight": 50,
+            "workload_type": "background_noise",
+            "comm": "stress-ng",
+            "reason": "comm/cmdline=stress-ng stress-ng --cpu 3 --timeout 600s --metrics-brief matches background noise rule",
+            "success": true
+          }
+        ]
+      }
+    },
+    "act": {
+      "ok": true,
+      "message": "executed 9 actions successfully",
+      "data": {
+        "results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 45294,
+            "group": "pid-45294"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "45531",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45531,
+            "group": "pid-45531"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "45531",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45531,
+            "group": "pid-45531"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "45532",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45532,
+            "group": "pid-45532"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "45532",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45532,
+            "group": "pid-45532"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "45533",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45533,
+            "group": "pid-45533"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "45533",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng-cpu"
+              }
+            },
+            "status": "ok",
+            "pid": 45533,
+            "group": "pid-45533"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "45530",
+              "target_type": "pid",
+              "value": 10,
+              "reason": "apply adaptive background weight",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 45530,
+            "group": "pid-45530"
+          },
+          {
+            "action": {
+              "action": "set_cgroup_cpu_max",
+              "target": "45530",
+              "target_type": "pid",
+              "value": "10000 100000",
+              "reason": "apply adaptive background CPU quota",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {
+                "comm": "stress-ng"
+              }
+            },
+            "status": "ok",
+            "pid": 45530,
+            "group": "pid-45530"
+          }
+        ]
+      }
+    },
+    "scx_cgroups": {
+      "ok": true,
+      "message": "mirrored 0 cgroup policies",
+      "data": {
+        "failed": 0
+      }
+    },
+    "ebpf_policy": {
+      "ok": true,
+      "message": "applied 6 eBPF policies (0 failed)",
+      "data": {
+        "results": [
+          {
+            "pid": 45293,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": null,
+            "net_policy": "deferred",
+            "resource_policy": "deferred",
+            "security_policy": "deferred",
+            "status": "deferred",
+            "reason": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first",
+            "success": true
+          },
+          {
+            "pid": 45294,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 51674,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 45531,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 51788,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 45532,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 51750,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 45533,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 51769,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          },
+          {
+            "pid": 45530,
+            "workload_type": "background_noise",
+            "class_id": 3,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 51807,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          }
+        ],
+        "successful": 6,
+        "failed": 0
+      }
+    },
+    "canary_candidate": {
+      "ok": true,
+      "message": "captured candidate SLO canary",
+      "data": {
+        "candidate": {
+          "requests_completed": 1251651,
+          "elapsed_seconds": 15.1,
+          "socket_errors": {
+            "connect": 0,
+            "read": 0,
+            "write": 0,
+            "timeout": 0
+          },
+          "non_success_responses": 0,
+          "latency_avg_ms": 0.3876,
+          "latency_stdev_ms": 0.2071,
+          "latency_max_ms": 7.2,
+          "req_per_sec_avg": 41810.0,
+          "req_per_sec_stdev": 2810.0,
+          "requests_per_sec": 82892.53,
+          "qps": 82892.53,
+          "transfer_sec": "13.28MB",
+          "p50_ms": 0.363,
+          "p50_latency_ms": 0.363,
+          "p75_ms": 0.428,
+          "p75_latency_ms": 0.428,
+          "p90_ms": 0.483,
+          "p90_latency_ms": 0.483,
+          "p99_ms": 0.88,
+          "p99_latency_ms": 0.88,
+          "avg_latency_ms": 0.3876,
+          "successful_requests_per_sec": 82890.79470198676,
+          "response_error_rate": 0.0,
+          "socket_errors_per_second": 0.0,
+          "background_cpu_ticks": 2706,
+          "system_cpu_ticks": 5335,
+          "background_cpu_share": 0.5072164948453608,
+          "background_pids": [
+            45530,
+            45531,
+            45532,
+            45533
+          ],
+          "raw_output": "Running 15s test @ http://127.0.0.1:35361/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   387.61us  207.08us   7.20ms   96.21%\n    Req/Sec    41.81k     2.81k   80.07k    93.69%\n  Latency Distribution\n     50%  363.00us\n     75%  428.00us\n     90%  483.00us\n     99%    0.88ms\n  1251651 requests in 15.10s, 200.53MB read\nRequests/sec:  82892.53\nTransfer/sec:     13.28MB\n"
+        },
+        "background_retention": 0.9981556621172999,
+        "nr_rejected": 0
+      }
+    },
+    "ebpf_stats": {
+      "ok": true,
+      "message": "collected eBPF statistics",
+      "data": {
+        "available": true,
+        "status": {
+          "available": true,
+          "sched_ext": true,
+          "bpf_lsm": true,
+          "programs": {
+            "sched_trace": {
+              "type": "sched_trace",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "events",
+                "global_stats",
+                "latency_histogram",
+                "task_info_map"
+              ]
+            },
+            "net_policy": {
+              "type": "net_policy",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "/sys/fs/cgroup",
+              "maps": [
+                "net_bucket_map",
+                "net_global_map",
+                "net_policy_map",
+                "net_stats_map"
+              ]
+            },
+            "resource_ctrl": {
+              "type": "resource_ctrl",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "res_global_map",
+                "res_policy_map",
+                "res_usage_map"
+              ]
+            },
+            "security_policy": {
+              "type": "security_policy",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "sec_exec_map",
+                "sec_policy_map",
+                "sec_stats_map"
+              ]
+            }
+          },
+          "dry_run": false,
+          "last_error": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first"
+        },
+        "hooks": {
+          "scheduler_trace": {
+            "available": true,
+            "loaded": true,
+            "name": "scheduler-trace",
+            "stats": {
+              "total_wakeups": 1765341,
+              "total_switches": 2400726,
+              "total_latency_ns": 357807459897,
+              "active_tasks": 7
+            },
+            "total_wakeups": 1765341,
+            "total_switches": 2400726,
+            "total_latency_ns": 357807459897,
+            "avg_latency_ns": 202684.61441557182
+          },
+          "network_policy": {
+            "available": true,
+            "loaded": true,
+            "name": "network-policy",
+            "stats": {
+              "total_packets": 0,
+              "total_bytes": 0,
+              "dropped_packets": 0,
+              "dropped_bytes": 0,
+              "overlimit_allowed_packets": 0
+            },
+            "total_packets": 0,
+            "total_bytes": 0,
+            "dropped_packets": 0,
+            "dropped_bytes": 0,
+            "drop_rate": 0.0
+          },
+          "security_policy": {
+            "available": true,
+            "loaded": true,
+            "name": "security-policy",
+            "bpf_lsm": true,
+            "stats": {
+              "exec_checks": 329,
+              "exec_denied": 0
+            }
+          },
+          "resource_control": {
+            "available": true,
+            "loaded": true,
+            "name": "resource-control",
+            "stats": {
+              "sched_switches": 2400976,
+              "policy_hits": 57587,
+              "process_exits": 382
+            },
+            "sched_switches": 2400976,
+            "policy_hits": 57587,
+            "process_exits": 382
+          }
+        }
+      }
+    },
+    "verify": {
+      "ok": true,
+      "message": "verification completed: 100.0% success rate",
+      "data": {
+        "execution_summary": {
+          "total": 9,
+          "success": 9,
+          "dry_run": 0,
+          "failed": 0,
+          "skipped": 0,
+          "success_rate": 1.0
+        },
+        "system_state": {
+          "cgroup_v2": true,
+          "cgroup_controllers": [
+            "cpuset",
+            "cpu",
+            "io",
+            "memory",
+            "dmem",
+            "xcu",
+            "hugetlb",
+            "pids",
+            "rdma",
+            "misc"
+          ],
+          "process_count": 5
+        },
+        "recommendations": [],
+        "canary": {
+          "accepted": true,
+          "status": "accepted",
+          "reasons": [],
+          "deltas": {
+            "response_error_rate_increase": 0.0,
+            "socket_errors_per_second_increase": 0.0,
+            "raw_requests_per_sec_percent": -0.430003,
+            "p99_percent": 3.529412,
+            "requests_per_sec_percent": -0.449454,
+            "successful_requests_per_sec_percent": -0.449454,
+            "background_retention_percent": 99.815566
+          }
+        }
+      }
+    }
+  },
+  "pre_verification_state": {
+    "scheduler_state": "enabled",
+    "ebpf_status": "attached"
+  }
+}

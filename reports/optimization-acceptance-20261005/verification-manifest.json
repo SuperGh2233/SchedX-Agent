@@ -1,0 +1,33 @@
+{
+  "recorded_client_utc": "2026-10-05T10:08:11.383100+00:00",
+  "candidate_commit": "47440e27bd5af2fa3c6672a951615dbfea7ee0e2",
+  "production_source_sha256": "ae15710fcf2a22ed96bd4a635d36602b7a57e0b1fbf5b6a88d0529e828197638",
+  "local_tests": {
+    "tests": 412,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "linux_tests": {
+    "tests": 412,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "unit_evidence_covers_current_candidate": true,
+  "active_validation": {
+    "status": "running",
+    "pid": 52340,
+    "path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/final-validation-47440e2/pipeline.json"
+  },
+  "goal_complete": false,
+  "automation_recreated": false,
+  "shutdown_sent": false,
+  "checkpoint_evidence_hashes": {
+    "local-tests-adaptive.xml": "11d577eab4794efca728e33411fb2161d6fb7c895225222638b542325d9ade7a",
+    "local-tests-adaptive.log": "6336a3c10340b82374b102eddc970cee261dae80b1face8f1cacaf421f6d7922",
+    "remote-checkpoint.tar.gz": "eaf6bdedfd82935b990c7b6603b00f7f9fced0881d1fab21dda96aa21d84677d",
+    "report.md": "2334bc9a8b71808d38e6a365e431aef96555a81548936d2bcae62f3bad2d90d4"
+  },
+  "checkpoint_scope": "terminal historical experiments; excludes the new active final-validation-47440e2 pipeline"
+}

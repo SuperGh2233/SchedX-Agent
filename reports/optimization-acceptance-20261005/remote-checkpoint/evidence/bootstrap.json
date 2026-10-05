@@ -1,0 +1,87 @@
+{
+  "status": "passed",
+  "stage": "complete",
+  "guest_utc_started": "2026-10-04T17:22:44Z",
+  "commands": [
+    {
+      "label": "build-native-baseline",
+      "command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-baseline",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/baseline",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "build-native-candidate",
+      "command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "clean-private-ebpf",
+      "command": [
+        "make",
+        "clean"
+      ],
+      "cwd": "/tmp/schedx-acceptance-20261005-79905fb/candidate/ebpf"
+    },
+    {
+      "label": "build-ebpf",
+      "command": [
+        "make",
+        "-j2"
+      ],
+      "cwd": "/tmp/schedx-acceptance-20261005-79905fb/candidate/ebpf"
+    },
+    {
+      "label": "linux-tests",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "--basetemp=/tmp/schedx-acceptance-20261005-79905fb/pytest-temp",
+        "--junitxml=/tmp/schedx-acceptance-20261005-79905fb/evidence/linux-tests.xml"
+      ],
+      "cwd": "/tmp/schedx-acceptance-20261005-79905fb/candidate"
+    }
+  ],
+  "git_proof_scope": "original commit objects and production subtrees only; not a full historical clone",
+  "environment": {
+    "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+    "cpus": 4,
+    "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+    "global_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+    "scheduler_state": "disabled",
+    "guest_wall_utc": "2026-10-04T17:22:44Z",
+    "gcc": "gcc (GCC) 12.3.1 (openEuler 12.3.1-110.oe2403sp4)\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "clang": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+    "bpftool": "bpftool v7.2.0\nusing libbpf v1.2\nfeatures: llvm, skeletons",
+    "wrk": "wrk 4.2.0 [epoll] Copyright (C) 2012 Will Glozer\nUsage: wrk <options> <url>                            \n  Options:                                            \n    -c, --connections <N>  Connections to keep open   \n    -d, --duration    <T>  Duration of test           \n    -t, --threads     <N>  Number of threads to use   \n                                                      \n    -s, --script      <S>  Load Lua script file       \n    -H, --header      <H>  Add header to request      \n        --latency          Print latency statistics   \n        --timeout     <T>  Socket/request timeout     \n    -v, --version          Print version details      \n                                                      \n  Numeric arguments may include a SI unit (1k, 1M, 1G)\n  Time arguments may include a time unit (2s, 2m, 2h)",
+    "redis-benchmark": "redis-benchmark 7.2.14",
+    "sysbench": "sysbench 1.0.20",
+    "nginx": "nginx version: nginx/1.24.0",
+    "build_bpftool": "bpftool v7.3.0\nusing libbpf v1.3\nfeatures: libbfd, skeletons",
+    "build_bpftool_sha256": "0d15b39359cd2831c61e56a2e6cf1b4c0aa03f18a9915a301a9a9c2b65820e07"
+  },
+  "ebpf_objects": {
+    "candidate/ebpf/build/security_policy.bpf.o": "03bf1bd6b79ab1d94db339f3d8b6f22a43cd2cac8507967c86563c131de668dd",
+    "candidate/ebpf/build/resource_ctrl.bpf.o": "400ff1bd4e6611167f2bc19d3adc4e31ba032e7c576ed496138e3c3555618e02",
+    "candidate/ebpf/build/net_policy.bpf.o": "88c4caf0b0fce9459a905cb26b28f876875ee04d1b1ca653269a40dac2203e15",
+    "candidate/ebpf/build/sched_trace.bpf.o": "4d61d9caa1be41c36d36b4069fcfcf360e1e06d3f39767f05519b9540823eb26"
+  }
+}

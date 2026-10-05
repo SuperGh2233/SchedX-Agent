@@ -1,0 +1,281 @@
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (initial_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent decision: mode=latency_first, target=nginx
+  reason: pure latency workload (2 services), no interference; router=latency_guard (stable_selection)
+  confidence: 86%
+Agent: measured objectives stable; continuing observation.
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 80%
+Agent: objective or policy changed; reassessing stability.
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 76%
+Agent decision: mode=latency_first, target=nginx
+  reason: mixed workload: protecting nginx, isolating stress-ng-cpu; router=latency_guard (stable_selection)
+  confidence: 73%
+{
+  "status": "failed",
+  "version_identity": {
+    "commit": "627222126b4cbf1dd0917e4ac8deb50401cf750f",
+    "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-6272221",
+    "source_sha256": "c0a772d786b89f06046401b635e0055a57e0fd54dd7220d1a280b08733b984fd",
+    "source_verified_against_git": true,
+    "source_file_count": 77,
+    "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "627222126b4cbf1dd0917e4ac8deb50401cf750f",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate-6272221",
+      "source_sha256": "c0a772d786b89f06046401b635e0055a57e0fd54dd7220d1a280b08733b984fd",
+      "source_verified_against_git": true,
+      "source_file_count": 77,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log",
+      "native_binary_reused_from_commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "native_source_byte_identity_verified": true
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "scope": "owned services and PIDs",
+  "stability_tolerance_percent": 10.0,
+  "stop_reason": "consecutive_failures",
+  "assessment": {
+    "status": "failed",
+    "failures": [
+      "incomplete_rounds",
+      "interference_has_no_accepted_measurement",
+      "recovery_has_no_accepted_measurement",
+      "recovery_plateau_not_observed",
+      "http_error_not_measured_rejected_and_recovered",
+      "fault_recovery_phase_evidence_missing"
+    ],
+    "completed_rounds": 8,
+    "fault_response_errors": 0,
+    "claim_scope": "real Agent flow, changing-load observation and controlled HTTP fault recovery; no performance gain is implied"
+  },
+  "rollback": {
+    "ok": true,
+    "message": "rollback completed: 12 settings restored, 7 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+    "data": {
+      "restored": 12,
+      "groups_removed": 7,
+      "skipped": 0,
+      "entries": [
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-42023",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx-experiment-2725bb832de54a62bfcfe7c7c4caabd0/service",
+          "file": "cgroup.procs",
+          "previous": "42023",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "10387466",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1038",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/system.slice/nginx.service",
+          "file": "cgroup.procs",
+          "previous": "1038",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "916",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1037",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/system.slice/nginx.service",
+          "file": "cgroup.procs",
+          "previous": "1037",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "916",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1036",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/system.slice/nginx.service",
+          "file": "cgroup.procs",
+          "previous": "1036",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "916",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1035",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/system.slice/nginx.service",
+          "file": "cgroup.procs",
+          "previous": "1035",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "916",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1034",
+          "file": "cpu.weight",
+          "previous": "100",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": null,
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/system.slice/nginx.service",
+          "file": "cgroup.procs",
+          "previous": "1034",
+          "owner": "session-5e7256975579418a9937ebd536a512dd",
+          "pid_start": "916",
+          "transaction": "056b1b03cf8544f2b7c257a9bf9dd08b"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-42023",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1038",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1037",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1036",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1035",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx/pid-1034",
+          "status": "removed"
+        },
+        {
+          "path": "/sys/fs/cgroup/schedx",
+          "status": "removed"
+        }
+      ],
+      "scx_entries": [
+        {
+          "source": "standalone_scx",
+          "pid": 42023,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 42023,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 42023,
+          "status": "restored"
+        },
+        {
+          "source": "standalone_scx",
+          "cgroup_id": 50521,
+          "status": "removed"
+        },
+        {
+          "source": "standalone_scx",
+          "pid": 42023,
+          "status": "removed"
+        }
+      ],
+      "process_entries": [],
+      "ebpf_cleanup": {
+        "security-policy": true,
+        "resource-control": true,
+        "network-policy": true,
+        "scheduler-trace": true
+      }
+    }
+  },
+  "task_restoration": {
+    "42022": true,
+    "42023": true,
+    "42213": true,
+    "42214": true,
+    "42215": true,
+    "42216": true
+  },
+  "workload_cleanup": {
+    "status": "passed",
+    "errors": [],
+    "cgroup_removed": true,
+    "leaders_reaped": true
+  },
+  "final_scheduler_state": "disabled",
+  "remaining_journals": [],
+  "pinned_hooks_remaining": false
+}

@@ -1,0 +1,50 @@
+{
+  "case": "batch",
+  "version": "reference",
+  "repeat": 1,
+  "failures": [],
+  "profile": "shared-throughput",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        5000
+      ],
+      "redis": [
+        1,
+        5000
+      ],
+      "noise": [
+        3,
+        300
+      ],
+      "batch": [
+        2,
+        2000
+      ]
+    },
+    "fairness": [
+      40,
+      32
+    ],
+    "description": "same existing Agent throughput weights and fairness settings on both binaries; batch only"
+  },
+  "command": [
+    "sysbench",
+    "cpu",
+    "--threads=3",
+    "--time=10",
+    "run"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 10.077861411991762,
+  "background_cpu_ticks": 1374,
+  "background_cpu_seconds_per_wall_second": 1.36338449580688,
+  "metrics": {
+    "elapsed_seconds": 10.0021,
+    "events": 70662.0,
+    "events_per_second": 7064.39,
+    "latency_p95_ms": 3.07
+  },
+  "final_scheduler_state": "disabled"
+}

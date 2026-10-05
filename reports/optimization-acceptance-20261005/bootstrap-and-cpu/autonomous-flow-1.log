@@ -1,0 +1,2 @@
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first
+eBPF: refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first

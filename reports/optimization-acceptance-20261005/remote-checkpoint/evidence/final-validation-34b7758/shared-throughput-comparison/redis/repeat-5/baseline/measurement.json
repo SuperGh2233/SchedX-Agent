@@ -1,0 +1,123 @@
+{
+  "case": "redis",
+  "version": "baseline",
+  "repeat": 5,
+  "failures": [],
+  "profile": "shared-throughput",
+  "settings": {
+    "policies": {
+      "service": [
+        1,
+        10000
+      ],
+      "redis": [
+        1,
+        10000
+      ],
+      "noise": [
+        3,
+        100
+      ],
+      "batch": [
+        2,
+        1500
+      ]
+    },
+    "fairness": null,
+    "description": "common static policies; each binary retains compiled fairness defaults"
+  },
+  "command": [
+    "redis-benchmark",
+    "-h",
+    "127.0.0.1",
+    "-p",
+    "57719",
+    "-n",
+    "500000",
+    "-c",
+    "64",
+    "--threads",
+    "2",
+    "--precision",
+    "3",
+    "-t",
+    "get"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 9.287890824009082,
+  "background_cpu_ticks": 2131,
+  "background_cpu_seconds_per_wall_second": 2.29438528120011,
+  "metrics": {
+    "requests_per_sec": 53902.54,
+    "qps": 53902.54,
+    "requests": 500000.0,
+    "elapsed_seconds": 9.28,
+    "latency_avg_ms": 1.033,
+    "latency_min_ms": 0.04,
+    "p50_ms": 0.871,
+    "p95_ms": 3.015,
+    "p99_ms": 3.663,
+    "latency_max_ms": 25.855,
+    "p50_latency_ms": 0.871,
+    "p95_latency_ms": 3.015,
+    "p99_latency_ms": 3.663
+  },
+  "native_evidence": {
+    "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/baseline/build/bin/scx_agent",
+    "fairness_configuration": "compiled defaults; no set fairness command",
+    "profile": "shared-throughput",
+    "settings": {
+      "policies": {
+        "service": [
+          1,
+          10000
+        ],
+        "redis": [
+          1,
+          10000
+        ],
+        "noise": [
+          3,
+          100
+        ],
+        "batch": [
+          2,
+          1500
+        ]
+      },
+      "fairness": null,
+      "description": "common static policies; each binary retains compiled fairness defaults"
+    },
+    "startup": "SchedX native sched_ext scheduler attached.\n",
+    "policies": {
+      "service": {
+        "cgroup_id": 53154,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "redis": {
+        "cgroup_id": 53168,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "noise": {
+        "cgroup_id": 53182,
+        "class_id": 3,
+        "weight": 100,
+        "acknowledged": true
+      },
+      "batch": {
+        "cgroup_id": 53196,
+        "class_id": 2,
+        "weight": 1500,
+        "acknowledged": true
+      }
+    },
+    "scheduler_stopped": true,
+    "output_readers_stopped": true,
+    "final_scheduler_state": "disabled"
+  },
+  "final_scheduler_state": "disabled"
+}

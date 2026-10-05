@@ -1,0 +1,81 @@
+{
+  "status": "failed",
+  "stage": "build-native-baseline",
+  "guest_utc_started": "2026-10-04T17:18:07Z",
+  "commands": [
+    {
+      "label": "git-init",
+      "command": [
+        "git",
+        "init",
+        "--bare",
+        "/tmp/schedx-acceptance-20261005-79905fb/repository.git"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "git-production-objects",
+      "command": [
+        "git",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/repository.git",
+        "index-pack",
+        "--stdin"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "extract-candidate",
+      "command": [
+        "tar",
+        "-xf",
+        "/tmp/schedx-acceptance-20261005-79905fb/schedx-candidate-core-79905fb.tar.gz",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/candidate"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "extract-baseline",
+      "command": [
+        "tar",
+        "-xf",
+        "/tmp/schedx-acceptance-20261005-79905fb/schedx-preliminary-core-b0591a1.tar.gz",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/baseline"
+      ],
+      "cwd": null
+    },
+    {
+      "label": "build-native-baseline",
+      "command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-baseline",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/baseline",
+        "BPFTOOL=/usr/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "cwd": null
+    }
+  ],
+  "git_proof_scope": "original commit objects and production subtrees only; not a full historical clone",
+  "environment": {
+    "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+    "cpus": 4,
+    "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+    "global_binary_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+    "scheduler_state": "disabled",
+    "guest_wall_utc": "2026-10-04T17:18:07Z",
+    "gcc": "gcc (GCC) 12.3.1 (openEuler 12.3.1-110.oe2403sp4)\nCopyright (C) 2022 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "clang": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+    "bpftool": "bpftool v7.2.0\nusing libbpf v1.2\nfeatures: llvm, skeletons",
+    "wrk": "wrk 4.2.0 [epoll] Copyright (C) 2012 Will Glozer\nUsage: wrk <options> <url>                            \n  Options:                                            \n    -c, --connections <N>  Connections to keep open   \n    -d, --duration    <T>  Duration of test           \n    -t, --threads     <N>  Number of threads to use   \n                                                      \n    -s, --script      <S>  Load Lua script file       \n    -H, --header      <H>  Add header to request      \n        --latency          Print latency statistics   \n        --timeout     <T>  Socket/request timeout     \n    -v, --version          Print version details      \n                                                      \n  Numeric arguments may include a SI unit (1k, 1M, 1G)\n  Time arguments may include a time unit (2s, 2m, 2h)",
+    "redis-benchmark": "redis-benchmark 7.2.14",
+    "sysbench": "sysbench 1.0.20",
+    "nginx": "nginx version: nginx/1.24.0"
+  },
+  "error": "RuntimeError: build-native-baseline failed with exit 2"
+}

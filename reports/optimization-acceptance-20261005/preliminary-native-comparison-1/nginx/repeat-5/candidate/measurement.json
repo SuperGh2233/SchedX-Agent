@@ -1,0 +1,85 @@
+{
+  "case": "nginx",
+  "version": "candidate",
+  "repeat": 5,
+  "failures": [],
+  "command": [
+    "wrk",
+    "-t2",
+    "-c64",
+    "-d10s",
+    "--latency",
+    "http://127.0.0.1:37745/"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 10.006298498003162,
+  "background_cpu_ticks": 1794,
+  "background_cpu_seconds_per_wall_second": 1.7928707607093746,
+  "metrics": {
+    "requests_completed": 865977,
+    "elapsed_seconds": 10.0,
+    "socket_errors": {
+      "connect": 0,
+      "read": 0,
+      "write": 0,
+      "timeout": 0
+    },
+    "non_success_responses": 0,
+    "latency_avg_ms": 0.7428,
+    "latency_stdev_ms": 0.3046,
+    "latency_max_ms": 13.17,
+    "req_per_sec_avg": 43520.0,
+    "req_per_sec_stdev": 1300.0,
+    "requests_per_sec": 86597.7,
+    "qps": 86573.49,
+    "transfer_sec": "13.87MB",
+    "p50_ms": 0.723,
+    "p50_latency_ms": 0.723,
+    "p75_ms": 0.773,
+    "p75_latency_ms": 0.773,
+    "p90_ms": 0.85,
+    "p90_latency_ms": 0.85,
+    "p99_ms": 1.19,
+    "p99_latency_ms": 1.19,
+    "avg_latency_ms": 0.7428,
+    "successful_requests_per_sec": 86597.7,
+    "response_error_rate": 0.0,
+    "socket_errors_per_second": 0.0,
+    "raw_requests_per_sec": 86573.49
+  },
+  "native_evidence": {
+    "binary": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "fairness_configuration": "compiled defaults; no set fairness command",
+    "startup": "SchedX native sched_ext scheduler attached.\n",
+    "policies": {
+      "service": {
+        "cgroup_id": 50887,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "redis": {
+        "cgroup_id": 50901,
+        "class_id": 1,
+        "weight": 10000,
+        "acknowledged": true
+      },
+      "noise": {
+        "cgroup_id": 50915,
+        "class_id": 3,
+        "weight": 100,
+        "acknowledged": true
+      },
+      "batch": {
+        "cgroup_id": 50929,
+        "class_id": 2,
+        "weight": 1500,
+        "acknowledged": true
+      }
+    },
+    "scheduler_stopped": true,
+    "output_readers_stopped": true,
+    "final_scheduler_state": "disabled"
+  },
+  "final_scheduler_state": "disabled"
+}

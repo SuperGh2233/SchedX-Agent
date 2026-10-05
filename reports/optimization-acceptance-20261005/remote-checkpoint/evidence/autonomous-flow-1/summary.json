@@ -1,0 +1,90 @@
+{
+  "status": "failed",
+  "version_identity": {
+    "commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+    "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate",
+    "source_sha256": "c21c2cf74efe9c30e0e0303138fa2b50e9274726d70f45bc22fcc5f0de9fe5d7",
+    "source_verified_against_git": true,
+    "source_file_count": 77,
+    "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+    "build_manifest_matches": true,
+    "build_manifest": {
+      "commit": "79905fbe79edaadeef9c24a6f16f4c37212e09e4",
+      "source_path": "/tmp/schedx-acceptance-20261005-79905fb/candidate",
+      "source_sha256": "c21c2cf74efe9c30e0e0303138fa2b50e9274726d70f45bc22fcc5f0de9fe5d7",
+      "source_verified_against_git": true,
+      "source_file_count": 77,
+      "binary_path": "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+      "binary_sha256": "8d0cb989dd113a184ffb99299bf07610922e9ef40bf17ca1702f47dd15c771c4",
+      "build_manifest_matches": false,
+      "kernel_release": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "btf_sha256": "b2936a3bdc6982c2ac7a355d86143c518d43da8102edf1146cf6418f96be5643",
+      "compiler": "clang version 17.0.6 ( 17.0.6-65.oe2403sp4)\nTarget: x86_64-openEuler-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin",
+      "build_command": [
+        "make",
+        "-C",
+        "/tmp/schedx-acceptance-20261005-79905fb/toolchain/kernel/tools/sched_ext-candidate",
+        "O=/tmp/schedx-acceptance-20261005-79905fb/native/candidate",
+        "BPFTOOL=/root/kernel-build/kernel/tools/sched_ext-opt-20261003/build/sbin/bpftool",
+        "VMLINUX_BTF=/sys/kernel/btf/vmlinux",
+        "-j2",
+        "scx_agent"
+      ],
+      "build_log": "build-native-candidate.log"
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "scope": "owned services and PIDs",
+  "stability_tolerance_percent": 10.0,
+  "stop_reason": "consecutive_failures",
+  "assessment": {
+    "status": "failed",
+    "failures": [
+      "incomplete_rounds",
+      "stable_has_no_accepted_measurement",
+      "incomplete_ebpf_chain_round_1",
+      "scheduler_inactive_round_1",
+      "incomplete_ebpf_chain_round_2",
+      "scheduler_inactive_round_2",
+      "incomplete_ebpf_chain_round_3",
+      "scheduler_inactive_round_3",
+      "interference_has_no_accepted_measurement",
+      "recovery_has_no_accepted_measurement",
+      "stable_plateau_not_observed",
+      "recovery_plateau_not_observed",
+      "interference_not_observed",
+      "http_error_not_measured_rejected_and_recovered",
+      "fault_recovery_phase_evidence_missing"
+    ],
+    "completed_rounds": 3,
+    "fault_response_errors": 0,
+    "claim_scope": "real Agent flow, changing-load observation and controlled HTTP fault recovery; no performance gain is implied"
+  },
+  "rollback": {
+    "ok": true,
+    "message": "rollback completed: 0 settings restored, 0 groups removed, 0 skipped; eBPF cleanup completed: 0/0 removed",
+    "data": {
+      "restored": 0,
+      "groups_removed": 0,
+      "skipped": 0,
+      "entries": [],
+      "scx_entries": [],
+      "process_entries": [],
+      "ebpf_cleanup": {}
+    }
+  },
+  "task_restoration": {
+    "41234": true,
+    "41235": true
+  },
+  "workload_cleanup": {
+    "status": "passed",
+    "errors": [],
+    "cgroup_removed": true,
+    "leaders_reaped": true
+  },
+  "final_scheduler_state": "disabled",
+  "remaining_journals": [],
+  "pinned_hooks_remaining": false
+}

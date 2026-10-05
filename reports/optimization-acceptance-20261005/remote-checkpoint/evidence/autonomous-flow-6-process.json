@@ -1,0 +1,26 @@
+{
+  "pid": 47567,
+  "start_time": "11689604",
+  "command": [
+    "python3",
+    "/tmp/schedx-acceptance-20261005-79905fb/candidate-7162f92/scripts/verify_autonomous_flow.py",
+    "--output",
+    "/tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6",
+    "--repository",
+    "/tmp/schedx-acceptance-20261005-79905fb/repository.git",
+    "--candidate-ref",
+    "7162f92fa7c3c38eb5eaa6b7c974eda5176cfccb",
+    "--binary",
+    "/tmp/schedx-acceptance-20261005-79905fb/native/candidate/build/bin/scx_agent",
+    "--build-manifest",
+    "/tmp/schedx-acceptance-20261005-79905fb/evidence/build-candidate-7162f92.json",
+    "--rounds-per-stage",
+    "10",
+    "--duration",
+    "10",
+    "--workers",
+    "3"
+  ],
+  "guest_started_utc": "2026-10-04T21:21:18.323466+00:00",
+  "harness_sha256": "1faa5f8314ae0bbce4b685f1910f81a5792bcb3ef33dd093edf755480caf4c56"
+}

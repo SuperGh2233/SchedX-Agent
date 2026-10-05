@@ -1,0 +1,43 @@
+{
+  "case": "redis",
+  "version": "reference",
+  "repeat": 3,
+  "failures": [],
+  "command": [
+    "redis-benchmark",
+    "-h",
+    "127.0.0.1",
+    "-p",
+    "42015",
+    "-n",
+    "500000",
+    "-c",
+    "64",
+    "--threads",
+    "2",
+    "--precision",
+    "3",
+    "-t",
+    "get"
+  ],
+  "client_returncode": 0,
+  "wall_seconds": 13.039496073994087,
+  "background_cpu_ticks": 3135,
+  "background_cpu_seconds_per_wall_second": 2.4042340150340857,
+  "metrics": {
+    "requests_per_sec": 38367.1,
+    "qps": 38367.1,
+    "requests": 500000.0,
+    "elapsed_seconds": 13.03,
+    "latency_avg_ms": 1.52,
+    "latency_min_ms": 0.048,
+    "p50_ms": 1.119,
+    "p95_ms": 3.655,
+    "p99_ms": 4.231,
+    "latency_max_ms": 13.831,
+    "p50_latency_ms": 1.119,
+    "p95_latency_ms": 3.655,
+    "p99_latency_ms": 4.231
+  },
+  "final_scheduler_state": "disabled"
+}

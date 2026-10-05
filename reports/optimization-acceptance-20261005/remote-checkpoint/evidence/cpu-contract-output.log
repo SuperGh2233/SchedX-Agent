@@ -1,0 +1,269 @@
+{
+  "status": "passed",
+  "cases": {
+    "hard_quota": {
+      "cpu_seconds": 0.204890526,
+      "result": {
+        "run_id": "tool-9d22eb655b4c42bea9e19d7f88dd9cd9",
+        "agent_id": "default",
+        "intent": "interactive",
+        "resource_hint": "",
+        "command": [
+          "/usr/bin/python3",
+          "-c",
+          "import time; a=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-a)"
+        ],
+        "profile": {
+          "intent": "interactive",
+          "scx_class": 1,
+          "scx_weight": 10000,
+          "cpu_weight": 1000,
+          "cpu_max": "10000 100000",
+          "memory_high": "1G",
+          "memory_max": "2G",
+          "pids_max": "256"
+        },
+        "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-9d22eb655b4c42bea9e19d7f88dd9cd9",
+        "cgroup_id": 49375,
+        "pid": 41094,
+        "native_scx": false,
+        "scx_mode": "cgroup",
+        "scx_policy_scope": "none",
+        "scx_error": "",
+        "cpu_control_support": {
+          "cpu_weight": "cgroup_v2",
+          "cpu_max": "cgroup_v2"
+        },
+        "cpu_control_support_at_launch": {
+          "cpu_weight": "cgroup_v2",
+          "cpu_max": "cgroup_v2"
+        },
+        "cpu_limit_mode": "hard",
+        "hard_cpu_quota_requested": true,
+        "returncode": 0,
+        "timed_out": false,
+        "cpu_contract_breached": false,
+        "duration_seconds": 2.16462632000912,
+        "metrics": {
+          "memory_current_bytes": 0,
+          "memory_peak_bytes": 3145728,
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0
+          },
+          "cpu_stat": {
+            "usage_usec": 212435,
+            "user_usec": 210630,
+            "system_usec": 1804,
+            "nr_periods": 22,
+            "nr_throttled": 21,
+            "throttled_usec": 1707513,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "pids_peak": 1
+        },
+        "scx_cgroup_metrics": {},
+        "cleanup": {
+          "policy_removed": true,
+          "scheduler_stopped": true,
+          "cgroup_removed": true,
+          "errors": []
+        },
+        "stdout": "0.204890526\n",
+        "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/tools/tool-9d22eb655b4c42bea9e19d7f88dd9cd9.stdout.log",
+        "stdout_truncated": false,
+        "stderr": "",
+        "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/tools/tool-9d22eb655b4c42bea9e19d7f88dd9cd9.stderr.log",
+        "stderr_truncated": false,
+        "feedback": [
+          "CPU throttling detected; reduce parallel workers or request a compile profile"
+        ],
+        "next_resource_hint": "intent:interactive,cpu:high",
+        "retry_recommended": true
+      }
+    },
+    "native_blocked_by_live_quota": {
+      "blocked_before_attach": true,
+      "hard_result": {
+        "run_id": "tool-31c3fedea71a4aef9dc358cc955013f2",
+        "agent_id": "default",
+        "intent": "interactive",
+        "resource_hint": "",
+        "command": [
+          "/usr/bin/python3",
+          "-c",
+          "from pathlib import Path; Path('/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/hard-running').touch(); import time; a=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-a)"
+        ],
+        "profile": {
+          "intent": "interactive",
+          "scx_class": 1,
+          "scx_weight": 10000,
+          "cpu_weight": 1000,
+          "cpu_max": "10000 100000",
+          "memory_high": "1G",
+          "memory_max": "2G",
+          "pids_max": "256"
+        },
+        "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-31c3fedea71a4aef9dc358cc955013f2",
+        "cgroup_id": 49504,
+        "pid": 41099,
+        "native_scx": false,
+        "scx_mode": "cgroup",
+        "scx_policy_scope": "none",
+        "scx_error": "",
+        "cpu_control_support": {
+          "cpu_weight": "cgroup_v2",
+          "cpu_max": "cgroup_v2"
+        },
+        "cpu_control_support_at_launch": {
+          "cpu_weight": "cgroup_v2",
+          "cpu_max": "cgroup_v2"
+        },
+        "cpu_limit_mode": "hard",
+        "hard_cpu_quota_requested": true,
+        "returncode": 0,
+        "timed_out": false,
+        "cpu_contract_breached": false,
+        "duration_seconds": 2.144683291000547,
+        "metrics": {
+          "memory_current_bytes": 356352,
+          "memory_peak_bytes": 4980736,
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0
+          },
+          "cpu_stat": {
+            "usage_usec": 215213,
+            "user_usec": 209816,
+            "system_usec": 5396,
+            "nr_periods": 22,
+            "nr_throttled": 21,
+            "throttled_usec": 1715672,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "pids_peak": 1
+        },
+        "scx_cgroup_metrics": {},
+        "cleanup": {
+          "policy_removed": true,
+          "scheduler_stopped": true,
+          "cgroup_removed": true,
+          "errors": []
+        },
+        "stdout": "0.200655614\n",
+        "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/tools/tool-31c3fedea71a4aef9dc358cc955013f2.stdout.log",
+        "stdout_truncated": false,
+        "stderr": "",
+        "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/tools/tool-31c3fedea71a4aef9dc358cc955013f2.stderr.log",
+        "stderr_truncated": false,
+        "feedback": [
+          "CPU throttling detected; reduce parallel workers or request a compile profile"
+        ],
+        "next_resource_hint": "intent:interactive,cpu:high",
+        "retry_recommended": true
+      }
+    },
+    "hard_rejected_under_native": {
+      "command_started": false
+    },
+    "explicit_soft_under_native": {
+      "cpu_seconds": 1.793002081,
+      "result": {
+        "run_id": "tool-622759aafe364daa86ce74d53f2d82db",
+        "agent_id": "default",
+        "intent": "interactive",
+        "resource_hint": "",
+        "command": [
+          "/usr/bin/python3",
+          "-c",
+          "import time; a=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-a)"
+        ],
+        "profile": {
+          "intent": "interactive",
+          "scx_class": 1,
+          "scx_weight": 10000,
+          "cpu_weight": 1000,
+          "cpu_max": "10000 100000",
+          "memory_high": "1G",
+          "memory_max": "2G",
+          "pids_max": "256"
+        },
+        "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-622759aafe364daa86ce74d53f2d82db",
+        "cgroup_id": 49633,
+        "pid": 41106,
+        "native_scx": false,
+        "scx_mode": "cgroup",
+        "scx_policy_scope": "none",
+        "scx_error": "",
+        "cpu_control_support": {
+          "cpu_weight": "schedx_policy_map",
+          "cpu_max": "not_enforced"
+        },
+        "cpu_control_support_at_launch": {
+          "cpu_weight": "schedx_policy_map",
+          "cpu_max": "not_enforced"
+        },
+        "cpu_limit_mode": "soft",
+        "hard_cpu_quota_requested": false,
+        "returncode": 0,
+        "timed_out": false,
+        "cpu_contract_breached": false,
+        "duration_seconds": 2.0439841600018553,
+        "metrics": {
+          "memory_current_bytes": 282624,
+          "memory_peak_bytes": 3145728,
+          "memory_events": {
+            "low": 0,
+            "high": 0,
+            "max": 0,
+            "oom": 0,
+            "oom_kill": 0,
+            "oom_group_kill": 0
+          },
+          "cpu_stat": {
+            "usage_usec": 1800560,
+            "user_usec": 1798021,
+            "system_usec": 2538,
+            "nr_periods": 2,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          },
+          "pids_peak": 1
+        },
+        "scx_cgroup_metrics": {},
+        "cleanup": {
+          "policy_removed": true,
+          "scheduler_stopped": true,
+          "cgroup_removed": true,
+          "errors": []
+        },
+        "stdout": "1.793002081\n",
+        "stdout_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/soft/tool-622759aafe364daa86ce74d53f2d82db.stdout.log",
+        "stdout_truncated": false,
+        "stderr": "",
+        "stderr_path": "/tmp/schedx-acceptance-20261005-79905fb/evidence/cpu-contract/soft/tool-622759aafe364daa86ce74d53f2d82db.stderr.log",
+        "stderr_truncated": false,
+        "feedback": [
+          "the active native scheduler does not enforce CPU quotas; use the default scheduler for a hard quota"
+        ],
+        "next_resource_hint": "",
+        "retry_recommended": false
+      }
+    }
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "scheduler_stopped": true,
+  "final_state": "disabled"
+}

@@ -1,0 +1,977 @@
+{
+  "stage": "stable",
+  "result": {
+    "round": 9,
+    "status": "failed_rolled_back",
+    "trial_context": "dab7d0e32bb80fb1b08d255054a30f2cff94b73f9e31a8952dbed5f9b5942509",
+    "failed_phase": "verify",
+    "verify_success": false,
+    "rollback_success": true,
+    "canary_rejected": true
+  },
+  "snapshot": {
+    "cpu_count": 4,
+    "pressure": {
+      "cpu": {},
+      "memory": {},
+      "io": {}
+    },
+    "cgroup": {
+      "v2": true,
+      "controllers": [
+        "cpuset",
+        "cpu",
+        "io",
+        "memory",
+        "dmem",
+        "xcu",
+        "hugetlb",
+        "pids",
+        "rdma",
+        "misc"
+      ],
+      "cpu_pressure": "",
+      "cpu_stat": {
+        "usage_usec": 34050368986,
+        "user_usec": 27822215766,
+        "system_usec": 6228153219,
+        "nr_periods": 0,
+        "nr_throttled": 0,
+        "throttled_usec": 0,
+        "nr_bursts": 0,
+        "burst_usec": 0
+      }
+    },
+    "processes": [
+      {
+        "pid": 47570,
+        "comm": "nginx",
+        "state": "S",
+        "ppid": 47567,
+        "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf",
+        "utime": 1,
+        "stime": 0,
+        "rss_bytes": 10477568,
+        "voluntary_ctxt_switches": 3,
+        "nonvoluntary_ctxt_switches": 2,
+        "cpu_percent": 0.0,
+        "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+        "sched": {
+          "se.sum_exec_runtime": 16.824945,
+          "nr_switches": 5.0
+        },
+        "start_time": 11689613
+      },
+      {
+        "pid": 47571,
+        "comm": "nginx",
+        "state": "S",
+        "ppid": 47570,
+        "cmdline": "nginx: worker process",
+        "utime": 1373,
+        "stime": 5021,
+        "rss_bytes": 5201920,
+        "voluntary_ctxt_switches": 1194,
+        "nonvoluntary_ctxt_switches": 17211,
+        "cpu_percent": 0.0,
+        "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+        "sched": {
+          "se.sum_exec_runtime": 63941.411782,
+          "nr_switches": 18405.0
+        },
+        "start_time": 11689616
+      }
+    ],
+    "process_scope": "explicit_pids",
+    "scope_pids": [
+      47570,
+      47571
+    ]
+  },
+  "classification": {
+    "overall": "latency_sensitive",
+    "groups": {
+      "latency_sensitive": [
+        {
+          "pid": 47570,
+          "comm": "nginx",
+          "state": "S",
+          "ppid": 47567,
+          "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf",
+          "utime": 1,
+          "stime": 0,
+          "rss_bytes": 10477568,
+          "voluntary_ctxt_switches": 3,
+          "nonvoluntary_ctxt_switches": 2,
+          "cpu_percent": 0.0,
+          "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+          "sched": {
+            "se.sum_exec_runtime": 16.824945,
+            "nr_switches": 5.0
+          },
+          "start_time": 11689613,
+          "workload_type": "latency_sensitive",
+          "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf matches latency service rule"
+        },
+        {
+          "pid": 47571,
+          "comm": "nginx",
+          "state": "S",
+          "ppid": 47570,
+          "cmdline": "nginx: worker process",
+          "utime": 1373,
+          "stime": 5021,
+          "rss_bytes": 5201920,
+          "voluntary_ctxt_switches": 1194,
+          "nonvoluntary_ctxt_switches": 17211,
+          "cpu_percent": 0.0,
+          "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+          "sched": {
+            "se.sum_exec_runtime": 63941.411782,
+            "nr_switches": 18405.0
+          },
+          "start_time": 11689616,
+          "workload_type": "latency_sensitive",
+          "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+        }
+      ],
+      "batch_compute": [],
+      "background_noise": [],
+      "unknown": []
+    },
+    "psi_insight": {}
+  },
+  "agent_decision": {
+    "mode": "latency_first",
+    "target": "nginx",
+    "parameters": {
+      "cpu_weight": 8000,
+      "cpu_weight_bg": 25,
+      "cpu_max_bg": "50000 100000",
+      "nice_target": -5,
+      "nice_bg": 5
+    },
+    "reason": "pure latency workload (2 services), no interference; router=latency_guard (stable_selection)",
+    "confidence": 0.8578199052132701,
+    "source": "rule_engine",
+    "expert_id": "latency_guard"
+  },
+  "policy_route": {
+    "expert_id": "latency_guard",
+    "mode": "latency_first",
+    "confidence": 0.8578199052132701,
+    "scores": {
+      "background_isolation": 0.047393,
+      "balanced": 0.047393,
+      "latency_guard": 0.85782,
+      "throughput_boost": 0.047393
+    },
+    "switched": false,
+    "reason": "stable_selection",
+    "timestamp": 117000.409205235
+  },
+  "actions": [
+    {
+      "action": "set_cgroup_cpu_weight",
+      "target": "nginx",
+      "target_type": "process_name",
+      "value": 8000,
+      "reason": "protect latency-sensitive workload",
+      "risk_level": "medium",
+      "rollback_enabled": true,
+      "metadata": {}
+    }
+  ],
+  "execution_results": [
+    {
+      "action": {
+        "action": "set_cgroup_cpu_weight",
+        "target": "nginx",
+        "target_type": "process_name",
+        "value": 8000,
+        "reason": "protect latency-sensitive workload",
+        "risk_level": "medium",
+        "rollback_enabled": true,
+        "metadata": {}
+      },
+      "status": "ok",
+      "pid": 47571,
+      "group": "pid-47571"
+    }
+  ],
+  "scx_results": {
+    "mode": "latency_first",
+    "total_actions": 1,
+    "successful": 1,
+    "failed": 0,
+    "results": [
+      {
+        "type": "set_task_policy",
+        "pid": 47571,
+        "class_id": 1,
+        "weight": 10000,
+        "workload_type": "latency_sensitive",
+        "comm": "nginx",
+        "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+        "success": true
+      }
+    ]
+  },
+  "ebpf_status": "unloaded",
+  "ebpf_policy_results": [
+    {
+      "pid": 47570,
+      "workload_type": "latency_sensitive",
+      "class_id": 1,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": null,
+      "net_policy": "deferred",
+      "resource_policy": "deferred",
+      "security_policy": "deferred",
+      "status": "deferred",
+      "reason": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first",
+      "success": true
+    },
+    {
+      "pid": 47571,
+      "workload_type": "latency_sensitive",
+      "class_id": 1,
+      "sched_policy": "delegated_to_scx_or_cgroup",
+      "cgroup_id": 52510,
+      "net_policy": "applied",
+      "resource_policy": "applied",
+      "security_policy": "audit",
+      "status": "applied",
+      "reason": "",
+      "success": true
+    }
+  ],
+  "canary": {
+    "baseline": {
+      "requests_completed": 886755,
+      "elapsed_seconds": 10.0,
+      "socket_errors": {
+        "connect": 0,
+        "read": 0,
+        "write": 0,
+        "timeout": 0
+      },
+      "non_success_responses": 0,
+      "latency_avg_ms": 0.3655,
+      "latency_stdev_ms": 0.2031,
+      "latency_max_ms": 4.36,
+      "req_per_sec_avg": 44540.0,
+      "req_per_sec_stdev": 1360.0,
+      "requests_per_sec": 88650.87,
+      "qps": 88650.87,
+      "transfer_sec": "14.20MB",
+      "p50_ms": 0.336,
+      "p50_latency_ms": 0.336,
+      "p75_ms": 0.405,
+      "p75_latency_ms": 0.405,
+      "p90_ms": 0.459,
+      "p90_latency_ms": 0.459,
+      "p99_ms": 1.1,
+      "p99_latency_ms": 1.1,
+      "avg_latency_ms": 0.3655,
+      "successful_requests_per_sec": 88675.5,
+      "response_error_rate": 0.0,
+      "socket_errors_per_second": 0.0,
+      "background_cpu_ticks": 0,
+      "system_cpu_ticks": 3650,
+      "background_cpu_share": 0.0,
+      "background_pids": [],
+      "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   365.48us  203.10us   4.36ms   94.16%\n    Req/Sec    44.54k     1.36k   49.12k    71.50%\n  Latency Distribution\n     50%  336.00us\n     75%  405.00us\n     90%  459.00us\n     99%    1.10ms\n  886755 requests in 10.00s, 142.07MB read\nRequests/sec:  88650.87\nTransfer/sec:     14.20MB\n"
+    },
+    "background_expected": false,
+    "candidate": {
+      "requests_completed": 860297,
+      "elapsed_seconds": 10.1,
+      "socket_errors": {
+        "connect": 0,
+        "read": 0,
+        "write": 0,
+        "timeout": 0
+      },
+      "non_success_responses": 0,
+      "latency_avg_ms": 0.3821,
+      "latency_stdev_ms": 0.2402,
+      "latency_max_ms": 8.31,
+      "req_per_sec_avg": 42790.0,
+      "req_per_sec_stdev": 1410.0,
+      "requests_per_sec": 85136.48,
+      "qps": 85136.48,
+      "transfer_sec": "13.64MB",
+      "p50_ms": 0.352,
+      "p50_latency_ms": 0.352,
+      "p75_ms": 0.414,
+      "p75_latency_ms": 0.414,
+      "p90_ms": 0.471,
+      "p90_latency_ms": 0.471,
+      "p99_ms": 1.18,
+      "p99_latency_ms": 1.18,
+      "avg_latency_ms": 0.3821,
+      "successful_requests_per_sec": 85177.92079207921,
+      "response_error_rate": 0.0,
+      "socket_errors_per_second": 0.0,
+      "background_cpu_ticks": 0,
+      "system_cpu_ticks": 3646,
+      "background_cpu_share": 0.0,
+      "background_pids": [],
+      "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   382.09us  240.23us   8.31ms   95.55%\n    Req/Sec    42.79k     1.41k   48.03k    73.27%\n  Latency Distribution\n     50%  352.00us\n     75%  414.00us\n     90%  471.00us\n     99%    1.18ms\n  860297 requests in 10.10s, 137.83MB read\nRequests/sec:  85136.48\nTransfer/sec:     13.64MB\n"
+    },
+    "background_share": null,
+    "background_retention": null,
+    "nr_rejected": 0
+  },
+  "canary_verdict": {
+    "accepted": false,
+    "status": "rejected",
+    "reasons": [
+      "p99_regression"
+    ],
+    "deltas": {
+      "response_error_rate_increase": 0.0,
+      "socket_errors_per_second_increase": 0.0,
+      "raw_requests_per_sec_percent": -3.964304,
+      "p99_percent": 7.272727,
+      "requests_per_sec_percent": -3.944245,
+      "successful_requests_per_sec_percent": -3.944245
+    }
+  },
+  "rollback": {
+    "restored": 2,
+    "groups_removed": 2,
+    "skipped": 0,
+    "entries": [
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-47571",
+        "file": "cpu.weight",
+        "previous": "100",
+        "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+        "pid_start": null,
+        "transaction": "9421680b800143378f34ca307bb43999"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+        "file": "cgroup.procs",
+        "previous": "47571",
+        "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+        "pid_start": "11689616",
+        "transaction": "9421680b800143378f34ca307bb43999"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx/pid-47571",
+        "status": "removed"
+      },
+      {
+        "path": "/sys/fs/cgroup/schedx",
+        "status": "removed"
+      }
+    ],
+    "scx_entries": [
+      {
+        "source": "standalone_scx",
+        "cgroup_id": 52510,
+        "status": "removed"
+      },
+      {
+        "source": "standalone_scx",
+        "pid": 47571,
+        "status": "removed"
+      }
+    ],
+    "process_entries": [],
+    "ebpf_cleanup": {
+      "security-policy": true,
+      "resource-control": true,
+      "network-policy": true,
+      "scheduler-trace": true
+    }
+  },
+  "stability": {
+    "stable": false,
+    "window": 3,
+    "tolerance_percent": 10.0,
+    "reason": "unmeasured_or_failed_round"
+  },
+  "converged": false,
+  "scheduler_state": "disabled",
+  "phase_results": {
+    "probe": {
+      "ok": true,
+      "message": "probe completed",
+      "data": {
+        "cpu_count": 4,
+        "pressure": {
+          "cpu": {},
+          "memory": {},
+          "io": {}
+        },
+        "cgroup": {
+          "v2": true,
+          "controllers": [
+            "cpuset",
+            "cpu",
+            "io",
+            "memory",
+            "dmem",
+            "xcu",
+            "hugetlb",
+            "pids",
+            "rdma",
+            "misc"
+          ],
+          "cpu_pressure": "",
+          "cpu_stat": {
+            "usage_usec": 34050368986,
+            "user_usec": 27822215766,
+            "system_usec": 6228153219,
+            "nr_periods": 0,
+            "nr_throttled": 0,
+            "throttled_usec": 0,
+            "nr_bursts": 0,
+            "burst_usec": 0
+          }
+        },
+        "processes": [
+          {
+            "pid": 47570,
+            "comm": "nginx",
+            "state": "S",
+            "ppid": 47567,
+            "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf",
+            "utime": 1,
+            "stime": 0,
+            "rss_bytes": 10477568,
+            "voluntary_ctxt_switches": 3,
+            "nonvoluntary_ctxt_switches": 2,
+            "cpu_percent": 0.0,
+            "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+            "sched": {
+              "se.sum_exec_runtime": 16.824945,
+              "nr_switches": 5.0
+            },
+            "start_time": 11689613
+          },
+          {
+            "pid": 47571,
+            "comm": "nginx",
+            "state": "S",
+            "ppid": 47570,
+            "cmdline": "nginx: worker process",
+            "utime": 1373,
+            "stime": 5021,
+            "rss_bytes": 5201920,
+            "voluntary_ctxt_switches": 1194,
+            "nonvoluntary_ctxt_switches": 17211,
+            "cpu_percent": 0.0,
+            "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+            "sched": {
+              "se.sum_exec_runtime": 63941.411782,
+              "nr_switches": 18405.0
+            },
+            "start_time": 11689616
+          }
+        ],
+        "process_scope": "explicit_pids",
+        "scope_pids": [
+          47570,
+          47571
+        ]
+      }
+    },
+    "analyze": {
+      "ok": true,
+      "message": "classification completed",
+      "data": {
+        "overall": "latency_sensitive",
+        "groups": {
+          "latency_sensitive": [
+            {
+              "pid": 47570,
+              "comm": "nginx",
+              "state": "S",
+              "ppid": 47567,
+              "cmdline": "nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf",
+              "utime": 1,
+              "stime": 0,
+              "rss_bytes": 10477568,
+              "voluntary_ctxt_switches": 3,
+              "nonvoluntary_ctxt_switches": 2,
+              "cpu_percent": 0.0,
+              "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+              "sched": {
+                "se.sum_exec_runtime": 16.824945,
+                "nr_switches": 5.0
+              },
+              "start_time": 11689613,
+              "workload_type": "latency_sensitive",
+              "reason": "comm/cmdline=nginx nginx: master process /usr/sbin/nginx -p /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/ -c /tmp/schedx-acceptance-20261005-79905fb/evidence/autonomous-flow-6/workloads/nginx.conf matches latency service rule"
+            },
+            {
+              "pid": 47571,
+              "comm": "nginx",
+              "state": "S",
+              "ppid": 47570,
+              "cmdline": "nginx: worker process",
+              "utime": 1373,
+              "stime": 5021,
+              "rss_bytes": 5201920,
+              "voluntary_ctxt_switches": 1194,
+              "nonvoluntary_ctxt_switches": 17211,
+              "cpu_percent": 0.0,
+              "cgroup": "/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+              "sched": {
+                "se.sum_exec_runtime": 63941.411782,
+                "nr_switches": 18405.0
+              },
+              "start_time": 11689616,
+              "workload_type": "latency_sensitive",
+              "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule"
+            }
+          ],
+          "batch_compute": [],
+          "background_noise": [],
+          "unknown": []
+        },
+        "psi_insight": {}
+      }
+    },
+    "policy": {
+      "ok": true,
+      "message": "planned 1 actions for mode=latency_first",
+      "data": {
+        "actions": [
+          "Action(action='set_cgroup_cpu_weight', target='nginx', target_type='process_name', value=8000, reason='protect latency-sensitive workload', risk_level='medium', rollback_enabled=True, metadata={})"
+        ],
+        "count": 1
+      }
+    },
+    "canary_baseline": {
+      "ok": true,
+      "message": "captured baseline SLO canary",
+      "data": {
+        "requests_completed": 886755,
+        "elapsed_seconds": 10.0,
+        "socket_errors": {
+          "connect": 0,
+          "read": 0,
+          "write": 0,
+          "timeout": 0
+        },
+        "non_success_responses": 0,
+        "latency_avg_ms": 0.3655,
+        "latency_stdev_ms": 0.2031,
+        "latency_max_ms": 4.36,
+        "req_per_sec_avg": 44540.0,
+        "req_per_sec_stdev": 1360.0,
+        "requests_per_sec": 88650.87,
+        "qps": 88650.87,
+        "transfer_sec": "14.20MB",
+        "p50_ms": 0.336,
+        "p50_latency_ms": 0.336,
+        "p75_ms": 0.405,
+        "p75_latency_ms": 0.405,
+        "p90_ms": 0.459,
+        "p90_latency_ms": 0.459,
+        "p99_ms": 1.1,
+        "p99_latency_ms": 1.1,
+        "avg_latency_ms": 0.3655,
+        "successful_requests_per_sec": 88675.5,
+        "response_error_rate": 0.0,
+        "socket_errors_per_second": 0.0,
+        "background_cpu_ticks": 0,
+        "system_cpu_ticks": 3650,
+        "background_cpu_share": 0.0,
+        "background_pids": [],
+        "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   365.48us  203.10us   4.36ms   94.16%\n    Req/Sec    44.54k     1.36k   49.12k    71.50%\n  Latency Distribution\n     50%  336.00us\n     75%  405.00us\n     90%  459.00us\n     99%    1.10ms\n  886755 requests in 10.00s, 142.07MB read\nRequests/sec:  88650.87\nTransfer/sec:     14.20MB\n"
+      }
+    },
+    "ebpf_load": {
+      "ok": true,
+      "message": "loaded 4 eBPF programs (0 failed)",
+      "data": {
+        "results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "successful": 4,
+        "failed": 0
+      }
+    },
+    "ebpf_attach": {
+      "ok": true,
+      "message": "attached 4 eBPF programs (0 failed)",
+      "data": {
+        "results": {
+          "scheduler-trace": true,
+          "network-policy": true,
+          "resource-control": true,
+          "security-policy": true
+        },
+        "successful": 4,
+        "failed": 0
+      }
+    },
+    "scx": {
+      "ok": true,
+      "message": "applied 1 scx policies (0 failed)",
+      "data": {
+        "mode": "latency_first",
+        "total_actions": 1,
+        "successful": 1,
+        "failed": 0,
+        "results": [
+          {
+            "type": "set_task_policy",
+            "pid": 47571,
+            "class_id": 1,
+            "weight": 10000,
+            "workload_type": "latency_sensitive",
+            "comm": "nginx",
+            "reason": "comm/cmdline=nginx nginx: worker process matches latency service rule",
+            "success": true
+          }
+        ]
+      }
+    },
+    "act": {
+      "ok": true,
+      "message": "executed 1 actions successfully",
+      "data": {
+        "results": [
+          {
+            "action": {
+              "action": "set_cgroup_cpu_weight",
+              "target": "nginx",
+              "target_type": "process_name",
+              "value": 8000,
+              "reason": "protect latency-sensitive workload",
+              "risk_level": "medium",
+              "rollback_enabled": true,
+              "metadata": {}
+            },
+            "status": "ok",
+            "pid": 47571,
+            "group": "pid-47571"
+          }
+        ]
+      }
+    },
+    "scx_cgroups": {
+      "ok": true,
+      "message": "mirrored 1 cgroup policies",
+      "data": {
+        "failed": 0
+      }
+    },
+    "ebpf_policy": {
+      "ok": true,
+      "message": "applied 2 eBPF policies (0 failed)",
+      "data": {
+        "results": [
+          {
+            "pid": 47570,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": null,
+            "net_policy": "deferred",
+            "resource_policy": "deferred",
+            "security_policy": "deferred",
+            "status": "deferred",
+            "reason": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first",
+            "success": true
+          },
+          {
+            "pid": 47571,
+            "workload_type": "latency_sensitive",
+            "class_id": 1,
+            "sched_policy": "delegated_to_scx_or_cgroup",
+            "cgroup_id": 52510,
+            "net_policy": "applied",
+            "resource_policy": "applied",
+            "security_policy": "audit",
+            "status": "applied",
+            "reason": "",
+            "success": true
+          }
+        ],
+        "successful": 2,
+        "failed": 0
+      }
+    },
+    "canary_candidate": {
+      "ok": true,
+      "message": "captured candidate SLO canary",
+      "data": {
+        "candidate": {
+          "requests_completed": 860297,
+          "elapsed_seconds": 10.1,
+          "socket_errors": {
+            "connect": 0,
+            "read": 0,
+            "write": 0,
+            "timeout": 0
+          },
+          "non_success_responses": 0,
+          "latency_avg_ms": 0.3821,
+          "latency_stdev_ms": 0.2402,
+          "latency_max_ms": 8.31,
+          "req_per_sec_avg": 42790.0,
+          "req_per_sec_stdev": 1410.0,
+          "requests_per_sec": 85136.48,
+          "qps": 85136.48,
+          "transfer_sec": "13.64MB",
+          "p50_ms": 0.352,
+          "p50_latency_ms": 0.352,
+          "p75_ms": 0.414,
+          "p75_latency_ms": 0.414,
+          "p90_ms": 0.471,
+          "p90_latency_ms": 0.471,
+          "p99_ms": 1.18,
+          "p99_latency_ms": 1.18,
+          "avg_latency_ms": 0.3821,
+          "successful_requests_per_sec": 85177.92079207921,
+          "response_error_rate": 0.0,
+          "socket_errors_per_second": 0.0,
+          "background_cpu_ticks": 0,
+          "system_cpu_ticks": 3646,
+          "background_cpu_share": 0.0,
+          "background_pids": [],
+          "raw_output": "Running 10s test @ http://127.0.0.1:33483/\n  2 threads and 32 connections\n  Thread Stats   Avg      Stdev     Max   +/- Stdev\n    Latency   382.09us  240.23us   8.31ms   95.55%\n    Req/Sec    42.79k     1.41k   48.03k    73.27%\n  Latency Distribution\n     50%  352.00us\n     75%  414.00us\n     90%  471.00us\n     99%    1.18ms\n  860297 requests in 10.10s, 137.83MB read\nRequests/sec:  85136.48\nTransfer/sec:     13.64MB\n"
+        },
+        "background_retention": null,
+        "nr_rejected": 0
+      }
+    },
+    "ebpf_stats": {
+      "ok": true,
+      "message": "collected eBPF statistics",
+      "data": {
+        "available": true,
+        "status": {
+          "available": true,
+          "sched_ext": true,
+          "bpf_lsm": true,
+          "programs": {
+            "sched_trace": {
+              "type": "sched_trace",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "events",
+                "global_stats",
+                "latency_histogram",
+                "task_info_map"
+              ]
+            },
+            "net_policy": {
+              "type": "net_policy",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "/sys/fs/cgroup",
+              "maps": [
+                "net_bucket_map",
+                "net_global_map",
+                "net_policy_map",
+                "net_stats_map"
+              ]
+            },
+            "resource_ctrl": {
+              "type": "resource_ctrl",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "res_global_map",
+                "res_policy_map",
+                "res_usage_map"
+              ]
+            },
+            "security_policy": {
+              "type": "security_policy",
+              "loaded": true,
+              "attached": true,
+              "attach_target": "kernel-declared hooks",
+              "maps": [
+                "sec_exec_map",
+                "sec_policy_map",
+                "sec_stats_map"
+              ]
+            }
+          },
+          "dry_run": false,
+          "last_error": "refusing a PID policy on a shared cgroup; move the workload to /sys/fs/cgroup/schedx first"
+        },
+        "hooks": {
+          "scheduler_trace": {
+            "available": true,
+            "loaded": true,
+            "name": "scheduler-trace",
+            "stats": {
+              "total_wakeups": 81247,
+              "total_switches": 110063,
+              "total_latency_ns": 13411118979,
+              "active_tasks": 13
+            },
+            "total_wakeups": 81247,
+            "total_switches": 110063,
+            "total_latency_ns": 13411118979,
+            "avg_latency_ns": 165066.02064076212
+          },
+          "network_policy": {
+            "available": true,
+            "loaded": true,
+            "name": "network-policy",
+            "stats": {
+              "total_packets": 0,
+              "total_bytes": 0,
+              "dropped_packets": 0,
+              "dropped_bytes": 0,
+              "overlimit_allowed_packets": 0
+            },
+            "total_packets": 0,
+            "total_bytes": 0,
+            "dropped_packets": 0,
+            "dropped_bytes": 0,
+            "drop_rate": 0.0
+          },
+          "security_policy": {
+            "available": true,
+            "loaded": true,
+            "name": "security-policy",
+            "bpf_lsm": true,
+            "stats": {
+              "exec_checks": 66,
+              "exec_denied": 0
+            }
+          },
+          "resource_control": {
+            "available": true,
+            "loaded": true,
+            "name": "resource-control",
+            "stats": {
+              "sched_switches": 110504,
+              "policy_hits": 785,
+              "process_exits": 86
+            },
+            "sched_switches": 110504,
+            "policy_hits": 785,
+            "process_exits": 86
+          }
+        }
+      }
+    },
+    "verify": {
+      "ok": false,
+      "message": "canary rejected; rollback required",
+      "data": {
+        "execution_summary": {
+          "total": 1,
+          "success": 1,
+          "dry_run": 0,
+          "failed": 0,
+          "skipped": 0,
+          "success_rate": 1.0
+        },
+        "system_state": {
+          "cgroup_v2": true,
+          "cgroup_controllers": [
+            "cpuset",
+            "cpu",
+            "io",
+            "memory",
+            "dmem",
+            "xcu",
+            "hugetlb",
+            "pids",
+            "rdma",
+            "misc"
+          ],
+          "process_count": 5
+        },
+        "recommendations": [
+          "Canary policy regressed or violated safety constraints; rollback required."
+        ],
+        "canary": {
+          "accepted": false,
+          "status": "rejected",
+          "reasons": [
+            "p99_regression"
+          ],
+          "deltas": {
+            "response_error_rate_increase": 0.0,
+            "socket_errors_per_second_increase": 0.0,
+            "raw_requests_per_sec_percent": -3.964304,
+            "p99_percent": 7.272727,
+            "requests_per_sec_percent": -3.944245,
+            "successful_requests_per_sec_percent": -3.944245
+          }
+        }
+      }
+    },
+    "rollback": {
+      "ok": true,
+      "message": "rollback completed: 2 settings restored, 2 groups removed, 0 skipped; eBPF cleanup completed: 4/4 removed",
+      "data": {
+        "restored": 2,
+        "groups_removed": 2,
+        "skipped": 0,
+        "entries": [
+          {
+            "path": "/sys/fs/cgroup/schedx/pid-47571",
+            "file": "cpu.weight",
+            "previous": "100",
+            "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+            "pid_start": null,
+            "transaction": "9421680b800143378f34ca307bb43999"
+          },
+          {
+            "path": "/sys/fs/cgroup/schedx-experiment-775178ccdbb44945b818f3bcf2efaf05/service",
+            "file": "cgroup.procs",
+            "previous": "47571",
+            "owner": "session-303fe1073355449fbfa515cbcefc62b1",
+            "pid_start": "11689616",
+            "transaction": "9421680b800143378f34ca307bb43999"
+          },
+          {
+            "path": "/sys/fs/cgroup/schedx/pid-47571",
+            "status": "removed"
+          },
+          {
+            "path": "/sys/fs/cgroup/schedx",
+            "status": "removed"
+          }
+        ],
+        "scx_entries": [
+          {
+            "source": "standalone_scx",
+            "cgroup_id": 52510,
+            "status": "removed"
+          },
+          {
+            "source": "standalone_scx",
+            "pid": 47571,
+            "status": "removed"
+          }
+        ],
+        "process_entries": [],
+        "ebpf_cleanup": {
+          "security-policy": true,
+          "resource-control": true,
+          "network-policy": true,
+          "scheduler-trace": true
+        }
+      }
+    }
+  },
+  "pre_verification_state": {
+    "scheduler_state": "enabled",
+    "ebpf_status": "attached"
+  }
+}
