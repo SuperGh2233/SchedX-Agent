@@ -101,7 +101,7 @@ class ToolAdmission:
                  cgroup_root: Path = Path("/sys/fs/cgroup"),
                  pressure_reader: Callable[[], dict[str, int]] = pressure_totals,
                  clock: Callable[[], float] = time.monotonic,
-                 poll_seconds: float = 0.05):
+                 poll_seconds: float = 0.01):
         if not math.isfinite(poll_seconds) or poll_seconds <= 0:
             raise ValueError("admission polling interval must be positive")
         self.directory = directory.resolve()

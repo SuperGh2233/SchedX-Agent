@@ -213,6 +213,7 @@ class ToolCallRunner:
         scx_started = scx_used = timed_out = contract_breached = False
         scx_error = ""
         descriptors = []
+        pidfd = None
         readers, captures = [], {}
         result = None
         quota_lease = None
@@ -237,6 +238,13 @@ class ToolCallRunner:
                 pass_fds=(ready_w, gate_r, *((quota_lease.fd,) if quota_lease else ()),
                           *((admission_lease.fd,) if admission_lease else ())), start_new_session=True,
             )
+            if hasattr(os, "pidfd_open"):
+                try:
+                    pidfd = os.pidfd_open(process.pid, 0)
+                    descriptors.append(pidfd)
+                except OSError:
+                    # Older kernels or restricted environments retain the portable wait.
+                    pass
             for descriptor in (ready_w, gate_r):
                 os.close(descriptor)
                 descriptors.remove(descriptor)
@@ -296,10 +304,15 @@ class ToolCallRunner:
                     timeout_phase = "execution"
                     self._stop_tree(process, tool)
                     break
-                try:
-                    process.wait(timeout=min(remaining, 0.1) if hard_quota else remaining)
-                except subprocess.TimeoutExpired:
-                    continue
+                wait = min(remaining, 0.1) if hard_quota else remaining
+                if pidfd is not None:
+                    if select.select([pidfd], [], [], wait)[0]:
+                        process.wait()
+                else:
+                    try:
+                        process.wait(timeout=wait)
+                    except subprocess.TimeoutExpired:
+                        continue
             metrics = self._metrics(tool)
             scx_metrics = {}
             if scx_used and not scx_started:
@@ -320,6 +333,7 @@ class ToolCallRunner:
                 "timed_out": timed_out, "cpu_contract_breached": contract_breached,
                 "duration_seconds": time.monotonic() - started, "metrics": metrics, "scx_cgroup_metrics": scx_metrics,
                 "command_started": command_started, "timeout_phase": timeout_phase,
+                "process_wait_mode": "pidfd" if pidfd is not None else "poll",
                 "queue_wait_seconds": admitted - submitted,
                 "startup_seconds": (launch_at or time.monotonic()) - admitted,
                 "execution_seconds": time.monotonic() - launch_at if launch_at is not None else 0.0,

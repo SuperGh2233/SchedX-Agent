@@ -42,6 +42,25 @@ def test_tool_timeout_stops_process_group(tmp_path):
     assert result["cleanup"]["cgroup_removed"]
 
 
+def test_unavailable_pidfd_keeps_the_portable_wait_and_deadline(tmp_path, monkeypatch):
+    def unavailable(*args):
+        raise OSError("pidfd is unavailable")
+    monkeypatch.setattr("schedx.tool_runner.os.pidfd_open", unavailable, raising=False)
+    runner = FilesystemRunner(root=tmp_path / "groups", state_dir=tmp_path / "state", native_scx=False)
+    result = runner.run([sys.executable, "-c", "import time; time.sleep(60)"], timeout=.1)
+    assert result["process_wait_mode"] == "poll"
+    assert result["returncode"] == 124 and result["cleanup"]["cgroup_removed"]
+
+
+@pytest.mark.skipif(not hasattr(os, "pidfd_open"), reason="real pidfd requires Linux")
+def test_real_pidfd_observes_completion_and_releases_resources(tmp_path):
+    runner = FilesystemRunner(root=tmp_path / "groups", state_dir=tmp_path / "state", native_scx=False)
+    result = runner.run([sys.executable, "-c", "print('completed')"])
+    assert result["process_wait_mode"] == "pidfd"
+    assert result["returncode"] == 0 and result["stdout"] == "completed\n"
+    assert result["cleanup"]["cgroup_removed"]
+
+
 def test_output_is_drained_with_bounded_storage(tmp_path):
     runner = FilesystemRunner(root=tmp_path / "groups", state_dir=tmp_path / "state", native_scx=False)
     result = runner.run([sys.executable, "-c", "import sys; sys.stdout.write('x'*200000); sys.stderr.write('y'*200000)"], output_limit=8192)
