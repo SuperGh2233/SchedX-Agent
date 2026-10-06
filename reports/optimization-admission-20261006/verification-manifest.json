@@ -1,5 +1,5 @@
 {
-  "recorded_client_utc": "2026-10-06T06:45:13.105546+00:00",
+  "recorded_client_utc": "2026-10-06T08:07:06.555827+00:00",
   "implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
   "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
   "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
@@ -429,7 +429,7 @@
       "final_scheduler_state": "disabled"
     },
     "30min": {
-      "status": "running",
+      "status": "passed",
       "duration_seconds": 1800.0,
       "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
       "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
@@ -445,9 +445,9 @@
         "cooldown_seconds": 3.0
       },
       "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
-      "waves": 1400,
-      "tools": 6912,
-      "recovery_checks": 8,
+      "waves": 2803,
+      "tools": 13844,
+      "recovery_checks": 15,
       "max_pending": 7,
       "max_active": 5,
       "max_queue_seconds": {
@@ -459,9 +459,44 @@
         "interactive": 0.23517707900009555
       },
       "failures": [],
-      "native_backend": false
+      "native_backend": false,
+      "private_cgroup_removed": true,
+      "elapsed_seconds": 1802.131715251,
+      "final_scheduler_state": "disabled"
     },
-    "2h": "not_started"
+    "2h": {
+      "status": "running",
+      "duration_seconds": 7200.0,
+      "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+      "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      },
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "waves": 6433,
+      "tools": 31716,
+      "recovery_checks": 35,
+      "max_pending": 7,
+      "max_active": 5,
+      "max_queue_seconds": {
+        "compile": 1.8471433340000658,
+        "interactive": 0.12957452400041802
+      },
+      "max_total_seconds": {
+        "compile": 2.7186725409992505,
+        "interactive": 0.2377990029999637
+      },
+      "failures": [],
+      "native_backend": false
+    }
   },
   "performance_improvement_claim": {
     "scope": "current ToolCallRunner off/fixed/adaptive on declared 4-vCPU task bursts; nearest-rank batch tail, not initial whole Agent or service P99",
@@ -481,8 +516,7 @@
   "pushed_this_iteration": false,
   "goal_complete": false,
   "remaining_work": [
-    "finish running 30-minute validation",
-    "finish two-hour changing-load and recovery validation",
+    "finish running two-hour changing-load and recovery validation",
     "terminal cleanup and original-state audit",
     "archive terminal evidence and finalize report"
   ],
@@ -491,7 +525,7 @@
     "reports/optimization-admission-20261006/local-tests-runtime.log": "f1de9768c7e8fff0a5027143aaf4c56c22ebab137195f16dce175538ebf3cea9",
     "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
     "reports/optimization-admission-20261006/long-validation-pipeline.json": "9240b10a710161fd43fc480a6a1ea21fd14ef907a2090d1fe85213a65841d603",
-    "reports/optimization-admission-20261006/report.md": "e0ea17d01b3c999229369b6a6e4f80866ddb137bf00f7c223da8050520c0e1f8",
+    "reports/optimization-admission-20261006/report.md": "32636dc5b5a959685b49e5b6eca53513931a66c6705b3a49ff272fd2ce2b94bb",
     "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
     "reports/optimization-admission-20261006/local-tests-topology.log": "ad3868778f48373f12ddf251af981b7f29077273e9abab1672d80c1a03ba7911",
     "reports/optimization-admission-20261006/failed-long-evidence-068c7ba.tar.gz": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
@@ -518,7 +552,10 @@
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/source-identity-5ac43a8.json": "f91e251d1c0c1440bd41e10edac3180b145849f3d2bb8292570025e1b0c3e8d9",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/smoke-topology/summary.json": "08d59dd3eb301f3f7b0b9e1322fb3d199b5de1d3fe1b9e9348f3a3545a6f0120",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/paired-topology/summary.json": "400f14d3d80cd3e0f236a3eb4147bf4118bd961888476827ddfc488476c100f7",
-    "docs/optimization-plan.md": "c4469d3262e23554d364dfe715a764d781e408c892b5648fc75fac3349cc884b"
+    "docs/optimization-plan.md": "49763f8f9faf66095a5bcb896c268b6149bc2eedd9108ac6592c177d6a989fbd",
+    "reports/optimization-admission-20261006/pipeline-5ac43a8-latest.json": "d848ab03aa47beffa90e429b19e6c05e436fcd2611706bb271dcaca9d64acce1",
+    "reports/optimization-admission-20261006/30min-5ac43a8-summary.json": "856b8edd024026d27a95d293eee9c2f02061dce326ca4ca04e33bb9a0ba33d03",
+    "reports/optimization-admission-20261006/2h-5ac43a8-checkpoint.json": "7d23b991a7372a93b132e88fd1e6ad1fdfde65b0c11359a179cb611e2d154549"
   },
   "historical_local_implementation": {
     "commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
@@ -555,10 +592,29 @@
       },
       {
         "name": "admission-30min",
-        "status": "running",
+        "status": "passed",
         "duration_seconds": 1800,
         "guest_started_utc": "2026-10-06T06:28:45.624209+00:00",
-        "pid": 67475
+        "pid": 67475,
+        "returncode": 0,
+        "tools": 13844,
+        "recovery_checks": 15,
+        "max_queue_seconds": {
+          "compile": 3.2247909199995775,
+          "interactive": 0.11960611599988624
+        },
+        "max_total_seconds": {
+          "compile": 4.104010121000101,
+          "interactive": 0.23517707900009555
+        },
+        "guest_finished_utc": "2026-10-06T06:58:47.812085+00:00"
+      },
+      {
+        "name": "admission-2h",
+        "status": "running",
+        "duration_seconds": 7200,
+        "guest_started_utc": "2026-10-06T06:58:47.813705+00:00",
+        "pid": 137407
       }
     ],
     "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
@@ -624,10 +680,29 @@
       },
       {
         "name": "admission-30min",
-        "status": "running",
+        "status": "passed",
         "duration_seconds": 1800,
         "guest_started_utc": "2026-10-06T06:28:45.624209+00:00",
-        "pid": 67475
+        "pid": 67475,
+        "returncode": 0,
+        "tools": 13844,
+        "recovery_checks": 15,
+        "max_queue_seconds": {
+          "compile": 3.2247909199995775,
+          "interactive": 0.11960611599988624
+        },
+        "max_total_seconds": {
+          "compile": 4.104010121000101,
+          "interactive": 0.23517707900009555
+        },
+        "guest_finished_utc": "2026-10-06T06:58:47.812085+00:00"
+      },
+      {
+        "name": "admission-2h",
+        "status": "running",
+        "duration_seconds": 7200,
+        "guest_started_utc": "2026-10-06T06:58:47.813705+00:00",
+        "pid": 137407
       }
     ],
     "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
