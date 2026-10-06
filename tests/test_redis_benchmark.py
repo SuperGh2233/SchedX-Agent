@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from schedx.benchmark.common import describe
 from schedx.benchmark.redis import (
     RedisBenchmarkConfig,
@@ -20,6 +22,18 @@ Summary:
           avg       min       p50       p95       p99       max
         0.195     0.040     0.191     0.279     0.359     0.591
 """
+
+
+@pytest.fixture(autouse=True)
+def isolated_cleanup_paths(monkeypatch):
+    """Summary/order tests describe a clean host without inspecting kernel mounts."""
+    kernel_paths = {Path("/sys/fs/cgroup/schedx"), Path("/sys/fs/bpf/schedx")}
+    original_exists = Path.exists
+
+    def exists(path):
+        return False if path in kernel_paths else original_exists(path)
+
+    monkeypatch.setattr(Path, "exists", exists)
 
 
 def test_parse_detailed_redis_benchmark_output():

@@ -1,0 +1,179 @@
+..........................................F......F...................... [ 15%]
+........................................................................ [ 31%]
+........................................................................ [ 47%]
+........................................................................ [ 63%]
+.............................FF......................................... [ 79%]
+........................................................................ [ 95%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+_____________ test_rollback_skill_removes_persistent_scx_policies ______________
+
+tmp_path = PosixPath('/var/tmp/schedx-ci-nonroot-20261006/tmp/test_rollback_skill_removes_pe0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2047d4d850>
+
+    def test_rollback_skill_removes_persistent_scx_policies(tmp_path, monkeypatch):
+        removed = []
+    
+        class FakeClient:
+            def is_available(self):
+                return True
+    
+            def remove_task_policy(self, pid):
+                removed.append(pid)
+                return True
+    
+        context = AgentContext(state_dir=tmp_path)
+        context.scx_rollback_file.write_text(
+            json.dumps({"source": "persistent_scx_daemon", "pids": [10, 20]}),
+            encoding="utf-8",
+        )
+        monkeypatch.setattr("schedx.skills.rollback_skill.ScxDaemonClient", FakeClient)
+        monkeypatch.setattr(
+            "schedx.controllers.cgroup_controller.CgroupController.rollback",
+            lambda self: [],
+        )
+    
+        result = RollbackSkill().run(context)
+    
+>       assert result.ok
+E       assert False
+E        +  where False = SkillResult(ok=False, message="rollback completed: 0 settings restored, 0 groups removed, 0 skipped; failed to clean e...ed'}, {'source': 'persistent_scx_daemon', 'pid': 20, 'status': 'removed'}], 'process_entries': [], 'ebpf_cleanup': {}}).ok
+
+tests/test_agent_skills.py:105: AssertionError
+_____________________ test_rollback_includes_ebpf_cleanup ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2047d4f350>
+
+    def test_rollback_includes_ebpf_cleanup(monkeypatch):
+        monkeypatch.setattr(
+            "schedx.controllers.cgroup_controller.CgroupController.rollback",
+            lambda self: [],
+        )
+        monkeypatch.setattr(
+            EbpfCleanupSkill,
+            "run",
+            lambda self, context: SkillResult(True, "clean", {"results": {"sched_trace": True}}),
+        )
+    
+        result = RollbackSkill().run(AgentContext(dry_run=False))
+    
+>       assert result.ok
+E       assert False
+E        +  where False = SkillResult(ok=False, message='rollback completed: 0 settings restored, 0 groups removed, 0 skipped; clean', data={'re..._failed: [Errno 13] Permission denied: '.schedx/process_rollback.json.lock'"}], 'ebpf_cleanup': {'sched_trace': True}}).ok
+
+tests/test_agent_skills.py:236: AssertionError
+_________ test_redis_summary_enforces_interference_and_fairness_floor __________
+
+tmp_path = PosixPath('/var/tmp/schedx-ci-nonroot-20261006/tmp/test_redis_summary_enforces_in0')
+
+    def test_redis_summary_enforces_interference_and_fairness_floor(tmp_path: Path):
+        rows = [
+            {"phase": "baseline", "requests_per_sec": 1000, "p99_ms": 1, "wall_seconds": 1, "background_cpu_ticks": 0},
+            {"phase": "baseline", "requests_per_sec": 900, "p99_ms": 1, "wall_seconds": 1, "background_cpu_ticks": 0},
+            {"phase": "interference", "requests_per_sec": 500, "p99_ms": 4, "wall_seconds": 2, "background_cpu_ticks": 100},
+            {"phase": "interference", "requests_per_sec": 600, "p99_ms": 5, "wall_seconds": 2, "background_cpu_ticks": 100},
+            {"phase": "schedx", "requests_per_sec": 800, "p99_ms": 2, "wall_seconds": 1.5, "background_cpu_ticks": 40},
+            {"phase": "schedx", "requests_per_sec": 900, "p99_ms": 2.5, "wall_seconds": 1.5, "background_cpu_ticks": 40},
+        ]
+>       summary = build_redis_summary(
+            RedisBenchmarkConfig(output=tmp_path),
+            {"redis_status": "PONG"},
+            rows,
+            {phase: [] for phase in RedisMixedBenchmark.phases},
+            [],
+        )
+
+tests/test_redis_benchmark.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+schedx/benchmark/redis.py:386: in build_redis_summary
+    "ebpf_base_exists": Path("/sys/fs/bpf/schedx").exists(),
+/usr/lib64/python3.11/pathlib.py:1235: in exists
+    self.stat()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/sys/fs/bpf/schedx')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+E       PermissionError: [Errno 13] Permission denied: '/sys/fs/bpf/schedx'
+
+/usr/lib64/python3.11/pathlib.py:1013: PermissionError
+______________________ test_redis_run_rotates_phase_order ______________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2047bb1f10>
+tmp_path = PosixPath('/var/tmp/schedx-ci-nonroot-20261006/tmp/test_redis_run_rotates_phase_o0')
+
+    def test_redis_run_rotates_phase_order(monkeypatch, tmp_path: Path):
+        calls: list[tuple[int, str]] = []
+    
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.collect_environment", lambda: {"kernel": "test"}
+        )
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.shutil.which", lambda tool: f"/usr/bin/{tool}"
+        )
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.RedisMixedBenchmark._redis_ping", lambda *_: "PONG"
+        )
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.RedisMixedBenchmark._cleanup", lambda *_: None
+        )
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.ScxController.state", lambda *_: "disabled"
+        )
+        monkeypatch.setattr(
+            "schedx.benchmark.redis.time.strftime", lambda *_: "2026-08-30_00-00-00"
+        )
+    
+        def run_repeat(self, phase, repeat, config, run_dir):
+            calls.append((repeat, phase))
+            return (
+                {
+                    "phase": phase,
+                    "repeat": repeat,
+                    "requests_per_sec": 100.0,
+                    "p99_ms": 1.0,
+                    "wall_seconds": 1.0,
+                    "background_cpu_ticks": 10 if phase != "baseline" else 0,
+                    "notes": "",
+                },
+                {"status": "ok"},
+            )
+    
+        monkeypatch.setattr(RedisMixedBenchmark, "_run_repeat", run_repeat)
+>       result = RedisMixedBenchmark().run(
+            RedisBenchmarkConfig(repeats=3, output=tmp_path)
+        )
+
+tests/test_redis_benchmark.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+schedx/benchmark/redis.py:98: in run
+    summary = build_redis_summary(
+schedx/benchmark/redis.py:386: in build_redis_summary
+    "ebpf_base_exists": Path("/sys/fs/bpf/schedx").exists(),
+/usr/lib64/python3.11/pathlib.py:1235: in exists
+    self.stat()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/sys/fs/bpf/schedx')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+E       PermissionError: [Errno 13] Permission denied: '/sys/fs/bpf/schedx'
+
+/usr/lib64/python3.11/pathlib.py:1013: PermissionError
+------ generated xml file: /var/tmp/schedx-ci-nonroot-20261006/tests.xml -------
+=========================== short test summary info ============================
+FAILED tests/test_agent_skills.py::test_rollback_skill_removes_persistent_scx_policies
+FAILED tests/test_agent_skills.py::test_rollback_includes_ebpf_cleanup - asse...
+FAILED tests/test_redis_benchmark.py::test_redis_summary_enforces_interference_and_fairness_floor
+FAILED tests/test_redis_benchmark.py::test_redis_run_rotates_phase_order - Pe...
+4 failed, 448 passed in 6.89s

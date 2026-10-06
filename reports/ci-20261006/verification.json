@@ -1,0 +1,46 @@
+{
+  "recorded_client_utc": "2026-10-06T10:15:18.924142+00:00",
+  "failed_github_run": 37446927469,
+  "failed_github_commit": "176a50c5a7f6b524b090c63dc5d241d7194fd792",
+  "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "production_code_unchanged": true,
+  "ci_kernel_skip_expected": true,
+  "remote_ci_recheck": "pending_push",
+  "test_results": {
+    "local-tests.xml": {
+      "tests": 452,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    "tests.xml": {
+      "tests": 452,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0
+    },
+    "clean-tests.xml": {
+      "tests": 452,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fixed-tests.xml": {
+      "tests": 452,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "file_sha256": {
+    "reports/ci-20261006/clean-tests.xml": "fbb14e5f9d43a04af73bb200e0a8a6f5f734d8a36d89eac0e2b7575643917b8d",
+    "reports/ci-20261006/failed-python312-annotations.json": "39ca8ada384440182ac4926cf505cbe8b67175625043d896c4f9831324810c2e",
+    "reports/ci-20261006/fixed-tests.xml": "760e0e6e8125f8d0efc11f713d0427a32c97a13edcaf3b90bf5d41ced405304f",
+    "reports/ci-20261006/tests.xml": "bd901b7d979efd7283818afef9478f79914c4bf86eada8d700cbd87ab88d7896",
+    "reports/ci-20261006/failed-jobs-176a50c.json": "337dcd3a77abd6084fff99611deb83a14ba2e0ed2ae95c439f162cf2b24cb0a8",
+    "reports/ci-20261006/clean-tests.log": "ee9f3f06ea07888ea284992e9fd587c3158aae606751a3bb90f8689bcf33657f",
+    "reports/ci-20261006/fixed-tests.log": "7531e9b46c527409354e3b6ccebeac1948555bc64312caaca06a2a91e54e665c",
+    "reports/ci-20261006/tests.log": "8c1434dd8b0929585ccbbe1899cb387cb8088170a057992561b4e1707f82bf6e",
+    "reports/ci-20261006/local-tests.xml": "5206976f788bed13883d3ac926dfb612e5f209a26077546ebc780c044f65f7d9"
+  }
+}

@@ -60,7 +60,7 @@ def test_ebpf_dry_run_pipeline_preserves_controller_state(monkeypatch):
     assert context.data["ebpf_status"] == "attached"
 
 
-def test_rollback_skill_reports_settings_and_removed_groups(monkeypatch):
+def test_rollback_skill_reports_settings_and_removed_groups(tmp_path, monkeypatch):
     entries = [
         RollbackEntry("/sys/fs/cgroup/schedx/pid-1", "cpu.weight", "100"),
         {"path": "/sys/fs/cgroup/schedx/pid-1", "status": "removed"},
@@ -70,7 +70,8 @@ def test_rollback_skill_reports_settings_and_removed_groups(monkeypatch):
         lambda self: entries,
     )
 
-    context = AgentContext(dry_run=False)
+    monkeypatch.setattr(EbpfCleanupSkill, "run", lambda *_: SkillResult(True, "clean"))
+    context = AgentContext(dry_run=False, state_dir=tmp_path)
     result = RollbackSkill().run(context)
 
     assert result.data["restored"] == 1
@@ -100,6 +101,7 @@ def test_rollback_skill_removes_persistent_scx_policies(tmp_path, monkeypatch):
         lambda self: [],
     )
 
+    monkeypatch.setattr(EbpfCleanupSkill, "run", lambda *_: SkillResult(True, "clean"))
     result = RollbackSkill().run(context)
 
     assert result.ok
@@ -220,7 +222,7 @@ def test_ebpf_cleanup_uses_active_probe(monkeypatch):
     assert "_ebpf_probe" not in context.data
 
 
-def test_rollback_includes_ebpf_cleanup(monkeypatch):
+def test_rollback_includes_ebpf_cleanup(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "schedx.controllers.cgroup_controller.CgroupController.rollback",
         lambda self: [],
@@ -231,7 +233,7 @@ def test_rollback_includes_ebpf_cleanup(monkeypatch):
         lambda self, context: SkillResult(True, "clean", {"results": {"sched_trace": True}}),
     )
 
-    result = RollbackSkill().run(AgentContext(dry_run=False))
+    result = RollbackSkill().run(AgentContext(dry_run=False, state_dir=tmp_path))
 
     assert result.ok
     assert result.data["ebpf_cleanup"] == {"sched_trace": True}

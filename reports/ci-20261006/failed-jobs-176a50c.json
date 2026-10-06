@@ -1,0 +1,234 @@
+{
+  "total_count": 3,
+  "jobs": [
+    {
+      "id": 112213898378,
+      "run_id": 37446927469,
+      "workflow_name": "Python regression tests",
+      "head_branch": "codex/optimization-20261003",
+      "run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/runs/37446927469",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTV8Cdc8AAAAaIHg0ig",
+      "head_sha": "176a50c5a7f6b524b090c63dc5d241d7194fd792",
+      "url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/jobs/112213898378",
+      "html_url": "https://github.com/SuperGh2233/SchedX-Agent/actions/runs/37446927469/job/112213898378",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-06T10:01:04Z",
+      "started_at": "2026-10-06T10:01:05Z",
+      "completed_at": "2026-10-06T10:01:33Z",
+      "name": "unit (3.10)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-06T10:01:06Z",
+          "completed_at": "2026-10-06T10:01:07Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-06T10:01:07Z",
+          "completed_at": "2026-10-06T10:01:11Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-06T10:01:11Z",
+          "completed_at": "2026-10-06T10:01:11Z"
+        },
+        {
+          "name": "Run python -m pip install -e . pytest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-06T10:01:11Z",
+          "completed_at": "2026-10-06T10:01:19Z"
+        },
+        {
+          "name": "Run python -m pytest -q",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-10-06T10:01:19Z",
+          "completed_at": "2026-10-06T10:01:32Z"
+        },
+        {
+          "name": "Run python -m compileall -q schedx scripts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-10-06T10:01:32Z",
+          "completed_at": "2026-10-06T10:01:32Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-06T10:01:32Z",
+          "completed_at": "2026-10-06T10:01:32Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-06T10:01:32Z",
+          "completed_at": "2026-10-06T10:01:32Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-06T10:01:32Z",
+          "completed_at": "2026-10-06T10:01:32Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/check-runs/112213898378",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000009,
+      "runner_name": "GitHub Actions 1000000009",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 112213898594,
+      "run_id": 37446927469,
+      "workflow_name": "Python regression tests",
+      "head_branch": "codex/optimization-20261003",
+      "run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/runs/37446927469",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTV8Cdc8AAAAaIHg1Yg",
+      "head_sha": "176a50c5a7f6b524b090c63dc5d241d7194fd792",
+      "url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/jobs/112213898594",
+      "html_url": "https://github.com/SuperGh2233/SchedX-Agent/actions/runs/37446927469/job/112213898594",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-06T10:01:04Z",
+      "started_at": "2026-10-06T10:01:05Z",
+      "completed_at": "2026-10-06T10:01:32Z",
+      "name": "unit (3.12)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-06T10:01:06Z",
+          "completed_at": "2026-10-06T10:01:07Z"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-06T10:01:07Z",
+          "completed_at": "2026-10-06T10:01:11Z"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-06T10:01:11Z",
+          "completed_at": "2026-10-06T10:01:11Z"
+        },
+        {
+          "name": "Run python -m pip install -e . pytest",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-06T10:01:11Z",
+          "completed_at": "2026-10-06T10:01:18Z"
+        },
+        {
+          "name": "Run python -m pytest -q",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5,
+          "started_at": "2026-10-06T10:01:18Z",
+          "completed_at": "2026-10-06T10:01:31Z"
+        },
+        {
+          "name": "Run python -m compileall -q schedx scripts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 6,
+          "started_at": "2026-10-06T10:01:31Z",
+          "completed_at": "2026-10-06T10:01:31Z"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11,
+          "started_at": "2026-10-06T10:01:31Z",
+          "completed_at": "2026-10-06T10:01:31Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-06T10:01:31Z",
+          "completed_at": "2026-10-06T10:01:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-06T10:01:31Z",
+          "completed_at": "2026-10-06T10:01:31Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/check-runs/112213898594",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000010,
+      "runner_name": "GitHub Actions 1000000010",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 112213900538,
+      "run_id": 37446927469,
+      "workflow_name": "Python regression tests",
+      "head_branch": "codex/optimization-20261003",
+      "run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/runs/37446927469",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOTV8Cdc8AAAAaIHg8-g",
+      "head_sha": "176a50c5a7f6b524b090c63dc5d241d7194fd792",
+      "url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/actions/jobs/112213900538",
+      "html_url": "https://github.com/SuperGh2233/SchedX-Agent/actions/runs/37446927469/job/112213900538",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-06T10:01:04Z",
+      "started_at": "2026-10-06T10:01:04Z",
+      "completed_at": "2026-10-06T10:01:03Z",
+      "name": "kernel-validation",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/SuperGh2233/SchedX-Agent/check-runs/112213900538",
+      "labels": [
+        "self-hosted",
+        "linux",
+        "sched-ext"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}
