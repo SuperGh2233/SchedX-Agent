@@ -1,0 +1,945 @@
+{
+  "status": "passed",
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "work_cpus": [
+    0,
+    1,
+    2
+  ],
+  "housekeeping_cpu": 3,
+  "parameters": {
+    "output": "/var/tmp/schedx-admission-20261006-f265822/evidence/final-validation-5ac43a8/paired-topology",
+    "repeats": 5,
+    "jobs": 24,
+    "cpu_seconds": 1.0,
+    "foreground_cpu_seconds": 0.05,
+    "timeout": 60,
+    "limit": 5,
+    "maximum": 8,
+    "reserve": 2
+  },
+  "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "harness_sha256": "cf73dbcfae2641f3a9dbd6067ee36f0dfce4830c96569e8fc532e6377c0cf1b3",
+  "runs": [
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.623738299000252,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.6233315563844695,
+      "foreground_p99_seconds": 0.6584510229995431,
+      "background_p99_seconds": 6.612230956000531,
+      "background_cpu_seconds_per_wall_second": 2.740298934023346,
+      "mode": "off",
+      "repeat": 1,
+      "configuration": null
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.655115538000246,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.606248435953016,
+      "foreground_p99_seconds": 0.18235890800042398,
+      "background_p99_seconds": 6.606616602999566,
+      "background_cpu_seconds_per_wall_second": 2.725589194722006,
+      "final_admission": {
+        "mode": "fixed",
+        "limit": 5,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "initial",
+          "high_windows": 0,
+          "low_windows": 0
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-606f0c463cb9418cb10fa5024f68c9c5",
+      "admission_runtime_removed": true,
+      "mode": "fixed",
+      "repeat": 1,
+      "configuration": {
+        "mode": "fixed",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.820940577000329,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.518576320826793,
+      "foreground_p99_seconds": 0.16363335799997003,
+      "background_p99_seconds": 6.730211717000202,
+      "background_cpu_seconds_per_wall_second": 2.6596263074289976,
+      "final_admission": {
+        "mode": "adaptive",
+        "limit": 6,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "cooldown",
+          "high_windows": 2,
+          "low_windows": 0,
+          "sample": {
+            "at": 7221.493156414,
+            "totals": {
+              "cpu": 259396173,
+              "memory": 0,
+              "io": 4141199
+            }
+          },
+          "pressure_percent": {
+            "cpu": 31.272991485959654,
+            "memory": 0.0,
+            "io": 0.007368706958463132
+          },
+          "recent_execution_timeouts": 0,
+          "changed_at": 7219.484127465
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-386235c969c445ae86aa26c189c995dd",
+      "admission_runtime_removed": true,
+      "mode": "adaptive",
+      "repeat": 1,
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.823187560999941,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.5174175977778326,
+      "foreground_p99_seconds": 0.20043155499934073,
+      "background_p99_seconds": 6.745980394999606,
+      "background_cpu_seconds_per_wall_second": 2.658181361401998,
+      "final_admission": {
+        "mode": "fixed",
+        "limit": 5,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "initial",
+          "high_windows": 0,
+          "low_windows": 0
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-3fe2ece832204417830c435cc573402d",
+      "admission_runtime_removed": true,
+      "mode": "fixed",
+      "repeat": 2,
+      "configuration": {
+        "mode": "fixed",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 7.0366498009998395,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.410714001511036,
+      "foreground_p99_seconds": 0.20525738299966179,
+      "background_p99_seconds": 6.945735851999416,
+      "background_cpu_seconds_per_wall_second": 2.5772916818203915,
+      "final_admission": {
+        "mode": "adaptive",
+        "limit": 6,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "hold",
+          "high_windows": 0,
+          "low_windows": 1,
+          "sample": {
+            "at": 7236.151758747,
+            "totals": {
+              "cpu": 260646852,
+              "memory": 0,
+              "io": 4153519
+            }
+          },
+          "pressure_percent": {
+            "cpu": 1.8442670252520172,
+            "memory": 0.0,
+            "io": 0.0069752913209229096
+          },
+          "recent_execution_timeouts": 0,
+          "changed_at": 7233.136777745
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-3f5ad0bbac044d46ae61b5cefdc1057c",
+      "admission_runtime_removed": true,
+      "mode": "adaptive",
+      "repeat": 2,
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.644593403999352,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.611959158487336,
+      "foreground_p99_seconds": 0.5649809389997245,
+      "background_p99_seconds": 6.6338099060003515,
+      "background_cpu_seconds_per_wall_second": 2.730680102875678,
+      "mode": "off",
+      "repeat": 2,
+      "configuration": null
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.980223088999992,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.438285523828195,
+      "foreground_p99_seconds": 0.2110107460002837,
+      "background_p99_seconds": 6.966187869999885,
+      "background_cpu_seconds_per_wall_second": 2.5987662240461122,
+      "final_admission": {
+        "mode": "adaptive",
+        "limit": 6,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "cooldown",
+          "high_windows": 2,
+          "low_windows": 0,
+          "sample": {
+            "at": 7248.834180118,
+            "totals": {
+              "cpu": 267399499,
+              "memory": 0,
+              "io": 4160846
+            }
+          },
+          "pressure_percent": {
+            "cpu": 32.760253841853086,
+            "memory": 0.0,
+            "io": 0.016114095146425828
+          },
+          "recent_execution_timeouts": 0,
+          "changed_at": 7246.824380327
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-ac1cfd85ce9a475ebe404e267c772514",
+      "admission_runtime_removed": true,
+      "mode": "adaptive",
+      "repeat": 3,
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.53490569799942,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.67258551372016,
+      "foreground_p99_seconds": 0.5868484229995374,
+      "background_p99_seconds": 6.493871644000137,
+      "background_cpu_seconds_per_wall_second": 2.777369688067014,
+      "mode": "off",
+      "repeat": 3,
+      "configuration": null
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.675008748999971,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.5955009053127616,
+      "foreground_p99_seconds": 0.20179660899975715,
+      "background_p99_seconds": 6.605263629999172,
+      "background_cpu_seconds_per_wall_second": 2.717357487017142,
+      "final_admission": {
+        "mode": "fixed",
+        "limit": 5,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "initial",
+          "high_windows": 0,
+          "low_windows": 0
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-8dfee824ad1e43638674356f0ba07284",
+      "admission_runtime_removed": true,
+      "mode": "fixed",
+      "repeat": 3,
+      "configuration": {
+        "mode": "fixed",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.561982185000488,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.657431447293424,
+      "foreground_p99_seconds": 0.45165455200003635,
+      "background_p99_seconds": 6.513042470000073,
+      "background_cpu_seconds_per_wall_second": 2.7659910509188084,
+      "mode": "off",
+      "repeat": 4,
+      "configuration": null
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.656239191000168,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.6056396579693457,
+      "foreground_p99_seconds": 0.17565077199924417,
+      "background_p99_seconds": 6.575467695000043,
+      "background_cpu_seconds_per_wall_second": 2.725236049889353,
+      "final_admission": {
+        "mode": "fixed",
+        "limit": 5,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "initial",
+          "high_windows": 0,
+          "low_windows": 0
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-7c922c3546384a5b99a4af0c2d2ae1bf",
+      "admission_runtime_removed": true,
+      "mode": "fixed",
+      "repeat": 4,
+      "configuration": {
+        "mode": "fixed",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.912824564999937,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.4718080539051286,
+      "foreground_p99_seconds": 0.20538225099971896,
+      "background_p99_seconds": 6.830738366999867,
+      "background_cpu_seconds_per_wall_second": 2.6238876496065346,
+      "final_admission": {
+        "mode": "adaptive",
+        "limit": 6,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "cooldown",
+          "high_windows": 2,
+          "low_windows": 0,
+          "sample": {
+            "at": 7282.259188461,
+            "totals": {
+              "cpu": 280961517,
+              "memory": 0,
+              "io": 4183722
+            }
+          },
+          "pressure_percent": {
+            "cpu": 34.09252688568147,
+            "memory": 0.0,
+            "io": 0.06613564557358861
+          },
+          "recent_execution_timeouts": 0,
+          "changed_at": 7280.250693981
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-8db167d187e44d0c8f10b979b2dce655",
+      "admission_runtime_removed": true,
+      "mode": "adaptive",
+      "repeat": 4,
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.81186561999948,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.5232638661479982,
+      "foreground_p99_seconds": 0.1828738539998085,
+      "background_p99_seconds": 6.805499332000181,
+      "background_cpu_seconds_per_wall_second": 2.6622565698824494,
+      "final_admission": {
+        "mode": "fixed",
+        "limit": 5,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "initial",
+          "high_windows": 0,
+          "low_windows": 0
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-025db11358834f93871878df4f69b6d6",
+      "admission_runtime_removed": true,
+      "mode": "fixed",
+      "repeat": 5,
+      "configuration": {
+        "mode": "fixed",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.716849221000302,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.573103878074818,
+      "foreground_p99_seconds": 0.20777608399930614,
+      "background_p99_seconds": 6.6415342020000026,
+      "background_cpu_seconds_per_wall_second": 2.700343033351408,
+      "final_admission": {
+        "mode": "adaptive",
+        "limit": 6,
+        "active": 0,
+        "pending": 0,
+        "reaped": 0,
+        "control": {
+          "reason": "cooldown",
+          "high_windows": 2,
+          "low_windows": 0,
+          "sample": {
+            "at": 7295.995899775,
+            "totals": {
+              "cpu": 282190587,
+              "memory": 0,
+              "io": 4193631
+            }
+          },
+          "pressure_percent": {
+            "cpu": 32.181123542272964,
+            "memory": 0.0,
+            "io": 0.0030851331628653396
+          },
+          "recent_execution_timeouts": 0,
+          "changed_at": 7293.986836684
+        },
+        "jobs": {}
+      },
+      "admission_runtime_directory": "/run/schedx/admission-verify-42b87b2aa1614c1f9525b9071a38ef3a",
+      "admission_runtime_removed": true,
+      "mode": "adaptive",
+      "repeat": 5,
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      }
+    },
+    {
+      "status": "passed",
+      "failures": [],
+      "jobs": 24,
+      "successful_jobs": 24,
+      "timeouts": 0,
+      "elapsed_seconds": 6.549459467999441,
+      "foreground_samples": 6,
+      "background_samples": 18,
+      "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+      "successful_jobs_per_second": 3.664424540263763,
+      "foreground_p99_seconds": 0.5237319509997178,
+      "background_p99_seconds": 6.494067398999505,
+      "background_cpu_seconds_per_wall_second": 2.7710292870235302,
+      "mode": "off",
+      "repeat": 5,
+      "configuration": null
+    }
+  ],
+  "assessment": {
+    "status": "passed",
+    "failures": [],
+    "comparisons": {
+      "fixed": {
+        "foreground_p99_seconds": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9946320676482755,
+              "change_percent": -72.30486374374567
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9734502985548062,
+              "change_percent": -64.52419167375866
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9783924332048,
+              "change_percent": -65.61350408537841
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9852656786377102,
+              "change_percent": -61.1094870578809
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9607464570474036,
+              "change_percent": -65.08254773253141
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": -65.7269,
+            "median": -65.0825,
+            "stdev": 4.0763,
+            "ci95": [
+              -70.7875,
+              -60.6663
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        },
+        "background_p99_seconds": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9946320676482755,
+              "change_percent": -0.08490860404490173
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9734502985548062,
+              "change_percent": 1.690890914703403
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9783924332048,
+              "change_percent": 1.7153401253619283
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9852656786377102,
+              "change_percent": 0.958464884691121
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9607464570474036,
+              "change_percent": 4.79563752369827
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": 1.8151,
+            "median": 1.6909,
+            "stdev": 1.8202,
+            "ci95": [
+              -0.4447,
+              4.0748
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        },
+        "successful_jobs_per_second": {
+          "direction": "higher",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9946320676482755,
+              "change_percent": -0.47147549611772205
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9734502985548062,
+              "change_percent": -2.61745929455904
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9783924332048,
+              "change_percent": -2.0989193612898407
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9852656786377102,
+              "change_percent": -1.4160699953079163
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9607464570474036,
+              "change_percent": -3.852192139986162
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": -2.0912,
+            "median": -2.0989,
+            "stdev": 1.2706,
+            "ci95": [
+              -3.6686,
+              -0.5139
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        }
+      },
+      "adaptive": {
+        "foreground_p99_seconds": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9705606473831293,
+              "change_percent": -75.1487426878698
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9438277589184638,
+              "change_percent": -63.670034008039
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9356933055083475,
+              "change_percent": -64.04339898848974
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9486247790768991,
+              "change_percent": -54.526695216457725
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.974490975608544,
+              "change_percent": -60.327781491525215
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": -63.5433,
+            "median": -63.67,
+            "stdev": 7.5265,
+            "ci95": [
+              -72.8872,
+              -54.1995
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        },
+        "background_p99_seconds": {
+          "direction": "lower",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9705606473831293,
+              "change_percent": 1.7842807032111478
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9438277589184638,
+              "change_percent": 4.702063375631613
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9356933055083475,
+              "change_percent": 7.273260881836703
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9486247790768991,
+              "change_percent": 4.877841630284816
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.974490975608544,
+              "change_percent": 2.270792616399653
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": 4.1816,
+            "median": 4.7021,
+            "stdev": 2.2199,
+            "ci95": [
+              1.4257,
+              6.9376
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        },
+        "successful_jobs_per_second": {
+          "direction": "higher",
+          "pairs": [
+            {
+              "repeat": 1,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9705606473831293,
+              "change_percent": -2.8911302741007257
+            },
+            {
+              "repeat": 2,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9438277589184638,
+              "change_percent": -5.571634344298061
+            },
+            {
+              "repeat": 3,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9356933055083475,
+              "change_percent": -6.379701412442532
+            },
+            {
+              "repeat": 4,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.9486247790768991,
+              "change_percent": -5.075239168888882
+            },
+            {
+              "repeat": 5,
+              "valid": true,
+              "invalid_reasons": [],
+              "background_retention": 0.974490975608544,
+              "change_percent": -2.4920873983223535
+            }
+          ],
+          "statistics": {
+            "count": 5,
+            "mean": -4.482,
+            "median": -5.0752,
+            "stdev": 1.7052,
+            "ci95": [
+              -6.5989,
+              -2.365
+            ]
+          },
+          "valid_pairs": 5,
+          "stable_regression_over_5_percent": false
+        }
+      }
+    },
+    "claim_scope": "current ToolCallRunner with admission off/fixed/adaptive; not initial whole-Agent gains"
+  },
+  "private_cgroup_removed": true,
+  "final_scheduler_state": "disabled"
+}

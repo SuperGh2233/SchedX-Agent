@@ -1,19 +1,19 @@
 {
-  "recorded_client_utc": "2026-10-06T06:25:22.201712+00:00",
-  "implementation_commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
+  "recorded_client_utc": "2026-10-06T06:45:13.105546+00:00",
+  "implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
   "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
-  "production_source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
+  "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
   "production_source_matches_git": true,
   "production_source_file_count": 79,
   "native_and_ebpf_source_unchanged": true,
   "default_admission": "off",
   "implementation_status": "topology_fix_local_and_linux_unit_regression_passed_full_revalidation_running",
   "local_tests": {
-    "tests": 450,
-    "passed": 449,
+    "tests": 452,
+    "passed": 451,
+    "skipped": 1,
     "failures": 0,
     "errors": 0,
-    "skipped": 1,
     "skip_reason": "real pidfd requires Linux"
   },
   "initial_local_test_attempt": {
@@ -25,7 +25,7 @@
   "initial_failure_cause": "macOS AF_UNIX path too long; original output retained, rerun with dedicated short basetemp",
   "compile_checks": "passed",
   "changed_files_static_checks": "F821/F822/F823/F401 passed",
-  "whole_repository_static_checks": "F821/F822/F823 passed; seven existing F401 unused imports in untouched files",
+  "whole_repository_static_checks": "F821/F822/F823 passed; six existing F401 unused imports in untouched files",
   "remote_availability": {
     "recorded_client_utc": "2026-10-05T16:33:59.861064+00:00",
     "ports": [
@@ -62,9 +62,9 @@
     }
   },
   "linux_validation": {
-    "status": "failed_long_validation",
+    "status": "paired_and_smoke_passed_long_running",
     "unit_tests": {
-      "tests": 450,
+      "tests": 452,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -81,46 +81,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9637439976637879,
-                "change_percent": -66.21131552938316
+                "background_retention": 0.9946320676482755,
+                "change_percent": -72.30486374374567
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9990341046639973,
-                "change_percent": -66.40502787119861
+                "background_retention": 0.9734502985548062,
+                "change_percent": -64.52419167375866
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9790396604870573,
-                "change_percent": -65.4879814478688
+                "background_retention": 0.9783924332048,
+                "change_percent": -65.61350408537841
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9731578019155906,
-                "change_percent": -65.61747126990882
+                "background_retention": 0.9852656786377102,
+                "change_percent": -61.1094870578809
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9820094371288446,
-                "change_percent": -53.99862900051609
+                "background_retention": 0.9607464570474036,
+                "change_percent": -65.08254773253141
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": -63.5441,
-              "median": -65.6175,
-              "stdev": 5.3501,
+              "mean": -65.7269,
+              "median": -65.0825,
+              "stdev": 4.0763,
               "ci95": [
-                -70.186,
-                -56.9022
+                -70.7875,
+                -60.6663
               ]
             },
             "valid_pairs": 5,
@@ -133,46 +133,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9637439976637879,
-                "change_percent": 3.5330572932051654
+                "background_retention": 0.9946320676482755,
+                "change_percent": -0.08490860404490173
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9990341046639973,
-                "change_percent": -0.4547173768119312
+                "background_retention": 0.9734502985548062,
+                "change_percent": 1.690890914703403
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9790396604870573,
-                "change_percent": 1.776054404845121
+                "background_retention": 0.9783924332048,
+                "change_percent": 1.7153401253619283
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9731578019155906,
-                "change_percent": 4.176820882500603
+                "background_retention": 0.9852656786377102,
+                "change_percent": 0.958464884691121
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9820094371288446,
-                "change_percent": 2.2398479884402707
+                "background_retention": 0.9607464570474036,
+                "change_percent": 4.79563752369827
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": 2.2542,
-              "median": 2.2398,
-              "stdev": 1.7958,
+              "mean": 1.8151,
+              "median": 1.6909,
+              "stdev": 1.8202,
               "ci95": [
-                0.0248,
-                4.4836
+                -0.4447,
+                4.0748
               ]
             },
             "valid_pairs": 5,
@@ -185,46 +185,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9637439976637879,
-                "change_percent": -3.560010617496377
+                "background_retention": 0.9946320676482755,
+                "change_percent": -0.47147549611772205
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9990341046639973,
-                "change_percent": -0.07110101289532791
+                "background_retention": 0.9734502985548062,
+                "change_percent": -2.61745929455904
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9790396604870573,
-                "change_percent": -2.0827084012116726
+                "background_retention": 0.9783924332048,
+                "change_percent": -2.0989193612898407
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9731578019155906,
-                "change_percent": -2.6343200474328077
+                "background_retention": 0.9852656786377102,
+                "change_percent": -1.4160699953079163
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9820094371288446,
-                "change_percent": -1.7274202659497888
+                "background_retention": 0.9607464570474036,
+                "change_percent": -3.852192139986162
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": -2.0151,
-              "median": -2.0827,
-              "stdev": 1.2881,
+              "mean": -2.0912,
+              "median": -2.0989,
+              "stdev": 1.2706,
               "ci95": [
-                -3.6142,
-                -0.416
+                -3.6686,
+                -0.5139
               ]
             },
             "valid_pairs": 5,
@@ -239,46 +239,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.955542959877025,
-                "change_percent": -68.30450158119054
+                "background_retention": 0.9705606473831293,
+                "change_percent": -75.1487426878698
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9823608187066648,
-                "change_percent": -70.25250207301731
+                "background_retention": 0.9438277589184638,
+                "change_percent": -63.670034008039
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9608724393689323,
-                "change_percent": -74.0737158123269
+                "background_retention": 0.9356933055083475,
+                "change_percent": -64.04339898848974
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9588000138603266,
-                "change_percent": -72.39024901537904
+                "background_retention": 0.9486247790768991,
+                "change_percent": -54.526695216457725
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9716317174978105,
-                "change_percent": -54.0551233991871
+                "background_retention": 0.974490975608544,
+                "change_percent": -60.327781491525215
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": -67.8152,
-              "median": -70.2525,
-              "stdev": 7.9941,
+              "mean": -63.5433,
+              "median": -63.67,
+              "stdev": 7.5265,
               "ci95": [
-                -77.7396,
-                -57.8909
+                -72.8872,
+                -54.1995
               ]
             },
             "valid_pairs": 5,
@@ -291,46 +291,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.955542959877025,
-                "change_percent": 5.116396104490442
+                "background_retention": 0.9705606473831293,
+                "change_percent": 1.7842807032111478
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9823608187066648,
-                "change_percent": 1.5011593324858465
+                "background_retention": 0.9438277589184638,
+                "change_percent": 4.702063375631613
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9608724393689323,
-                "change_percent": 3.500562937635099
+                "background_retention": 0.9356933055083475,
+                "change_percent": 7.273260881836703
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9588000138603266,
-                "change_percent": 4.81426122420606
+                "background_retention": 0.9486247790768991,
+                "change_percent": 4.877841630284816
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9716317174978105,
-                "change_percent": 2.252942633100096
+                "background_retention": 0.974490975608544,
+                "change_percent": 2.270792616399653
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": 3.4371,
-              "median": 3.5006,
-              "stdev": 1.5709,
+              "mean": 4.1816,
+              "median": 4.7021,
+              "stdev": 2.2199,
               "ci95": [
-                1.4869,
-                5.3873
+                1.4257,
+                6.9376
               ]
             },
             "valid_pairs": 5,
@@ -343,46 +343,46 @@
                 "repeat": 1,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.955542959877025,
-                "change_percent": -4.398442083592658
+                "background_retention": 0.9705606473831293,
+                "change_percent": -2.8911302741007257
               },
               {
                 "repeat": 2,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9823608187066648,
-                "change_percent": -1.7117416670907981
+                "background_retention": 0.9438277589184638,
+                "change_percent": -5.571634344298061
               },
               {
                 "repeat": 3,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9608724393689323,
-                "change_percent": -3.8926366046454337
+                "background_retention": 0.9356933055083475,
+                "change_percent": -6.379701412442532
               },
               {
                 "repeat": 4,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9588000138603266,
-                "change_percent": -4.0886243440630805
+                "background_retention": 0.9486247790768991,
+                "change_percent": -5.075239168888882
               },
               {
                 "repeat": 5,
                 "valid": true,
                 "invalid_reasons": [],
-                "background_retention": 0.9716317174978105,
-                "change_percent": -2.7874794223604153
+                "background_retention": 0.974490975608544,
+                "change_percent": -2.4920873983223535
               }
             ],
             "statistics": {
               "count": 5,
-              "mean": -3.3758,
-              "median": -3.8926,
-              "stdev": 1.1109,
+              "mean": -4.482,
+              "median": -5.0752,
+              "stdev": 1.7052,
               "ci95": [
-                -4.7549,
-                -1.9967
+                -6.5989,
+                -2.365
               ]
             },
             "valid_pairs": 5,
@@ -392,15 +392,83 @@
       },
       "claim_scope": "current ToolCallRunner with admission off/fixed/adaptive; not initial whole-Agent gains"
     },
-    "30min": "failed_after_8252_tools",
-    "2h": "not_started_due_to_previous_failure"
+    "smoke": {
+      "status": "passed",
+      "duration_seconds": 180.0,
+      "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+      "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      },
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "waves": 287,
+      "tools": 1412,
+      "recovery_checks": 2,
+      "max_pending": 7,
+      "max_active": 5,
+      "max_queue_seconds": {
+        "compile": 1.8204374349998034,
+        "interactive": 0.11430189000020619
+      },
+      "max_total_seconds": {
+        "compile": 2.6958704560001934,
+        "interactive": 0.22835166700042464
+      },
+      "failures": [],
+      "native_backend": false,
+      "private_cgroup_removed": true,
+      "elapsed_seconds": 182.06060961000003,
+      "final_scheduler_state": "disabled"
+    },
+    "30min": {
+      "status": "running",
+      "duration_seconds": 1800.0,
+      "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+      "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+      "configuration": {
+        "mode": "adaptive",
+        "initial_limit": 5,
+        "min_limit": 1,
+        "max_limit": 8,
+        "interactive_reserve": 2,
+        "max_pending": 128,
+        "aging_seconds": 2.0,
+        "sample_seconds": 1.0,
+        "cooldown_seconds": 3.0
+      },
+      "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+      "waves": 1400,
+      "tools": 6912,
+      "recovery_checks": 8,
+      "max_pending": 7,
+      "max_active": 5,
+      "max_queue_seconds": {
+        "compile": 3.2247909199995775,
+        "interactive": 0.11960611599988624
+      },
+      "max_total_seconds": {
+        "compile": 4.104010121000101,
+        "interactive": 0.23517707900009555
+      },
+      "failures": [],
+      "native_backend": false
+    },
+    "2h": "not_started"
   },
   "performance_improvement_claim": {
     "scope": "current ToolCallRunner off/fixed/adaptive on declared 4-vCPU task bursts; nearest-rank batch tail, not initial whole Agent or service P99",
-    "fixed_foreground_tail_change_percent": -63.5441,
-    "adaptive_foreground_tail_change_percent": -67.8152,
-    "fixed_total_throughput_change_percent": -2.0151,
-    "adaptive_total_throughput_change_percent": -3.3758,
+    "fixed_foreground_tail_change_percent": -65.7269,
+    "adaptive_foreground_tail_change_percent": -63.5433,
+    "fixed_total_throughput_change_percent": -2.0912,
+    "adaptive_total_throughput_change_percent": -4.482,
     "initial_limit": 5,
     "max_limit": 8,
     "interactive_reserve": 2,
@@ -413,17 +481,17 @@
   "pushed_this_iteration": false,
   "goal_complete": false,
   "remaining_work": [
-    "finish local and Linux regression for shared cgroup topology guard",
-    "repeat paired comparison on corrected candidate",
-    "restart 30-minute and two-hour long validation",
-    "terminal evidence and original-state audit"
+    "finish running 30-minute validation",
+    "finish two-hour changing-load and recovery validation",
+    "terminal cleanup and original-state audit",
+    "archive terminal evidence and finalize report"
   ],
   "file_sha256": {
     "reports/optimization-admission-20261006/local-tests.log": "984ef197e18348b773636e1eab46006e5aa6e0c477324f7360a05d7d328fd4ae",
     "reports/optimization-admission-20261006/local-tests-runtime.log": "f1de9768c7e8fff0a5027143aaf4c56c22ebab137195f16dce175538ebf3cea9",
     "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
     "reports/optimization-admission-20261006/long-validation-pipeline.json": "9240b10a710161fd43fc480a6a1ea21fd14ef907a2090d1fe85213a65841d603",
-    "reports/optimization-admission-20261006/report.md": "1f02dd762bfcd5c818b0dc7b55fe79449b7611e62e66193abccfcfaf547dee98",
+    "reports/optimization-admission-20261006/report.md": "e0ea17d01b3c999229369b6a6e4f80866ddb137bf00f7c223da8050520c0e1f8",
     "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
     "reports/optimization-admission-20261006/local-tests-topology.log": "ad3868778f48373f12ddf251af981b7f29077273e9abab1672d80c1a03ba7911",
     "reports/optimization-admission-20261006/failed-long-evidence-068c7ba.tar.gz": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
@@ -440,7 +508,17 @@
     "reports/optimization-admission-20261006/cli-help.txt": "85b7cf1aae79c35aab4bf7048446481261e5784e8ee7e7abb8f3f7f4912e95fe",
     "reports/optimization-admission-20261006/local-tests.xml": "129881cbe2b496279e5200e073b649e3838da181cf84de42e1732b7fd93d1ac7",
     "reports/optimization-admission-20261006/local-tests-runtime.xml": "267462949385240c472f8676035cd4fdcbc3696742f1859d9fd9f2be3c03983c",
-    "reports/optimization-admission-20261006/psi-test-boot-prepared.json": "dc2b79a0e4ca8e5f03d53fb95aaa24f58b2fcd3f815cf51e348aadedaca66287"
+    "reports/optimization-admission-20261006/psi-test-boot-prepared.json": "dc2b79a0e4ca8e5f03d53fb95aaa24f58b2fcd3f815cf51e348aadedaca66287",
+    "reports/optimization-admission-20261006/pipeline-5ac43a8-checkpoint.json": "8a3d7be436d3e7e63598dd46bfd63acd9d1b88de58c45dd849acf9050dba3c83",
+    "reports/optimization-admission-20261006/30min-5ac43a8-checkpoint.json": "a9cc0f29742e8fc52e3b0c7b68c51ab42402df0604ebf842355de1b7d04e7dce",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8-hashes.json": "d0a81a776e93e28b21ee2a7f8eafeec7533988a0070d62cfa1e72258eff32a01",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8.tar.gz": "4f61652fe1e596c5428c3b422b5b183bb02620050a997c55200f193c19156f91",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/linux-tests-5ac43a8.xml": "13c494bbe9e70ff248608263f7de076cf933723733b45d1f4a731537bd8b231f",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/linux-tests-5ac43a8.log": "fee4cde0f0d43496e0c10db12c2da520be13e85f253faf616b889e5d94c3e67e",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/source-identity-5ac43a8.json": "f91e251d1c0c1440bd41e10edac3180b145849f3d2bb8292570025e1b0c3e8d9",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/smoke-topology/summary.json": "08d59dd3eb301f3f7b0b9e1322fb3d199b5de1d3fe1b9e9348f3a3545a6f0120",
+    "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/paired-topology/summary.json": "400f14d3d80cd3e0f236a3eb4147bf4118bd961888476827ddfc488476c100f7",
+    "docs/optimization-plan.md": "c4469d3262e23554d364dfe715a764d781e408c892b5648fc75fac3349cc884b"
   },
   "historical_local_implementation": {
     "commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
@@ -453,66 +531,54 @@
     }
   },
   "long_validation": {
-    "status": "failed",
-    "pid": 16027,
-    "commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
-    "source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
-    "guest_started_utc": "2026-10-06T05:23:02.874577+00:00",
+    "status": "running",
+    "pid": 58872,
+    "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
+    "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+    "guest_started_utc": "2026-10-06T06:24:02.376544+00:00",
     "stages": [
       {
+        "name": "paired-topology",
+        "status": "passed",
+        "guest_started_utc": "2026-10-06T06:24:02.378383+00:00",
+        "pid": 58873,
+        "returncode": 0,
+        "guest_finished_utc": "2026-10-06T06:25:43.504715+00:00"
+      },
+      {
+        "name": "smoke-topology",
+        "status": "passed",
+        "guest_started_utc": "2026-10-06T06:25:43.506181+00:00",
+        "pid": 60385,
+        "returncode": 0,
+        "guest_finished_utc": "2026-10-06T06:28:45.622554+00:00"
+      },
+      {
         "name": "admission-30min",
-        "status": "failed",
+        "status": "running",
         "duration_seconds": 1800,
-        "guest_started_utc": "2026-10-06T05:23:02.878036+00:00",
-        "pid": 16028,
-        "returncode": 1,
-        "tools": 8252,
-        "recovery_checks": 9,
-        "max_queue_seconds": {
-          "compile": 1.855657519000033,
-          "interactive": 0.11810910100030014
-        },
-        "max_total_seconds": {
-          "compile": 2.728227817000061,
-          "interactive": 0.21480354900040766
-        },
-        "guest_finished_utc": "2026-10-06T05:40:38.828564+00:00"
+        "guest_started_utc": "2026-10-06T06:28:45.624209+00:00",
+        "pid": 67475
       }
     ],
-    "harness_sha256": "d8aaa92ccc8c7a0c8e47c33cb54762fec7e3bc8ddcbaabeac59ae6232a701a2f",
+    "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
     "windows_shutdown_requested": false,
-    "boot_configuration_restored": true,
-    "prerequisites": {
-      "paired_comparison": "passed",
-      "smoke": "passed",
-      "hard_cpu_contract": "passed",
-      "native_compatibility": "passed"
-    },
-    "error": "RuntimeError('admission-30min failed; later experiments not started')",
-    "remaining_private_cgroups": [],
-    "cpu_controller_restored": true,
-    "guest_finished_utc": "2026-10-06T05:40:38.852810+00:00",
-    "elapsed_seconds": 1055.9782034619998,
-    "final_scheduler_state": "disabled",
-    "terminal_archive": {
-      "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-068c7ba.tar.gz",
-      "returncode": 0,
-      "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
-      "scope": "all experiment evidence; private boot backup retained separately"
-    }
+    "boot_configuration_restored": true
   },
   "test_environment_changes": {
     "psi_runtime_enabled_for_test": true,
     "boot_configuration_restored": true,
-    "root_cpu_controller_temporarily_added": false,
-    "cpu_controller_restoration_pending": false,
+    "root_cpu_controller_temporarily_added": true,
+    "cpu_controller_restoration_pending": true,
     "native_installed_program_unchanged": true,
     "original_workspace_baseline_regular_files": 3586
   },
   "checkpoint": {
-    "archive_sha256": "fc99a80542ff728d3289bf0b378363d17774d2406365c40b4cbfdf88a8b4512d",
+    "candidate": "5ac43a8102200cbc926613c580ff331296cf9db7",
+    "archive_sha256": "4f61652fe1e596c5428c3b422b5b183bb02620050a997c55200f193c19156f91",
     "local_raw_evidence_archived": true,
-    "scope": "terminal short tests and paired comparison; long test terminal evidence not yet available"
+    "verified_files": 10001,
+    "scope": "terminal paired and smoke results plus candidate source and Linux unit evidence; excludes running long experiment"
   },
   "failed_long_archive": {
     "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
@@ -523,7 +589,8 @@
     "passed": 451,
     "skipped": 1,
     "failures": 0,
-    "errors": 0
+    "errors": 0,
+    "skip_reason": "real pidfd requires Linux"
   },
   "topology_fix_commit": "5ac43a8",
   "topology_fix_linux_tests": {
@@ -533,15 +600,449 @@
     "skipped": 0
   },
   "new_validation": {
-    "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
-    "pid": 58872,
     "status": "running",
-    "path": "/var/tmp/schedx-admission-20261006-f265822/evidence/final-validation-5ac43a8/pipeline.json",
+    "pid": 58872,
+    "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
+    "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+    "guest_started_utc": "2026-10-06T06:24:02.376544+00:00",
     "stages": [
-      "five paired comparisons",
-      "three-minute changing-load and crash recovery",
-      "30min",
-      "2h"
-    ]
+      {
+        "name": "paired-topology",
+        "status": "passed",
+        "guest_started_utc": "2026-10-06T06:24:02.378383+00:00",
+        "pid": 58873,
+        "returncode": 0,
+        "guest_finished_utc": "2026-10-06T06:25:43.504715+00:00"
+      },
+      {
+        "name": "smoke-topology",
+        "status": "passed",
+        "guest_started_utc": "2026-10-06T06:25:43.506181+00:00",
+        "pid": 60385,
+        "returncode": 0,
+        "guest_finished_utc": "2026-10-06T06:28:45.622554+00:00"
+      },
+      {
+        "name": "admission-30min",
+        "status": "running",
+        "duration_seconds": 1800,
+        "guest_started_utc": "2026-10-06T06:28:45.624209+00:00",
+        "pid": 67475
+      }
+    ],
+    "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+    "windows_shutdown_requested": false,
+    "boot_configuration_restored": true
+  },
+  "historical_candidate_068c7ba": {
+    "implementation_commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
+    "production_source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
+    "local_tests": {
+      "tests": 450,
+      "passed": 449,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "skip_reason": "real pidfd requires Linux"
+    },
+    "linux_validation": {
+      "status": "failed_long_validation",
+      "unit_tests": {
+        "tests": 450,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "paired_performance": {
+        "status": "passed",
+        "failures": [],
+        "comparisons": {
+          "fixed": {
+            "foreground_p99_seconds": {
+              "direction": "lower",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9637439976637879,
+                  "change_percent": -66.21131552938316
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9990341046639973,
+                  "change_percent": -66.40502787119861
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9790396604870573,
+                  "change_percent": -65.4879814478688
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9731578019155906,
+                  "change_percent": -65.61747126990882
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9820094371288446,
+                  "change_percent": -53.99862900051609
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": -63.5441,
+                "median": -65.6175,
+                "stdev": 5.3501,
+                "ci95": [
+                  -70.186,
+                  -56.9022
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            },
+            "background_p99_seconds": {
+              "direction": "lower",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9637439976637879,
+                  "change_percent": 3.5330572932051654
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9990341046639973,
+                  "change_percent": -0.4547173768119312
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9790396604870573,
+                  "change_percent": 1.776054404845121
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9731578019155906,
+                  "change_percent": 4.176820882500603
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9820094371288446,
+                  "change_percent": 2.2398479884402707
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": 2.2542,
+                "median": 2.2398,
+                "stdev": 1.7958,
+                "ci95": [
+                  0.0248,
+                  4.4836
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            },
+            "successful_jobs_per_second": {
+              "direction": "higher",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9637439976637879,
+                  "change_percent": -3.560010617496377
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9990341046639973,
+                  "change_percent": -0.07110101289532791
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9790396604870573,
+                  "change_percent": -2.0827084012116726
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9731578019155906,
+                  "change_percent": -2.6343200474328077
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9820094371288446,
+                  "change_percent": -1.7274202659497888
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": -2.0151,
+                "median": -2.0827,
+                "stdev": 1.2881,
+                "ci95": [
+                  -3.6142,
+                  -0.416
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            }
+          },
+          "adaptive": {
+            "foreground_p99_seconds": {
+              "direction": "lower",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.955542959877025,
+                  "change_percent": -68.30450158119054
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9823608187066648,
+                  "change_percent": -70.25250207301731
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9608724393689323,
+                  "change_percent": -74.0737158123269
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9588000138603266,
+                  "change_percent": -72.39024901537904
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9716317174978105,
+                  "change_percent": -54.0551233991871
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": -67.8152,
+                "median": -70.2525,
+                "stdev": 7.9941,
+                "ci95": [
+                  -77.7396,
+                  -57.8909
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            },
+            "background_p99_seconds": {
+              "direction": "lower",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.955542959877025,
+                  "change_percent": 5.116396104490442
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9823608187066648,
+                  "change_percent": 1.5011593324858465
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9608724393689323,
+                  "change_percent": 3.500562937635099
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9588000138603266,
+                  "change_percent": 4.81426122420606
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9716317174978105,
+                  "change_percent": 2.252942633100096
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": 3.4371,
+                "median": 3.5006,
+                "stdev": 1.5709,
+                "ci95": [
+                  1.4869,
+                  5.3873
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            },
+            "successful_jobs_per_second": {
+              "direction": "higher",
+              "pairs": [
+                {
+                  "repeat": 1,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.955542959877025,
+                  "change_percent": -4.398442083592658
+                },
+                {
+                  "repeat": 2,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9823608187066648,
+                  "change_percent": -1.7117416670907981
+                },
+                {
+                  "repeat": 3,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9608724393689323,
+                  "change_percent": -3.8926366046454337
+                },
+                {
+                  "repeat": 4,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9588000138603266,
+                  "change_percent": -4.0886243440630805
+                },
+                {
+                  "repeat": 5,
+                  "valid": true,
+                  "invalid_reasons": [],
+                  "background_retention": 0.9716317174978105,
+                  "change_percent": -2.7874794223604153
+                }
+              ],
+              "statistics": {
+                "count": 5,
+                "mean": -3.3758,
+                "median": -3.8926,
+                "stdev": 1.1109,
+                "ci95": [
+                  -4.7549,
+                  -1.9967
+                ]
+              },
+              "valid_pairs": 5,
+              "stable_regression_over_5_percent": false
+            }
+          }
+        },
+        "claim_scope": "current ToolCallRunner with admission off/fixed/adaptive; not initial whole-Agent gains"
+      },
+      "30min": "failed_after_8252_tools",
+      "2h": "not_started_due_to_previous_failure"
+    },
+    "performance_improvement_claim": {
+      "scope": "current ToolCallRunner off/fixed/adaptive on declared 4-vCPU task bursts; nearest-rank batch tail, not initial whole Agent or service P99",
+      "fixed_foreground_tail_change_percent": -65.7269,
+      "adaptive_foreground_tail_change_percent": -63.5433,
+      "fixed_total_throughput_change_percent": -2.0912,
+      "adaptive_total_throughput_change_percent": -4.482,
+      "initial_limit": 5,
+      "max_limit": 8,
+      "interactive_reserve": 2,
+      "adaptive_superiority_over_fixed_not_proven": true
+    },
+    "long_validation": {
+      "status": "failed",
+      "pid": 16027,
+      "commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
+      "source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
+      "guest_started_utc": "2026-10-06T05:23:02.874577+00:00",
+      "stages": [
+        {
+          "name": "admission-30min",
+          "status": "failed",
+          "duration_seconds": 1800,
+          "guest_started_utc": "2026-10-06T05:23:02.878036+00:00",
+          "pid": 16028,
+          "returncode": 1,
+          "tools": 8252,
+          "recovery_checks": 9,
+          "max_queue_seconds": {
+            "compile": 1.855657519000033,
+            "interactive": 0.11810910100030014
+          },
+          "max_total_seconds": {
+            "compile": 2.728227817000061,
+            "interactive": 0.21480354900040766
+          },
+          "guest_finished_utc": "2026-10-06T05:40:38.828564+00:00"
+        }
+      ],
+      "harness_sha256": "d8aaa92ccc8c7a0c8e47c33cb54762fec7e3bc8ddcbaabeac59ae6232a701a2f",
+      "windows_shutdown_requested": false,
+      "boot_configuration_restored": true,
+      "prerequisites": {
+        "paired_comparison": "passed",
+        "smoke": "passed",
+        "hard_cpu_contract": "passed",
+        "native_compatibility": "passed"
+      },
+      "error": "RuntimeError('admission-30min failed; later experiments not started')",
+      "remaining_private_cgroups": [],
+      "cpu_controller_restored": true,
+      "guest_finished_utc": "2026-10-06T05:40:38.852810+00:00",
+      "elapsed_seconds": 1055.9782034619998,
+      "final_scheduler_state": "disabled",
+      "terminal_archive": {
+        "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-068c7ba.tar.gz",
+        "returncode": 0,
+        "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
+        "scope": "all experiment evidence; private boot backup retained separately"
+      }
+    },
+    "checkpoint": {
+      "archive_sha256": "fc99a80542ff728d3289bf0b378363d17774d2406365c40b4cbfdf88a8b4512d",
+      "local_raw_evidence_archived": true,
+      "scope": "terminal short tests and paired comparison; long test terminal evidence not yet available"
+    }
   }
 }
