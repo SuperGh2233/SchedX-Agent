@@ -1,5 +1,5 @@
 {
-  "recorded_client_utc": "2026-10-06T09:28:23.076707+00:00",
+  "recorded_client_utc": "2026-10-06T09:59:49.934234+00:00",
   "implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
   "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
   "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
@@ -517,16 +517,14 @@
   "automation_created": false,
   "shutdown_requested_this_iteration": false,
   "pushed_this_iteration": true,
-  "goal_complete": false,
-  "remaining_work": [
-    "authenticate to user-provided GitLink repository, read branch/history, and synchronize without force-push"
-  ],
+  "goal_complete": true,
+  "remaining_work": [],
   "file_sha256": {
     "reports/optimization-admission-20261006/local-tests.log": "984ef197e18348b773636e1eab46006e5aa6e0c477324f7360a05d7d328fd4ae",
     "reports/optimization-admission-20261006/local-tests-runtime.log": "f1de9768c7e8fff0a5027143aaf4c56c22ebab137195f16dce175538ebf3cea9",
     "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
     "reports/optimization-admission-20261006/long-validation-pipeline.json": "9240b10a710161fd43fc480a6a1ea21fd14ef907a2090d1fe85213a65841d603",
-    "reports/optimization-admission-20261006/report.md": "8711711bb7a331ddb2c1477353608352e89b6e6486eae29b3f3684218df28e49",
+    "reports/optimization-admission-20261006/report.md": "060d72873d20d1c6e5523cb715178dda23852c013af6bed7aed847bcc891d2bb",
     "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
     "reports/optimization-admission-20261006/local-tests-topology.log": "ad3868778f48373f12ddf251af981b7f29077273e9abab1672d80c1a03ba7911",
     "reports/optimization-admission-20261006/failed-long-evidence-068c7ba.tar.gz": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
@@ -553,7 +551,7 @@
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/source-identity-5ac43a8.json": "f91e251d1c0c1440bd41e10edac3180b145849f3d2bb8292570025e1b0c3e8d9",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/smoke-topology/summary.json": "08d59dd3eb301f3f7b0b9e1322fb3d199b5de1d3fe1b9e9348f3a3545a6f0120",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/paired-topology/summary.json": "400f14d3d80cd3e0f236a3eb4147bf4118bd961888476827ddfc488476c100f7",
-    "docs/optimization-plan.md": "98dcd80674c179809dc294488a2c719d12a28c2a89cac2be2a6a0673f5b3df63",
+    "docs/optimization-plan.md": "270c383b6f8e02c40d82fac81db7516f06af25fb29e28d5899795c03de341bc2",
     "reports/optimization-admission-20261006/pipeline-5ac43a8-latest.json": "d848ab03aa47beffa90e429b19e6c05e436fcd2611706bb271dcaca9d64acce1",
     "reports/optimization-admission-20261006/30min-5ac43a8-summary.json": "856b8edd024026d27a95d293eee9c2f02061dce326ca4ca04e33bb9a0ba33d03",
     "reports/optimization-admission-20261006/2h-5ac43a8-checkpoint.json": "7d23b991a7372a93b132e88fd1e6ad1fdfde65b0c11359a179cb611e2d154549",
@@ -582,7 +580,8 @@
     "docs/tool-admission.md": "ac6b7f0444ac0bef7b7cdcff84c9adb6769be74c947127d6d9f765ae67d1ffe2",
     "docs/final-round-improvements.md": "2638017224eb21813a283a0ac0d409120ee5ce33f2ce5102be57b6e9ea682efe",
     "docs/competition_evidence_matrix.md": "e3741587af1465aaf55c6f6c70f4f268a52b21284fe091b50a1bacbe1f34f9f9",
-    "reports/optimization-admission-20261006/publication-status.json": "2add5e35febc6ab520bbceaa3cb8498b84a6c4960a7fe91fc6239cf6d614b84c"
+    "reports/optimization-admission-20261006/publication-status.json": "6f6c9a40f3bb34dd0532e8bed188c633af0bf3f6528fa0eda236690ac10a5d7f",
+    "reports/optimization-admission-20261006/publication-before-gitlink-sync.json": "2add5e35febc6ab520bbceaa3cb8498b84a6c4960a7fe91fc6239cf6d614b84c"
   },
   "historical_local_implementation": {
     "commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
@@ -1257,21 +1256,28 @@
     }
   },
   "publication": {
+    "recorded_client_utc": "2026-10-06T09:59:49.934234+00:00",
+    "verified_code_delivery_commit": "1f122d37948a2c5c136566cdd08e009d2a17e002",
+    "production_implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
+    "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
     "github": {
       "url": "https://github.com/SuperGh2233/SchedX-Agent.git",
       "branch": "codex/optimization-20261003",
-      "verified_delivery_commit": "63cd7b74446a3162e4badabaef8ff7f89b0c71a7",
-      "remote_head_verified": true
+      "status": "pushed_and_verified",
+      "remote_head": "1f122d37948a2c5c136566cdd08e009d2a17e002"
     },
     "gitlink": {
       "url": "https://gitlink.org.cn/SuperGh/mxoedzsyzygka.git",
-      "status": "authentication_required",
-      "default_branch": "not_readable_without_authentication",
-      "https": "no_saved_credentials",
-      "ssh_existing_public_key": "not_authorized",
-      "push_performed": false
-    }
+      "git_url": "git@gitlink.org.cn:SuperGh/mxoedzsyzygka.git",
+      "branch": "master",
+      "status": "pushed_and_verified",
+      "remote_head": "1f122d37948a2c5c136566cdd08e009d2a17e002",
+      "previous_master": "58903feb8e51d223f0401e6ecd2a5ae4b58adecd",
+      "history_preserved_fast_forward": true,
+      "main_unchanged": "f7323b6ede9e5c957b4448aac3cb88064b629007"
+    },
+    "followup_commit_scope": "publication metadata only; production fingerprint remains unchanged"
   },
   "github_delivery_complete": true,
-  "gitlink_delivery_complete": false
+  "gitlink_delivery_complete": true
 }

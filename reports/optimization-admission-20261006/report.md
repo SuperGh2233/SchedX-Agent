@@ -64,6 +64,6 @@ SP4 native 仍不执行硬 `cpu.max`，普通 cgroup `cpu.weight` 也不能直�
 
 最终流水线与两个长期摘要分别保存为 `pipeline-5ac43a8-final.json`、`30min-5ac43a8-final.json`、`2h-5ac43a8-final.json`。完整归档为 `final-evidence-5ac43a8.tar.gz`，本地与远端一致的 SHA-256 为 `33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d`；它包含本轮完整原始结果、历史失败、源码身份、测试和环境记录，排除私有启动配置备份。归档内流水线在打包时尚未写入该归档自身哈希，最终元数据以独立终态 JSON 为准。
 
-源代码、摘要、文件指纹与限制统一记录于 [验证清单](verification-manifest.json)。本轮按授权推送优化分支 `codex/optimization-20261003`，不合入主分支、不创建 PR。GitHub 已推送并核对交付提交 `63cd7b74446a3162e4badabaef8ff7f89b0c71a7`。GitLink 比赛仓库 `https://gitlink.org.cn/SuperGh/mxoedzsyzygka.git` 已配置，但 HTTPS 没有已保存凭据、现有 SSH 公钥未授权，当前无法读取默认分支或推送；需补齐认证后保留历史同步。发布核验见 `publication-status.json`。
+源代码、摘要、文件指纹与限制统一记录于 [验证清单](verification-manifest.json)。GitHub 优化分支 `codex/optimization-20261003` 与 GitLink 比赛仓库 `master` 已同步并核对交付提交 `1f122d37948a2c5c136566cdd08e009d2a17e002`，保留原提交历史。两端的源码 SHA、最终报告和完整原始包一致。发布核验见 `publication-status.json`；后续记录提交仅补充发布状态，不改动已验收生产源码。
 
 本地归档核验完成：490557 个普通文件、97591 个目录；逐文件指纹保存于 `final-evidence-5ac43a8-files.jsonl.gz`，核验收据见 `final-evidence-5ac43a8-verification.json`。
