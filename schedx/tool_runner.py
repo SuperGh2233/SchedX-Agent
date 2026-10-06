@@ -11,6 +11,9 @@ import signal
 import select
 import threading
 import math
+import fcntl
+import hashlib
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Sequence
@@ -49,6 +52,10 @@ PROFILES = {
 
 class CpuQuotaUnavailable(RuntimeError):
     """A requested hard quota cannot be established before the tool executes."""
+
+
+class ToolGroupBusy(RuntimeError):
+    """The cgroup topology could not be updated within its bounded lock wait."""
 
 
 def infer_intent(command: Sequence[str]) -> str:
@@ -223,7 +230,8 @@ class ToolCallRunner:
                     quota_lease = CpuBackendLease(lease_path, native=False).acquire()
                 except CpuBackendBusy as exc:
                     raise CpuQuotaUnavailable(str(exc)) from exc
-            self._prepare_group(parent, tool, profile)
+            with self._group_mutation_lock(self.root, deadline=min(started + timeout, time.monotonic() + 5)):
+                self._prepare_group(parent, tool, profile)
             if admission_lease is not None:
                 self.admission.bind_cgroup(admission_lease, tool)
             if hard_quota:
@@ -356,7 +364,11 @@ class ToolCallRunner:
             scheduler_stopped = True
             if scx_started or getattr(scx, "_process", None) is not None or getattr(scx, "_backend_lease", None) is not None:
                 scheduler_stopped = scx.stop_scheduler()
-            cleanup = self._cleanup(tool, parent)
+            try:
+                with self._group_mutation_lock(self.root):
+                    cleanup = self._cleanup(tool, parent)
+            except ToolGroupBusy as exc:
+                cleanup = {"cgroup_removed": False, "errors": [str(exc)]}
             if quota_lease is not None:
                 quota_lease.release()
             if result is not None:
@@ -459,6 +471,35 @@ class ToolCallRunner:
         self._write_if_exists(tool / "memory.high", str(profile["memory_high"]))
         self._write_if_exists(tool / "memory.max", str(profile["memory_max"]))
         self._write_if_exists(tool / "pids.max", str(profile["pids_max"]))
+
+    @staticmethod
+    @contextmanager
+    def _group_mutation_lock(root: Path, *, deadline: float | None = None):
+        """Serialize shared ancestor creation/removal across all caller processes.
+
+        State/output directories differ between callers, so they cannot provide
+        this lock's scope. Its identity is the actual cgroup hierarchy root.
+        """
+        resolved = root.resolve()
+        real_root = Path('/sys/fs/cgroup')
+        directory = Path('/run/schedx') if resolved == real_root or real_root in resolved.parents else resolved.parent
+        directory.mkdir(parents=True, exist_ok=True)
+        name = 'tool-groups-' + hashlib.sha256(str(resolved).encode()).hexdigest()[:24] + '.lock'
+        fd = os.open(directory / name, os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+        cutoff = time.monotonic() + 5 if deadline is None else deadline
+        try:
+            while True:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError:
+                    remaining = cutoff - time.monotonic()
+                    if remaining <= 0:
+                        raise ToolGroupBusy('cgroup topology update deadline expired')
+                    time.sleep(min(.005, remaining))
+            yield
+        finally:
+            os.close(fd)
 
     @staticmethod
     def _move_self(tool: Path):
