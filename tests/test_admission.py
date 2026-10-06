@@ -160,6 +160,39 @@ def test_lock_contention_respects_the_submission_deadline(tmp_path):
     assert not list(ctl.directory.glob("*.lease"))
 
 
+def test_release_wakes_a_waiter_without_waiting_for_periodic_recovery(tmp_path):
+    ctl = controller(tmp_path)
+    holder = acquire(ctl)
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        waiting = pool.submit(acquire, ctl, "waiting", "compile")
+        wait_pending(ctl, 1)
+        # Let this caller observe an unchanged occupied queue before the release.
+        time.sleep(.03)
+        started = time.monotonic()
+        ctl.release(holder)
+        lease = waiting.result(timeout=.15)
+        assert time.monotonic() - started < .15
+        ctl.release(lease)
+
+
+def test_interactive_request_uses_reserved_capacity_amid_many_pending_callers(tmp_path):
+    ctl = controller(tmp_path, limit=2, max_limit=2, reserve=1)
+    holder = acquire(ctl, "running", "compile")
+    def background(n):
+        lease = acquire(ctl, str(n), "compile")
+        ctl.release(lease)
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        waiting = [pool.submit(background, n) for n in range(10)]
+        wait_pending(ctl, 10)
+        started = time.monotonic()
+        interactive = acquire(ctl, "foreground", "interactive", timeout=.5)
+        assert time.monotonic() - started < .5
+        ctl.release(interactive)
+        ctl.release(holder)
+        for future in waiting:
+            future.result(timeout=3)
+
+
 def test_interrupted_wait_removes_its_ticket_and_keeps_the_running_owner(tmp_path, monkeypatch):
     ctl = controller(tmp_path)
     holder = acquire(ctl)

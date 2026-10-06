@@ -317,9 +317,21 @@ class ToolAdmission:
         token = uuid.uuid4().hex
         fd = os.open(self._lease_path(token), os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
         registered = False
+        observed_version = None
+        refreshed_at = -math.inf
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
             while True:
+                now = self.clock()
+                if registered and now < deadline and now - refreshed_at < min(.2, self.config.sample_seconds):
+                    current = self.path.stat()
+                    version = (current.st_ino, current.st_mtime_ns, current.st_size)
+                    if version == observed_version:
+                        # Pending callers need not all parse and lock the same unchanged
+                        # registry. Periodic refresh still recovers a caller that died
+                        # without updating it; writes wake waiters on their next poll.
+                        time.sleep(min(self.poll_seconds, max(0, deadline - now)))
+                        continue
                 with self._locked(deadline):
                     now = self.clock()
                     state = self._load()
@@ -341,6 +353,9 @@ class ToolAdmission:
                     self._promote(state, now)
                     if before != json.dumps(state, sort_keys=True):
                         atomic_json(self.path, state)
+                    current = self.path.stat()
+                    observed_version = (current.st_ino, current.st_mtime_ns, current.st_size)
+                    refreshed_at = now
                     job = state["jobs"][token]
                     if job["status"] == "running":
                         return AdmissionLease(token, fd, submitted_at, job["admitted"], self._telemetry(state))
@@ -411,9 +426,11 @@ class ToolAdmission:
     def snapshot(self) -> dict:
         with self._locked():
             state = self._load()
+            before = json.dumps(state, sort_keys=True)
             self._reap(state, self.clock())
             state = self._validate_config(state)
             self._adapt(state, self.clock())
             self._promote(state, self.clock())
-            atomic_json(self.path, state)
+            if before != json.dumps(state, sort_keys=True):
+                atomic_json(self.path, state)
             return {**self._telemetry(state), "jobs": dict(state["jobs"])}

@@ -14,6 +14,7 @@ import hashlib
 import json
 import math
 import os
+import shutil
 from pathlib import Path
 import sys
 import threading
@@ -139,7 +140,10 @@ def one_burst(args, root: Path, output: Path, mode: str, repeat: int, work_cpus:
     output.mkdir()
     config = AdmissionConfig(mode="fixed" if mode == "fixed" else "adaptive", initial_limit=args.limit,
                              max_limit=args.maximum, interactive_reserve=args.reserve)
-    admission = ToolAdmission(output / "admission", config, cgroup_root=root) if mode != "off" else None
+    runtime = Path("/run/schedx") / ("admission-verify-" + uuid.uuid4().hex)
+    # The production CLI defaults to /run. Keep synchronization there too;
+    # persistent measurement output must not silently become the runtime queue.
+    admission = ToolAdmission(runtime, config, cgroup_root=root) if mode != "off" else None
     runner = ToolCallRunner(root=root, state_dir=output / "tools", native_scx=False, admission=admission)
     stop = threading.Event()
     errors = []
@@ -187,8 +191,15 @@ def one_burst(args, root: Path, output: Path, mode: str, repeat: int, work_cpus:
     if admission:
         final = admission.snapshot()
         summary["final_admission"] = final
+        summary["admission_runtime_directory"] = str(runtime)
         if final["active"] or final["pending"]:
             summary["failures"].append("admission_not_drained")
+        shutil.copytree(runtime, output / "admission")
+        if not final["active"] and not final["pending"]:
+            shutil.rmtree(runtime)
+            summary["admission_runtime_removed"] = True
+        else:
+            summary["admission_runtime_removed"] = False
     summary.update(status="failed" if summary["failures"] else "passed", mode=mode, repeat=repeat,
                    configuration=asdict(config) if admission else None)
     atomic_json(output / "summary.json", summary)
