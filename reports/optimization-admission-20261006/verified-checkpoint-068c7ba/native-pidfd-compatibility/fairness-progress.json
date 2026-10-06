@@ -1,0 +1,330 @@
+{
+  "duration": 30,
+  "samples": [
+    {
+      "elapsed": 5.0,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "awaiting_runtime_sample",
+        "background_interval": 64,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 30.64,
+        "background_runtime_share": 0.0
+      },
+      "runtime_delta_ns": {},
+      "class_metrics": {
+        "0": {
+          "enqueues": 11003,
+          "runs": 11026,
+          "runtime_ns": 5733900515,
+          "wait_ns": 6282291396,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 447,
+          "runs": 449,
+          "runtime_ns": 4685740463,
+          "wait_ns": 15282819190,
+          "max_wait_ns": 67610921
+        },
+        "2": {
+          "enqueues": 16,
+          "runs": 16,
+          "runtime_ns": 444205289,
+          "wait_ns": 4341247922,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 10,
+          "runs": 10,
+          "runtime_ns": 25264358,
+          "wait_ns": 4398421594,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 10.01,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "runtime_share_low",
+        "background_interval": 32,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 61.47,
+        "background_runtime_share": 0.0037182821363013797
+      },
+      "runtime_delta_ns": {
+        "0": 17519400,
+        "1": 4544184991,
+        "2": 438653342,
+        "3": 23366999
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 11563,
+          "runs": 11585,
+          "runtime_ns": 5751419915,
+          "wait_ns": 8300708109,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 865,
+          "runs": 868,
+          "runtime_ns": 9229925454,
+          "wait_ns": 30766613621,
+          "max_wait_ns": 67610921
+        },
+        "2": {
+          "enqueues": 30,
+          "runs": 30,
+          "runtime_ns": 882858631,
+          "wait_ns": 9002691856,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 19,
+          "runs": 19,
+          "runtime_ns": 48631357,
+          "wait_ns": 9844557842,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 15.01,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "runtime_share_low",
+        "background_interval": 16,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 73.83,
+        "background_runtime_share": 0.007222858633179294
+      },
+      "runtime_delta_ns": {
+        "0": 15096167,
+        "1": 4511955597,
+        "2": 437826191,
+        "3": 42592914
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 12148,
+          "runs": 12171,
+          "runtime_ns": 5766516082,
+          "wait_ns": 11451484831,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 1281,
+          "runs": 1285,
+          "runtime_ns": 13741881051,
+          "wait_ns": 46225907461,
+          "max_wait_ns": 67610921
+        },
+        "2": {
+          "enqueues": 44,
+          "runs": 44,
+          "runtime_ns": 1320684822,
+          "wait_ns": 13582660062,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 36,
+          "runs": 36,
+          "runtime_ns": 91224271,
+          "wait_ns": 14850815354,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 20.01,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "runtime_share_low",
+        "background_interval": 8,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 85.18,
+        "background_runtime_share": 0.014649207375454176
+      },
+      "runtime_delta_ns": {
+        "0": 13389600,
+        "1": 4488290884,
+        "2": 437035890,
+        "3": 85243745
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 12646,
+          "runs": 12669,
+          "runtime_ns": 5779905682,
+          "wait_ns": 13661655476,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 1694,
+          "runs": 1699,
+          "runtime_ns": 18230171935,
+          "wait_ns": 61753424270,
+          "max_wait_ns": 68570471
+        },
+        "2": {
+          "enqueues": 58,
+          "runs": 58,
+          "runtime_ns": 1757720712,
+          "wait_ns": 18043607346,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 68,
+          "runs": 69,
+          "runtime_ns": 176468016,
+          "wait_ns": 19787592100,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 25.02,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "runtime_share_low",
+        "background_interval": 4,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 89.73,
+        "background_runtime_share": 0.028202727569503917
+      },
+      "runtime_delta_ns": {
+        "0": 13913976,
+        "1": 4364516825,
+        "2": 470358242,
+        "3": 167817763
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 13181,
+          "runs": 13204,
+          "runtime_ns": 5793819658,
+          "wait_ns": 16120787185,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 2096,
+          "runs": 2103,
+          "runtime_ns": 22594688760,
+          "wait_ns": 77430930970,
+          "max_wait_ns": 70074635
+        },
+        "2": {
+          "enqueues": 73,
+          "runs": 73,
+          "runtime_ns": 2228078954,
+          "wait_ns": 22573311065,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 133,
+          "runs": 133,
+          "runtime_ns": 344285779,
+          "wait_ns": 24612381389,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 30.02,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "runtime_share_low",
+        "background_interval": 2,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 93.91,
+        "background_runtime_share": 0.051759186621327245
+      },
+      "runtime_delta_ns": {
+        "0": 13402786,
+        "1": 4192593828,
+        "2": 499545792,
+        "3": 302683289
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 13668,
+          "runs": 13691,
+          "runtime_ns": 5807222444,
+          "wait_ns": 18354063537,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 2481,
+          "runs": 2488,
+          "runtime_ns": 26787282588,
+          "wait_ns": 93221520940,
+          "max_wait_ns": 73431021
+        },
+        "2": {
+          "enqueues": 89,
+          "runs": 89,
+          "runtime_ns": 2727624746,
+          "wait_ns": 27035686036,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 254,
+          "runs": 255,
+          "runtime_ns": 646969068,
+          "wait_ns": 29306517167,
+          "max_wait_ns": 741225266
+        }
+      }
+    },
+    {
+      "elapsed": 35.02,
+      "scheduler_running": true,
+      "fairness": {
+        "mode": "uncontended",
+        "background_interval": 64,
+        "default_interval": 32,
+        "cpu_pressure_avg10": 73.94,
+        "background_runtime_share": 0.0
+      },
+      "runtime_delta_ns": {
+        "0": 26121283,
+        "1": 91179071,
+        "2": 1541884,
+        "3": 12682429
+      },
+      "class_metrics": {
+        "0": {
+          "enqueues": 14452,
+          "runs": 14475,
+          "runtime_ns": 5833343727,
+          "wait_ns": 18470626909,
+          "max_wait_ns": 361004756
+        },
+        "1": {
+          "enqueues": 2489,
+          "runs": 2499,
+          "runtime_ns": 26878461659,
+          "wait_ns": 93504719521,
+          "max_wait_ns": 73431021
+        },
+        "2": {
+          "enqueues": 89,
+          "runs": 90,
+          "runtime_ns": 2729166630,
+          "wait_ns": 27280486115,
+          "max_wait_ns": 351389576
+        },
+        "3": {
+          "enqueues": 258,
+          "runs": 260,
+          "runtime_ns": 659651497,
+          "wait_ns": 29395582180,
+          "max_wait_ns": 741225266
+        }
+      }
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,117 @@
+{
+  "run_id": "tool-76fa90e10fc5477197fd38e13dac6b38",
+  "agent_id": "agent-2",
+  "intent": "compile",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import os,time,subprocess\nfrom pathlib import Path\nos.sched_setaffinity(0, [0, 1, 2])\nend=time.process_time()+0.8\nwhile time.process_time()<end:\n sum(range(1000))\n"
+  ],
+  "profile": {
+    "intent": "compile",
+    "scx_class": 2,
+    "scx_weight": 1500,
+    "cpu_weight": 300,
+    "cpu_max": "max",
+    "memory_high": "3G",
+    "memory_max": "4G",
+    "pids_max": "2048"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-admission-soak-8d68ae1303e54e1783136b55119f6113/schedx-agents/agent-2/tool-76fa90e10fc5477197fd38e13dac6b38",
+  "cgroup_id": 198986,
+  "pid": 15316,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 1.7665739260000919,
+  "metrics": {
+    "memory_current_bytes": 262144,
+    "memory_peak_bytes": 5935104,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 817991,
+      "user_usec": 726257,
+      "system_usec": 91733,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 0.8752805579997585,
+  "startup_seconds": 0.04820299500033798,
+  "execution_seconds": 0.8420446840000295,
+  "admission": {
+    "enabled": true,
+    "admitted": true,
+    "mode": "adaptive",
+    "limit": 5,
+    "active": 3,
+    "pending": 3,
+    "reaped": 0,
+    "control": {
+      "reason": "hold",
+      "high_windows": 1,
+      "low_windows": 0,
+      "sample": {
+        "at": 3185.693322091,
+        "totals": {
+          "cpu": 119696881,
+          "memory": 0,
+          "io": 1362803
+        }
+      },
+      "pressure_percent": {
+        "cpu": 23.04887435417936,
+        "memory": 0.0,
+        "io": 0.08036348902736488
+      },
+      "recent_execution_timeouts": 0,
+      "changed_at": 3163.503552797
+    }
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": [],
+    "admission_released": true
+  },
+  "stdout": "",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/soak-smoke-1/wave-276/2/tool-76fa90e10fc5477197fd38e13dac6b38.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/soak-smoke-1/wave-276/2/tool-76fa90e10fc5477197fd38e13dac6b38.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

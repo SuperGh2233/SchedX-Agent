@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "queue_timeout_before_execution": true,
+  "timeout_tree_cleanup": true,
+  "crash_keeps_live_descendants_in_capacity": true,
+  "orphan_recovery_after_owned_cgroup_kill": true,
+  "final_admission": {
+    "mode": "fixed",
+    "limit": 1,
+    "active": 0,
+    "pending": 0,
+    "reaped": 3,
+    "control": {
+      "reason": "initial",
+      "high_windows": 0,
+      "low_windows": 0
+    },
+    "jobs": {}
+  }
+}

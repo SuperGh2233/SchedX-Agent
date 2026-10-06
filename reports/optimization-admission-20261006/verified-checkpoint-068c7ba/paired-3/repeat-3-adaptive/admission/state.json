@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "config": {
+    "mode": "adaptive",
+    "initial_limit": 5,
+    "min_limit": 1,
+    "max_limit": 8,
+    "interactive_reserve": 2,
+    "max_pending": 128,
+    "aging_seconds": 2.0,
+    "sample_seconds": 1.0,
+    "cooldown_seconds": 3.0
+  },
+  "cgroup_root": "/sys/fs/cgroup/schedx-admission-bench-0d818c25527a43bd9669fcac8980e38d",
+  "limit": 6,
+  "sequence": 48,
+  "jobs": {},
+  "last_served": {},
+  "control": {
+    "reason": "cooldown",
+    "high_windows": 2,
+    "low_windows": 0,
+    "sample": {
+      "at": 2878.628291932,
+      "totals": {
+        "cpu": 83212614,
+        "memory": 0,
+        "io": 836921
+      }
+    },
+    "pressure_percent": {
+      "cpu": 23.217222358553073,
+      "memory": 0.0,
+      "io": 0.05349842910032311
+    },
+    "recent_execution_timeouts": 0,
+    "changed_at": 2876.619162827
+  },
+  "completions": [
+    {
+      "intent": "interactive",
+      "at": 2872.77743609,
+      "end_to_end_seconds": 0.16406684899993706,
+      "execution_timeout": false
+    },
+    {
+      "intent": "interactive",
+      "at": 2872.799322539,
+      "end_to_end_seconds": 0.12295247799966091,
+      "execution_timeout": false
+    },
+    {
+      "intent": "interactive",
+      "at": 2872.910828627,
+      "end_to_end_seconds": 0.15446258600013607,
+      "execution_timeout": false
+    },
+    {
+      "intent": "interactive",
+      "at": 2872.976075951,
+      "end_to_end_seconds": 0.13937466700008372,
+      "execution_timeout": false
+    },
+    {
+      "intent": "interactive",
+      "at": 2873.04327258,
+      "end_to_end_seconds": 0.12663152100003572,
+      "execution_timeout": false
+    },
+    {
+      "intent": "interactive",
+      "at": 2873.100023714,
+      "end_to_end_seconds": 0.1038202659997296,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2873.819541335,
+      "end_to_end_seconds": 1.213834147000398,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2873.825674293,
+      "end_to_end_seconds": 1.2292889469999864,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2873.908592179,
+      "end_to_end_seconds": 1.31013145299994,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2874.917063862,
+      "end_to_end_seconds": 2.299563016999855,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2874.918593372,
+      "end_to_end_seconds": 2.2929984439997497,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2874.978575658,
+      "end_to_end_seconds": 2.3562324029999218,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2876.01349114,
+      "end_to_end_seconds": 3.379610500999661,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2876.01606793,
+      "end_to_end_seconds": 3.378769635000026,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2876.048157477,
+      "end_to_end_seconds": 3.4049250310004027,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2877.127219625,
+      "end_to_end_seconds": 4.4706421840000985,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2877.201338183,
+      "end_to_end_seconds": 4.542759307999859,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2877.231582355,
+      "end_to_end_seconds": 4.580988893000267,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2878.280315219,
+      "end_to_end_seconds": 5.619922096000209,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2878.330109692,
+      "end_to_end_seconds": 5.670405372000005,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2878.332362985,
+      "end_to_end_seconds": 5.673172469999827,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2878.871456601,
+      "end_to_end_seconds": 6.210440065000057,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2879.35555899,
+      "end_to_end_seconds": 6.69394826900043,
+      "execution_timeout": false
+    },
+    {
+      "intent": "compile",
+      "at": 2879.390394065,
+      "end_to_end_seconds": 6.724728225000035,
+      "execution_timeout": false
+    }
+  ],
+  "reaped": 0
+}

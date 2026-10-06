@@ -1,0 +1,102 @@
+{
+  "run_id": "tool-a802fdaa326b462d935e8e0e69a617b9",
+  "agent_id": "admission-bench-2",
+  "intent": "compile",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import os,time\nos.sched_setaffinity(0, [0, 1, 2])\nend = time.process_time() + 1.0\nwhile time.process_time() < end:\n    sum(range(1000))\nprint('completed')\n"
+  ],
+  "profile": {
+    "intent": "compile",
+    "scx_class": 2,
+    "scx_weight": 1500,
+    "cpu_weight": 300,
+    "cpu_max": "max",
+    "memory_high": "3G",
+    "memory_max": "4G",
+    "pids_max": "2048"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-admission-bench-0d818c25527a43bd9669fcac8980e38d/schedx-agents/admission-bench-2/tool-a802fdaa326b462d935e8e0e69a617b9",
+  "cgroup_id": 62911,
+  "pid": 7479,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 2.3799039059999814,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 1008488,
+      "user_usec": 918780,
+      "system_usec": 89708,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 1.2949732210004186,
+  "startup_seconds": 0.03452558799972394,
+  "execution_seconds": 1.0386000150001564,
+  "admission": {
+    "enabled": true,
+    "admitted": true,
+    "mode": "fixed",
+    "limit": 5,
+    "active": 3,
+    "pending": 12,
+    "reaped": 0,
+    "control": {
+      "reason": "initial",
+      "high_windows": 0,
+      "low_windows": 0
+    }
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": [],
+    "admission_released": true
+  },
+  "stdout": "completed\n",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-3-fixed/tools/tool-a802fdaa326b462d935e8e0e69a617b9.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-3-fixed/tools/tool-a802fdaa326b462d935e8e0e69a617b9.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

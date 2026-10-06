@@ -1,0 +1,93 @@
+{
+  "run_id": "tool-37989576de554bc8bf3a89e2b0375dbf",
+  "agent_id": "default",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time; start=time.process_time(); end=time.monotonic()+2\nwhile time.monotonic()<end: pass\nprint(time.process_time()-start)"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "10000 100000",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/default/tool-37989576de554bc8bf3a89e2b0375dbf",
+  "cgroup_id": 200517,
+  "pid": 15692,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "soft",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 2.0861516400000255,
+  "metrics": {
+    "memory_current_bytes": 176128,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 212545,
+      "user_usec": 209677,
+      "system_usec": 2868,
+      "nr_periods": 21,
+      "nr_throttled": 21,
+      "throttled_usec": 1842631,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 0.0,
+  "startup_seconds": 0.023208699999941018,
+  "execution_seconds": 2.0626558530002512,
+  "admission": {
+    "enabled": false,
+    "admitted": true
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "0.204942131\n",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/native-pidfd-compatibility/cpu-controls/tool-37989576de554bc8bf3a89e2b0375dbf.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/native-pidfd-compatibility/cpu-controls/tool-37989576de554bc8bf3a89e2b0375dbf.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [
+    "CPU throttling detected; reduce parallel workers or request a compile profile"
+  ],
+  "next_resource_hint": "intent:interactive,cpu:high",
+  "retry_recommended": true
+}

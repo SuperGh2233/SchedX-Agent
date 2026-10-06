@@ -1,0 +1,41 @@
+{
+  "status": "ready_for_test_reboot",
+  "guest_utc": "2026-10-06T03:53:17.571175+00:00",
+  "default_kernel": "/boot/vmlinuz-6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "before": {
+    "index": "0",
+    "kernel": "/boot/vmlinuz-6.6.0-159.4.3.154.oe2403sp4.schedx1",
+    "args": "\"ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap cgroup_disable=files apparmor=0 crashkernel=512M systemd.unified_cgroup_hierarchy=1 cgroup_no_v1=all\"",
+    "root": "/dev/mapper/openeuler-root",
+    "initrd": "/boot/initramfs-6.6.0-159.4.3.154.oe2403sp4.schedx1.img",
+    "title": "openEuler (6.6.0-159.4.3.154.oe2403sp4.schedx1) 24.03 (LTS-SP4)"
+  },
+  "files": {
+    "/boot/grub2/grub.cfg": {
+      "sha256": "bc7b49f8ef68b1f64a38a6cb94af526eb8ecfb597613265203c938b3ce21026d",
+      "backup": "/var/tmp/schedx-admission-20261006-f265822/evidence/boot-config-before/boot/grub2/grub.cfg",
+      "symlink": null
+    },
+    "/boot/grub2/grubenv": {
+      "sha256": "16f94b19fcb667deec36f5a39756cb9dcbd1f890f3bb17b0e40edf10062914ae",
+      "backup": "/var/tmp/schedx-admission-20261006-f265822/evidence/boot-config-before/boot/grub2/grubenv",
+      "symlink": null
+    },
+    "/etc/default/grub": {
+      "sha256": "5db1f2b9074137cb1192ae4ced6e5895e2a4596212100ac6e0aa8806102fdaf4",
+      "backup": "/var/tmp/schedx-admission-20261006-f265822/evidence/boot-config-before/etc/default/grub",
+      "symlink": null
+    }
+  },
+  "added_parameter": "psi=1",
+  "kernel_changed": false,
+  "installed_program_changed": false,
+  "after": {
+    "index": "0",
+    "kernel": "/boot/vmlinuz-6.6.0-159.4.3.154.oe2403sp4.schedx1",
+    "args": "\"ro resume=/dev/mapper/openeuler-swap rd.lvm.lv=openeuler/root rd.lvm.lv=openeuler/swap cgroup_disable=files apparmor=0 crashkernel=512M systemd.unified_cgroup_hierarchy=1 cgroup_no_v1=all psi=1\"",
+    "root": "/dev/mapper/openeuler-root",
+    "initrd": "/boot/initramfs-6.6.0-159.4.3.154.oe2403sp4.schedx1.img",
+    "title": "openEuler (6.6.0-159.4.3.154.oe2403sp4.schedx1) 24.03 (LTS-SP4)"
+  }
+}

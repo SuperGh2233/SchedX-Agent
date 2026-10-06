@@ -1,0 +1,25 @@
+{
+  "status": "running",
+  "pid": 16027,
+  "commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
+  "source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
+  "guest_started_utc": "2026-10-06T05:23:02.874577+00:00",
+  "stages": [
+    {
+      "name": "admission-30min",
+      "status": "running",
+      "duration_seconds": 1800,
+      "guest_started_utc": "2026-10-06T05:23:02.878036+00:00",
+      "pid": 16028
+    }
+  ],
+  "harness_sha256": "d8aaa92ccc8c7a0c8e47c33cb54762fec7e3bc8ddcbaabeac59ae6232a701a2f",
+  "windows_shutdown_requested": false,
+  "boot_configuration_restored": true,
+  "prerequisites": {
+    "paired_comparison": "passed",
+    "smoke": "passed",
+    "hard_cpu_contract": "passed",
+    "native_compatibility": "passed"
+  }
+}

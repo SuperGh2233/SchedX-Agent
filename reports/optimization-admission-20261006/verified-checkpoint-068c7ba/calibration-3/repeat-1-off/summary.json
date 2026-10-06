@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "failures": [],
+  "jobs": 24,
+  "successful_jobs": 24,
+  "timeouts": 0,
+  "elapsed_seconds": 6.539639652000005,
+  "foreground_samples": 6,
+  "background_samples": 18,
+  "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+  "successful_jobs_per_second": 3.6699269802519052,
+  "foreground_p99_seconds": 0.5481832120003673,
+  "background_p99_seconds": 6.50023669400025,
+  "background_cpu_seconds_per_wall_second": 2.776657578441141,
+  "mode": "off",
+  "repeat": 1,
+  "configuration": null
+}

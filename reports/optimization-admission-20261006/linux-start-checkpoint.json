@@ -1,0 +1,42 @@
+{
+  "recorded_client_utc": "2026-10-06T04:26:02.055721+00:00",
+  "implementation_commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
+  "linux_unit_tests": {
+    "status": "passed",
+    "tests": 446,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "elapsed_seconds": 5.89,
+    "observed_exit_code": 0,
+    "raw_xml_remote": "/var/tmp/schedx-admission-20261006-f265822/evidence/linux-tests.xml",
+    "local_raw_evidence_archived": false
+  },
+  "source_sha256_remote_verified_against_git": "661694471fc3a52a61e524a821b90784c8354e06e90f9af47e3c0a5912e549c5",
+  "original_regular_files_baseline_count": 3586,
+  "root_cpu_controller_changed": false,
+  "test_boot_parameter": "psi=1",
+  "kernel_binary_changed": false,
+  "native_program_changed": false,
+  "reboot_requested": true,
+  "boot_configuration_restored": false,
+  "current_stage": "recover_vm_connectivity_and_restore_boot_configuration",
+  "ports": [
+    {
+      "ip": "100.121.207.17",
+      "port": 22,
+      "state": "open"
+    },
+    {
+      "ip": "100.105.181.122",
+      "port": 445,
+      "state": "open"
+    }
+  ],
+  "calibration": "not_started",
+  "paired_performance": "not_started",
+  "30min": "not_started",
+  "2h": "not_started",
+  "windows_shutdown_requested": false,
+  "needs_user_input": "VMware console state or Mac unlock for remote console control"
+}

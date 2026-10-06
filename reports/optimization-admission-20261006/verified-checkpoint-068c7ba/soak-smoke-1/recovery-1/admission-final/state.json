@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "config": {
+    "mode": "fixed",
+    "initial_limit": 1,
+    "min_limit": 1,
+    "max_limit": 1,
+    "interactive_reserve": 0,
+    "max_pending": 128,
+    "aging_seconds": 2.0,
+    "sample_seconds": 1.0,
+    "cooldown_seconds": 3.0
+  },
+  "cgroup_root": "/sys/fs/cgroup/schedx-admission-soak-8d68ae1303e54e1783136b55119f6113",
+  "limit": 1,
+  "sequence": 8,
+  "jobs": {},
+  "last_served": {},
+  "control": {
+    "reason": "initial",
+    "high_windows": 0,
+    "low_windows": 0
+  },
+  "completions": [
+    {
+      "intent": "interactive",
+      "at": 3132.539802327,
+      "end_to_end_seconds": 0.30246271600026375,
+      "execution_timeout": true
+    }
+  ],
+  "reaped": 3
+}

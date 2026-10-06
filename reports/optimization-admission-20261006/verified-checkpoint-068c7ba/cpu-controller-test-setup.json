@@ -1,0 +1,14 @@
+{
+  "guest_utc": "2026-10-06T04:28:50.361191+00:00",
+  "before": [
+    "memory",
+    "pids"
+  ],
+  "after": [
+    "cpu",
+    "memory",
+    "pids"
+  ],
+  "added_cpu": true,
+  "restored": false
+}

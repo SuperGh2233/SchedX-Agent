@@ -1,0 +1,112 @@
+{
+  "run_id": "tool-75ec5257e8264be8a152159585f9b0af",
+  "agent_id": "admission-bench-2",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import os,time\nos.sched_setaffinity(0, [0, 1, 2])\nend = time.process_time() + 0.05\nwhile time.process_time() < end:\n    sum(range(1000))\nprint('completed')\n"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "max",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-admission-bench-0d818c25527a43bd9669fcac8980e38d/schedx-agents/admission-bench-2/tool-75ec5257e8264be8a152159585f9b0af",
+  "cgroup_id": 52927,
+  "pid": 6890,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 0.10263225100015916,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 57256,
+      "user_usec": 50322,
+      "system_usec": 6934,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 8.066899999903399e-05,
+  "startup_seconds": 0.027814174000013736,
+  "execution_seconds": 0.07395064599995749,
+  "admission": {
+    "enabled": true,
+    "admitted": true,
+    "mode": "adaptive",
+    "limit": 5,
+    "active": 5,
+    "pending": 15,
+    "reaped": 0,
+    "control": {
+      "reason": "pressure_warmup",
+      "high_windows": 0,
+      "low_windows": 0,
+      "sample": {
+        "at": 2845.710191441,
+        "totals": {
+          "cpu": 74450676,
+          "memory": 0,
+          "io": 812779
+        }
+      }
+    }
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": [],
+    "admission_released": true
+  },
+  "stdout": "completed\n",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-1-adaptive/tools/tool-75ec5257e8264be8a152159585f9b0af.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-1-adaptive/tools/tool-75ec5257e8264be8a152159585f9b0af.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false,
+  "index": 23,
+  "submitted_to_completed_seconds": 0.10275451000006797
+}

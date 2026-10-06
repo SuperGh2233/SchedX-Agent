@@ -1,0 +1,7 @@
+{
+  "commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
+  "source_sha256": "661694471fc3a52a61e524a821b90784c8354e06e90f9af47e3c0a5912e549c5",
+  "source_verified_against_git": true,
+  "source_file_count": 79,
+  "proof_scope": "candidate commit and production/test/script tree/blob objects; full history retained locally"
+}

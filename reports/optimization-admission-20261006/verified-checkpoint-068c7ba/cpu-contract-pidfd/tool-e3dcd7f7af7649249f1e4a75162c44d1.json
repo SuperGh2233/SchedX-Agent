@@ -1,0 +1,93 @@
+{
+  "run_id": "tool-e3dcd7f7af7649249f1e4a75162c44d1",
+  "agent_id": "pidfd-contract-ae8cac93",
+  "intent": "interactive",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import time\nend=time.monotonic()+2\nwhile time.monotonic()<end:\n sum(range(1000))\n"
+  ],
+  "profile": {
+    "intent": "interactive",
+    "scx_class": 1,
+    "scx_weight": 10000,
+    "cpu_weight": 1000,
+    "cpu_max": "10000 100000",
+    "memory_high": "1G",
+    "memory_max": "2G",
+    "pids_max": "256"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-agents/pidfd-contract-ae8cac93/tool-e3dcd7f7af7649249f1e4a75162c44d1",
+  "cgroup_id": 183914,
+  "pid": 14493,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": true,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 2.093923057000211,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3145728,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 210020,
+      "user_usec": 208091,
+      "system_usec": 1929,
+      "nr_periods": 21,
+      "nr_throttled": 21,
+      "throttled_usec": 1824756,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 0.0,
+  "startup_seconds": 0.023774977000357467,
+  "execution_seconds": 2.0697385539997413,
+  "admission": {
+    "enabled": false,
+    "admitted": true
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/cpu-contract-pidfd/tool-e3dcd7f7af7649249f1e4a75162c44d1.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/cpu-contract-pidfd/tool-e3dcd7f7af7649249f1e4a75162c44d1.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [
+    "CPU throttling reflects the requested hard limit; preserve the limit and reduce parallel workers if needed"
+  ],
+  "next_resource_hint": "",
+  "retry_recommended": false
+}

@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "quota_cpu_seconds": 0.21002,
+  "quota": "10000 100000",
+  "wall_work_seconds": 2,
+  "pidfd_wait_used": true,
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "final_scheduler_state": "disabled"
+}

@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "failures": [],
+  "jobs": 24,
+  "successful_jobs": 24,
+  "timeouts": 0,
+  "elapsed_seconds": 6.651370784999926,
+  "foreground_samples": 6,
+  "background_samples": 18,
+  "tail_estimate_note": "nearest-rank batch P99; small foreground counts approximate the batch maximum, not a service SLO",
+  "successful_jobs_per_second": 3.608278770764734,
+  "foreground_p99_seconds": 0.1874450740001521,
+  "background_p99_seconds": 6.571724910999819,
+  "background_cpu_seconds_per_wall_second": 2.7277948540949066,
+  "final_admission": {
+    "mode": "fixed",
+    "limit": 5,
+    "active": 0,
+    "pending": 0,
+    "reaped": 0,
+    "control": {
+      "reason": "initial",
+      "high_windows": 0,
+      "low_windows": 0
+    },
+    "jobs": {}
+  },
+  "admission_runtime_directory": "/run/schedx/admission-verify-ab6df04e189d43f29de6464c23d24e79",
+  "admission_runtime_removed": true,
+  "mode": "fixed",
+  "repeat": 2,
+  "configuration": {
+    "mode": "fixed",
+    "initial_limit": 5,
+    "min_limit": 1,
+    "max_limit": 8,
+    "interactive_reserve": 2,
+    "max_pending": 128,
+    "aging_seconds": 2.0,
+    "sample_seconds": 1.0,
+    "cooldown_seconds": 3.0
+  }
+}

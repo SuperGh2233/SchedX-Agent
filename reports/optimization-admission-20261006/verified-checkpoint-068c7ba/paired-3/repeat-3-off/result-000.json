@@ -1,0 +1,93 @@
+{
+  "run_id": "tool-bf86adb2189f4fce969f47c72f05c4e5",
+  "agent_id": "admission-bench-0",
+  "intent": "compile",
+  "resource_hint": "",
+  "command": [
+    "/usr/bin/python3",
+    "-c",
+    "import os,time\nos.sched_setaffinity(0, [0, 1, 2])\nend = time.process_time() + 1.0\nwhile time.process_time() < end:\n    sum(range(1000))\nprint('completed')\n"
+  ],
+  "profile": {
+    "intent": "compile",
+    "scx_class": 2,
+    "scx_weight": 1500,
+    "cpu_weight": 300,
+    "cpu_max": "max",
+    "memory_high": "3G",
+    "memory_max": "4G",
+    "pids_max": "2048"
+  },
+  "cgroup": "/sys/fs/cgroup/schedx-admission-bench-0d818c25527a43bd9669fcac8980e38d/schedx-agents/admission-bench-0/tool-bf86adb2189f4fce969f47c72f05c4e5",
+  "cgroup_id": 60847,
+  "pid": 7334,
+  "native_scx": false,
+  "scx_mode": "cgroup",
+  "scx_policy_scope": "none",
+  "scx_error": "",
+  "cpu_control_support": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_control_support_at_launch": {
+    "cpu_weight": "cgroup_v2",
+    "cpu_max": "cgroup_v2"
+  },
+  "cpu_limit_mode": "hard",
+  "hard_cpu_quota_requested": false,
+  "returncode": 0,
+  "timed_out": false,
+  "cpu_contract_breached": false,
+  "duration_seconds": 6.328624549999859,
+  "metrics": {
+    "memory_current_bytes": 0,
+    "memory_peak_bytes": 3084288,
+    "memory_events": {
+      "low": 0,
+      "high": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_kill": 0,
+      "oom_group_kill": 0
+    },
+    "cpu_stat": {
+      "usage_usec": 1007515,
+      "user_usec": 908198,
+      "system_usec": 99316,
+      "nr_periods": 0,
+      "nr_throttled": 0,
+      "throttled_usec": 0,
+      "nr_bursts": 0,
+      "burst_usec": 0
+    },
+    "pids_peak": 1
+  },
+  "scx_cgroup_metrics": {},
+  "command_started": true,
+  "timeout_phase": null,
+  "process_wait_mode": "pidfd",
+  "queue_wait_seconds": 0.0,
+  "startup_seconds": 0.18414986699963265,
+  "execution_seconds": 6.144078416999946,
+  "admission": {
+    "enabled": false,
+    "admitted": true
+  },
+  "cleanup": {
+    "policy_removed": true,
+    "scheduler_stopped": true,
+    "cgroup_removed": true,
+    "errors": []
+  },
+  "stdout": "completed\n",
+  "stdout_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-3-off/tools/tool-bf86adb2189f4fce969f47c72f05c4e5.stdout.log",
+  "stdout_truncated": false,
+  "stderr": "",
+  "stderr_path": "/var/tmp/schedx-admission-20261006-f265822/evidence/paired-3/repeat-3-off/tools/tool-bf86adb2189f4fce969f47c72f05c4e5.stderr.log",
+  "stderr_truncated": false,
+  "feedback": [],
+  "next_resource_hint": "",
+  "retry_recommended": false,
+  "index": 0,
+  "submitted_to_completed_seconds": 6.328735939000126
+}
