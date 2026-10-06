@@ -1,5 +1,5 @@
 {
-  "recorded_client_utc": "2026-10-06T05:30:15.882839+00:00",
+  "recorded_client_utc": "2026-10-06T06:13:50.345660+00:00",
   "implementation_commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
   "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
   "production_source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
@@ -7,7 +7,7 @@
   "production_source_file_count": 79,
   "native_and_ebpf_source_unchanged": true,
   "default_admission": "off",
-  "implementation_status": "paired_and_short_real_checks_passed_long_validation_running",
+  "implementation_status": "long_validation_failed_topology_fix_local_regression_passed_linux_retest_pending",
   "local_tests": {
     "tests": 450,
     "passed": 449,
@@ -62,7 +62,7 @@
     }
   },
   "linux_validation": {
-    "status": "running",
+    "status": "failed_long_validation",
     "unit_tests": {
       "tests": 450,
       "failures": 0,
@@ -392,8 +392,8 @@
       },
       "claim_scope": "current ToolCallRunner with admission off/fixed/adaptive; not initial whole-Agent gains"
     },
-    "30min": "running",
-    "2h": "not_started"
+    "30min": "failed_after_8252_tools",
+    "2h": "not_started_due_to_previous_failure"
   },
   "performance_improvement_claim": {
     "scope": "current ToolCallRunner off/fixed/adaptive on declared 4-vCPU task bursts; nearest-rank batch tail, not initial whole Agent or service P99",
@@ -413,21 +413,24 @@
   "pushed_this_iteration": false,
   "goal_complete": false,
   "remaining_work": [
-    "30-minute and two-hour independently running validation",
-    "terminal original-workspace and cleanup audit",
-    "CPU-controller restoration",
-    "retrieve and verify complete terminal evidence"
+    "finish local and Linux regression for shared cgroup topology guard",
+    "repeat paired comparison on corrected candidate",
+    "restart 30-minute and two-hour long validation",
+    "terminal evidence and original-state audit"
   ],
   "file_sha256": {
     "reports/optimization-admission-20261006/local-tests.log": "984ef197e18348b773636e1eab46006e5aa6e0c477324f7360a05d7d328fd4ae",
     "reports/optimization-admission-20261006/local-tests-runtime.log": "f1de9768c7e8fff0a5027143aaf4c56c22ebab137195f16dce175538ebf3cea9",
     "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
-    "reports/optimization-admission-20261006/long-validation-pipeline.json": "ba4fa7e1944182961426c7230a6c00a86dc92b31099bfaae896f586645bfc01c",
-    "reports/optimization-admission-20261006/report.md": "0f9ad5c081d6be8c226071091338e451b5965e3302dd5ee8e31e98f9f49f903c",
+    "reports/optimization-admission-20261006/long-validation-pipeline.json": "9240b10a710161fd43fc480a6a1ea21fd14ef907a2090d1fe85213a65841d603",
+    "reports/optimization-admission-20261006/report.md": "1f02dd762bfcd5c818b0dc7b55fe79449b7611e62e66193abccfcfaf547dee98",
     "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
+    "reports/optimization-admission-20261006/local-tests-topology.log": "ad3868778f48373f12ddf251af981b7f29077273e9abab1672d80c1a03ba7911",
+    "reports/optimization-admission-20261006/failed-long-evidence-068c7ba.tar.gz": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
     "reports/optimization-admission-20261006/local-tests-pidfd.xml": "4f9e44080a2a24f51bbd8528b55569c3f8cba07dff79b50d0fcd0e32402e0041",
     "reports/optimization-admission-20261006/linux-start-checkpoint.json": "0c67e9467204b4c1db163d95f84964857e96d930f8af368e12bb30ed4ccb1294",
     "reports/optimization-admission-20261006/local-tests-first.log": "ac2603e17b35081d65902c8c7c50045661ef7af4c11f0832e9d33e3ec7dd1311",
+    "reports/optimization-admission-20261006/local-tests-topology.xml": "559cb2838ce93c2207ed0829542ff884dc62a93123d96372d945a138ad4cb471",
     "reports/optimization-admission-20261006/local-tests-pidfd.log": "69ad37f51601aa01cd4b927839059d6e60fb675f5c7151954563bf6dc4aee537",
     "reports/optimization-admission-20261006/first-performance-evidence.tar.gz": "a7ff47d9fdd68517f21be116cd3abf4bd1eb32ef2d17d91f07a099db0f59f422",
     "reports/optimization-admission-20261006/remote-availability.json": "c7d98ae031426bdc432becdb0098aa2b0c33be208f283583078c3fbc4bb353de",
@@ -450,7 +453,7 @@
     }
   },
   "long_validation": {
-    "status": "running",
+    "status": "failed",
     "pid": 16027,
     "commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
     "source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
@@ -458,10 +461,22 @@
     "stages": [
       {
         "name": "admission-30min",
-        "status": "running",
+        "status": "failed",
         "duration_seconds": 1800,
         "guest_started_utc": "2026-10-06T05:23:02.878036+00:00",
-        "pid": 16028
+        "pid": 16028,
+        "returncode": 1,
+        "tools": 8252,
+        "recovery_checks": 9,
+        "max_queue_seconds": {
+          "compile": 1.855657519000033,
+          "interactive": 0.11810910100030014
+        },
+        "max_total_seconds": {
+          "compile": 2.728227817000061,
+          "interactive": 0.21480354900040766
+        },
+        "guest_finished_utc": "2026-10-06T05:40:38.828564+00:00"
       }
     ],
     "harness_sha256": "d8aaa92ccc8c7a0c8e47c33cb54762fec7e3bc8ddcbaabeac59ae6232a701a2f",
@@ -472,13 +487,25 @@
       "smoke": "passed",
       "hard_cpu_contract": "passed",
       "native_compatibility": "passed"
+    },
+    "error": "RuntimeError('admission-30min failed; later experiments not started')",
+    "remaining_private_cgroups": [],
+    "cpu_controller_restored": true,
+    "guest_finished_utc": "2026-10-06T05:40:38.852810+00:00",
+    "elapsed_seconds": 1055.9782034619998,
+    "final_scheduler_state": "disabled",
+    "terminal_archive": {
+      "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-068c7ba.tar.gz",
+      "returncode": 0,
+      "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
+      "scope": "all experiment evidence; private boot backup retained separately"
     }
   },
   "test_environment_changes": {
     "psi_runtime_enabled_for_test": true,
     "boot_configuration_restored": true,
-    "root_cpu_controller_temporarily_added": true,
-    "cpu_controller_restoration_pending": true,
+    "root_cpu_controller_temporarily_added": false,
+    "cpu_controller_restoration_pending": false,
     "native_installed_program_unchanged": true,
     "original_workspace_baseline_regular_files": 3586
   },
@@ -486,5 +513,17 @@
     "archive_sha256": "fc99a80542ff728d3289bf0b378363d17774d2406365c40b4cbfdf88a8b4512d",
     "local_raw_evidence_archived": true,
     "scope": "terminal short tests and paired comparison; long test terminal evidence not yet available"
-  }
+  },
+  "failed_long_archive": {
+    "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
+    "local_raw_evidence_archived": true
+  },
+  "topology_fix_local_tests": {
+    "tests": 452,
+    "passed": 451,
+    "skipped": 1,
+    "failures": 0,
+    "errors": 0
+  },
+  "topology_fix_commit": "5ac43a8"
 }

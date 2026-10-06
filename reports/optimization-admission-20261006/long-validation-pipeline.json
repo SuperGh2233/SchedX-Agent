@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "failed",
   "pid": 16027,
   "commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
   "source_sha256": "be3a39455ebaa31d43b29955240178cc4455c15f966ce40d27b63fded7c6a24c",
@@ -7,10 +7,22 @@
   "stages": [
     {
       "name": "admission-30min",
-      "status": "running",
+      "status": "failed",
       "duration_seconds": 1800,
       "guest_started_utc": "2026-10-06T05:23:02.878036+00:00",
-      "pid": 16028
+      "pid": 16028,
+      "returncode": 1,
+      "tools": 8252,
+      "recovery_checks": 9,
+      "max_queue_seconds": {
+        "compile": 1.855657519000033,
+        "interactive": 0.11810910100030014
+      },
+      "max_total_seconds": {
+        "compile": 2.728227817000061,
+        "interactive": 0.21480354900040766
+      },
+      "guest_finished_utc": "2026-10-06T05:40:38.828564+00:00"
     }
   ],
   "harness_sha256": "d8aaa92ccc8c7a0c8e47c33cb54762fec7e3bc8ddcbaabeac59ae6232a701a2f",
@@ -21,5 +33,17 @@
     "smoke": "passed",
     "hard_cpu_contract": "passed",
     "native_compatibility": "passed"
+  },
+  "error": "RuntimeError('admission-30min failed; later experiments not started')",
+  "remaining_private_cgroups": [],
+  "cpu_controller_restored": true,
+  "guest_finished_utc": "2026-10-06T05:40:38.852810+00:00",
+  "elapsed_seconds": 1055.9782034619998,
+  "final_scheduler_state": "disabled",
+  "terminal_archive": {
+    "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-068c7ba.tar.gz",
+    "returncode": 0,
+    "sha256": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
+    "scope": "all experiment evidence; private boot backup retained separately"
   }
 }
