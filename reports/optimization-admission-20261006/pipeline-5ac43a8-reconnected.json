@@ -1,0 +1,54 @@
+{
+  "status": "running",
+  "pid": 58872,
+  "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
+  "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "guest_started_utc": "2026-10-06T06:24:02.376544+00:00",
+  "stages": [
+    {
+      "name": "paired-topology",
+      "status": "passed",
+      "guest_started_utc": "2026-10-06T06:24:02.378383+00:00",
+      "pid": 58873,
+      "returncode": 0,
+      "guest_finished_utc": "2026-10-06T06:25:43.504715+00:00"
+    },
+    {
+      "name": "smoke-topology",
+      "status": "passed",
+      "guest_started_utc": "2026-10-06T06:25:43.506181+00:00",
+      "pid": 60385,
+      "returncode": 0,
+      "guest_finished_utc": "2026-10-06T06:28:45.622554+00:00"
+    },
+    {
+      "name": "admission-30min",
+      "status": "passed",
+      "duration_seconds": 1800,
+      "guest_started_utc": "2026-10-06T06:28:45.624209+00:00",
+      "pid": 67475,
+      "returncode": 0,
+      "tools": 13844,
+      "recovery_checks": 15,
+      "max_queue_seconds": {
+        "compile": 3.2247909199995775,
+        "interactive": 0.11960611599988624
+      },
+      "max_total_seconds": {
+        "compile": 4.104010121000101,
+        "interactive": 0.23517707900009555
+      },
+      "guest_finished_utc": "2026-10-06T06:58:47.812085+00:00"
+    },
+    {
+      "name": "admission-2h",
+      "status": "running",
+      "duration_seconds": 7200,
+      "guest_started_utc": "2026-10-06T06:58:47.813705+00:00",
+      "pid": 137407
+    }
+  ],
+  "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+  "windows_shutdown_requested": false,
+  "boot_configuration_restored": true
+}
