@@ -1,0 +1,49 @@
+{
+  "recorded_client_utc": "2026-10-06T08:19:06.020508+00:00",
+  "local_tailscale": {
+    "state": "Running",
+    "online": true,
+    "health": [
+      "Tailscale can't reach the configured DNS servers. Internet connectivity may be affected."
+    ]
+  },
+  "targets": [
+    {
+      "hostname": "openeuler-sp4-stock",
+      "ips": [
+        "100.121.207.17",
+        "fd7a:115c:a1e0::932d:cf12"
+      ],
+      "online": false,
+      "last_seen": "2026-10-06T08:10:00.1Z"
+    },
+    {
+      "hostname": "SD-20230928XZGS",
+      "ips": [
+        "100.105.181.122",
+        "fd7a:115c:a1e0::d92d:b57b"
+      ],
+      "online": false,
+      "last_seen": "2026-10-06T08:10:00.1Z"
+    }
+  ],
+  "observed_ports": [
+    {
+      "host": "100.121.207.17",
+      "port": 22,
+      "state": "connection_timed_out"
+    },
+    {
+      "host": "100.105.181.122",
+      "port": 445,
+      "state": "connection_timed_out"
+    },
+    {
+      "host": "100.105.181.122",
+      "port": 3389,
+      "state": "connection_timed_out"
+    }
+  ],
+  "shutdown_requested_this_iteration": false,
+  "interpretation": "remote connectivity unavailable; power state and long-test terminal status unknown; no test failure inferred"
+}
