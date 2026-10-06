@@ -1,11 +1,21 @@
 {
-  "recorded_client_utc": "2026-10-06T10:15:18.924142+00:00",
+  "recorded_client_utc": "2026-10-06T10:17:30.545223+00:00",
   "failed_github_run": 37446927469,
   "failed_github_commit": "176a50c5a7f6b524b090c63dc5d241d7194fd792",
   "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
   "production_code_unchanged": true,
   "ci_kernel_skip_expected": true,
-  "remote_ci_recheck": "pending_push",
+  "remote_ci_recheck": {
+    "commit": "15067bfbdb640bc93ef3344689f9932daa2c1770",
+    "run_id": 37448564861,
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/SuperGh2233/SchedX-Agent/actions/runs/37448564861",
+    "unit_jobs": {
+      "unit (3.12)": "success",
+      "unit (3.10)": "success"
+    }
+  },
   "test_results": {
     "local-tests.xml": {
       "tests": 452,
@@ -41,6 +51,9 @@
     "reports/ci-20261006/clean-tests.log": "ee9f3f06ea07888ea284992e9fd587c3158aae606751a3bb90f8689bcf33657f",
     "reports/ci-20261006/fixed-tests.log": "7531e9b46c527409354e3b6ccebeac1948555bc64312caaca06a2a91e54e665c",
     "reports/ci-20261006/tests.log": "8c1434dd8b0929585ccbbe1899cb387cb8088170a057992561b4e1707f82bf6e",
-    "reports/ci-20261006/local-tests.xml": "5206976f788bed13883d3ac926dfb612e5f209a26077546ebc780c044f65f7d9"
+    "reports/ci-20261006/local-tests.xml": "5206976f788bed13883d3ac926dfb612e5f209a26077546ebc780c044f65f7d9",
+    "reports/ci-20261006/report.md": "022f2043573ad3412d774366bd9e03f2c06a5e0f95a0c0e4ef7ad22f3b4bb391",
+    "reports/ci-20261006/github-passed-run-15067bf.json": "d87b67b2dd53b628e15171177ce084acb958afc2de9e9a52ec4382e35b2e700c",
+    "reports/ci-20261006/github-passed-jobs-15067bf.json": "906769925c95c9b11f534164d3abdc657a1f01f903247c79442c0a71644a3490"
   }
 }

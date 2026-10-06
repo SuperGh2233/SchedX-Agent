@@ -1,24 +1,23 @@
 {
-  "recorded_client_utc": "2026-10-06T10:18:22.597654+00:00",
-  "verified_code_delivery_commit": "15067bfbdb640bc93ef3344689f9932daa2c1770",
+  "recorded_client_utc": "2026-10-06T09:59:49.934234+00:00",
+  "verified_code_delivery_commit": "1f122d37948a2c5c136566cdd08e009d2a17e002",
   "production_implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
   "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
   "github": {
     "url": "https://github.com/SuperGh2233/SchedX-Agent.git",
     "branch": "codex/optimization-20261003",
     "status": "pushed_and_verified",
-    "remote_head": "15067bfbdb640bc93ef3344689f9932daa2c1770"
+    "remote_head": "1f122d37948a2c5c136566cdd08e009d2a17e002"
   },
   "gitlink": {
     "url": "https://gitlink.org.cn/SuperGh/mxoedzsyzygka.git",
     "git_url": "git@gitlink.org.cn:SuperGh/mxoedzsyzygka.git",
     "branch": "master",
     "status": "pushed_and_verified",
-    "remote_head": "15067bfbdb640bc93ef3344689f9932daa2c1770",
+    "remote_head": "1f122d37948a2c5c136566cdd08e009d2a17e002",
     "previous_master": "58903feb8e51d223f0401e6ecd2a5ae4b58adecd",
     "history_preserved_fast_forward": true,
     "main_unchanged": "f7323b6ede9e5c957b4448aac3cb88064b629007"
   },
-  "followup_commit_scope": "CI/test isolation fix, production code unchanged; subsequent publication records only",
-  "github_ci_run": 37448564861
+  "followup_commit_scope": "publication metadata only; production fingerprint remains unchanged"
 }

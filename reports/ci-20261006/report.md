@@ -8,4 +8,6 @@
 
 修正后本地 451 通过、1 项 Linux pidfd 专属检查跳过；普通账户 Linux 452 全部通过，编译与变更文件静态检查通过。生产源码 SHA 仍为 `fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a`，此前冻结代码的长测与性能证据对应的生产源码未变。
 
-下一步推送修正并等待 GitHub Python 3.10 / 3.12 两项实际结果；不把本地结果代替远端 CI。相关原始 XML、普通账户失败/成功日志及公开 GitHub 任务信息保留于本目录。
+修正提交 `15067bf` 的实际 GitHub run `37448564861` 已通过；Python 3.10 与 3.12 的 pytest 和编译步骤均成功，内核验证仍按手动触发条件正常跳过。代码已同步 GitHub 优化分支与 GitLink master。原始 XML、普通账户失败/成功日志及公开 GitHub 任务信息全部保留。
+
+[通过的 GitHub 自动检查](https://github.com/SuperGh2233/SchedX-Agent/actions/runs/37448564861)。
