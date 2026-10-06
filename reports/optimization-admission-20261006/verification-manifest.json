@@ -1,5 +1,5 @@
 {
-  "recorded_client_utc": "2026-10-06T08:38:49.019260+00:00",
+  "recorded_client_utc": "2026-10-06T09:20:50.661495+00:00",
   "implementation_commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
   "previous_accepted_commit": "7ee07775e4d841a2e60d393405c01fb6925b9e74",
   "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
@@ -7,7 +7,7 @@
   "production_source_file_count": 79,
   "native_and_ebpf_source_unchanged": true,
   "default_admission": "off",
-  "implementation_status": "topology_fix_local_and_linux_unit_regression_passed_full_revalidation_running",
+  "implementation_status": "final_validation_passed_complete_evidence_verified",
   "local_tests": {
     "tests": 452,
     "passed": 451,
@@ -62,7 +62,7 @@
     }
   },
   "linux_validation": {
-    "status": "paired_smoke_30min_passed_two_hour_running",
+    "status": "passed",
     "unit_tests": {
       "tests": 452,
       "failures": 0,
@@ -465,7 +465,7 @@
       "final_scheduler_state": "disabled"
     },
     "2h": {
-      "status": "running",
+      "status": "passed",
       "duration_seconds": 7200.0,
       "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
       "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
@@ -481,21 +481,24 @@
         "cooldown_seconds": 3.0
       },
       "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
-      "waves": 9387,
-      "tools": 46332,
-      "recovery_checks": 50,
-      "max_pending": 7,
-      "max_active": 5,
+      "waves": 11281,
+      "tools": 55660,
+      "recovery_checks": 60,
+      "max_pending": 8,
+      "max_active": 6,
       "max_queue_seconds": {
-        "compile": 3.0247342430011486,
+        "compile": 5.271877526000026,
         "interactive": 0.13412557099945843
       },
       "max_total_seconds": {
-        "compile": 3.8998473290012043,
+        "compile": 6.14513788899967,
         "interactive": 0.6828059749987005
       },
       "failures": [],
-      "native_backend": false
+      "native_backend": false,
+      "private_cgroup_removed": true,
+      "elapsed_seconds": 7202.031741131001,
+      "final_scheduler_state": "disabled"
     }
   },
   "performance_improvement_claim": {
@@ -516,16 +519,15 @@
   "pushed_this_iteration": false,
   "goal_complete": false,
   "remaining_work": [
-    "finish original running two-hour validation without restarting",
-    "terminal cleanup and original-state audit",
-    "archive terminal evidence and finalize report"
+    "push verified delivery to configured GitHub optimization branch",
+    "GitLink sync requires repository address"
   ],
   "file_sha256": {
     "reports/optimization-admission-20261006/local-tests.log": "984ef197e18348b773636e1eab46006e5aa6e0c477324f7360a05d7d328fd4ae",
     "reports/optimization-admission-20261006/local-tests-runtime.log": "f1de9768c7e8fff0a5027143aaf4c56c22ebab137195f16dce175538ebf3cea9",
     "reports/optimization-admission-20261006/static-check.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
     "reports/optimization-admission-20261006/long-validation-pipeline.json": "9240b10a710161fd43fc480a6a1ea21fd14ef907a2090d1fe85213a65841d603",
-    "reports/optimization-admission-20261006/report.md": "c1b7c0c54c0b78ed78579b73e51c4fbeccb5a28ceb7202a682029ccd063c24c2",
+    "reports/optimization-admission-20261006/report.md": "c79f99647cc4089295ca727675997dae19f42b6fc4b179ac8bf3af931c69608c",
     "reports/optimization-admission-20261006/linux-verifier-help.txt": "97a9757d4e517bbc58065a50820ff2f76c6972a265ded55e2b2606b2056aa875",
     "reports/optimization-admission-20261006/local-tests-topology.log": "ad3868778f48373f12ddf251af981b7f29077273e9abab1672d80c1a03ba7911",
     "reports/optimization-admission-20261006/failed-long-evidence-068c7ba.tar.gz": "c8e99096bbf1bfd96d9ab51bda3a2c0295d58f48fcae8f734da7e0b89a0e7f93",
@@ -552,14 +554,35 @@
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/source-identity-5ac43a8.json": "f91e251d1c0c1440bd41e10edac3180b145849f3d2bb8292570025e1b0c3e8d9",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/smoke-topology/summary.json": "08d59dd3eb301f3f7b0b9e1322fb3d199b5de1d3fe1b9e9348f3a3545a6f0120",
     "reports/optimization-admission-20261006/short-checkpoint-5ac43a8/final-validation-5ac43a8/paired-topology/summary.json": "400f14d3d80cd3e0f236a3eb4147bf4118bd961888476827ddfc488476c100f7",
-    "docs/optimization-plan.md": "e739985d8b824cf592b8aa78038f14d2110c6d330710493ae6c266a8f585c9ac",
+    "docs/optimization-plan.md": "f73fab15136ab9187e363af4e7bc48aa58c58c61fd9e6b41bee659b386bd4ede",
     "reports/optimization-admission-20261006/pipeline-5ac43a8-latest.json": "d848ab03aa47beffa90e429b19e6c05e436fcd2611706bb271dcaca9d64acce1",
     "reports/optimization-admission-20261006/30min-5ac43a8-summary.json": "856b8edd024026d27a95d293eee9c2f02061dce326ca4ca04e33bb9a0ba33d03",
     "reports/optimization-admission-20261006/2h-5ac43a8-checkpoint.json": "7d23b991a7372a93b132e88fd1e6ad1fdfde65b0c11359a179cb611e2d154549",
     "reports/optimization-admission-20261006/remote-unavailable-1618.json": "c578e5a5688821f0b6f6974191f18347a26015cf354456197451f889551119b4",
     "reports/optimization-admission-20261006/remote-reconnected-1638.json": "7ec2c4d98bd111ad88cf1ba698a62cf2cb7be9048fa6e4e035c5de91f50213a2",
     "reports/optimization-admission-20261006/pipeline-5ac43a8-reconnected.json": "d848ab03aa47beffa90e429b19e6c05e436fcd2611706bb271dcaca9d64acce1",
-    "reports/optimization-admission-20261006/2h-5ac43a8-reconnected.json": "1b3960a3f80ac30ecee16d0d655456783cb671b1f2a7c368a04f98fbe604d0ed"
+    "reports/optimization-admission-20261006/2h-5ac43a8-reconnected.json": "1b3960a3f80ac30ecee16d0d655456783cb671b1f2a7c368a04f98fbe604d0ed",
+    "reports/optimization-admission-20261006/pipeline-5ac43a8-final.json": "a81b19aa12b36a96bcb8b0c7f76505f196d73463f4e3d8101684d535a4ced626",
+    "reports/optimization-admission-20261006/30min-5ac43a8-final.json": "856b8edd024026d27a95d293eee9c2f02061dce326ca4ca04e33bb9a0ba33d03",
+    "reports/optimization-admission-20261006/final-evidence-5ac43a8-files.jsonl.gz": "22fae51edf86e7a2962e85691f3a74433ad14da180907d37ed4e4988885cf16f",
+    "reports/optimization-admission-20261006/2h-5ac43a8-final.json": "80b54f5e06737ab657655b5e2743ab1b57dff9769ff4da0c8bfbdc4819735f73",
+    "reports/optimization-admission-20261006/final-evidence-5ac43a8-verification.json": "852fd42646ed3f8b9f161c3f77c1aaeb64454fd4e589fb58287f27808b47458d",
+    "reports/optimization-admission-20261006/final-evidence-5ac43a8.tar.gz": "33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d",
+    "reports/optimization-admission-20261006/progress-history.md": "c1b7c0c54c0b78ed78579b73e51c4fbeccb5a28ceb7202a682029ccd063c24c2",
+    "reports/optimization-admission-20261006/final-independent-audit-5ac43a8.json": "a82c32c285d05a87dc0f8dc5785e8247e0908e9da0337d32b3730775cd8ca090",
+    "reports/optimization-admission-20261006/remote-final-availability.json": "04d8dd2feb528ec38cd0f8f17c718be431821e751cb7d0f6d6b67692d5d78348",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/linux-tests-5ac43a8.xml": "13c494bbe9e70ff248608263f7de076cf933723733b45d1f4a731537bd8b231f",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/cpu-controller-test-setup.json": "573aacbd6a1ac12eca54191b70b8aeedde83f7ad70778801708f3c2de19e75e6",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/psi-test-boot.json": "f56f0ace823b302c1d236c05b738da1f4f9ca00e909d564bd2ce750361106b0d",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/source-identity-5ac43a8.json": "f91e251d1c0c1440bd41e10edac3180b145849f3d2bb8292570025e1b0c3e8d9",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/final-validation-5ac43a8/pipeline.json": "138663aff9708d2d52d84a0ad667d8c85a4ebc4492939de64d153e17b45811f5",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/final-validation-5ac43a8/smoke-topology/summary.json": "08d59dd3eb301f3f7b0b9e1322fb3d199b5de1d3fe1b9e9348f3a3545a6f0120",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/final-validation-5ac43a8/admission-30min/summary.json": "e2dd16a2852d9aff134fe3b7c7b4b4a1deeb3ef26ba929f1a672d5d1eb13b22b",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/final-validation-5ac43a8/admission-2h/summary.json": "d7f60a8847d92a533daecefa313186d74c7245fea8669bba8aa27d6462ef3796",
+    "reports/optimization-admission-20261006/final-summary-5ac43a8/evidence/final-validation-5ac43a8/paired-topology/summary.json": "400f14d3d80cd3e0f236a3eb4147bf4118bd961888476827ddfc488476c100f7",
+    "docs/tool-admission.md": "ac6b7f0444ac0bef7b7cdcff84c9adb6769be74c947127d6d9f765ae67d1ffe2",
+    "docs/final-round-improvements.md": "2638017224eb21813a283a0ac0d409120ee5ce33f2ce5102be57b6e9ea682efe",
+    "docs/competition_evidence_matrix.md": "e3741587af1465aaf55c6f6c70f4f268a52b21284fe091b50a1bacbe1f34f9f9"
   },
   "historical_local_implementation": {
     "commit": "f265822046db218793db48c28bdeaae0fda0bdb5",
@@ -572,7 +595,7 @@
     }
   },
   "long_validation": {
-    "status": "running",
+    "status": "passed",
     "pid": 58872,
     "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
     "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
@@ -615,21 +638,48 @@
       },
       {
         "name": "admission-2h",
-        "status": "running",
+        "status": "passed",
         "duration_seconds": 7200,
         "guest_started_utc": "2026-10-06T06:58:47.813705+00:00",
-        "pid": 137407
+        "pid": 137407,
+        "returncode": 0,
+        "tools": 55660,
+        "recovery_checks": 60,
+        "max_queue_seconds": {
+          "compile": 5.271877526000026,
+          "interactive": 0.13412557099945843
+        },
+        "max_total_seconds": {
+          "compile": 6.14513788899967,
+          "interactive": 0.6828059749987005
+        },
+        "guest_finished_utc": "2026-10-06T08:58:49.900764+00:00"
       }
     ],
     "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
     "windows_shutdown_requested": false,
-    "boot_configuration_restored": true
+    "boot_configuration_restored": true,
+    "original_workspace_audit": {
+      "regular_files_checked": 3586,
+      "mismatches": []
+    },
+    "remaining_private_cgroups": [],
+    "cpu_controller_restored": true,
+    "guest_finished_utc": "2026-10-06T08:58:50.588260+00:00",
+    "elapsed_seconds": 9288.211644805,
+    "final_scheduler_state": "disabled",
+    "terminal_archive": {
+      "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-5ac43a8.tar.gz",
+      "returncode": 0,
+      "sha256": "33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d",
+      "scope": "all experiment evidence; private boot backup retained separately"
+    }
   },
   "test_environment_changes": {
     "psi_runtime_enabled_for_test": true,
     "boot_configuration_restored": true,
-    "root_cpu_controller_temporarily_added": true,
-    "cpu_controller_restoration_pending": true,
+    "root_cpu_controller_temporarily_added": false,
+    "cpu_controller_restoration_pending": false,
     "native_installed_program_unchanged": true,
     "original_workspace_baseline_regular_files": 3586
   },
@@ -660,7 +710,7 @@
     "skipped": 0
   },
   "new_validation": {
-    "status": "running",
+    "status": "passed",
     "pid": 58872,
     "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
     "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
@@ -703,15 +753,42 @@
       },
       {
         "name": "admission-2h",
-        "status": "running",
+        "status": "passed",
         "duration_seconds": 7200,
         "guest_started_utc": "2026-10-06T06:58:47.813705+00:00",
-        "pid": 137407
+        "pid": 137407,
+        "returncode": 0,
+        "tools": 55660,
+        "recovery_checks": 60,
+        "max_queue_seconds": {
+          "compile": 5.271877526000026,
+          "interactive": 0.13412557099945843
+        },
+        "max_total_seconds": {
+          "compile": 6.14513788899967,
+          "interactive": 0.6828059749987005
+        },
+        "guest_finished_utc": "2026-10-06T08:58:49.900764+00:00"
       }
     ],
     "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
     "windows_shutdown_requested": false,
-    "boot_configuration_restored": true
+    "boot_configuration_restored": true,
+    "original_workspace_audit": {
+      "regular_files_checked": 3586,
+      "mismatches": []
+    },
+    "remaining_private_cgroups": [],
+    "cpu_controller_restored": true,
+    "guest_finished_utc": "2026-10-06T08:58:50.588260+00:00",
+    "elapsed_seconds": 9288.211644805,
+    "final_scheduler_state": "disabled",
+    "terminal_archive": {
+      "path": "/var/tmp/schedx-admission-20261006-f265822/final-evidence-5ac43a8.tar.gz",
+      "returncode": 0,
+      "sha256": "33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d",
+      "scope": "all experiment evidence; private boot backup retained separately"
+    }
   },
   "historical_candidate_068c7ba": {
     "implementation_commit": "068c7ba9c0c523e381fcf343618ef8d7d30efa06",
@@ -1125,11 +1202,8 @@
     }
   },
   "remote_availability_current": {
-    "recorded_client_utc": "2026-10-06T08:38:49.019260+00:00",
-    "ssh_authenticated": true,
-    "original_pipeline_pid": 58872,
-    "original_two_hour_pid": 137407,
-    "test_restarted": false,
+    "recorded_client_utc": "2026-10-06T09:19:14.458920+00:00",
+    "local_tailscale_state": "Running",
     "peers": [
       {
         "hostname": "openeuler-sp4-stock",
@@ -1147,7 +1221,45 @@
         ],
         "online": true
       }
-    ]
+    ],
+    "shutdown_requested_this_iteration": false
   },
-  "current_verification_state": "remote_reconnected_original_two_hour_running"
+  "current_verification_state": "all_stages_passed_terminal_audit_and_local_archive_verified",
+  "optimization_acceptance_complete": true,
+  "final_evidence": {
+    "verified_client_utc": "2026-10-06T09:20:50.661495+00:00",
+    "candidate": "5ac43a8102200cbc926613c580ff331296cf9db7",
+    "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+    "archive_sha256": "33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d",
+    "archive_bytes": 39724022,
+    "regular_members_read_and_hashed": 490557,
+    "directory_members": 97591,
+    "inventory_sha256": "22fae51edf86e7a2962e85691f3a74433ad14da180907d37ed4e4988885cf16f",
+    "archive_matches_remote_terminal_sha256": true,
+    "terminal_summaries_and_linux_xml_verified": true,
+    "scope": "complete remote experiment evidence, private boot backups excluded; archive hash matches remote, each regular archive member read and hashed locally"
+  },
+  "terminal_independent_audit": {
+    "guest_utc": "2026-10-06T09:16:33.482949+00:00",
+    "test_processes": [],
+    "private_cgroups": [],
+    "scheduler_state": "disabled",
+    "bpf_pins": [],
+    "daemon_socket_exists": false,
+    "root_controllers": [
+      "memory",
+      "pids"
+    ],
+    "installed_program_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+    "original_workspace_audit": {
+      "regular_files_checked": 3586,
+      "mismatches": []
+    }
+  },
+  "publication": {
+    "github_remote": "origin",
+    "branch": "codex/optimization-20261003",
+    "github_status": "ready_to_push",
+    "gitlink_status": "repository_address_missing"
+  }
 }

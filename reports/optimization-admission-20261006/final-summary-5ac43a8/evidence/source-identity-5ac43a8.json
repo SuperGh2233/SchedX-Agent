@@ -1,0 +1,12 @@
+{
+  "commit": "5ac43a8102200cbc926613c580ff331296cf9db7",
+  "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "source_verified_against_git": true,
+  "source_file_count": 79,
+  "native_and_ebpf_source_unchanged": true,
+  "input_sha256": {
+    "pack": "113c15b12384751891bb64c29d6a4a55b0042a6c0b5907610f6b5b286af9ebdb",
+    "archive": "3182e11e45b180912c96417eab610be327117b75b0a7975de747b0286c0c5580"
+  },
+  "harness_sha256": "cf73dbcfae2641f3a9dbd6067ee36f0dfce4830c96569e8fc532e6377c0cf1b3"
+}

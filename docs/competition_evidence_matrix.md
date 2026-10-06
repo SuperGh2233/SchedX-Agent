@@ -4,25 +4,17 @@ This index maps every explicit competition requirement to executable code and
 real openEuler SP4 evidence. It is the quickest judge-facing entry point when a
 claim needs to be verified.
 
-## Final-round iteration evidence (2026-10-04)
+## Final-round iteration evidence (2026-10-06)
 
-The current implementation continues the same repository history. See
-[final-round improvements](final-round-improvements.md) for the substantive
-code changes and their evidence. The team has confirmed the preliminary
-submission as `b0591a10785b74cf980c8f0b4ed703a9a95e1aa2` (2026-07-30).
-Its Git object and ancestry to the current branch have been checked.
-`58903fe` remains the October optimization starting point, not the preliminary
-submission. The preliminary suite collects 141 tests; the current suite passes 241.
+The team-confirmed preliminary submission is `b0591a10785b74cf980c8f0b4ed703a9a95e1aa2` (2026-07-30), an ancestor of the current optimization branch. The frozen production implementation is `5ac43a8102200cbc926613c580ff331296cf9db7`; Linux passes all 452 tests, while macOS passes 451 and skips one Linux-only pidfd check. The preliminary suite collects 141 tests; test count alone is not a claim of substantive improvement.
 
-The October paired experiments compare `59c1ca4` with `58903fe`; they show
-nginx/Redis P99 reductions of 49.48%/30.67% and a 2.26% batch throughput cost
-on the verified four-vCPU VM. The current implementation has 241 passing
-tests and additional monitor-state and task-idempotence verification. Keep
-these version-specific results separate from the earlier formal results below.
-An exact preliminary-versus-final paired performance comparison is still pending.
+The latest new tool admission path passes five rotated off/fixed/adaptive comparisons, independent-process recovery, 30-minute and two-hour validation. The two-hour run completes 55,660 tool calls and 60 recovery checks. Fixed admission reduces interactive batch tail time by 65.7269%, with successful tool throughput reduced by 2.0912%. This compares the same current tool entry point with admission off/on; six interactive samples per batch approximate its maximum. It is not service P99 or preliminary whole-Agent improvement. Adaptive superiority over fixed is not established.
 
-Sources: [kernel/performance acceptance](../reports/optimization-20261004/report.md)
-and [continuous monitoring followup](../reports/optimization-continuous-20261004/report.md).
+Full-Agent quality gates, declared process scope, recovery and bounded observation were validated at the preceding `47440e2`: 46 rounds, including 31 without control changes. Formal preliminary component comparisons have been completed; they do not establish significant performance improvement. A static configuration fails the batch background-progress gate; a declared shared runtime-feedback adapter passes regression gates without significant gain. These experiments are not unmodified preliminary whole-Agent comparisons.
+
+Earlier October `59c1ca4` versus `58903fe` nginx/Redis P99 reductions of 49.48%/30.67% remain historical, version-specific evidence. `58903fe` is the October starting point, not the official preliminary submission. Keep these separate from the earlier formal results below and the latest tool-admission measurements.
+
+Sources: [substantive improvements](final-round-improvements.md), [latest admission acceptance](../reports/optimization-admission-20261006/report.md), [full Agent and preliminary comparisons](../reports/optimization-acceptance-20261005/report.md), [earlier October performance](../reports/optimization-20261004/report.md).
 
 | Competition requirement | Implemented capability | Code evidence | Runtime evidence | Verification command |
 | --- | --- | --- | --- | --- |
@@ -37,8 +29,9 @@ and [continuous monitoring followup](../reports/optimization-continuous-20261004
 | Batch performance | sysbench baseline/interference/Agent experiment with fairness gate | `schedx/benchmark/batch.py` | `results/batch-formal-final/` | `schedx benchmark batch-throughput ...` |
 | Scheduler comparison | Same harness for default, scx_simple, scx_qmap, scx_flatcg and scx_agent | `schedx/benchmark/scx_comparison.py` | five 20-second repeats with raw output and cleanup | `schedx benchmark scx-compare ...` |
 | Reproducible environment | SP4 kernel build instructions, dependency scripts, timestamped raw data, CSV/JSON/Markdown reports | `kernel/`, `scripts/`, `docs/experiment.md` | openEuler kernel `6.6.0-159.4.3.154.oe2403sp4.schedx1` | `python3 -m pytest -q` |
+| Shared tool admission | Cross-process bounded queue, priority/aging, inherited lease, submission deadline, PSI control and bounded cgroup topology coordination | `schedx/admission.py`, `schedx/tool_runner.py` | `reports/optimization-admission-20261006/report.md`: five paired comparisons, 55,660 calls / 60 recoveries in two hours; final cleanup and original-file audit pass | `python3 scripts/verify_tool_admission.py --help` |
 
-## Verified Formal Results
+## Earlier Verified Formal Results
 
 | Scenario | Interference effect | SchedX result | Fairness |
 | --- | ---: | ---: | ---: |

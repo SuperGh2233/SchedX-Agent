@@ -1,0 +1,17 @@
+{
+  "guest_utc": "2026-10-06T09:16:33.482949+00:00",
+  "test_processes": [],
+  "private_cgroups": [],
+  "scheduler_state": "disabled",
+  "bpf_pins": [],
+  "daemon_socket_exists": false,
+  "root_controllers": [
+    "memory",
+    "pids"
+  ],
+  "installed_program_sha256": "6e2148d333d5833dc889f8436b7746661edd61d9c78e89b57b4a54bd8f373f39",
+  "original_workspace_audit": {
+    "regular_files_checked": 3586,
+    "mismatches": []
+  }
+}

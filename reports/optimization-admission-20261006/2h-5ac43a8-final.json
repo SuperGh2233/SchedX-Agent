@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "duration_seconds": 7200.0,
+  "production_source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "harness_sha256": "e65eb4a434140c32a40fa045f9abb15c4f2bb994f206bddd1ef92492fdd61ed5",
+  "configuration": {
+    "mode": "adaptive",
+    "initial_limit": 5,
+    "min_limit": 1,
+    "max_limit": 8,
+    "interactive_reserve": 2,
+    "max_pending": 128,
+    "aging_seconds": 2.0,
+    "sample_seconds": 1.0,
+    "cooldown_seconds": 3.0
+  },
+  "kernel": "6.6.0-159.4.3.154.oe2403sp4.schedx1",
+  "waves": 11281,
+  "tools": 55660,
+  "recovery_checks": 60,
+  "max_pending": 8,
+  "max_active": 6,
+  "max_queue_seconds": {
+    "compile": 5.271877526000026,
+    "interactive": 0.13412557099945843
+  },
+  "max_total_seconds": {
+    "compile": 6.14513788899967,
+    "interactive": 0.6828059749987005
+  },
+  "failures": [],
+  "native_backend": false,
+  "private_cgroup_removed": true,
+  "elapsed_seconds": 7202.031741131001,
+  "final_scheduler_state": "disabled"
+}

@@ -1,0 +1,13 @@
+{
+  "verified_client_utc": "2026-10-06T09:20:50.661495+00:00",
+  "candidate": "5ac43a8102200cbc926613c580ff331296cf9db7",
+  "source_sha256": "fc17d3cc6c1f26cf910cc55af0cdb6203a488a8a0ef5b3fde872663a9663d66a",
+  "archive_sha256": "33a5d32fa0a1610eb3e6af2eb50b2aa8579ffd3892fb90e50a64572ae792f55d",
+  "archive_bytes": 39724022,
+  "regular_members_read_and_hashed": 490557,
+  "directory_members": 97591,
+  "inventory_sha256": "22fae51edf86e7a2962e85691f3a74433ad14da180907d37ed4e4988885cf16f",
+  "archive_matches_remote_terminal_sha256": true,
+  "terminal_summaries_and_linux_xml_verified": true,
+  "scope": "complete remote experiment evidence, private boot backups excluded; archive hash matches remote, each regular archive member read and hashed locally"
+}

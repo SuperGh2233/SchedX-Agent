@@ -1,0 +1,15 @@
+{
+  "before": [
+    "memory",
+    "pids"
+  ],
+  "after": [
+    "cpu",
+    "memory",
+    "pids"
+  ],
+  "added_cpu": true,
+  "restored": true,
+  "candidate": "5ac43a8",
+  "restored_guest_utc": "2026-10-06T08:58:50.586517+00:00"
+}
