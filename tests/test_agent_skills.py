@@ -99,6 +99,13 @@ def test_rollback_skill_removes_persistent_scx_policies(tmp_path, monkeypatch):
         "schedx.controllers.cgroup_controller.CgroupController.rollback",
         lambda self: [],
     )
+    # Isolate SCX rollback; eBPF cleanup has its own tests and requires bpffs access.
+    monkeypatch.setattr(
+        "schedx.skills.rollback_skill.EbpfCleanupSkill.run",
+        lambda self, context: SkillResult(
+            True, "eBPF cleanup completed: 0/0 removed", {"results": {}}
+        ),
+    )
 
     result = RollbackSkill().run(context)
 
