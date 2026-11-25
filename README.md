@@ -11,6 +11,8 @@
   <img alt="sched_ext" src="https://img.shields.io/badge/Scheduler-sched__ext-0F766E">
 </p>
 
+[![CI](https://github.com/SuperGh2233/SchedX-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/SuperGh2233/SchedX-Agent/actions/workflows/ci.yml)
+
 SchedX-Agent 是一个面向 Linux 混合负载的自适应资源控制项目。系统采集工作负载与运行时指标，由 Agent 选择受约束的策略，再通过 **cgroup v2、sched_ext 与 eBPF** 执行、观测和验证；当策略未达到目标或触发安全条件时，支持回滚。
 
 项目重点是探索 Agent 如何参与系统资源策略决策，同时让真正的调度与资源控制仍由 Linux 内核机制完成，而不是让 LLM 进入毫秒级调度路径。
@@ -124,7 +126,7 @@ python -m pip install -e ".[dev]"
 python -m pytest -q
 ```
 
-GitHub Actions 在 Python 3.10、3.11、3.12 上运行无特权单元测试。需要真实 sched_ext、eBPF、cgroup 或压测服务的实验，仍须在满足内核与权限要求的 Linux 测试机上单独验收。
+GitHub Actions 在 Python 3.10、3.11、3.12 上运行无特权单元测试。2026-11-25 的 CI 三个版本均为 **168 passed**。需要真实 sched_ext、eBPF、cgroup 或压测服务的实验，仍须在满足内核与权限要求的 Linux 测试机上单独验收。
 
 ## 安全与限制
 
