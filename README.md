@@ -117,6 +117,15 @@ README 不将不同内核、负载、实验轮次的数字合并成一个“通�
 
 官方初赛材料与演示文件位于仓库的 `master` 分支根目录；源码与实验复现材料以当前 `main` 分支中的目录组织为准。第三方组件和代码来源说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [code_origin_stats.md](code_origin_stats.md)。
 
+## 自动化测试
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest -q
+```
+
+GitHub Actions 在 Python 3.10、3.11、3.12 上运行无特权单元测试。需要真实 sched_ext、eBPF、cgroup 或压测服务的实验，仍须在满足内核与权限要求的 Linux 测试机上单独验收。
+
 ## 安全与限制
 
 - Agent 只负责较慢时间尺度的策略选择；内核调度器负责实际任务调度。
@@ -126,4 +135,4 @@ README 不将不同内核、负载、实验轮次的数字合并成一个“通�
 
 ## License
 
-请以仓库中的 LICENSE 与第三方组件声明为准。
+当前仓库尚未提供项目级 `LICENSE` 文件。Linux、openEuler、libbpf、sched-ext/scx 及其他依赖仍受各自许可证约束；本项目代码在明确添加许可证前，不应被视为允许自由复制、修改或再分发。
