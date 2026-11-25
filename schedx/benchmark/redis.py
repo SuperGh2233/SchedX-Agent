@@ -382,11 +382,19 @@ def build_redis_summary(
         "action_evidence": evidence,
         "cleanup": {
             "stress_processes": process_ids("stress-ng", "stress-ng-cpu"),
-            "cgroup_base_exists": Path("/sys/fs/cgroup/schedx").exists(),
-            "ebpf_base_exists": Path("/sys/fs/bpf/schedx").exists(),
+            "cgroup_base_exists": _safe_exists(Path("/sys/fs/cgroup/schedx")),
+            "ebpf_base_exists": _safe_exists(Path("/sys/fs/bpf/schedx")),
             "sched_ext_state": ScxController().state(),
         },
     }
+
+
+def _safe_exists(path: Path) -> bool | None:
+    """Return None when kernel pseudo-filesystems cannot be inspected."""
+    try:
+        return path.exists()
+    except OSError:
+        return None
 
 
 def _fmt(value: Any) -> str:

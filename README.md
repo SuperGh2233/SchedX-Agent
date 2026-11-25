@@ -11,6 +11,8 @@
   <img alt="sched_ext" src="https://img.shields.io/badge/Scheduler-sched__ext-0F766E">
 </p>
 
+[![CI](https://github.com/SuperGh2233/SchedX-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/SuperGh2233/SchedX-Agent/actions/workflows/ci.yml)
+
 SchedX-Agent 是一个面向 Linux 混合负载的自适应资源控制项目。系统采集工作负载与运行时指标，由 Agent 选择受约束的策略，再通过 **cgroup v2、sched_ext 与 eBPF** 执行、观测和验证；当策略未达到目标或触发安全条件时，支持回滚。
 
 项目重点是探索 Agent 如何参与系统资源策略决策，同时让真正的调度与资源控制仍由 Linux 内核机制完成，而不是让 LLM 进入毫秒级调度路径。
@@ -117,6 +119,15 @@ README 不将不同内核、负载、实验轮次的数字合并成一个“通�
 
 官方初赛材料与演示文件位于仓库的 `master` 分支根目录；源码与实验复现材料以当前 `main` 分支中的目录组织为准。第三方组件和代码来源说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [code_origin_stats.md](code_origin_stats.md)。
 
+## 自动化测试
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest -q
+```
+
+GitHub Actions 在 Python 3.10、3.11、3.12 上运行无特权单元测试。2026-11-25 的 CI 三个版本均为 **168 passed**。需要真实 sched_ext、eBPF、cgroup 或压测服务的实验，仍须在满足内核与权限要求的 Linux 测试机上单独验收。
+
 ## 安全与限制
 
 - Agent 只负责较慢时间尺度的策略选择；内核调度器负责实际任务调度。
@@ -126,4 +137,4 @@ README 不将不同内核、负载、实验轮次的数字合并成一个“通�
 
 ## License
 
-请以仓库中的 LICENSE 与第三方组件声明为准。
+当前仓库尚未提供项目级 `LICENSE` 文件。Linux、openEuler、libbpf、sched-ext/scx 及其他依赖仍受各自许可证约束；本项目代码在明确添加许可证前，不应被视为允许自由复制、修改或再分发。
