@@ -5,6 +5,7 @@ from schedx.benchmark.redis import (
     RedisBenchmarkConfig,
     RedisMixedBenchmark,
     build_redis_summary,
+    _safe_exists,
 )
 from schedx.benchmark.redis_parser import parse_redis_benchmark_output
 
@@ -120,3 +121,17 @@ def test_redis_run_rotates_phase_order(monkeypatch, tmp_path: Path):
         (3, "interference"),
     ]
     assert (tmp_path / "2026-08-30_00-00-00" / "report.md").exists()
+
+
+
+def test_safe_exists_reports_unknown_when_kernel_path_is_inaccessible(monkeypatch):
+    original_exists = Path.exists
+
+    def guarded_exists(path):
+        if path == Path("/sys/fs/bpf/schedx"):
+            raise PermissionError("bpffs is not readable by this runner")
+        return original_exists(path)
+
+    monkeypatch.setattr(Path, "exists", guarded_exists)
+    assert _safe_exists(Path("/sys/fs/bpf/schedx")) is None
+    assert _safe_exists(Path("/tmp")) is True
